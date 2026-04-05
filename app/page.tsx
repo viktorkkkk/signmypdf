@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
+import Logo from './components/Logo';
 
 type Step = 'upload' | 'sign' | 'done';
 
@@ -65,10 +66,9 @@ export default function Home() {
       <header className="header">
         <div className="header-inner">
           <a href="/" className="logo">
-            <div className="logo-mark">✍</div>
-            <span className="logo-name">Sign<span>My</span>PDF</span>
+            <Logo />
           </a>
-          <span className="header-tag">🔒 Free · Secure · No registration</span>
+          <span className="header-tag">🔒 No registration required</span>
         </div>
       </header>
 
