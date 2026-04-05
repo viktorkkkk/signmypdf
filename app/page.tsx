@@ -27,6 +27,7 @@ export default function Home() {
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
   const [showPricing, setShowPricing] = useState(false);
+  const [isFirstDoc, setIsFirstDoc] = useState<boolean | null>(null); // null = not checked yet
   const sigPlacement = useRef({ page: 1, xPct: 5, yPct: 75, wPct: 30, hPct: 12 });
 
   const onDrop = useCallback((files: File[]) => {
@@ -66,6 +67,11 @@ export default function Home() {
         window.dispatchEvent(new Event('signmypdf:saved'));
       };
       reader.readAsDataURL(blob);
+
+      // Check if first doc
+      const raw = localStorage.getItem('signmypdf_history');
+      const history = raw ? JSON.parse(raw) : [];
+      setIsFirstDoc(history.length === 0); // check BEFORE saving
 
       setStep('done');
     } catch (err: any) {
@@ -217,16 +223,36 @@ export default function Home() {
             <div className="done-icon">🎉</div>
             <h2 className="done-title">Document signed!</h2>
             <p className="done-sub">Your PDF is ready to download and send.</p>
+
             <div className="done-btns">
-              <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '15px 36px', fontSize: 16 }}>
-                ⬇️  Download Signed PDF
-              </a>
+              {isFirstDoc !== false ? (
+                /* First document — free download */
+                <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '15px 36px', fontSize: 16 }}>
+                  ⬇️  Download Signed PDF
+                </a>
+              ) : (
+                /* Not first — show paywall on click */
+                <button
+                  className="btn-primary"
+                  style={{ padding: '15px 36px', fontSize: 16 }}
+                  onClick={() => setShowPricing(true)}
+                >
+                  🔒  Download Signed PDF
+                </button>
+              )}
               <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
 
-            {/* Pricing */}
+            {isFirstDoc === true && (
+              <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
+                ✅ Free download — no registration needed
+              </p>
+            )}
+
+            {/* Show pricing only for non-first docs */}
+            {isFirstDoc === false && (
             <div className="pricing-wrap">
               <div className="pricing-header">
                 <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
@@ -280,6 +306,7 @@ export default function Home() {
 
               <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
             </div>
+            )}
           </div>
         )}
 

@@ -62,6 +62,8 @@ body {
   max-width: 860px;
   margin: 28px auto 0;
   padding: 0 24px;
+  display: flex;
+  justify-content: center;
 }
 .progress-steps {
   display: flex;
