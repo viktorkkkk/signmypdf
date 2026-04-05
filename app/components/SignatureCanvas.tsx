@@ -32,9 +32,22 @@ export default function SignatureCanvas({ onSave }: Props) {
   useEffect(() => { initCanvas(); }, [initCanvas]);
 
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
-    const rect = canvasRef.current!.getBoundingClientRect();
-    if ('touches' in e) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    return { x: (e as React.MouseEvent).clientX - rect.left, y: (e as React.MouseEvent).clientY - rect.top };
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
+    let clientX: number, clientY: number;
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
+    }
+    const dpr = window.devicePixelRatio || 1;
+    // Scale CSS coords → logical drawing coords (accounts for DPR + any resize)
+    return {
+      x: (clientX - rect.left) * (canvas.width  / dpr / rect.width),
+      y: (clientY - rect.top)  * (canvas.height / dpr / rect.height),
+    };
   };
 
   const saveStroke = () => {
