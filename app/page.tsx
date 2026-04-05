@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
 import PDFPreview from './components/PDFPreview';
 import Logo from './components/Logo';
+import FileHistory, { saveToHistory } from './components/FileHistory';
 
 type Step = 'upload' | 'sign' | 'done';
 
@@ -22,6 +23,7 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
+  const [showPricing, setShowPricing] = useState(false);
   const signPosition = useRef({ page: 1, x: 100, y: 80, pageWidth: 595, pageHeight: 842 });
 
   const onDrop = useCallback((files: File[]) => {
@@ -52,7 +54,18 @@ export default function Home() {
 
       const res = await fetch('/api/sign', { method: 'POST', body: fd });
       if (!res.ok) throw new Error();
-      setSignedPdfUrl(URL.createObjectURL(await res.blob()));
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      setSignedPdfUrl(url);
+
+      // Save to history
+      const reader = new FileReader();
+      reader.onload = () => {
+        saveToHistory(pdfFile!.name, blob.size, reader.result as string);
+        window.dispatchEvent(new Event('signmypdf:saved'));
+      };
+      reader.readAsDataURL(blob);
+
       setStep('done');
     } catch {
       alert('Error signing PDF. Please try again.');
@@ -282,7 +295,64 @@ export default function Home() {
             </div>
           </div>
         )}
+
       </div>
+
+      {/* File History — sticky bottom bar */}
+      <FileHistory onUpgrade={() => setShowPricing(true)} />
+
+      {/* Pricing modal */}
+      {showPricing && (
+        <div className="modal-overlay" onClick={() => setShowPricing(false)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
+            <div className="pricing-header">
+              <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
+              <h3 className="pricing-title">Unlock unlimited signatures</h3>
+              <p className="pricing-sub">Choose a plan to keep signing without limits.</p>
+            </div>
+            <div className="pricing-grid">
+              <div className="plan-card">
+                <div className="plan-name">Monthly</div>
+                <div className="plan-price">$4.99<span>/mo</span></div>
+                <div className="plan-desc">Billed monthly. Cancel anytime.</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited documents</li>
+                  <li>✓ Download history</li>
+                  <li>✓ Priority support</li>
+                </ul>
+                <button className="plan-btn">Get Monthly</button>
+              </div>
+              <div className="plan-card plan-featured">
+                <div className="plan-badge">Most Popular</div>
+                <div className="plan-name">Annual</div>
+                <div className="plan-price">$3.25<span>/mo</span></div>
+                <div className="plan-desc">$39/year — save 35%.</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited documents</li>
+                  <li>✓ Download history</li>
+                  <li>✓ Priority support</li>
+                  <li>✓ 1 year document storage</li>
+                </ul>
+                <button className="plan-btn plan-btn-featured">Get Annual — $39/yr</button>
+              </div>
+              <div className="plan-card">
+                <div className="plan-name">Lifetime</div>
+                <div className="plan-price">$79<span> once</span></div>
+                <div className="plan-desc">Pay once, use forever.</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited documents</li>
+                  <li>✓ Lifetime storage</li>
+                  <li>✓ All future features</li>
+                  <li>✓ Priority support forever</li>
+                </ul>
+                <button className="plan-btn">Get Lifetime</button>
+              </div>
+            </div>
+            <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
