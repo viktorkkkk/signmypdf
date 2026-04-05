@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
-import PDFPreview from './components/PDFPreview';
+import PlacementPicker, { zoneToPdfCoords } from './components/PlacementPicker';
 import Logo from './components/Logo';
 import FileHistory, { saveToHistory } from './components/FileHistory';
 
@@ -25,11 +25,29 @@ export default function Home() {
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
   const [showPricing, setShowPricing] = useState(false);
-  const signPosition = useRef({ page: 1, x: 100, y: 80, pageWidth: 595, pageHeight: 842 });
+  const [selectedZone, setSelectedZone] = useState(6); // default: bottom-left
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const signPosition = useRef({ page: 1, x: 50, y: 80, pageWidth: 595, pageHeight: 842 });
 
-  const onDrop = useCallback((files: File[]) => {
+  const onDrop = useCallback(async (files: File[]) => {
     const f = files[0];
-    if (f?.type === 'application/pdf') { setPdfFile(f); setStep('sign'); }
+    if (!f || f.type !== 'application/pdf') return;
+    setPdfFile(f);
+    // Detect page count cheaply via PDFDocument
+    try {
+      const { PDFDocument } = await import('pdf-lib');
+      const doc = await PDFDocument.load(await f.arrayBuffer());
+      const n = doc.getPageCount();
+      setTotalPages(n);
+      setSelectedPage(n); // default: last page
+      signPosition.current.page = n;
+      const page = doc.getPage(n - 1);
+      const { width, height } = page.getSize();
+      signPosition.current.pageWidth  = width;
+      signPosition.current.pageHeight = height;
+    } catch { setTotalPages(1); setSelectedPage(1); }
+    setStep('sign');
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -47,9 +65,10 @@ export default function Home() {
       fd.append('signatureData', signatureData);
       fd.append('typedName', typedName);
       fd.append('signMode', signMode);
-      fd.append('signPage', String(signPosition.current.page));
-      fd.append('signX', String(signPosition.current.x));
-      fd.append('signY', String(signPosition.current.y));
+      const coords = zoneToPdfCoords(selectedZone, signPosition.current.pageWidth, signPosition.current.pageHeight);
+      fd.append('signPage', String(selectedPage));
+      fd.append('signX', String(coords.x));
+      fd.append('signY', String(coords.y));
       fd.append('pageWidth', String(signPosition.current.pageWidth));
       fd.append('pageHeight', String(signPosition.current.pageHeight));
       fd.append('sigW', String(sigSize.current.w));
@@ -201,10 +220,7 @@ export default function Home() {
               {/* Right: PDF preview */}
               <div className="sign-right">
                 <div className="card">
-                  <div className="card-title">
-                    Document preview
-                    {signatureData && <span style={{ color: '#22c55e', marginLeft: 8, fontWeight: 600 }}>· drag to reposition</span>}
-                  </div>
+                  <div className="card-title">Where to place signature</div>
                   <div className="doc-row" style={{ marginBottom: 16 }}>
                     <div className="doc-badge">PDF</div>
                     <div>
@@ -212,15 +228,15 @@ export default function Home() {
                       <div className="doc-size">{pdfFile ? (pdfFile.size / 1024).toFixed(0) + ' KB' : ''}</div>
                     </div>
                   </div>
-                  {pdfFile && (
-                    <PDFPreview
-                      file={pdfFile}
-                      signatureDataUrl={previewSig}
-                      onPositionChange={(page, x, y, pw, ph) => {
-                        signPosition.current = { page, x, y, pageWidth: pw, pageHeight: ph };
-                      }}
-                    />
-                  )}
+                  <PlacementPicker
+                    signatureDataUrl={previewSig}
+                    fileName={pdfFile?.name ?? ''}
+                    totalPages={totalPages}
+                    selectedPage={selectedPage}
+                    onPageChange={(p) => { setSelectedPage(p); signPosition.current.page = p; }}
+                    selectedZone={selectedZone}
+                    onPlacement={setSelectedZone}
+                  />
                 </div>
               </div>
             </div>
