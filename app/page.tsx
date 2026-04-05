@@ -55,7 +55,11 @@ export default function Home() {
       fd.append('placementHPct', String(sigPlacement.current.hPct));
 
       const res = await fetch('/api/sign', { method: 'POST', body: fd });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const errText = await res.text().catch(() => 'unknown');
+        console.error('Sign API error:', res.status, errText);
+        throw new Error(errText);
+      }
       const blob = await res.blob();
       const url  = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
@@ -69,8 +73,9 @@ export default function Home() {
       reader.readAsDataURL(blob);
 
       setStep('done');
-    } catch {
-      alert('Error signing PDF. Please try again.');
+    } catch (err: any) {
+      console.error('handleSign error:', err);
+      alert('Error signing PDF: ' + (err?.message || 'unknown'));
     } finally {
       setIsProcessing(false);
     }
