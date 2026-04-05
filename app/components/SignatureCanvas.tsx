@@ -33,10 +33,12 @@ export default function SignatureCanvas({ onSave }: Props) {
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const rect = canvas.parentElement!.getBoundingClientRect();
-    const dpr  = window.devicePixelRatio || 1;
-    canvas.width  = rect.width * dpr;
-    canvas.height = 380 * dpr;
+    const parent = canvas.parentElement!;
+    const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
+    const cssH   = canvas.offsetHeight || 260;
+    const dpr    = window.devicePixelRatio || 1;
+    canvas.width  = cssW * dpr;
+    canvas.height = cssH * dpr;
     const ctx = canvas.getContext('2d')!;
     ctx.scale(dpr, dpr);
     ctx.strokeStyle = color;

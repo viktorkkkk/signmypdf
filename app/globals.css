@@ -683,10 +683,75 @@ body { padding-bottom: 160px; }
   display: inline-block;
 }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .sign-grid { grid-template-columns: 1fr; }
-  .features { grid-template-columns: 1fr; }
-  .hero-title { font-size: 28px; }
-  .progress-steps .step-label { display: none; }
+/* ── Mobile ── */
+@media (max-width: 680px) {
+
+  /* Header */
+  .header { padding: 12px 16px; }
+  .header-tag { display: none; }
+
+  /* Container */
+  .container { padding: 20px 16px 40px; }
+
+  /* Hero */
+  .hero-title { font-size: 26px; }
+  .hero-sub { font-size: 14px; margin-bottom: 24px; }
+  .dropzone { padding: 36px 20px; }
+  .dz-icon { width: 60px; height: 60px; font-size: 28px; }
+  .dz-title { font-size: 17px; }
+
+  /* Features — stacked horizontally */
+  .features { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .feat { padding: 14px 8px; }
+  .feat-icon { font-size: 22px; }
+  .feat-title { font-size: 11px; }
+  .feat-desc { font-size: 10px; }
+
+  /* Progress */
+  .progress-wrap { padding: 0 16px; margin-top: 16px; }
+  .step-label { display: none; }
+  .step-circle { width: 28px; height: 28px; font-size: 12px; }
+
+  /* Sign layout: PDF preview FIRST on mobile, then canvas */
+  .sign-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .sign-left  { order: 2; } /* canvas goes below */
+  .sign-right { order: 1; } /* PDF preview goes top */
+
+  /* Step header */
+  .step-title { font-size: 18px; }
+  .card { padding: 16px; }
+  .card-title { font-size: 12px; margin-bottom: 12px; }
+
+  /* Signature canvas — shorter on mobile */
+  .sig-canvas { height: 220px !important; }
+
+  /* Toolbar — wrap if needed */
+  .sig-toolbar { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
+
+  /* Buttons */
+  .done-btns { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-ghost { width: 100%; text-align: center; justify-content: center; }
+
+  /* Pricing */
+  .pricing-wrap { padding: 24px 16px; }
+  .pricing-title { font-size: 20px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .modal-box { padding: 24px 16px; border-radius: 16px; }
+
+  /* History bar — compact */
+  .history-wrap { padding: 10px 14px; }
+  .history-item { min-width: 180px; padding: 7px 10px; }
+  body { padding-bottom: 140px; }
+
+  /* Logo */
+  .logo > div:first-child { width: 40px !important; height: 40px !important; border-radius: 11px !important; }
+  .logo > div:last-child > div:first-child { font-size: 20px !important; }
+  .logo > div:last-child > div:last-child { font-size: 10px !important; }
+
+  /* Done */
+  .done-icon { width: 68px; height: 68px; font-size: 30px; }
+  .done-title { font-size: 26px; }
 }
