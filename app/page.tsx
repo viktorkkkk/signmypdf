@@ -3,7 +3,8 @@
 import { useState, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
-import PlacementPicker, { zoneToPdfCoords, PlacementState } from './components/PlacementPicker';
+import PDFViewer from './components/PDFViewer';
+import SavedSignatures, { saveSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
 import FileHistory, { saveToHistory } from './components/FileHistory';
 
@@ -25,30 +26,11 @@ export default function Home() {
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
   const [showPricing, setShowPricing] = useState(false);
-  const [selectedZone, setSelectedZone] = useState(6);
-  const [sigScale, setSigScale] = useState(1);
-  const [selectedPage, setSelectedPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const signPosition = useRef({ page: 1, x: 50, y: 80, pageWidth: 595, pageHeight: 842 });
+  const sigPlacement = useRef({ page: 1, xPct: 5, yPct: 75, wPct: 30, hPct: 12 });
 
-  const onDrop = useCallback(async (files: File[]) => {
+  const onDrop = useCallback((files: File[]) => {
     const f = files[0];
-    if (!f || f.type !== 'application/pdf') return;
-    setPdfFile(f);
-    // Detect page count cheaply via PDFDocument
-    try {
-      const { PDFDocument } = await import('pdf-lib');
-      const doc = await PDFDocument.load(await f.arrayBuffer());
-      const n = doc.getPageCount();
-      setTotalPages(n);
-      setSelectedPage(n); // default: last page
-      signPosition.current.page = n;
-      const page = doc.getPage(n - 1);
-      const { width, height } = page.getSize();
-      signPosition.current.pageWidth  = width;
-      signPosition.current.pageHeight = height;
-    } catch { setTotalPages(1); setSelectedPage(1); }
-    setStep('sign');
+    if (f?.type === 'application/pdf') { setPdfFile(f); setStep('sign'); }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -66,14 +48,11 @@ export default function Home() {
       fd.append('signatureData', signatureData);
       fd.append('typedName', typedName);
       fd.append('signMode', signMode);
-      const coords = zoneToPdfCoords(selectedZone, signPosition.current.pageWidth, signPosition.current.pageHeight, sigScale);
-      fd.append('signPage', String(selectedPage));
-      fd.append('signX', String(coords.x));
-      fd.append('signY', String(coords.y));
-      fd.append('pageWidth', String(signPosition.current.pageWidth));
-      fd.append('pageHeight', String(signPosition.current.pageHeight));
-      fd.append('sigW', String(sigSize.current.w * sigScale));
-      fd.append('sigH', String(sigSize.current.h * sigScale));
+      fd.append('signPage', String(sigPlacement.current.page));
+      fd.append('placementXPct', String(sigPlacement.current.xPct));
+      fd.append('placementYPct', String(sigPlacement.current.yPct));
+      fd.append('placementWPct', String(sigPlacement.current.wPct));
+      fd.append('placementHPct', String(sigPlacement.current.hPct));
 
       const res = await fetch('/api/sign', { method: 'POST', body: fd });
       if (!res.ok) throw new Error();
@@ -168,79 +147,66 @@ export default function Home() {
           <div>
             <div className="step-header">
               <button className="back-btn" onClick={reset}>← Back</button>
-              <h2 className="step-title">Add your signature</h2>
-            </div>
-
-            <div className="sign-layout">
-              {/* Left: draw signature */}
-              <div className="sign-left">
-                <div className="card">
-                  <div className="card-title">Your signature</div>
-                  <div className="tabs">
-                    <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')}>✏️ Draw</button>
-                    <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type name</button>
-                  </div>
-
-                  {signMode === 'draw' && <SignatureCanvas onSave={(url, w, h) => { setSignatureData(url); sigSize.current = { w, h }; }} />}
-
-                  {signMode === 'type' && (
-                    <div>
-                      <input
-                        type="text"
-                        className="type-input"
-                        placeholder="Your full name"
-                        value={typedName}
-                        onChange={e => setTypedName(e.target.value)}
-                      />
-                      {typedName && (
-                        <div className="type-preview">
-                          <span className="type-preview-text">{typedName}</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  className="btn-primary full"
-                  style={{ padding: '16px', fontSize: 16, borderRadius: 16, marginTop: 4 }}
-                  onClick={handleSign}
-                  disabled={isProcessing || !canSign}
-                >
-                  {isProcessing
-                    ? <><span className="spinner" /> Signing your PDF...</>
-                    : '✍️  Sign & Download'}
-                </button>
-                {!canSign && (
-                  <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center' }}>
-                    {signMode === 'draw' ? '↑ Draw your signature above first' : '↑ Type your name above first'}
-                  </p>
-                )}
-              </div>
-
-              {/* Right: PDF preview */}
-              <div className="sign-right">
-                <div className="card">
-                  <div className="card-title">Where to place signature</div>
-                  <div className="doc-row" style={{ marginBottom: 16 }}>
-                    <div className="doc-badge">PDF</div>
-                    <div>
-                      <div className="doc-name">{pdfFile?.name}</div>
-                      <div className="doc-size">{pdfFile ? (pdfFile.size / 1024).toFixed(0) + ' KB' : ''}</div>
-                    </div>
-                  </div>
-                  <PlacementPicker
-                    signatureDataUrl={previewSig}
-                    totalPages={totalPages}
-                    selectedPage={selectedPage}
-                    onPageChange={(p) => { setSelectedPage(p); signPosition.current.page = p; }}
-                    selectedZone={selectedZone}
-                    sigScale={sigScale}
-                    onPlacement={(zone, scale) => { setSelectedZone(zone); setSigScale(scale); }}
-                  />
-                </div>
+              <h2 className="step-title">Sign your document</h2>
+              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div className="doc-badge" style={{ width: 28, height: 28, fontSize: 8 }}>PDF</div>
+                <span style={{ fontSize: 13, color: '#64748b', maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
               </div>
             </div>
+
+            {/* 1. SIGNATURE AREA (top) */}
+            <div className="card" style={{ marginBottom: 16 }}>
+              <div className="card-title">1. Create your signature</div>
+              <div className="tabs">
+                <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')}>✏️ Draw</button>
+                <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type</button>
+              </div>
+
+              {signMode === 'draw' && <SignatureCanvas onSave={(url, w, h) => { setSignatureData(url); sigSize.current = { w, h }; }} />}
+
+              {signMode === 'type' && (
+                <div>
+                  <input type="text" className="type-input" placeholder="Your full name"
+                    value={typedName} onChange={e => setTypedName(e.target.value)} />
+                  {typedName && <div className="type-preview"><span className="type-preview-text">{typedName}</span></div>}
+                </div>
+              )}
+
+              {/* Saved signatures */}
+              <div style={{ marginTop: 14 }}>
+                <SavedSignatures
+                  currentSig={signatureData}
+                  onSelect={(url) => { setSignatureData(url); setSignMode('draw'); }}
+                  onSaveCurrent={() => { if (signatureData) { saveSig(signatureData); window.dispatchEvent(new Event('signmypdf:sigs')); } }}
+                />
+              </div>
+            </div>
+
+            {/* 2. DOCUMENT PREVIEW (below) */}
+            <div className="card" style={{ marginBottom: 16 }}>
+              <div className="card-title">2. Place signature on document</div>
+              {pdfFile && (
+                <PDFViewer
+                  file={pdfFile}
+                  signatureDataUrl={previewSig}
+                  onPosition={(page, xPct, yPct, wPct, hPct) => {
+                    sigPlacement.current = { page, xPct, yPct, wPct, hPct };
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Sign button */}
+            <button
+              className="btn-primary full"
+              style={{ padding: '16px', fontSize: 16, borderRadius: 16 }}
+              onClick={handleSign}
+              disabled={isProcessing || !canSign}
+            >
+              {isProcessing
+                ? <><span className="spinner" /> Signing...</>
+                : '✍️  Sign & Download'}
+            </button>
           </div>
         )}
 

@@ -3,50 +3,57 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const pdfFile   = formData.get('pdf') as File;
-    const signatureData = formData.get('signatureData') as string;
-    const typedName     = formData.get('typedName') as string;
-    const signMode      = formData.get('signMode') as string;
-    const signPage      = parseInt(formData.get('signPage') as string) || 1;
-    const signX         = parseFloat(formData.get('signX') as string) || 80;
-    const signY         = parseFloat(formData.get('signY') as string) || 80;
-    // Actual cropped signature dimensions in CSS px → convert to PDF pt (96dpi→72pt)
-    const sigWpx        = parseFloat(formData.get('sigW') as string) || 0;
-    const sigHpx        = parseFloat(formData.get('sigH') as string) || 0;
-    const PX_TO_PT      = 72 / 96;
-    // Clamp to reasonable range keeping aspect ratio
-    const maxSigW       = 220;
-    const rawW          = sigWpx > 0 ? sigWpx * PX_TO_PT : 160;
-    const rawH          = sigHpx > 0 ? sigHpx * PX_TO_PT : 50;
-    const scale         = rawW > maxSigW ? maxSigW / rawW : 1;
-    const sigW          = rawW  * scale;
-    const sigH          = rawH  * scale;
+    const fd          = await req.formData();
+    const pdfFile     = fd.get('pdf') as File;
+    const sigData     = fd.get('signatureData') as string;
+    const typedName   = fd.get('typedName') as string;
+    const signMode    = fd.get('signMode') as string;
+    const signPage    = parseInt(fd.get('signPage') as string) || 1;
+
+    // Position as % of page (from top-left of rendered view)
+    const xPct = parseFloat(fd.get('placementXPct') as string) || 5;
+    const yPct = parseFloat(fd.get('placementYPct') as string) || 75;
+    const wPct = parseFloat(fd.get('placementWPct') as string) || 30;
+    const hPct = parseFloat(fd.get('placementHPct') as string) || 12;
 
     if (!pdfFile) return NextResponse.json({ error: 'No PDF' }, { status: 400 });
 
-    const pdfBytes = await pdfFile.arrayBuffer();
-    const pdfDoc   = await PDFDocument.load(pdfBytes);
-    const pages    = pdfDoc.getPages();
+    const pdfDoc = await PDFDocument.load(await pdfFile.arrayBuffer());
+    const pages  = pdfDoc.getPages();
+    const pageIdx = Math.min(Math.max(signPage - 1, 0), pages.length - 1);
+    const page   = pages[pageIdx];
+    const { width: pw, height: ph } = page.getSize();
 
-    // Use specified page (1-indexed), fallback to last
-    const pageIndex = Math.min(Math.max(signPage - 1, 0), pages.length - 1);
-    const page = pages[pageIndex];
-    const { height } = page.getSize();
+    // Convert: xPct/yPct are from top-left of page (CSS coords)
+    // PDF coords: origin bottom-left
+    const sigW = (wPct / 100) * pw;
+    const sigH = (hPct / 100) * ph;
+    const pdfX = (xPct / 100) * pw;
+    const pdfY = ph - ((yPct / 100) * ph) - sigH; // flip Y
 
-    if (signMode === 'draw' && signatureData?.startsWith('data:image/png')) {
-      const base64 = signatureData.split(',')[1];
+    if (signMode === 'draw' && sigData?.startsWith('data:image/png')) {
+      const base64   = sigData.split(',')[1];
       const imgBytes = Buffer.from(base64, 'base64');
-      const img = await pdfDoc.embedPng(imgBytes);
-      const drawY = Math.max(10, Math.min(height - sigH - 10, signY));
-      page.drawImage(img, { x: signX, y: drawY, width: sigW, height: sigH, opacity: 0.95 });
+      const img      = await pdfDoc.embedPng(imgBytes);
+      page.drawImage(img, {
+        x: Math.max(0, pdfX),
+        y: Math.max(0, pdfY),
+        width:  Math.min(sigW, pw),
+        height: Math.min(sigH, ph),
+        opacity: 0.95,
+      });
     } else if (signMode === 'type' && typedName) {
       const font = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
-      const drawY = Math.max(10, Math.min(height - 40, signY));
-      page.drawText(typedName, { x: signX, y: drawY, size: 26, font, color: rgb(0.07, 0.22, 0.55), opacity: 0.92 });
+      const fontSize = Math.max(10, Math.min(40, sigH * 0.6));
+      page.drawText(typedName, {
+        x: Math.max(0, pdfX),
+        y: Math.max(0, pdfY + sigH * 0.2),
+        size: fontSize, font,
+        color: rgb(0.07, 0.22, 0.55),
+        opacity: 0.92,
+      });
     }
 
-    pdfDoc.setModificationDate(new Date());
     const signed = await pdfDoc.save();
     return new NextResponse(Buffer.from(signed), {
       status: 200,
@@ -57,6 +64,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: 'Failed to sign PDF' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }
