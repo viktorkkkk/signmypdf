@@ -11,7 +11,7 @@ body {
 .header {
   background: white;
   border-bottom: 1px solid #e2e8f0;
-  padding: 14px 24px;
+  padding: 20px 32px;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -49,11 +49,12 @@ body {
 }
 .logo-name span { color: #2563eb; }
 .header-tag {
-  font-size: 12px;
-  color: #94a3b8;
+  font-size: 14px;
+  color: #64748b;
   background: #f1f5f9;
-  padding: 4px 10px;
+  padding: 8px 16px;
   border-radius: 20px;
+  font-weight: 500;
 }
 
 /* ── Progress bar ── */
@@ -475,6 +476,82 @@ body {
 }
 .upsell-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
 .upsell-fine { font-size: 12px; color: #93c5fd; margin-top: 10px; }
+
+/* ── Pricing ── */
+.pricing-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+  border: 1px solid #f1f5f9;
+}
+.pricing-header { text-align: center; margin-bottom: 32px; }
+.pricing-title { font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+.pricing-sub { font-size: 15px; color: #64748b; }
+.pricing-fine { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+.plan-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px 20px;
+  position: relative;
+  transition: all 0.2s;
+  text-align: center;
+}
+.plan-card:hover { border-color: #93c5fd; box-shadow: 0 4px 20px rgba(37,99,235,0.1); }
+
+.plan-featured {
+  border-color: #2563eb;
+  background: linear-gradient(180deg, #eff6ff 0%, #fff 60%);
+  box-shadow: 0 8px 32px rgba(37,99,235,0.15);
+}
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.plan-name { font-size: 14px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.plan-price { font-size: 36px; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 6px; }
+.plan-price span { font-size: 15px; font-weight: 500; color: #94a3b8; }
+.plan-desc { font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+.plan-perks { list-style: none; text-align: left; font-size: 13px; color: #475569; display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.plan-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.plan-btn:hover { background: #eff6ff; border-color: #93c5fd; }
+.plan-btn-featured {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+}
+.plan-btn-featured:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); background: linear-gradient(135deg, #2563eb, #4f46e5); }
 .upsell-perks {
   display: flex;
   justify-content: center;
