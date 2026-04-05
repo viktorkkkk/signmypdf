@@ -27,6 +27,8 @@ export default function SignatureCanvas({ onSave }: Props) {
   const [isEmpty, setIsEmpty]     = useState(true);
   const [color, setColor]         = useState(COLORS[0].value);
   const [width, setWidth]         = useState(3);
+  const colorRef = useRef(COLORS[0].value);
+  const widthRef = useRef(3);
   const lastPos  = useRef<{ x: number; y: number } | null>(null);
   const strokes  = useRef<ImageData[]>([]);
 
@@ -47,15 +49,61 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineJoin    = 'round';
   }, []);
 
-  useEffect(() => { initCanvas(); }, [initCanvas]);
-
-  // Apply color/width changes to context
   useEffect(() => {
+    initCanvas();
+    // Attach touch listeners as non-passive so preventDefault() actually works
+    const canvas = canvasRef.current!;
+    const onTouchStart = (e: TouchEvent) => { e.preventDefault(); startDrawingTouch(e); };
+    const onTouchMove  = (e: TouchEvent) => { e.preventDefault(); drawTouch(e); };
+    const onTouchEnd   = (e: TouchEvent) => { e.preventDefault(); stopDrawing(); };
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchmove',  onTouchMove,  { passive: false });
+    canvas.addEventListener('touchend',   onTouchEnd,   { passive: false });
+    return () => {
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove',  onTouchMove);
+      canvas.removeEventListener('touchend',   onTouchEnd);
+    };
+  }, [initCanvas]);
+
+  // Sync refs + apply to context
+  useEffect(() => {
+    colorRef.current = color;
+    widthRef.current = width;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.strokeStyle = color;
     ctx.lineWidth   = width;
   }, [color, width]);
+
+  // Native touch helpers (called from non-passive DOM listeners)
+  const getTouchPos = (e: TouchEvent) => {
+    const canvas = canvasRef.current!;
+    const rect   = canvas.getBoundingClientRect();
+    const dpr    = window.devicePixelRatio || 1;
+    return {
+      x: (e.touches[0].clientX - rect.left) * (canvas.width  / dpr / rect.width),
+      y: (e.touches[0].clientY - rect.top)  * (canvas.height / dpr / rect.height),
+    };
+  };
+  const startDrawingTouch = (e: TouchEvent) => {
+    saveStroke();
+    setIsDrawing(true);
+    lastPos.current = getTouchPos(e);
+  };
+  const drawTouch = (e: TouchEvent) => {
+    if (!lastPos.current) return;
+    const ctx = canvasRef.current!.getContext('2d')!;
+    ctx.strokeStyle = colorRef.current;
+    ctx.lineWidth   = widthRef.current;
+    const pos = getTouchPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastPos.current.x, lastPos.current.y);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastPos.current = pos;
+    setIsEmpty(false);
+  };
 
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current!;
@@ -196,7 +244,6 @@ export default function SignatureCanvas({ onSave }: Props) {
           className="sig-canvas"
           style={{ height: '380px' }}
           onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing}
         />
         <div className="sig-baseline" />
         <div className="sig-baseline-label">Sign here</div>
