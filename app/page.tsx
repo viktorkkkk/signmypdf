@@ -1,56 +1,49 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
 
+type Step = 'upload' | 'sign' | 'done';
+
+const STEPS = [
+  { id: 'upload', label: 'Upload PDF' },
+  { id: 'sign',   label: 'Add Signature' },
+  { id: 'done',   label: 'Download' },
+];
+
 export default function Home() {
-  const [step, setStep] = useState<'upload' | 'sign' | 'done'>('upload');
+  const [step, setStep] = useState<Step>('upload');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [signedPdfUrl, setSignedPdfUrl] = useState<string | null>(null);
-  const [signatureData, setSignatureData] = useState<string>('');
+  const [signatureData, setSignatureData] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (file && file.type === 'application/pdf') {
-      setPdfFile(file);
-      setStep('sign');
-    }
+  const onDrop = useCallback((files: File[]) => {
+    const f = files[0];
+    if (f?.type === 'application/pdf') { setPdfFile(f); setStep('sign'); }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'application/pdf': ['.pdf'] },
-    maxFiles: 1,
+    onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1,
   });
 
-  const handleSign = async () => {
-    if (!pdfFile) return;
-    if (signMode === 'draw' && !signatureData) {
-      alert('Please draw your signature first');
-      return;
-    }
-    if (signMode === 'type' && !typedName.trim()) {
-      alert('Please type your name first');
-      return;
-    }
+  const canSign = signMode === 'draw' ? !!signatureData : !!typedName.trim();
 
+  const handleSign = async () => {
+    if (!pdfFile || !canSign) return;
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append('pdf', pdfFile);
-      formData.append('signatureData', signatureData);
-      formData.append('typedName', typedName);
-      formData.append('signMode', signMode);
-
-      const response = await fetch('/api/sign', { method: 'POST', body: formData });
-      if (!response.ok) throw new Error('Signing failed');
-
-      const blob = await response.blob();
-      setSignedPdfUrl(URL.createObjectURL(blob));
+      const fd = new FormData();
+      fd.append('pdf', pdfFile);
+      fd.append('signatureData', signatureData);
+      fd.append('typedName', typedName);
+      fd.append('signMode', signMode);
+      const res = await fetch('/api/sign', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error();
+      setSignedPdfUrl(URL.createObjectURL(await res.blob()));
       setStep('done');
     } catch {
       alert('Error signing PDF. Please try again.');
@@ -59,150 +52,190 @@ export default function Home() {
     }
   };
 
-  const handleReset = () => {
-    setPdfFile(null);
-    setSignedPdfUrl(null);
-    setSignatureData('');
-    setTypedName('');
-    setStep('upload');
+  const reset = () => {
+    setPdfFile(null); setSignedPdfUrl(null);
+    setSignatureData(''); setTypedName(''); setStep('upload');
   };
 
-  const canSign = signMode === 'draw' ? !!signatureData : !!typedName.trim();
+  const stepIndex = STEPS.findIndex(s => s.id === step);
 
   return (
     <>
+      {/* Header */}
       <header className="header">
         <div className="header-inner">
-          <div className="logo">
-            <div className="logo-icon">✍️</div>
-            <span className="logo-text">SignMyPDF</span>
-          </div>
-          <span className="header-badge">Free · Secure · Instant</span>
+          <a href="/" className="logo">
+            <div className="logo-mark">✍</div>
+            <span className="logo-name">Sign<span>My</span>PDF</span>
+          </a>
+          <span className="header-tag">🔒 Free · Secure · No registration</span>
         </div>
       </header>
 
+      {/* Progress */}
+      {step !== 'upload' && (
+        <div className="progress-wrap">
+          <div className="progress-steps">
+            {STEPS.map((s, i) => {
+              const state = i < stepIndex ? 'done' : i === stepIndex ? 'active' : 'idle';
+              return (
+                <div className="progress-step" key={s.id}>
+                  <div className={`step-circle ${state}`}>
+                    {state === 'done' ? '✓' : i + 1}
+                  </div>
+                  <span className={`step-label ${state}`}>{s.label}</span>
+                  {i < STEPS.length - 1 && <div className={`step-line ${state === 'done' ? 'done' : ''}`} />}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="container">
 
-        {/* UPLOAD */}
+        {/* ── UPLOAD ── */}
         {step === 'upload' && (
           <div>
             <h1 className="hero-title">Sign your PDF in seconds</h1>
-            <p className="hero-sub">No registration. No software. Just upload, sign, and download.</p>
+            <p className="hero-sub">No registration. No software. Upload, sign, download — done.</p>
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
-              <div className="dropzone-icon">📄</div>
-              <p className="dropzone-title">{isDragActive ? 'Drop your PDF here' : 'Drop your PDF here'}</p>
-              <p className="dropzone-sub">or click to browse files</p>
+              <div className="dz-icon">📄</div>
+              <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
+              <p className="dz-sub">or click to select a file from your computer</p>
               <button className="btn-primary" type="button">Choose PDF file</button>
             </div>
 
             <div className="features">
               {[
-                { icon: '⚡', title: 'Instant', desc: 'Sign in under 30 seconds' },
-                { icon: '🔒', title: 'Secure', desc: 'Files stay in your browser' },
-                { icon: '✅', title: 'Legal', desc: 'Legally binding e-signature' },
+                { icon: '⚡', title: 'Instant signing', desc: 'Done in under 30 seconds' },
+                { icon: '🔒', title: 'Private & secure', desc: 'File stays in your browser' },
+                { icon: '✅', title: 'Legally binding', desc: 'Accepted worldwide' },
               ].map(f => (
-                <div className="feature-card" key={f.title}>
-                  <div className="feature-icon">{f.icon}</div>
-                  <div className="feature-title">{f.title}</div>
-                  <div className="feature-desc">{f.desc}</div>
+                <div className="feat" key={f.title}>
+                  <div className="feat-icon">{f.icon}</div>
+                  <div className="feat-title">{f.title}</div>
+                  <div className="feat-desc">{f.desc}</div>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* SIGN */}
+        {/* ── SIGN ── */}
         {step === 'sign' && (
           <div>
             <div className="step-header">
-              <button className="back-btn" onClick={handleReset}>← Back</button>
+              <button className="back-btn" onClick={reset}>← Back</button>
               <h2 className="step-title">Add your signature</h2>
             </div>
 
             <div className="sign-grid">
-              {/* Left: Signature */}
+              {/* Signature panel */}
               <div className="card">
+                <div className="card-title">Your signature</div>
                 <div className="tabs">
                   <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')}>✏️ Draw</button>
-                  <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type</button>
+                  <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type name</button>
                 </div>
 
-                {signMode === 'draw' && (
-                  <SignatureCanvas onSave={setSignatureData} />
-                )}
+                {signMode === 'draw' && <SignatureCanvas onSave={setSignatureData} />}
 
                 {signMode === 'type' && (
                   <div>
                     <input
                       type="text"
                       className="type-input"
-                      placeholder="Type your full name"
+                      placeholder="Your full name"
                       value={typedName}
                       onChange={e => setTypedName(e.target.value)}
                     />
                     {typedName && (
                       <div className="type-preview">
-                        <div className="type-preview-label">Preview:</div>
-                        <div className="type-preview-text">{typedName}</div>
+                        <span className="type-preview-text">{typedName}</span>
                       </div>
                     )}
                   </div>
                 )}
               </div>
 
-              {/* Right: Doc + Button */}
-              <div className="sign-right">
+              {/* Right panel */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="card">
-                  <div style={{ fontWeight: 600, color: '#475569', marginBottom: 12 }}>Document</div>
-                  <div className="doc-info">
-                    <div className="doc-icon">PDF</div>
+                  <div className="card-title">Document</div>
+                  <div className="doc-row">
+                    <div className="doc-badge">PDF</div>
                     <div>
                       <div className="doc-name">{pdfFile?.name}</div>
                       <div className="doc-size">{pdfFile ? (pdfFile.size / 1024).toFixed(0) + ' KB' : ''}</div>
                     </div>
                   </div>
+                  <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5 }}>
+                    Your signature will be placed at the bottom of the last page.
+                  </p>
                 </div>
 
                 <button
-                  className="btn-primary"
-                  style={{ width: '100%', padding: '16px', fontSize: 17, borderRadius: 16, boxShadow: canSign ? '0 8px 24px rgba(37,99,235,0.3)' : 'none' }}
+                  className={`btn-primary full`}
+                  style={{ padding: '16px', fontSize: 16, borderRadius: 16 }}
                   onClick={handleSign}
                   disabled={isProcessing || !canSign}
                 >
-                  {isProcessing ? <><span className="spinner" />Signing...</> : '✍️ Sign Document'}
+                  {isProcessing
+                    ? <><span className="spinner" /> Signing your PDF...</>
+                    : '✍️  Sign & Download'}
                 </button>
+
+                {!canSign && (
+                  <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: -8 }}>
+                    {signMode === 'draw' ? 'Draw your signature above first' : 'Type your name above first'}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* DONE */}
+        {/* ── DONE ── */}
         {step === 'done' && (
-          <div className="done-center">
-            <div className="done-icon">✅</div>
+          <div className="done-wrap">
+            <div className="done-icon">🎉</div>
             <h2 className="done-title">Document signed!</h2>
-            <p className="done-sub">Your PDF has been signed successfully.</p>
+            <p className="done-sub">Your PDF is ready to download and send.</p>
 
-            <div className="done-actions">
-              <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '14px 32px', fontSize: 16 }}>
-                ⬇️ Download Signed PDF
+            <div className="done-btns">
+              <a
+                href={signedPdfUrl!}
+                download={`signed-${pdfFile?.name}`}
+                className="btn-primary"
+                style={{ padding: '15px 36px', fontSize: 16 }}
+              >
+                ⬇️  Download Signed PDF
               </a>
-              <button className="btn-secondary" style={{ padding: '14px 32px', fontSize: 16 }} onClick={handleReset}>
+              <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
 
+            {/* Upsell */}
             <div className="upsell">
               <div className="upsell-emoji">🚀</div>
-              <div className="upsell-title">Sign unlimited documents</div>
-              <div className="upsell-sub">You've used your free document. Get unlimited signatures for just $4.99/month.</div>
-              <button className="upsell-btn">Upgrade — $4.99/month</button>
-              <div className="upsell-fine">Cancel anytime. No hidden fees.</div>
+              <div className="upsell-title">Want unlimited signatures?</div>
+              <div className="upsell-sub">You've used your free document today. Upgrade for unlimited signing, no limits, ever.</div>
+              <div className="upsell-price">$4.99 <span>/ month</span></div>
+              <div className="upsell-perks">
+                <span className="upsell-perk">✓ Unlimited documents</span>
+                <span className="upsell-perk">✓ Download history</span>
+                <span className="upsell-perk">✓ Priority support</span>
+              </div>
+              <button className="upsell-btn">Upgrade now — $4.99/mo</button>
+              <div className="upsell-fine">Cancel anytime · No hidden fees · Instant access</div>
             </div>
           </div>
         )}
+
       </div>
     </>
   );
