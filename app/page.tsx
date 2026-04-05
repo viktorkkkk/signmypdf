@@ -146,12 +146,13 @@ export default function Home() {
         {step === 'sign' && (
           <div>
             <div className="step-header">
-              <button className="back-btn" onClick={reset}>← Back</button>
               <h2 className="step-title">Sign your document</h2>
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div className="doc-badge" style={{ width: 28, height: 28, fontSize: 8 }}>PDF</div>
-                <span style={{ fontSize: 13, color: '#64748b', maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
-              </div>
+            </div>
+            {/* File bar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '10px 14px', marginBottom: 16 }}>
+              <div className="doc-badge" style={{ width: 32, height: 32, fontSize: 9, flexShrink: 0 }}>PDF</div>
+              <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
+              <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>🔄 Change file</button>
             </div>
 
             {/* 1. SIGNATURE AREA (top) */}
