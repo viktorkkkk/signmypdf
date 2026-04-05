@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
-import PlacementPicker, { zoneToPdfCoords } from './components/PlacementPicker';
+import PlacementPicker, { zoneToPdfCoords, PlacementState } from './components/PlacementPicker';
 import Logo from './components/Logo';
 import FileHistory, { saveToHistory } from './components/FileHistory';
 
@@ -25,7 +25,8 @@ export default function Home() {
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
   const [showPricing, setShowPricing] = useState(false);
-  const [selectedZone, setSelectedZone] = useState(6); // default: bottom-left
+  const [selectedZone, setSelectedZone] = useState(6);
+  const [sigScale, setSigScale] = useState(1);
   const [selectedPage, setSelectedPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const signPosition = useRef({ page: 1, x: 50, y: 80, pageWidth: 595, pageHeight: 842 });
@@ -65,14 +66,14 @@ export default function Home() {
       fd.append('signatureData', signatureData);
       fd.append('typedName', typedName);
       fd.append('signMode', signMode);
-      const coords = zoneToPdfCoords(selectedZone, signPosition.current.pageWidth, signPosition.current.pageHeight);
+      const coords = zoneToPdfCoords(selectedZone, signPosition.current.pageWidth, signPosition.current.pageHeight, sigScale);
       fd.append('signPage', String(selectedPage));
       fd.append('signX', String(coords.x));
       fd.append('signY', String(coords.y));
       fd.append('pageWidth', String(signPosition.current.pageWidth));
       fd.append('pageHeight', String(signPosition.current.pageHeight));
-      fd.append('sigW', String(sigSize.current.w));
-      fd.append('sigH', String(sigSize.current.h));
+      fd.append('sigW', String(sigSize.current.w * sigScale));
+      fd.append('sigH', String(sigSize.current.h * sigScale));
 
       const res = await fetch('/api/sign', { method: 'POST', body: fd });
       if (!res.ok) throw new Error();
@@ -230,12 +231,12 @@ export default function Home() {
                   </div>
                   <PlacementPicker
                     signatureDataUrl={previewSig}
-                    fileName={pdfFile?.name ?? ''}
                     totalPages={totalPages}
                     selectedPage={selectedPage}
                     onPageChange={(p) => { setSelectedPage(p); signPosition.current.page = p; }}
                     selectedZone={selectedZone}
-                    onPlacement={setSelectedZone}
+                    sigScale={sigScale}
+                    onPlacement={(zone, scale) => { setSelectedZone(zone); setSigScale(scale); }}
                   />
                 </div>
               </div>

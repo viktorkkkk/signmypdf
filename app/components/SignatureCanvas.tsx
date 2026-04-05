@@ -25,6 +25,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isEmpty, setIsEmpty]     = useState(true);
+  const isEmptyRef = useRef(true); // sync ref to avoid async stale closure
   const [color, setColor]         = useState(COLORS[0].value);
   const [width, setWidth]         = useState(3);
   const colorRef = useRef(COLORS[0].value);
@@ -102,7 +103,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
     lastPos.current = pos;
-    setIsEmpty(false);
+    setIsEmpty(false); isEmptyRef.current = false;
   };
 
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
@@ -145,6 +146,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.stroke();
     lastPos.current = pos;
     setIsEmpty(false);
+    isEmptyRef.current = false;
   };
 
   // Crop canvas to tight bounding box around drawn content
@@ -174,10 +176,9 @@ export default function SignatureCanvas({ onSave }: Props) {
   };
 
   const stopDrawing = () => {
-    if (!isDrawing) return;
     setIsDrawing(false);
     lastPos.current = null;
-    if (!isEmpty) {
+    if (!isEmptyRef.current) {
       const { dataUrl, w, h } = getCropped();
       onSave(dataUrl, w, h);
     }
@@ -190,7 +191,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.putImageData(strokes.current.pop()!, 0, 0);
     const data  = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     const blank = !data.some(v => v !== 0);
-    setIsEmpty(blank);
+    setIsEmpty(blank); isEmptyRef.current = blank;
     if (blank) { onSave('', 0, 0); }
     else { const c = getCropped(); onSave(c.dataUrl, c.w, c.h); }
   };
@@ -200,7 +201,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     const ctx    = canvas.getContext('2d')!;
     saveStroke();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setIsEmpty(true);
+    setIsEmpty(true); isEmptyRef.current = true;
     strokes.current = [];
     onSave('', 0, 0);
   };
