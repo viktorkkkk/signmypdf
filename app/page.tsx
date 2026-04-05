@@ -7,6 +7,7 @@ import PDFViewer from './components/PDFViewer';
 import SavedSignatures, { saveSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
 import FileHistory, { saveToHistory } from './components/FileHistory';
+import { signPdfInBrowser } from './utils/signPdf';
 
 type Step = 'upload' | 'sign' | 'done';
 
@@ -43,25 +44,19 @@ export default function Home() {
     if (!pdfFile || !canSign) return;
     setIsProcessing(true);
     try {
-      const fd = new FormData();
-      fd.append('pdf', pdfFile);
-      fd.append('signatureData', signatureData);
-      fd.append('typedName', typedName);
-      fd.append('signMode', signMode);
-      fd.append('signPage', String(sigPlacement.current.page));
-      fd.append('placementXPct', String(sigPlacement.current.xPct));
-      fd.append('placementYPct', String(sigPlacement.current.yPct));
-      fd.append('placementWPct', String(sigPlacement.current.wPct));
-      fd.append('placementHPct', String(sigPlacement.current.hPct));
-
-      const res = await fetch('/api/sign', { method: 'POST', body: fd });
-      if (!res.ok) {
-        const errText = await res.text().catch(() => 'unknown');
-        console.error('Sign API error:', res.status, errText);
-        throw new Error(errText);
-      }
-      const blob = await res.blob();
-      const url  = URL.createObjectURL(blob);
+      // 100% client-side — no server, no size limits
+      const blob = await signPdfInBrowser({
+        pdfFile,
+        signatureDataUrl: signatureData,
+        typedName,
+        signMode: signMode as 'draw' | 'type',
+        page:  sigPlacement.current.page,
+        xPct:  sigPlacement.current.xPct,
+        yPct:  sigPlacement.current.yPct,
+        wPct:  sigPlacement.current.wPct,
+        hPct:  sigPlacement.current.hPct,
+      });
+      const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
       // Save to history
