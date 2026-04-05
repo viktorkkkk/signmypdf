@@ -20,6 +20,7 @@ export default function Home() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [signedPdfUrl, setSignedPdfUrl] = useState<string | null>(null);
   const [signatureData, setSignatureData] = useState('');
+  const sigSize = useRef({ w: 0, h: 0 });
   const [isProcessing, setIsProcessing] = useState(false);
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
@@ -51,6 +52,8 @@ export default function Home() {
       fd.append('signY', String(signPosition.current.y));
       fd.append('pageWidth', String(signPosition.current.pageWidth));
       fd.append('pageHeight', String(signPosition.current.pageHeight));
+      fd.append('sigW', String(sigSize.current.w));
+      fd.append('sigH', String(sigSize.current.h));
 
       const res = await fetch('/api/sign', { method: 'POST', body: fd });
       if (!res.ok) throw new Error();
@@ -158,7 +161,7 @@ export default function Home() {
                     <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type name</button>
                   </div>
 
-                  {signMode === 'draw' && <SignatureCanvas onSave={setSignatureData} />}
+                  {signMode === 'draw' && <SignatureCanvas onSave={(url, w, h) => { setSignatureData(url); sigSize.current = { w, h }; }} />}
 
                   {signMode === 'type' && (
                     <div>

@@ -11,6 +11,17 @@ export async function POST(req: NextRequest) {
     const signPage      = parseInt(formData.get('signPage') as string) || 1;
     const signX         = parseFloat(formData.get('signX') as string) || 80;
     const signY         = parseFloat(formData.get('signY') as string) || 80;
+    // Actual cropped signature dimensions in CSS px → convert to PDF pt (96dpi→72pt)
+    const sigWpx        = parseFloat(formData.get('sigW') as string) || 0;
+    const sigHpx        = parseFloat(formData.get('sigH') as string) || 0;
+    const PX_TO_PT      = 72 / 96;
+    // Clamp to reasonable range keeping aspect ratio
+    const maxSigW       = 220;
+    const rawW          = sigWpx > 0 ? sigWpx * PX_TO_PT : 160;
+    const rawH          = sigHpx > 0 ? sigHpx * PX_TO_PT : 50;
+    const scale         = rawW > maxSigW ? maxSigW / rawW : 1;
+    const sigW          = rawW  * scale;
+    const sigH          = rawH  * scale;
 
     if (!pdfFile) return NextResponse.json({ error: 'No PDF' }, { status: 400 });
 
@@ -27,9 +38,6 @@ export async function POST(req: NextRequest) {
       const base64 = signatureData.split(',')[1];
       const imgBytes = Buffer.from(base64, 'base64');
       const img = await pdfDoc.embedPng(imgBytes);
-      const sigW = 160;
-      const sigH = 50;
-      // signY is already in PDF coords (origin bottom-left)
       const drawY = Math.max(10, Math.min(height - sigH - 10, signY));
       page.drawImage(img, { x: signX, y: drawY, width: sigW, height: sigH, opacity: 0.95 });
     } else if (signMode === 'type' && typedName) {

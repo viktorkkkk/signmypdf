@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 interface Props {
-  onSave: (dataUrl: string) => void;
+  onSave: (dataUrl: string, width: number, height: number) => void;
 }
 
 const COLORS = [
@@ -97,11 +97,40 @@ export default function SignatureCanvas({ onSave }: Props) {
     setIsEmpty(false);
   };
 
+  // Crop canvas to tight bounding box around drawn content
+  const getCropped = (): { dataUrl: string; w: number; h: number } => {
+    const canvas = canvasRef.current!;
+    const ctx    = canvas.getContext('2d')!;
+    const dpr    = window.devicePixelRatio || 1;
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
+    for (let y = 0; y < canvas.height; y++) {
+      for (let x = 0; x < canvas.width; x++) {
+        if (imgData.data[(y * canvas.width + x) * 4 + 3] > 10) {
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (minX > maxX) return { dataUrl: '', w: 0, h: 0 };
+    const pad = Math.ceil(12 * dpr);
+    const sx = Math.max(0, minX - pad), sy = Math.max(0, minY - pad);
+    const sw = Math.min(canvas.width  - sx, maxX - minX + pad * 2);
+    const sh = Math.min(canvas.height - sy, maxY - minY + pad * 2);
+    const tmp = document.createElement('canvas');
+    tmp.width = sw; tmp.height = sh;
+    tmp.getContext('2d')!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+    return { dataUrl: tmp.toDataURL('image/png'), w: sw / dpr, h: sh / dpr };
+  };
+
   const stopDrawing = () => {
     if (!isDrawing) return;
     setIsDrawing(false);
     lastPos.current = null;
-    if (!isEmpty) onSave(canvasRef.current!.toDataURL('image/png'));
+    if (!isEmpty) {
+      const { dataUrl, w, h } = getCropped();
+      onSave(dataUrl, w, h);
+    }
   };
 
   const undo = () => {
@@ -112,7 +141,8 @@ export default function SignatureCanvas({ onSave }: Props) {
     const data  = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     const blank = !data.some(v => v !== 0);
     setIsEmpty(blank);
-    onSave(blank ? '' : canvas.toDataURL('image/png'));
+    if (blank) { onSave('', 0, 0); }
+    else { const c = getCropped(); onSave(c.dataUrl, c.w, c.h); }
   };
 
   const clear = () => {
@@ -122,7 +152,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setIsEmpty(true);
     strokes.current = [];
-    onSave('');
+    onSave('', 0, 0);
   };
 
   return (
