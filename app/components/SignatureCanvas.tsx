@@ -21,11 +21,11 @@ export default function SignatureCanvas({ onSave }: Props) {
     const rect = container.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = rect.width * dpr;
-    canvas.height = 200 * dpr;
+    canvas.height = 380 * dpr;
     const ctx = canvas.getContext('2d')!;
     ctx.scale(dpr, dpr);
     ctx.strokeStyle = '#1e3a8a';
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }, []);
