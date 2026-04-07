@@ -25,7 +25,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isEmpty, setIsEmpty]     = useState(true);
-  const isEmptyRef = useRef(true); // sync ref to avoid async stale closure
+  const isEmptyRef = useRef(true);
   const [color, setColor]         = useState(COLORS[0].value);
   const [width, setWidth]         = useState(3);
   const colorRef = useRef(COLORS[0].value);
@@ -52,7 +52,6 @@ export default function SignatureCanvas({ onSave }: Props) {
 
   useEffect(() => {
     initCanvas();
-    // Attach touch listeners as non-passive so preventDefault() actually works
     const canvas = canvasRef.current!;
     const onTouchStart = (e: TouchEvent) => { e.preventDefault(); startDrawingTouch(e); };
     const onTouchMove  = (e: TouchEvent) => { e.preventDefault(); drawTouch(e); };
@@ -67,7 +66,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     };
   }, [initCanvas]);
 
-  // Sync refs + apply to context
   useEffect(() => {
     colorRef.current = color;
     widthRef.current = width;
@@ -77,7 +75,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
   }, [color, width]);
 
-  // Native touch helpers (called from non-passive DOM listeners)
   const getTouchPos = (e: TouchEvent) => {
     const canvas = canvasRef.current!;
     const rect   = canvas.getBoundingClientRect();
@@ -149,7 +146,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     isEmptyRef.current = false;
   };
 
-  // Crop canvas to tight bounding box around drawn content
   const getCropped = (): { dataUrl: string; w: number; h: number } => {
     const canvas = canvasRef.current!;
     const ctx    = canvas.getContext('2d')!;

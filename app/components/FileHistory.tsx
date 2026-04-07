@@ -50,10 +50,10 @@ function timeAgo(iso: string) {
 }
 
 interface Props {
-  onUpgrade: () => void;
+  onDownload: (item: HistoryItem) => void;
 }
 
-export default function FileHistory({ onUpgrade }: Props) {
+export default function FileHistory({ onDownload }: Props) {
   const [list, setList] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
@@ -69,40 +69,105 @@ export default function FileHistory({ onUpgrade }: Props) {
   if (list.length === 0) return null;
 
   return (
-    <div className="history-wrap">
-      <div className="history-header">
-        <span className="history-title">📂 Recent documents</span>
-        <span className="history-sub">{list.length} file{list.length !== 1 ? 's' : ''}</span>
+    <div style={{
+      background: '#f8fafc',
+      borderRadius: 12,
+      padding: '16px 20px',
+      marginTop: 32,
+      marginBottom: 24,
+    }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+      }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>
+          📂 Recent documents
+        </span>
+        <span style={{ fontSize: 13, color: '#64748b' }}>
+          {list.length} file{list.length !== 1 ? 's' : ''}
+        </span>
       </div>
-      <div className="history-list">
-        {list.map((item, i) => {
-          const locked = !item.free;
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
+        {list.map((item, index) => {
+          const isFirstFree = index === 0 && item.free;
+          const canDownload = isFirstFree;
+          
           return (
-            <div key={item.id} className={`history-item${locked ? ' locked' : ''}`}>
-              <div className="history-icon">📄</div>
-              <div className="history-meta">
-                <div className="history-name">{item.name}</div>
-                <div className="history-info">{fmt(item.size)} · {timeAgo(item.date)}</div>
+            <div
+              key={item.id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px 16px',
+                background: 'white',
+                borderRadius: 8,
+                border: '1px solid #e2e8f0',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
+                <span style={{ fontSize: 20 }}>📄</span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: '#1e293b',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {item.name}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+                    {fmt(item.size)} · {timeAgo(item.date)}
+                    {isFirstFree && (
+                      <span style={{ color: '#22c55e', marginLeft: 8, fontWeight: 500 }}>
+                        ✓ Free
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              {locked ? (
-                <button className="history-lock-btn" onClick={onUpgrade}>
-                  🔒 Upgrade
-                </button>
-              ) : (
-                <a
-                  href={item.dataUrl}
-                  download={`signed-${item.name}`}
-                  className="history-dl-btn"
-                >
-                  ⬇️ Download
-                </a>
-              )}
+
+              <button
+                onClick={() => onDownload(item)}
+                style={{
+                  padding: '8px 16px',
+                  background: canDownload ? '#2563eb' : '#f1f5f9',
+                  color: canDownload ? 'white' : '#64748b',
+                  border: canDownload ? 'none' : '1px solid #e2e8f0',
+                  borderRadius: 6,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {canDownload ? 'Download' : '🔒 Download'}
+              </button>
             </div>
           );
         })}
       </div>
-      <p className="history-note">
-        🔒 Free plan: 1 download per day · <button className="history-upgrade-link" onClick={onUpgrade}>Upgrade for unlimited access</button>
+
+      <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
+        🔒 Free plan: 1 download ·{' '}
+        <button
+          onClick={() => onDownload(list[0] || { id: '', name: '', date: '', size: 0, dataUrl: '', free: true })}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#2563eb',
+            cursor: 'pointer',
+            fontSize: 12,
+            fontWeight: 500,
+          }}
+        >
+          Upgrade for unlimited access
+        </button>
       </p>
     </div>
   );

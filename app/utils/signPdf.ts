@@ -1,19 +1,44 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { PDFDocument, rgb } from 'pdf-lib';
+
+// Render text to PNG image (supports any Unicode including Cyrillic)
+function renderTextToDataUrl(text: string, width: number, height: number): string {
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(400, Math.round(width * 2));
+  canvas.height = Math.max(100, Math.round(height * 2));
+  const ctx = canvas.getContext('2d')!;
+  
+  // Transparent background
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw text with nice font
+  const fontSize = Math.min(canvas.height * 0.6, canvas.width / text.length * 1.5);
+  ctx.font = `italic ${fontSize}px "Brush Script MT", "Dancing Script", "Pacifico", cursive`;
+  ctx.fillStyle = '#1e3a8a'; // Dark blue
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  
+  return canvas.toDataURL('image/png');
+}
+
+export interface SignaturePlacement {
+  page: number;
+  x: number;      // % from left
+  y: number;      // % from top
+  w: number;      // % width
+  h: number;      // % height
+}
 
 export interface SignOptions {
   pdfFile: File;
   signatureDataUrl: string;
   typedName: string;
   signMode: 'draw' | 'type';
-  page: number;       // 1-indexed
-  xPct: number;       // % from left
-  yPct: number;       // % from top
-  wPct: number;       // % width
-  hPct: number;       // % height
+  placements: SignaturePlacement[];  // Multiple signature placements
 }
 
 export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
-  const { pdfFile, signatureDataUrl, typedName, signMode, page, xPct, yPct, wPct, hPct } = opts;
+  const { pdfFile, signatureDataUrl, typedName, signMode, placements } = opts;
 
   const arrayBuffer = await pdfFile.arrayBuffer();
 
@@ -24,36 +49,54 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     throw new Error('Cannot parse PDF: ' + (e?.message || 'unknown'));
   }
 
-  const pages   = pdfDoc.getPages();
-  const pageIdx = Math.min(Math.max(page - 1, 0), pages.length - 1);
-  const pg      = pages[pageIdx];
-  const { width: pw, height: ph } = pg.getSize();
+  const pages = pdfDoc.getPages();
 
-  const sigW  = (wPct / 100) * pw;
-  const sigH  = (hPct / 100) * ph;
-  const pdfX  = (xPct / 100) * pw;
-  const pdfY  = ph - ((yPct / 100) * ph) - sigH;
-  const safeX = Math.max(0, Math.min(pw - sigW, pdfX));
-  const safeY = Math.max(0, pdfY);
+  // Apply each signature placement
+  for (const placement of placements) {
+    const { page, x, y, w, h } = placement;
+    
+    // Validate page number
+    if (page < 1 || page > pages.length) {
+      console.warn(`Skipping invalid page number: ${page}`);
+      continue;
+    }
 
-  if (signMode === 'draw' && signatureDataUrl?.startsWith('data:image/png')) {
-    const base64   = signatureDataUrl.split(',')[1];
-    const bytes    = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-    const img      = await pdfDoc.embedPng(bytes);
-    pg.drawImage(img, {
-      x: safeX, y: safeY,
-      width: sigW, height: Math.min(sigH, ph - safeY),
-      opacity: 0.95,
-    });
-  } else if (signMode === 'type' && typedName.trim()) {
-    const font     = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
-    const fontSize = Math.max(12, Math.min(48, sigH * 0.55));
-    pg.drawText(typedName.trim(), {
-      x: safeX, y: Math.max(10, safeY + sigH * 0.15),
-      size: fontSize, font,
-      color: rgb(0.07, 0.22, 0.55),
-      opacity: 0.92,
-    });
+    const pageIdx = page - 1; // Convert to 0-indexed
+    const pg = pages[pageIdx];
+    const { width: pw, height: ph } = pg.getSize();
+
+    const sigW = (w / 100) * pw;
+    const sigH = (h / 100) * ph;
+    const pdfX = (x / 100) * pw;
+    const pdfY = ph - ((y / 100) * ph) - sigH;
+    const safeX = Math.max(0, Math.min(pw - sigW, pdfX));
+    const safeY = Math.max(0, pdfY);
+
+    if (signMode === 'draw' && signatureDataUrl?.startsWith('data:image/png')) {
+      const base64 = signatureDataUrl.split(',')[1];
+      const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+      const img = await pdfDoc.embedPng(bytes);
+      pg.drawImage(img, {
+        x: safeX,
+        y: safeY,
+        width: sigW,
+        height: Math.min(sigH, ph - safeY),
+        opacity: 0.95,
+      });
+    } else if (signMode === 'type' && typedName.trim()) {
+      // Generate image from text to support any characters (including Cyrillic)
+      const textDataUrl = await renderTextToDataUrl(typedName.trim(), sigW, sigH);
+      const base64 = textDataUrl.split(',')[1];
+      const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+      const img = await pdfDoc.embedPng(bytes);
+      pg.drawImage(img, {
+        x: safeX,
+        y: safeY,
+        width: sigW,
+        height: Math.min(sigH, ph - safeY),
+        opacity: 0.95,
+      });
+    }
   }
 
   pdfDoc.setModificationDate(new Date());

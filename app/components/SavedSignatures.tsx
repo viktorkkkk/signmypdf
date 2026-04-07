@@ -3,13 +3,16 @@
 import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'signmypdf_signatures';
-const MAX = 5;
+const MAX = 10;
 
 export interface SavedSig {
   id: string;
   dataUrl: string;
   label: string;
   date: string;
+  type: 'draw' | 'type';
+  text?: string; // For typed signatures
+  font?: string; // For typed signatures
 }
 
 export function getSavedSigs(): SavedSig[] {
@@ -18,13 +21,16 @@ export function getSavedSigs(): SavedSig[] {
   return raw ? JSON.parse(raw) : [];
 }
 
-export function saveSig(dataUrl: string): SavedSig {
+export function saveSig(dataUrl: string, type: 'draw' | 'type' = 'draw', text?: string, font?: string): SavedSig {
   const list = getSavedSigs();
   const item: SavedSig = {
     id: Math.random().toString(36).slice(2),
     dataUrl,
     label: `Signature ${list.length + 1}`,
     date: new Date().toISOString(),
+    type,
+    text,
+    font,
   };
   const updated = [item, ...list].slice(0, MAX);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -37,12 +43,16 @@ export function deleteSig(id: string) {
 }
 
 interface Props {
-  onSelect: (dataUrl: string) => void;
+  onSelect: (sig: SavedSig) => void;
   currentSig: string;
+  currentType: 'draw' | 'type';
+  currentText?: string;
+  currentFont?: string;
   onSaveCurrent: () => void;
+  selectedId?: string | null;
 }
 
-export default function SavedSignatures({ onSelect, currentSig, onSaveCurrent }: Props) {
+export default function SavedSignatures({ onSelect, currentSig, currentType, currentText, currentFont, onSaveCurrent, selectedId }: Props) {
   const [sigs, setSigs] = useState<SavedSig[]>([]);
 
   useEffect(() => {
@@ -74,17 +84,22 @@ export default function SavedSignatures({ onSelect, currentSig, onSaveCurrent }:
         )}
       </div>
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
-        {sigs.map(s => (
+        {sigs.map(s => {
+          const isSelected = selectedId === s.id || (!selectedId && currentSig === s.dataUrl && currentType === s.type);
+          return (
           <div key={s.id} style={{
-            border: '1.5px solid #e2e8f0', borderRadius: 10, padding: 8,
-            background: 'white', cursor: 'pointer', flexShrink: 0,
+            border: isSelected ? '2px solid #2563eb' : '1.5px solid #e2e8f0', 
+            borderRadius: 10, padding: 8,
+            background: isSelected ? '#eff6ff' : 'white', 
+            cursor: 'pointer', flexShrink: 0,
             minWidth: 100, textAlign: 'center', position: 'relative',
-            transition: 'border-color 0.15s',
+            transition: 'all 0.15s',
+            boxShadow: isSelected ? '0 0 0 2px #bfdbfe' : 'none',
           }}
-            onClick={() => onSelect(s.dataUrl)}
+            onClick={() => onSelect(s)}
           >
             <img src={s.dataUrl} style={{ height: 32, maxWidth: 100, objectFit: 'contain' }} alt="saved" />
-            <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 4 }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: isSelected ? '#2563eb' : '#94a3b8', marginTop: 4, fontWeight: isSelected ? 600 : 400 }}>{s.label}</div>
             <button
               onClick={(e) => { e.stopPropagation(); deleteSig(s.id); window.dispatchEvent(new Event('signmypdf:sigs')); }}
               style={{
@@ -95,7 +110,7 @@ export default function SavedSignatures({ onSelect, currentSig, onSaveCurrent }:
               title="Delete"
             >✕</button>
           </div>
-        ))}
+        );})}
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import SignatureCanvas from './components/SignatureCanvas';
-import PDFViewer from './components/PDFViewer';
-import SavedSignatures, { saveSig } from './components/SavedSignatures';
+import PDFViewer, { SignaturePlacement } from './components/PDFViewer';
+import SavedSignatures, { saveSig, SavedSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
-import FileHistory, { saveToHistory } from './components/FileHistory';
+import FileHistory, { saveToHistory, HistoryItem } from './components/FileHistory';
 import { signPdfInBrowser } from './utils/signPdf';
 
 type Step = 'upload' | 'sign' | 'done';
@@ -26,20 +26,62 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
   const [typedName, setTypedName] = useState('');
+  const [selectedFont, setSelectedFont] = useState('"Brush Script MT", "Dancing Script", cursive');
+  
+  const FONTS = [
+    { name: 'Script', value: '"Brush Script MT", "Dancing Script", cursive' },
+    { name: 'Handwritten', value: '"Comic Sans MS", "Chalkboard SE", cursive' },
+    { name: 'Elegant', value: '"Times New Roman", Georgia, serif' },
+    { name: 'Modern', value: '"Segoe UI", Roboto, sans-serif' },
+  ];
   const [showPricing, setShowPricing] = useState(false);
-  const [isFirstDoc, setIsFirstDoc] = useState<boolean | null>(null); // null = not checked yet
-  const sigPlacement = useRef({ page: 1, xPct: 5, yPct: 75, wPct: 30, hPct: 12 });
+  const [isFirstDoc, setIsFirstDoc] = useState<boolean | null>(null);
+  const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
+  const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
+  
+  // Multi-page signature state
+  const [selectedPages, setSelectedPages] = useState<number[]>([]);
+  const [placements, setPlacements] = useState<SignaturePlacement[]>([]);
+  
+
+  
+  // Generate dataUrl for typed signature
+  const [typedSigDataUrl, setTypedSigDataUrl] = useState('');
+  useEffect(() => {
+    if (!typedName.trim()) {
+      setTypedSigDataUrl('');
+      return;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = 'transparent';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `italic 48px ${selectedFont}`;
+    ctx.fillStyle = '#1e3a8a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(typedName, canvas.width / 2, canvas.height / 2);
+    setTypedSigDataUrl(canvas.toDataURL('image/png'));
+  }, [typedName, selectedFont]);
 
   const onDrop = useCallback((files: File[]) => {
     const f = files[0];
-    if (f?.type === 'application/pdf') { setPdfFile(f); setStep('sign'); }
+    if (f?.type === 'application/pdf') { 
+      setPdfFile(f); 
+      setStep('sign');
+      // Auto-select first page for immediate preview
+      setSelectedPages([1]);
+      setPlacements([{ page: 1, x: 5, y: 75, w: 30, h: 12 }]);
+    }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1,
   });
 
-  const canSign = signMode === 'draw' ? !!signatureData : !!typedName.trim();
+  const canSign = (signMode === 'draw' ? !!signatureData : !!typedName.trim()) && selectedPages.length > 0;
 
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
@@ -51,14 +93,16 @@ export default function Home() {
         signatureDataUrl: signatureData,
         typedName,
         signMode: signMode as 'draw' | 'type',
-        page:  sigPlacement.current.page,
-        xPct:  sigPlacement.current.xPct,
-        yPct:  sigPlacement.current.yPct,
-        wPct:  sigPlacement.current.wPct,
-        hPct:  sigPlacement.current.hPct,
+        placements: placements.filter(p => selectedPages.includes(p.page)),
       });
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
+
+      // Check if first doc BEFORE saving
+      const raw = localStorage.getItem('signmypdf_history');
+      const history = raw ? JSON.parse(raw) : [];
+      const isFirst = history.length === 0;
+      setIsFirstDoc(isFirst);
 
       // Save to history
       const reader = new FileReader();
@@ -68,12 +112,9 @@ export default function Home() {
       };
       reader.readAsDataURL(blob);
 
-      // Check if first doc
-      const raw = localStorage.getItem('signmypdf_history');
-      const history = raw ? JSON.parse(raw) : [];
-      setIsFirstDoc(history.length === 0); // check BEFORE saving
-
       setStep('done');
+      // Scroll to top to show download button, not file history
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
     } catch (err: any) {
       console.error('handleSign error:', err);
       alert('Error signing PDF: ' + (err?.message || 'unknown'));
@@ -83,12 +124,17 @@ export default function Home() {
   };
 
   const reset = () => {
-    setPdfFile(null); setSignedPdfUrl(null);
-    setSignatureData(''); setTypedName(''); setStep('upload');
+    setPdfFile(null); 
+    setSignedPdfUrl(null);
+    setSignatureData(''); 
+    setTypedName(''); 
+    setStep('upload');
+    setSelectedPages([]);
+    setPlacements([]);
   };
 
   const stepIndex = STEPS.findIndex(s => s.id === step);
-  const previewSig = signMode === 'draw' ? signatureData : '';
+  const previewSig = signMode === 'draw' ? signatureData : typedSigDataUrl;
 
   return (
     <>
@@ -173,32 +219,84 @@ export default function Home() {
 
               {signMode === 'type' && (
                 <div>
+                  {/* Font selector */}
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                    {FONTS.map(f => (
+                      <button
+                        key={f.value}
+                        onClick={() => setSelectedFont(f.value)}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: 20,
+                          border: selectedFont === f.value ? '2px solid #2563eb' : '1px solid #e2e8f0',
+                          background: selectedFont === f.value ? '#eff6ff' : 'white',
+                          color: selectedFont === f.value ? '#2563eb' : '#64748b',
+                          fontSize: 13,
+                          fontWeight: selectedFont === f.value ? 600 : 400,
+                          cursor: 'pointer',
+                          fontFamily: f.value,
+                        }}
+                      >
+                        {f.name}
+                      </button>
+                    ))}
+                  </div>
                   <input type="text" className="type-input" placeholder="Your full name"
-                    value={typedName} onChange={e => setTypedName(e.target.value)} />
-                  {typedName && <div className="type-preview"><span className="type-preview-text">{typedName}</span></div>}
+                    value={typedName} onChange={e => setTypedName(e.target.value)} 
+                    style={{ fontFamily: selectedFont, fontSize: 24 }} />
+                  {typedName && (
+                    <div className="type-preview" style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img src={typedSigDataUrl} style={{ maxHeight: 60, maxWidth: '100%' }} alt="typed signature" />
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Saved signatures */}
               <div style={{ marginTop: 14 }}>
                 <SavedSignatures
-                  currentSig={signatureData}
-                  onSelect={(url) => { setSignatureData(url); setSignMode('draw'); }}
-                  onSaveCurrent={() => { if (signatureData) { saveSig(signatureData); window.dispatchEvent(new Event('signmypdf:sigs')); } }}
+                  currentSig={signMode === 'draw' ? signatureData : typedSigDataUrl}
+                  currentType={signMode}
+                  currentText={typedName}
+                  currentFont={selectedFont}
+                  selectedId={selectedSigId}
+                  onSelect={(sig: SavedSig) => { 
+                    setSelectedSigId(sig.id);
+                    if (sig.type === 'type' && sig.text) {
+                      setTypedName(sig.text);
+                      setSelectedFont(sig.font || FONTS[0].value);
+                      setSignMode('type');
+                    } else {
+                      setSignatureData(sig.dataUrl);
+                      setSignMode('draw');
+                    }
+                  }}
+                  onSaveCurrent={() => { 
+                    if (signMode === 'draw' && signatureData) {
+                      const newSig = saveSig(signatureData, 'draw');
+                      setSelectedSigId(newSig.id);
+                      window.dispatchEvent(new Event('signmypdf:sigs'));
+                    } else if (signMode === 'type' && typedName && typedSigDataUrl) {
+                      const newSig = saveSig(typedSigDataUrl, 'type', typedName, selectedFont);
+                      setSelectedSigId(newSig.id);
+                      window.dispatchEvent(new Event('signmypdf:sigs'));
+                    }
+                  }}
                 />
               </div>
             </div>
 
             {/* 2. DOCUMENT PREVIEW (below) */}
             <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-title">2. Place signature on document</div>
+              <div className="card-title">2. Select pages & place signature</div>
               {pdfFile && (
                 <PDFViewer
                   file={pdfFile}
                   signatureDataUrl={previewSig}
-                  onPosition={(page, xPct, yPct, wPct, hPct) => {
-                    sigPlacement.current = { page, xPct, yPct, wPct, hPct };
-                  }}
+                  placements={placements}
+                  selectedPages={selectedPages}
+                  onPlacementsChange={setPlacements}
+                  onSelectedPagesChange={setSelectedPages}
                 />
               )}
             </div>
@@ -212,8 +310,14 @@ export default function Home() {
             >
               {isProcessing
                 ? <><span className="spinner" /> Signing...</>
-                : '✍️  Sign & Download'}
+                : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
             </button>
+            
+            {selectedPages.length === 0 && (
+              <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>
+                Select at least one page to sign above
+              </p>
+            )}
           </div>
         )}
 
@@ -222,7 +326,7 @@ export default function Home() {
           <div className="done-wrap">
             <div className="done-icon">🎉</div>
             <h2 className="done-title">Document signed!</h2>
-            <p className="done-sub">Your PDF is ready to download and send.</p>
+            <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
 
             <div className="done-btns">
               {isFirstDoc !== false ? (
@@ -313,7 +417,21 @@ export default function Home() {
       </div>
 
       {/* File History — sticky bottom bar */}
-      <FileHistory onUpgrade={() => setShowPricing(true)} />
+      <FileHistory 
+        onDownload={(item: HistoryItem) => {
+          if (item.free) {
+            // Free file - download directly
+            const a = document.createElement('a');
+            a.href = item.dataUrl;
+            a.download = `signed-${item.name}`;
+            a.click();
+          } else {
+            // Paid file - show pricing
+            setPendingDownload(item);
+            setShowPricing(true);
+          }
+        }}
+      />
 
       {/* Pricing modal */}
       {showPricing && (
@@ -323,11 +441,13 @@ export default function Home() {
             <div className="pricing-header">
               <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
               <h3 className="pricing-title">Unlock unlimited signatures</h3>
-              <p className="pricing-sub">Choose a plan to keep signing without limits.</p>
+              <p className="pricing-sub">{pendingDownload ? "You've used your free document. Choose a plan to keep signing." : "Choose a plan to keep signing without limits."}</p>
             </div>
+            
             <div className="pricing-grid">
+              {/* Monthly */}
               <div className="plan-card">
-                <div className="plan-name">Monthly</div>
+                <div className="plan-name">MONTHLY</div>
                 <div className="plan-price">$4.99<span>/mo</span></div>
                 <div className="plan-desc">Billed monthly. Cancel anytime.</div>
                 <ul className="plan-perks">
@@ -337,11 +457,13 @@ export default function Home() {
                 </ul>
                 <button className="plan-btn">Get Monthly</button>
               </div>
+
+              {/* Annual - always visible */}
               <div className="plan-card plan-featured">
                 <div className="plan-badge">Most Popular</div>
-                <div className="plan-name">Annual</div>
+                <div className="plan-name">ANNUAL</div>
                 <div className="plan-price">$3.25<span>/mo</span></div>
-                <div className="plan-desc">$39/year — save 35%.</div>
+                <div className="plan-desc">$39/year — save 35%</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited documents</li>
                   <li>✓ Download history</li>
@@ -350,8 +472,10 @@ export default function Home() {
                 </ul>
                 <button className="plan-btn plan-btn-featured">Get Annual — $39/yr</button>
               </div>
+
+              {/* Lifetime - always visible */}
               <div className="plan-card">
-                <div className="plan-name">Lifetime</div>
+                <div className="plan-name">LIFETIME</div>
                 <div className="plan-price">$79<span> once</span></div>
                 <div className="plan-desc">Pay once, use forever.</div>
                 <ul className="plan-perks">
