@@ -360,6 +360,88 @@ export default function Home() {
       </div>
 
       {/* Pricing removed - all features free */}
+
+      {/* Footer */}
+      <footer style={{
+        background: '#f1f5f9',
+        borderTop: '1px solid #e2e8f0',
+        padding: '48px 0 24px',
+        marginTop: 64,
+      }}>
+        <div className="container">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 32,
+            marginBottom: 32,
+          }}>
+            {/* Company Info */}
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
+                SignMyPDF
+              </h4>
+              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
+                Simple and secure PDF signing tool. No registration required. 
+                Sign your documents online for free.
+              </p>
+            </div>
+
+            {/* Contacts */}
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
+                Контакты
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
+                <li>📧 support@signmypdf.app</li>
+                <li>🌐 https://signmypdf.vercel.app</li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
+                Правовая информация
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, lineHeight: 2 }}>
+                <li>
+                  <a href="/terms" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    📄 Публичная оферта
+                  </a>
+                </li>
+                <li>
+                  <a href="/privacy" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    🔒 Политика конфиденциальности
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* About */}
+            <div>
+              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
+                О компании
+              </h4>
+              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
+                ИП / ООО «СайнМайПДФ»<br />
+                ОГРН: [ваш ОГРН]<br />
+                ИНН: [ваш ИНН]<br />
+                Адрес: [ваш юридический адрес]
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div style={{
+            borderTop: '1px solid #e2e8f0',
+            paddingTop: 24,
+            textAlign: 'center',
+            fontSize: 13,
+            color: '#94a3b8',
+          }}>
+            © {new Date().getFullYear()} SignMyPDF. Все права защищены.
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
