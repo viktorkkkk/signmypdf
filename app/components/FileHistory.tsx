@@ -50,10 +50,11 @@ function timeAgo(iso: string) {
 }
 
 interface Props {
-  onDownload: (item: HistoryItem) => void;
+  hasSubscription?: boolean;
+  onDownload: (item: HistoryItem, canDownload: boolean) => void;
 }
 
-export default function FileHistory({ onDownload }: Props) {
+export default function FileHistory({ hasSubscription = false, onDownload }: Props) {
   const [list, setList] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
@@ -91,57 +92,93 @@ export default function FileHistory({ onDownload }: Props) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
-        {list.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '12px 16px',
-              background: 'white',
-              borderRadius: 8,
-              border: '1px solid #e2e8f0',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-              <span style={{ fontSize: 20 }}>📄</span>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: '#1e293b',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {item.name}
-                </div>
-                <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
-                  {fmt(item.size)} · {timeAgo(item.date)}
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => onDownload(item)}
+        {list.map((item, index) => {
+          // Most recent file can always be downloaded (just signed)
+          // Older files require subscription
+          const canDownload = hasSubscription || index === 0;
+          
+          return (
+            <div
+              key={item.id}
               style={{
-                padding: '8px 16px',
-                background: '#2563eb',
-                color: 'white',
-                border: 'none',
-                borderRadius: 6,
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px 16px',
+                background: 'white',
+                borderRadius: 8,
+                border: '1px solid #e2e8f0',
+                opacity: canDownload ? 1 : 0.7,
               }}
             >
-              Download
-            </button>
-          </div>
-        ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
+                <span style={{ fontSize: 20 }}>📄</span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: '#1e293b',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {item.name}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+                    {fmt(item.size)} · {timeAgo(item.date)}
+                    {!canDownload && (
+                      <span style={{ color: '#dc2626', marginLeft: 8, fontWeight: 500 }}>
+                        🔒 Требуется подписка
+                      </span>
+                    )}
+                    {canDownload && index === 0 && !hasSubscription && (
+                      <span style={{ color: '#22c55e', marginLeft: 8, fontWeight: 500 }}>
+                        ✓ Доступно
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => onDownload(item, canDownload)}
+                style={{
+                  padding: '8px 16px',
+                  background: canDownload ? '#2563eb' : '#f1f5f9',
+                  color: canDownload ? 'white' : '#94a3b8',
+                  border: canDownload ? 'none' : '1px solid #e2e8f0',
+                  borderRadius: 6,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {canDownload ? 'Download' : '🔒'}
+              </button>
+            </div>
+          );
+        })}
       </div>
+      
+      {!hasSubscription && list.length > 1 && (
+        <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
+          🔒 Только последний файл доступен для скачивания.{' '}
+          <button
+            onClick={() => onDownload(list[0], false)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#2563eb',
+              cursor: 'pointer',
+              fontSize: 12,
+              fontWeight: 500,
+            }}
+          >
+            Оформить подписку для доступа ко всем
+          </button>
+        </p>
+      )}
     </div>
   );
 }

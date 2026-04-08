@@ -17,6 +17,27 @@ const STEPS = [
   { id: 'done',   label: 'Download' },
 ];
 
+const DAILY_LIMIT = 2;
+const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
+
+function getTodayCount(): number {
+  const today = new Date().toISOString().split('T')[0];
+  const key = `signmypdf_count_${today}`;
+  const raw = localStorage.getItem(key);
+  return raw ? parseInt(raw, 10) : 0;
+}
+
+function incrementTodayCount() {
+  const today = new Date().toISOString().split('T')[0];
+  const key = `signmypdf_count_${today}`;
+  const count = getTodayCount();
+  localStorage.setItem(key, String(count + 1));
+}
+
+function isSubscribed(): boolean {
+  return localStorage.getItem(SUBSCRIPTION_KEY) === 'true';
+}
+
 export default function Home() {
   const [step, setStep] = useState<Step>('upload');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -35,9 +56,16 @@ export default function Home() {
     { name: 'Modern', value: '"Segoe UI", Roboto, sans-serif' },
   ];
   const [showPricing, setShowPricing] = useState(false);
-  const [isFirstDoc, setIsFirstDoc] = useState<boolean | null>(null);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
   const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
+
+  // Check subscription and count on mount
+  useEffect(() => {
+    setHasSubscription(isSubscribed());
+    setTodayCount(getTodayCount());
+  }, []);
   
   // Multi-page signature state
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
@@ -82,9 +110,17 @@ export default function Home() {
   });
 
   const canSign = (signMode === 'draw' ? !!signatureData : !!typedName.trim()) && selectedPages.length > 0;
+  const canSignToday = hasSubscription || todayCount < DAILY_LIMIT;
 
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
+    
+    // Check daily limit
+    if (!canSignToday) {
+      setShowPricing(true);
+      return;
+    }
+    
     setIsProcessing(true);
     try {
       // 100% client-side — no server, no size limits
@@ -112,7 +148,11 @@ export default function Home() {
       };
       reader.readAsDataURL(blob);
 
-      // Optional: show done screen after short delay, or stay on current screen
+      // Increment daily count
+      incrementTodayCount();
+      setTodayCount(getTodayCount());
+
+      // Show done screen after short delay
       setTimeout(() => {
         setStep('done');
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -173,12 +213,64 @@ export default function Home() {
           <div>
             <h1 className="hero-title">Sign your PDF in seconds</h1>
             <p className="hero-sub">No registration. No software. Upload, sign, download — done.</p>
-            <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
+            
+            {!hasSubscription && (
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                marginBottom: 20,
+                gap: 12,
+                flexWrap: 'wrap'
+              }}>
+                <span style={{ 
+                  fontSize: 14, 
+                  color: todayCount >= DAILY_LIMIT ? '#dc2626' : '#64748b', 
+                  background: todayCount >= DAILY_LIMIT ? '#fef2f2' : '#f8fafc', 
+                  padding: '10px 16px', 
+                  borderRadius: 8, 
+                  border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}`
+                }}>
+                  📄 {todayCount}/{DAILY_LIMIT} подписей сегодня
+                  {todayCount >= DAILY_LIMIT && ' — лимит исчерпан'}
+                </span>
+                {todayCount >= DAILY_LIMIT && (
+                  <button
+                    onClick={() => setShowPricing(true)}
+                    style={{
+                      fontSize: 14,
+                      color: 'white',
+                      background: '#dc2626',
+                      padding: '10px 16px',
+                      borderRadius: 8,
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                    }}
+                  >
+                    🔓 Оформить подписку
+                  </button>
+                )}
+              </div>
+            )}
+            <div {...getRootProps()} 
+              className={`dropzone${isDragActive ? ' active' : ''}${todayCount >= DAILY_LIMIT && !hasSubscription ? ' disabled' : ''}`}
+              style={todayCount >= DAILY_LIMIT && !hasSubscription ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
+            >
               <input {...getInputProps()} />
               <div className="dz-icon">📄</div>
-              <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
-              <p className="dz-sub">or click to select a file from your computer</p>
-              <button className="btn-primary" type="button">Choose PDF file</button>
+              <p className="dz-title">
+                {todayCount >= DAILY_LIMIT && !hasSubscription 
+                  ? '🔒 Лимит подписей исчерпан' 
+                  : isDragActive ? 'Drop it here!' : 'Drop your PDF here'}
+              </p>
+              <p className="dz-sub">
+                {todayCount >= DAILY_LIMIT && !hasSubscription
+                  ? 'Оформите подписку для безлимитного доступа'
+                  : 'or click to select a file from your computer'}
+              </p>
+              {!(todayCount >= DAILY_LIMIT && !hasSubscription) && (
+                <button className="btn-primary" type="button">Choose PDF file</button>
+              )}
             </div>
             <div className="features">
               {[
@@ -199,8 +291,21 @@ export default function Home() {
         {/* ── SIGN ── */}
         {step === 'sign' && (
           <div>
-            <div className="step-header">
+            <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h2 className="step-title">Sign your document</h2>
+              {!hasSubscription && (
+                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#dc2626' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fef2f2' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}` }}>
+                  {todayCount >= DAILY_LIMIT 
+                    ? '🔒 Лимит исчерпан — оформите подписку'
+                    : `📄 ${todayCount}/${DAILY_LIMIT} подписей сегодня (бесплатно)`
+                  }
+                </div>
+              )}
+              {hasSubscription && (
+                <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0' }}>
+                  ⭐ Премиум активен
+                </div>
+              )}
             </div>
             {/* File bar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '10px 14px', marginBottom: 16 }}>
@@ -306,13 +411,20 @@ export default function Home() {
             {/* Sign button */}
             <button
               className="btn-primary full"
-              style={{ padding: '16px', fontSize: 16, borderRadius: 16 }}
+              style={{ 
+                padding: '16px', 
+                fontSize: 16, 
+                borderRadius: 16,
+                background: !canSignToday ? '#dc2626' : undefined,
+              }}
               onClick={handleSign}
               disabled={isProcessing || !canSign}
             >
               {isProcessing
                 ? <><span className="spinner" /> Signing...</>
-                : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
+                : !canSignToday
+                  ? '🔒 Оформить подписку для продолжения'
+                  : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
             </button>
             
             {selectedPages.length === 0 && (
@@ -350,16 +462,70 @@ export default function Home() {
       {/* File History — sticky bottom bar */}
       <div className="container">
       <FileHistory 
-        onDownload={(item: HistoryItem) => {
-          const a = document.createElement('a');
-          a.href = item.dataUrl;
-          a.download = `signed-${item.name}`;
-          a.click();
+        hasSubscription={hasSubscription}
+        onDownload={(item: HistoryItem, canDownload: boolean) => {
+          if (canDownload) {
+            const a = document.createElement('a');
+            a.href = item.dataUrl;
+            a.download = `signed-${item.name}`;
+            a.click();
+          } else {
+            setPendingDownload(item);
+            setShowPricing(true);
+          }
         }}
       />
       </div>
 
-      {/* Pricing removed - all features free */}
+      {/* Pricing modal */}
+      {showPricing && (
+        <div className="modal-overlay" onClick={() => setShowPricing(false)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
+            <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
+            <div className="pricing-header">
+              <div style={{ fontSize: 32, marginBottom: 8 }}>⭐</div>
+              <h3 className="pricing-title">Премиум подписка</h3>
+              <p className="pricing-sub">
+                {todayCount >= DAILY_LIMIT 
+                  ? `Вы использовали ${DAILY_LIMIT} из ${DAILY_LIMIT} бесплатных подписей сегодня`
+                  : 'Скачивание истории документов доступно только с подпиской'
+                }
+              </p>
+            </div>
+            
+            <div className="pricing-grid" style={{ gridTemplateColumns: '1fr' }}>
+              {/* Monthly */}
+              <div className="plan-card plan-featured" style={{ border: '2px solid #2563eb' }}>
+                <div className="plan-badge">Рекомендуем</div>
+                <div className="plan-name">Премиум</div>
+                <div className="plan-price">$4.99<span>/мес</span></div>
+                <div className="plan-desc">Отмена в любое время</div>
+                <ul className="plan-perks">
+                  <li>✓ Безлимитные подписи PDF</li>
+                  <li>✓ Скачивание из истории</li>
+                  <li>✓ Хранение файлов навсегда</li>
+                  <li>✓ Приоритетная поддержка</li>
+                </ul>
+                <button 
+                  className="plan-btn plan-btn-featured"
+                  onClick={() => {
+                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+                    setHasSubscription(true);
+                    setShowPricing(false);
+                    alert('✅ Премиум активирован! (Демо режим)');
+                  }}
+                >
+                  Оформить подписку
+                </button>
+              </div>
+            </div>
+            
+            <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: 16 }}>
+              🔒 Безопасная оплата · Без скрытых комиссий
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer style={{
