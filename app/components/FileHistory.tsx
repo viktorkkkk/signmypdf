@@ -50,7 +50,7 @@ function timeAgo(iso: string) {
 }
 
 interface Props {
-  onDownload: (item: HistoryItem) => void;
+  onDownload: (item: HistoryItem, canDownload: boolean) => void;
 }
 
 export default function FileHistory({ onDownload }: Props) {
@@ -133,7 +133,7 @@ export default function FileHistory({ onDownload }: Props) {
               </div>
 
               <button
-                onClick={() => onDownload(item)}
+                onClick={() => onDownload(item, canDownload)}
                 style={{
                   padding: '8px 16px',
                   background: canDownload ? '#2563eb' : '#f1f5f9',

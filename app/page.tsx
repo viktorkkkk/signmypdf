@@ -419,8 +419,8 @@ export default function Home() {
       {/* File History — sticky bottom bar */}
       <div className="container">
       <FileHistory 
-        onDownload={(item: HistoryItem) => {
-          if (item.free) {
+        onDownload={(item: HistoryItem, canDownload: boolean) => {
+          if (canDownload) {
             // Free file - download directly
             const a = document.createElement('a');
             a.href = item.dataUrl;
