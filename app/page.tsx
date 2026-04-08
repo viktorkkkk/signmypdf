@@ -329,35 +329,20 @@ export default function Home() {
             <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
 
             <div className="done-btns">
-              {isFirstDoc !== false ? (
-                /* First document — free download */
-                <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '15px 36px', fontSize: 16 }}>
-                  ⬇️  Download Signed PDF
-                </a>
-              ) : (
-                /* Not first — show paywall on click */
-                <button
-                  className="btn-primary"
-                  style={{ padding: '15px 36px', fontSize: 16 }}
-                  onClick={() => setShowPricing(true)}
-                >
-                  🔒  Download Signed PDF
-                </button>
-              )}
+              <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '15px 36px', fontSize: 16 }}>
+                ⬇️  Download Signed PDF
+              </a>
               <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
 
-            {isFirstDoc === true && (
-              <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
-                ✅ Free download — no registration needed
-              </p>
-            )}
+            <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
+              ✅ Free download — no registration needed
+            </p>
 
-            {/* Show pricing only for non-first docs */}
-            {isFirstDoc === false && (
-            <div className="pricing-wrap">
+            {/* Premium promo (optional upgrade) */}
+            <div className="pricing-wrap" style={{ opacity: 0.7 }}>
               <div className="pricing-header">
                 <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
                 <h3 className="pricing-title">Unlock unlimited signatures</h3>
@@ -410,7 +395,6 @@ export default function Home() {
 
               <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
             </div>
-            )}
           </div>
         )}
 
@@ -419,18 +403,11 @@ export default function Home() {
       {/* File History — sticky bottom bar */}
       <div className="container">
       <FileHistory 
-        onDownload={(item: HistoryItem, canDownload: boolean) => {
-          if (canDownload) {
-            // Free file - download directly
-            const a = document.createElement('a');
-            a.href = item.dataUrl;
-            a.download = `signed-${item.name}`;
-            a.click();
-          } else {
-            // Paid file - show pricing
-            setPendingDownload(item);
-            setShowPricing(true);
-          }
+        onDownload={(item: HistoryItem) => {
+          const a = document.createElement('a');
+          a.href = item.dataUrl;
+          a.download = `signed-${item.name}`;
+          a.click();
         }}
       />
       </div>

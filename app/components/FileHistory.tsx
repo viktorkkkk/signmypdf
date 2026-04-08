@@ -50,7 +50,7 @@ function timeAgo(iso: string) {
 }
 
 interface Props {
-  onDownload: (item: HistoryItem, canDownload: boolean) => void;
+  onDownload: (item: HistoryItem) => void;
 }
 
 export default function FileHistory({ onDownload }: Props) {
@@ -91,84 +91,57 @@ export default function FileHistory({ onDownload }: Props) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
-        {list.map((item, index) => {
-          const isFirstFree = index === 0;
-          const canDownload = isFirstFree;
-          
-          return (
-            <div
-              key={item.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '12px 16px',
-                background: 'white',
-                borderRadius: 8,
-                border: '1px solid #e2e8f0',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 20 }}>📄</span>
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <div style={{
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: '#1e293b',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}>
-                    {item.name}
-                  </div>
-                  <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
-                    {fmt(item.size)} · {timeAgo(item.date)}
-                    {isFirstFree && (
-                      <span style={{ color: '#22c55e', marginLeft: 8, fontWeight: 500 }}>
-                        ✓ Free
-                      </span>
-                    )}
-                  </div>
+        {list.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px 16px',
+              background: 'white',
+              borderRadius: 8,
+              border: '1px solid #e2e8f0',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
+              <span style={{ fontSize: 20 }}>📄</span>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: '#1e293b',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {item.name}
+                </div>
+                <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
+                  {fmt(item.size)} · {timeAgo(item.date)}
                 </div>
               </div>
-
-              <button
-                onClick={() => onDownload(item, canDownload)}
-                style={{
-                  padding: '8px 16px',
-                  background: canDownload ? '#2563eb' : '#f1f5f9',
-                  color: canDownload ? 'white' : '#64748b',
-                  border: canDownload ? 'none' : '1px solid #e2e8f0',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {canDownload ? 'Download' : '🔒 Download'}
-              </button>
             </div>
-          );
-        })}
-      </div>
 
-      <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
-        🔒 Free plan: 1 download ·{' '}
-        <button
-          onClick={() => onDownload(list[0] || { id: '', name: '', date: '', size: 0, dataUrl: '', free: true }, false)}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#2563eb',
-            cursor: 'pointer',
-            fontSize: 12,
-            fontWeight: 500,
-          }}
-        >
-          Upgrade for unlimited access
-        </button>
-      </p>
+            <button
+              onClick={() => onDownload(item)}
+              style={{
+                padding: '8px 16px',
+                background: '#2563eb',
+                color: 'white',
+                border: 'none',
+                borderRadius: 6,
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Download
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
