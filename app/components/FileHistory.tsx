@@ -92,7 +92,7 @@ export default function FileHistory({ onDownload }: Props) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
         {list.map((item, index) => {
-          const isFirstFree = index === 0 && item.free;
+          const isFirstFree = index === 0;
           const canDownload = isFirstFree;
           
           return (

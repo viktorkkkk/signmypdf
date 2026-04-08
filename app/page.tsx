@@ -417,6 +417,7 @@ export default function Home() {
       </div>
 
       {/* File History — sticky bottom bar */}
+      <div className="container">
       <FileHistory 
         onDownload={(item: HistoryItem) => {
           if (item.free) {
@@ -432,6 +433,7 @@ export default function Home() {
           }
         }}
       />
+      </div>
 
       {/* Pricing modal */}
       {showPricing && (
