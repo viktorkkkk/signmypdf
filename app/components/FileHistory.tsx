@@ -128,12 +128,12 @@ export default function FileHistory({ hasSubscription = false, onDownload }: Pro
                     {fmt(item.size)} · {timeAgo(item.date)}
                     {!canDownload && (
                       <span style={{ color: '#dc2626', marginLeft: 8, fontWeight: 500 }}>
-                        🔒 Требуется подписка
+                        🔒 Premium required
                       </span>
                     )}
                     {canDownload && index === 0 && !hasSubscription && (
                       <span style={{ color: '#22c55e', marginLeft: 8, fontWeight: 500 }}>
-                        ✓ Доступно
+                        ✓ Available
                       </span>
                     )}
                   </div>
@@ -163,7 +163,7 @@ export default function FileHistory({ hasSubscription = false, onDownload }: Pro
       
       {!hasSubscription && list.length > 1 && (
         <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
-          🔒 Только последний файл доступен для скачивания.{' '}
+          🔒 Only the most recent file can be downloaded.{' '}
           <button
             onClick={() => onDownload(list[0], false)}
             style={{
@@ -175,7 +175,7 @@ export default function FileHistory({ hasSubscription = false, onDownload }: Pro
               fontWeight: 500,
             }}
           >
-            Оформить подписку для доступа ко всем
+            Upgrade for full access
           </button>
         </p>
       )}

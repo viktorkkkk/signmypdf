@@ -230,8 +230,8 @@ export default function Home() {
                   borderRadius: 8, 
                   border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}`
                 }}>
-                  📄 {todayCount}/{DAILY_LIMIT} подписей сегодня
-                  {todayCount >= DAILY_LIMIT && ' — лимит исчерпан'}
+                  📄 {todayCount}/{DAILY_LIMIT} signatures today
+                  {todayCount >= DAILY_LIMIT && ' — limit reached'}
                 </span>
                 {todayCount >= DAILY_LIMIT && (
                   <button
@@ -247,7 +247,7 @@ export default function Home() {
                       fontWeight: 500,
                     }}
                   >
-                    🔓 Оформить подписку
+                    🔓 Upgrade to Premium
                   </button>
                 )}
               </div>
@@ -260,12 +260,12 @@ export default function Home() {
               <div className="dz-icon">📄</div>
               <p className="dz-title">
                 {todayCount >= DAILY_LIMIT && !hasSubscription 
-                  ? '🔒 Лимит подписей исчерпан' 
+                  ? '🔒 Daily limit reached' 
                   : isDragActive ? 'Drop it here!' : 'Drop your PDF here'}
               </p>
               <p className="dz-sub">
                 {todayCount >= DAILY_LIMIT && !hasSubscription
-                  ? 'Оформите подписку для безлимитного доступа'
+                  ? 'Upgrade to premium for unlimited access'
                   : 'or click to select a file from your computer'}
               </p>
               {!(todayCount >= DAILY_LIMIT && !hasSubscription) && (
@@ -296,14 +296,14 @@ export default function Home() {
               {!hasSubscription && (
                 <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#dc2626' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fef2f2' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}` }}>
                   {todayCount >= DAILY_LIMIT 
-                    ? '🔒 Лимит исчерпан — оформите подписку'
-                    : `📄 ${todayCount}/${DAILY_LIMIT} подписей сегодня (бесплатно)`
+                    ? '🔒 Limit reached — upgrade now'
+                    : `📄 ${todayCount}/${DAILY_LIMIT} signatures today (free)`
                   }
                 </div>
               )}
               {hasSubscription && (
                 <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0' }}>
-                  ⭐ Премиум активен
+                  ⭐ Premium active
                 </div>
               )}
             </div>
@@ -423,7 +423,7 @@ export default function Home() {
               {isProcessing
                 ? <><span className="spinner" /> Signing...</>
                 : !canSignToday
-                  ? '🔒 Оформить подписку для продолжения'
+                  ? '🔒 Upgrade to continue'
                   : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
             </button>
             
@@ -480,31 +480,54 @@ export default function Home() {
       {/* Pricing modal */}
       {showPricing && (
         <div className="modal-overlay" onClick={() => setShowPricing(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
             <div className="pricing-header">
-              <div style={{ fontSize: 32, marginBottom: 8 }}>⭐</div>
-              <h3 className="pricing-title">Премиум подписка</h3>
+              <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
+              <h3 className="pricing-title">Unlock Unlimited Signing</h3>
               <p className="pricing-sub">
                 {todayCount >= DAILY_LIMIT 
-                  ? `Вы использовали ${DAILY_LIMIT} из ${DAILY_LIMIT} бесплатных подписей сегодня`
-                  : 'Скачивание истории документов доступно только с подпиской'
+                  ? `You've used ${DAILY_LIMIT} of ${DAILY_LIMIT} free signatures today`
+                  : 'Download history and unlimited signing with premium'
                 }
               </p>
             </div>
             
-            <div className="pricing-grid" style={{ gridTemplateColumns: '1fr' }}>
-              {/* Monthly */}
-              <div className="plan-card plan-featured" style={{ border: '2px solid #2563eb' }}>
-                <div className="plan-badge">Рекомендуем</div>
-                <div className="plan-name">Премиум</div>
-                <div className="plan-price">$4.99<span>/мес</span></div>
-                <div className="plan-desc">Отмена в любое время</div>
+            <div className="pricing-grid">
+              {/* Weekly */}
+              <div className="plan-card">
+                <div className="plan-name">Weekly</div>
+                <div className="plan-price">$2.99<span>/week</span></div>
+                <div className="plan-desc">Perfect for short-term needs</div>
                 <ul className="plan-perks">
-                  <li>✓ Безлимитные подписи PDF</li>
-                  <li>✓ Скачивание из истории</li>
-                  <li>✓ Хранение файлов навсегда</li>
-                  <li>✓ Приоритетная поддержка</li>
+                  <li>✓ Unlimited signatures</li>
+                  <li>✓ Download history</li>
+                  <li>✓ 7 days access</li>
+                </ul>
+                <button 
+                  className="plan-btn"
+                  onClick={() => {
+                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+                    setHasSubscription(true);
+                    setShowPricing(false);
+                    alert('✅ Premium activated! (Demo mode)');
+                  }}
+                >
+                  Get Weekly
+                </button>
+              </div>
+
+              {/* Annual - featured */}
+              <div className="plan-card plan-featured">
+                <div className="plan-badge">Most Popular</div>
+                <div className="plan-name">Annual</div>
+                <div className="plan-price">$3.25<span>/mo</span></div>
+                <div className="plan-desc">$39/year — save 35%</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited signatures</li>
+                  <li>✓ Download history</li>
+                  <li>✓ 1 year file storage</li>
+                  <li>✓ Priority support</li>
                 </ul>
                 <button 
                   className="plan-btn plan-btn-featured"
@@ -512,50 +535,72 @@ export default function Home() {
                     localStorage.setItem(SUBSCRIPTION_KEY, 'true');
                     setHasSubscription(true);
                     setShowPricing(false);
-                    alert('✅ Премиум активирован! (Демо режим)');
+                    alert('✅ Premium activated! (Demo mode)');
                   }}
                 >
-                  Оформить подписку
+                  Get Annual — $39/yr
+                </button>
+              </div>
+
+              {/* Lifetime */}
+              <div className="plan-card">
+                <div className="plan-name">Lifetime</div>
+                <div className="plan-price">$79<span> once</span></div>
+                <div className="plan-desc">Pay once, use forever</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited signatures</li>
+                  <li>✓ Lifetime storage</li>
+                  <li>✓ All future features</li>
+                  <li>✓ Priority support</li>
+                </ul>
+                <button 
+                  className="plan-btn"
+                  onClick={() => {
+                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+                    setHasSubscription(true);
+                    setShowPricing(false);
+                    alert('✅ Premium activated! (Demo mode)');
+                  }}
+                >
+                  Get Lifetime
                 </button>
               </div>
             </div>
             
-            <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: 16 }}>
-              🔒 Безопасная оплата · Без скрытых комиссий
-            </p>
+            <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
           </div>
         </div>
       )}
 
       {/* Footer */}
       <footer style={{
-        background: '#f1f5f9',
+        background: '#f8fafc',
         borderTop: '1px solid #e2e8f0',
-        padding: '48px 0 24px',
-        marginTop: 64,
+        padding: '32px 0 24px',
+        marginTop: 48,
       }}>
         <div className="container">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 32,
-            marginBottom: 32,
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 24,
+            marginBottom: 24,
           }}>
             {/* Company Info */}
             <div>
-              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
                 SignMyPDF
               </h4>
-              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
                 Simple and secure PDF signing tool. No registration required. 
-                Sign your documents online for free.
+                Sign your documents online.
               </p>
             </div>
 
             {/* Contacts */}
             <div>
-              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
-                Контакты
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+                Contact
               </h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
                 <li>📧 support@signmypdf.app</li>
@@ -565,18 +610,18 @@ export default function Home() {
 
             {/* Legal */}
             <div>
-              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
-                Правовая информация
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+                Legal
               </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, lineHeight: 2 }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
                 <li>
                   <a href="/terms" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    📄 Публичная оферта
+                    Terms of Service
                   </a>
                 </li>
                 <li>
                   <a href="/privacy" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    🔒 Политика конфиденциальности
+                    Privacy Policy
                   </a>
                 </li>
               </ul>
@@ -584,14 +629,12 @@ export default function Home() {
 
             {/* About */}
             <div>
-              <h4 style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', marginBottom: 12 }}>
-                О компании
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+                Company
               </h4>
-              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
-                ИП / ООО «СайнМайПДФ»<br />
-                ОГРН: [ваш ОГРН]<br />
-                ИНН: [ваш ИНН]<br />
-                Адрес: [ваш юридический адрес]
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
+                SignMyPDF Inc.<br />
+                Making document signing simple and secure.
               </p>
             </div>
           </div>
@@ -599,12 +642,12 @@ export default function Home() {
           {/* Bottom bar */}
           <div style={{
             borderTop: '1px solid #e2e8f0',
-            paddingTop: 24,
+            paddingTop: 16,
             textAlign: 'center',
-            fontSize: 13,
+            fontSize: 12,
             color: '#94a3b8',
           }}>
-            © {new Date().getFullYear()} SignMyPDF. Все права защищены.
+            © {new Date().getFullYear()} SignMyPDF. All rights reserved.
           </div>
         </div>
       </footer>
