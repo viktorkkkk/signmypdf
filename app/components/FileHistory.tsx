@@ -156,7 +156,7 @@ export default function FileHistory({ onDownload }: Props) {
       <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
         🔒 Free plan: 1 download ·{' '}
         <button
-          onClick={() => onDownload(list[0] || { id: '', name: '', date: '', size: 0, dataUrl: '', free: true })}
+          onClick={() => onDownload(list[0] || { id: '', name: '', date: '', size: 0, dataUrl: '', free: true }, false)}
           style={{
             background: 'none',
             border: 'none',
