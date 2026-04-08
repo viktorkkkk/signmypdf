@@ -98,11 +98,11 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
-      // Check if first doc BEFORE saving
-      const raw = localStorage.getItem('signmypdf_history');
-      const history = raw ? JSON.parse(raw) : [];
-      const isFirst = history.length === 0;
-      setIsFirstDoc(isFirst);
+      // Auto-download immediately
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `signed-${pdfFile.name}`;
+      a.click();
 
       // Save to history
       const reader = new FileReader();
@@ -112,9 +112,11 @@ export default function Home() {
       };
       reader.readAsDataURL(blob);
 
-      setStep('done');
-      // Scroll to top to show download button, not file history
-      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      // Optional: show done screen after short delay, or stay on current screen
+      setTimeout(() => {
+        setStep('done');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 500);
     } catch (err: any) {
       console.error('handleSign error:', err);
       alert('Error signing PDF: ' + (err?.message || 'unknown'));
@@ -338,63 +340,8 @@ export default function Home() {
             </div>
 
             <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
-              ✅ Free download — no registration needed
+              ✅ Document saved — check your downloads folder
             </p>
-
-            {/* Premium promo (optional upgrade) */}
-            <div className="pricing-wrap" style={{ opacity: 0.7 }}>
-              <div className="pricing-header">
-                <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
-                <h3 className="pricing-title">Unlock unlimited signatures</h3>
-                <p className="pricing-sub">You've used your free document. Choose a plan to keep signing.</p>
-              </div>
-
-              <div className="pricing-grid">
-                {/* Monthly */}
-                <div className="plan-card">
-                  <div className="plan-name">Monthly</div>
-                  <div className="plan-price">$4.99<span>/mo</span></div>
-                  <div className="plan-desc">Billed monthly. Cancel anytime.</div>
-                  <ul className="plan-perks">
-                    <li>✓ Unlimited documents</li>
-                    <li>✓ Download history</li>
-                    <li>✓ Priority support</li>
-                  </ul>
-                  <button className="plan-btn">Get Monthly</button>
-                </div>
-
-                {/* Annual — featured */}
-                <div className="plan-card plan-featured">
-                  <div className="plan-badge">Most Popular</div>
-                  <div className="plan-name">Annual</div>
-                  <div className="plan-price">$3.25<span>/mo</span></div>
-                  <div className="plan-desc">$39/year — save 35% vs monthly.</div>
-                  <ul className="plan-perks">
-                    <li>✓ Unlimited documents</li>
-                    <li>✓ Download history</li>
-                    <li>✓ Priority support</li>
-                    <li>✓ 1 year document storage</li>
-                  </ul>
-                  <button className="plan-btn plan-btn-featured">Get Annual — $39/yr</button>
-                </div>
-
-                {/* Lifetime */}
-                <div className="plan-card">
-                  <div className="plan-name">Lifetime</div>
-                  <div className="plan-price">$79<span> once</span></div>
-                  <div className="plan-desc">Pay once, use forever.</div>
-                  <ul className="plan-perks">
-                    <li>✓ Unlimited documents</li>
-                    <li>✓ Lifetime storage</li>
-                    <li>✓ All future features</li>
-                    <li>✓ Priority support forever</li>
-                  </ul>
-                  <button className="plan-btn">Get Lifetime</button>
-                </div>
-              </div>
-
-              <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
-            </div>
           </div>
         )}
 
@@ -412,64 +359,7 @@ export default function Home() {
       />
       </div>
 
-      {/* Pricing modal */}
-      {showPricing && (
-        <div className="modal-overlay" onClick={() => setShowPricing(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
-            <div className="pricing-header">
-              <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
-              <h3 className="pricing-title">Unlock unlimited signatures</h3>
-              <p className="pricing-sub">{pendingDownload ? "You've used your free document. Choose a plan to keep signing." : "Choose a plan to keep signing without limits."}</p>
-            </div>
-            
-            <div className="pricing-grid">
-              {/* Monthly */}
-              <div className="plan-card">
-                <div className="plan-name">MONTHLY</div>
-                <div className="plan-price">$4.99<span>/mo</span></div>
-                <div className="plan-desc">Billed monthly. Cancel anytime.</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited documents</li>
-                  <li>✓ Download history</li>
-                  <li>✓ Priority support</li>
-                </ul>
-                <button className="plan-btn">Get Monthly</button>
-              </div>
-
-              {/* Annual - always visible */}
-              <div className="plan-card plan-featured">
-                <div className="plan-badge">Most Popular</div>
-                <div className="plan-name">ANNUAL</div>
-                <div className="plan-price">$3.25<span>/mo</span></div>
-                <div className="plan-desc">$39/year — save 35%</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited documents</li>
-                  <li>✓ Download history</li>
-                  <li>✓ Priority support</li>
-                  <li>✓ 1 year document storage</li>
-                </ul>
-                <button className="plan-btn plan-btn-featured">Get Annual — $39/yr</button>
-              </div>
-
-              {/* Lifetime - always visible */}
-              <div className="plan-card">
-                <div className="plan-name">LIFETIME</div>
-                <div className="plan-price">$79<span> once</span></div>
-                <div className="plan-desc">Pay once, use forever.</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited documents</li>
-                  <li>✓ Lifetime storage</li>
-                  <li>✓ All future features</li>
-                  <li>✓ Priority support forever</li>
-                </ul>
-                <button className="plan-btn">Get Lifetime</button>
-              </div>
-            </div>
-            <p className="pricing-fine">Secure payment · No hidden fees · Instant access</p>
-          </div>
-        </div>
-      )}
+      {/* Pricing removed - all features free */}
     </>
   );
 }
