@@ -214,63 +214,13 @@ export default function Home() {
             <h1 className="hero-title">Sign your PDF in seconds</h1>
             <p className="hero-sub">No registration. No software. Upload, sign, download — done.</p>
             
-            {!hasSubscription && (
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                marginBottom: 20,
-                gap: 12,
-                flexWrap: 'wrap'
-              }}>
-                <span style={{ 
-                  fontSize: 14, 
-                  color: todayCount >= DAILY_LIMIT ? '#dc2626' : '#64748b', 
-                  background: todayCount >= DAILY_LIMIT ? '#fef2f2' : '#f8fafc', 
-                  padding: '10px 16px', 
-                  borderRadius: 8, 
-                  border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}`
-                }}>
-                  📄 {todayCount}/{DAILY_LIMIT} signatures today
-                  {todayCount >= DAILY_LIMIT && ' — limit reached'}
-                </span>
-                {todayCount >= DAILY_LIMIT && (
-                  <button
-                    onClick={() => setShowPricing(true)}
-                    style={{
-                      fontSize: 14,
-                      color: 'white',
-                      background: '#dc2626',
-                      padding: '10px 16px',
-                      borderRadius: 8,
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontWeight: 500,
-                    }}
-                  >
-                    🔓 Upgrade to Premium
-                  </button>
-                )}
-              </div>
-            )}
-            <div {...getRootProps()} 
-              className={`dropzone${isDragActive ? ' active' : ''}${todayCount >= DAILY_LIMIT && !hasSubscription ? ' disabled' : ''}`}
-              style={todayCount >= DAILY_LIMIT && !hasSubscription ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
-            >
+
+            <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
               <div className="dz-icon">📄</div>
-              <p className="dz-title">
-                {todayCount >= DAILY_LIMIT && !hasSubscription 
-                  ? '🔒 Daily limit reached' 
-                  : isDragActive ? 'Drop it here!' : 'Drop your PDF here'}
-              </p>
-              <p className="dz-sub">
-                {todayCount >= DAILY_LIMIT && !hasSubscription
-                  ? 'Upgrade to premium for unlimited access'
-                  : 'or click to select a file from your computer'}
-              </p>
-              {!(todayCount >= DAILY_LIMIT && !hasSubscription) && (
-                <button className="btn-primary" type="button">Choose PDF file</button>
-              )}
+              <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
+              <p className="dz-sub">or click to select a file from your computer</p>
+              <button className="btn-primary" type="button">Choose PDF file</button>
             </div>
             <div className="features">
               {[
@@ -294,10 +244,10 @@ export default function Home() {
             <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h2 className="step-title">Sign your document</h2>
               {!hasSubscription && (
-                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#dc2626' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fef2f2' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fecaca' : '#e2e8f0'}` }}>
+                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}` }}>
                   {todayCount >= DAILY_LIMIT 
-                    ? '🔒 Limit reached — upgrade now'
-                    : `📄 ${todayCount}/${DAILY_LIMIT} signatures today (free)`
+                    ? `📄 ${todayCount}/${DAILY_LIMIT} used — upgrade to save`
+                    : `📄 ${todayCount}/${DAILY_LIMIT} free signatures today`
                   }
                 </div>
               )}
@@ -415,16 +365,13 @@ export default function Home() {
                 padding: '16px', 
                 fontSize: 16, 
                 borderRadius: 16,
-                background: !canSignToday ? '#dc2626' : undefined,
               }}
               onClick={handleSign}
               disabled={isProcessing || !canSign}
             >
               {isProcessing
                 ? <><span className="spinner" /> Signing...</>
-                : !canSignToday
-                  ? '🔒 Upgrade to continue'
-                  : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
+                : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
             </button>
             
             {selectedPages.length === 0 && (
@@ -487,7 +434,7 @@ export default function Home() {
               <h3 className="pricing-title">Unlock Unlimited Signing</h3>
               <p className="pricing-sub">
                 {todayCount >= DAILY_LIMIT 
-                  ? `You've used ${DAILY_LIMIT} of ${DAILY_LIMIT} free signatures today`
+                  ? `Free plan: ${DAILY_LIMIT} signatures per day. Upgrade to save your signed document.`
                   : 'Download history and unlimited signing with premium'
                 }
               </p>
