@@ -1,7 +1,8 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPosts } from '../posts';
+import { getPostBySlug, getAllPosts } from '../../blog/posts';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -92,7 +93,7 @@ function formatContent(content: string) {
       
       // Bold text **text**
       let text = trimmed;
-      const boldParts: (string | JSX.Element)[] = [];
+      const boldParts: (string | React.ReactNode)[] = [];
       const boldRegex = /\*\*(.+?)\*\*/g;
       let lastIndex = 0;
       let match;

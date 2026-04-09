@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getAllPosts } from './app/blog/posts';
+import { getAllPosts } from './blog/posts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://signmypdf.vercel.app';
