@@ -11,6 +11,8 @@ export interface BlogPost {
   metaDescription: string;
 }
 
+export type { BlogPost as default };
+
 const posts: BlogPost[] = [
   {
     slug: 'how-to-sign-pdf-online',

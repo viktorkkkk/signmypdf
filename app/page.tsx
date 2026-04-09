@@ -65,6 +65,23 @@ export default function Home() {
   useEffect(() => {
     setHasSubscription(isSubscribed());
     setTodayCount(getTodayCount());
+    
+    // Check for pending PDF from blog
+    const pendingPdf = localStorage.getItem('blog_pending_pdf');
+    const pendingPdfName = localStorage.getItem('blog_pending_pdf_name');
+    if (pendingPdf && pendingPdfName) {
+      // Convert base64 to File
+      fetch(pendingPdf)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], pendingPdfName, { type: 'application/pdf' });
+          setPdfFile(file);
+          setStep('sign');
+          // Clear pending
+          localStorage.removeItem('blog_pending_pdf');
+          localStorage.removeItem('blog_pending_pdf_name');
+        });
+    }
   }, []);
   
   // Multi-page signature state

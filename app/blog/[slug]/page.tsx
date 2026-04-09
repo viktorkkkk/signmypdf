@@ -1,52 +1,88 @@
-import type { Metadata } from 'next';
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPosts } from '../../blog/posts';
+import { getPostBySlug, getAllPosts, BlogPost } from '../../blog/posts';
 import Logo from '../../components/Logo';
+import BlogPdfUploader from '../../components/BlogPdfUploader';
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+// FAQ Accordion Component
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
   
-  if (!post) {
-    return {
-      title: 'Article Not Found',
-    };
-  }
-
-  return {
-    title: post.metaTitle || post.title,
-    description: post.metaDescription || post.excerpt,
-    keywords: post.tags,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: 'article',
-      publishedTime: post.date,
-      authors: [post.author],
-      tags: post.tags,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
-    },
-  };
+  return (
+    <div style={{
+      borderBottom: '1px solid #e2e8f0',
+    }}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          width: '100%',
+          padding: '20px 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+        }}
+      >
+        <span style={{
+          fontSize: 16,
+          fontWeight: 600,
+          color: '#0f172a',
+        }}>
+          {question}
+        </span>
+        <svg 
+          width="20" 
+          height="20" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="#64748b" 
+          strokeWidth="2"
+          style={{
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+          }}
+        >
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+      {isOpen && (
+        <div style={{
+          paddingBottom: 20,
+          fontSize: 15,
+          color: '#475569',
+          lineHeight: 1.7,
+        }}>
+          {answer}
+        </div>
+      )}
+    </div>
+  );
 }
 
-// Simple markdown-like parser
-function formatContent(content: string) {
+// Parse content with internal links
+function formatContent(content: string, currentSlug: string) {
+  const allPosts = getAllPosts();
+  
+  // Link mapping for internal linking
+  const linkMap: Record<string, string> = {
+    'sign pdf online': '/blog/how-to-sign-pdf-online',
+    'sign pdf free': '/blog/sign-pdf-free-without-registration',
+    'add signature': '/blog/how-to-add-signature-to-pdf',
+    'sign pdf on iphone': '/blog/sign-pdf-on-iphone-free',
+    'sign pdf on mac': '/blog/sign-pdf-on-mac',
+    'sign pdf on android': '/blog/sign-pdf-android-free',
+    'sign pdf on windows': '/blog/sign-pdf-windows-free',
+    'without adobe': '/blog/sign-pdf-without-adobe',
+    'no watermark': '/blog/sign-pdf-no-watermark',
+    'free alternative': '/blog/sign-pdf-without-adobe',
+  };
+
   return content
     .split('\n\n')
     .map((block, i) => {
@@ -134,7 +170,7 @@ function formatContent(content: string) {
         );
       }
       
-      // Bold text **text**
+      // Bold text **text** and process internal links
       let text = trimmed;
       const boldParts: (string | React.ReactNode)[] = [];
       const boldRegex = /\*\*(.+?)\*\*/g;
@@ -175,7 +211,7 @@ function formatContent(content: string) {
         return <hr key={i} style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '32px 0' }} />;
       }
       
-      // Regular paragraph
+      // Regular paragraph with internal links
       if (trimmed) {
         return (
           <p key={i} style={{ 
@@ -193,17 +229,229 @@ function formatContent(content: string) {
     });
 }
 
-export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
+// SEO Variations Block
+function SEOVariations() {
+  return (
+    <div style={{ marginTop: 48 }}>
+      <h2 style={{ 
+        fontSize: 24, 
+        fontWeight: 700, 
+        color: '#0f172a', 
+        marginBottom: 24 
+      }}>
+        More Ways to Sign PDFs
+      </h2>
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+            <Link href="/blog/sign-pdf-on-iphone-free" style={{ color: '#2563eb', textDecoration: 'none' }}>
+              Sign PDF on iPhone
+            </Link>
+          </h3>
+          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+            Sign PDF documents directly on your iPhone without installing apps. Works in Safari and Chrome. 
+            Perfect for signing contracts, forms, and agreements on the go.{' '}
+            <Link href="/blog/sign-pdf-on-iphone-free" style={{ color: '#2563eb' }}>Learn more →</Link>
+          </p>
+        </div>
+        
+        <div>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+            <Link href="/blog/sign-pdf-without-adobe" style={{ color: '#2563eb', textDecoration: 'none' }}>
+              Sign PDF Without Adobe
+            </Link>
+          </h3>
+          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+            Skip the expensive Adobe Acrobat subscription. Our free online tool provides the same professional 
+            signing capabilities without the $14.99/month price tag.{' '}
+            <Link href="/blog/sign-pdf-without-adobe" style={{ color: '#2563eb' }}>Learn more →</Link>
+          </p>
+        </div>
+        
+        <div>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+            <Link href="/blog/sign-pdf-free-without-registration" style={{ color: '#2563eb', textDecoration: 'none' }}>
+              Sign PDF Without Registration
+            </Link>
+          </h3>
+          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+            No email required. No account creation. No passwords to remember. Just upload your PDF and 
+            sign instantly. Your privacy matters — we collect zero personal information.{' '}
+            <Link href="/blog/sign-pdf-free-without-registration" style={{ color: '#2563eb' }}>Learn more →</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// FAQ Section
+function FAQSection() {
+  const faqs = [
+    {
+      question: 'Is it free?',
+      answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. For unlimited signing and additional features like saved signatures, we offer affordable premium plans starting at just $2.99/week.'
+    },
+    {
+      question: 'Is it legal?',
+      answer: 'Absolutely. Electronic signatures are legally binding in the United States (ESIGN Act, UETA), European Union (eIDAS regulation), United Kingdom, Canada, Australia, and over 100 countries worldwide. Documents signed with our tool carry the same legal weight as handwritten signatures.'
+    },
+    {
+      question: 'Do I need to install anything?',
+      answer: 'No installation required. Our PDF signer works entirely in your web browser. Simply open the website, upload your PDF, and start signing. It works on any device with a modern browser — desktop, laptop, tablet, or smartphone.'
+    },
+    {
+      question: 'Is my file safe?',
+      answer: 'Yes, your files are completely safe. All PDF processing happens locally in your browser using JavaScript. Your documents are never uploaded to our servers, ensuring maximum privacy and security. We cannot see or access your files at any point.'
+    },
+  ];
+
+  return (
+    <div style={{ marginTop: 48 }}>
+      <h2 style={{ 
+        fontSize: 24, 
+        fontWeight: 700, 
+        color: '#0f172a', 
+        marginBottom: 24 
+      }}>
+        Frequently Asked Questions
+      </h2>
+      <div style={{
+        background: 'white',
+        borderRadius: 16,
+        border: '1px solid #e2e8f0',
+        padding: '0 24px',
+      }}>
+        {faqs.map((faq, index) => (
+          <FAQItem key={index} question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Final CTA Block
+function FinalCTA() {
+  return (
+    <div style={{
+      marginTop: 48,
+      padding: 40,
+      background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+      borderRadius: 24,
+      textAlign: 'center',
+      boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)'
+    }}>
+      <h2 style={{
+        fontSize: 28,
+        fontWeight: 800,
+        color: 'white',
+        marginBottom: 12,
+        letterSpacing: -0.5
+      }}>
+        Ready to sign your PDF?
+      </h2>
+      <p style={{
+        fontSize: 16,
+        color: 'rgba(255,255,255,0.9)',
+        marginBottom: 28,
+        maxWidth: 480,
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}>
+        Join thousands of users who trust SignMyPDF for fast, free, and secure document signing.
+      </p>
+      <Link 
+        href="/"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 10,
+          padding: '18px 36px',
+          background: 'white',
+          color: '#2563eb',
+          fontWeight: 800,
+          fontSize: 16,
+          borderRadius: 16,
+          textDecoration: 'none',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+        }}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Sign PDF Free
+      </Link>
+    </div>
+  );
+}
+
+// Related Articles
+function RelatedArticles({ currentSlug }: { currentSlug: string }) {
+  const allPosts = getAllPosts();
+  const relatedPosts = allPosts
+    .filter(p => p.slug !== currentSlug)
+    .slice(0, 6);
+
+  return (
+    <div style={{ marginTop: 48 }}>
+      <h2 style={{ 
+        fontSize: 24, 
+        fontWeight: 700, 
+        color: '#0f172a', 
+        marginBottom: 24 
+      }}>
+        Related Articles
+      </h2>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+        gap: 16 
+      }}>
+        {relatedPosts.map(post => (
+          <Link 
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <div style={{
+              background: 'white',
+              borderRadius: 12,
+              padding: 20,
+              border: '1px solid #e2e8f0',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}>
+              <span style={{ fontSize: 12, color: '#94a3b8' }}>{post.readTime}</span>
+              <h3 style={{
+                fontSize: 15,
+                fontWeight: 600,
+                color: '#0f172a',
+                marginTop: 8,
+                lineHeight: 1.4
+              }}>
+                {post.title}
+              </h3>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface BlogPostPageProps {
+  params: { slug: string };
+}
+
+export default function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = params;
   const post = getPostBySlug(slug);
   
   if (!post) {
     notFound();
   }
-
-  const relatedPosts = getAllPosts()
-    .filter(p => p.slug !== post.slug && p.tags.some(tag => post.tags.includes(tag)))
-    .slice(0, 3);
 
   return (
     <>
@@ -289,7 +537,7 @@ export default async function BlogPostPage({ params }: Props) {
             </span>
           </div>
 
-          {/* Title */}
+          {/* H1 Title */}
           <h1 style={{
             fontSize: 36,
             fontWeight: 800,
@@ -316,180 +564,63 @@ export default async function BlogPostPage({ params }: Props) {
             ))}
           </div>
 
-          {/* HERO CTA Banner - Upload PDF */}
+          {/* HERO: PDF Uploader */}
           <div style={{
             marginBottom: 48,
             padding: 40,
             background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
             borderRadius: 24,
-            textAlign: 'center',
             boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)'
           }}>
-            <div style={{
-              width: 64,
-              height: 64,
-              background: 'rgba(255,255,255,0.2)',
-              borderRadius: 20,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 24px',
-              fontSize: 32
-            }}>
-              📄
-            </div>
             <h2 style={{
-              fontSize: 28,
+              fontSize: 26,
               fontWeight: 800,
               color: 'white',
-              marginBottom: 12,
+              marginBottom: 8,
+              textAlign: 'center',
               letterSpacing: -0.5
             }}>
               Upload your file and sign in seconds
             </h2>
             <p style={{
-              fontSize: 16,
-              color: 'rgba(255,255,255,0.9)',
-              marginBottom: 28,
-              lineHeight: 1.6,
-              maxWidth: 480,
-              marginLeft: 'auto',
-              marginRight: 'auto'
+              fontSize: 15,
+              color: 'rgba(255,255,255,0.85)',
+              marginBottom: 24,
+              textAlign: 'center'
             }}>
-              No registration required. Sign 2 PDFs per day completely free.
+              No registration required • Free • No watermark
             </p>
-            <Link 
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '18px 36px',
-                background: 'white',
-                color: '#2563eb',
-                fontWeight: 800,
-                fontSize: 16,
-                borderRadius: 16,
-                textDecoration: 'none',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
-              }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Upload PDF & Sign Free
-            </Link>
+            
+            <BlogPdfUploader />
+            
             <p style={{
               fontSize: 13,
-              color: 'rgba(255,255,255,0.7)',
-              marginTop: 16
+              color: 'rgba(255,255,255,0.6)',
+              marginTop: 16,
+              textAlign: 'center'
             }}>
-              ✓ No credit card required • ✓ No watermark
+              Your files are processed locally in your browser — never uploaded to servers
             </p>
           </div>
 
           {/* Content */}
           <div style={{ fontSize: 16 }}>
-            {formatContent(post.content)}
+            {formatContent(post.content, slug)}
           </div>
 
-          {/* CTA Box */}
-          <div style={{
-            marginTop: 48,
-            padding: 32,
-            background: 'linear-gradient(135deg, #eff6ff, #e0e7ff)',
-            borderRadius: 20,
-            border: '1px solid #dbeafe'
-          }}>
-            <h3 style={{
-              fontSize: 22,
-              fontWeight: 700,
-              color: '#0f172a',
-              marginBottom: 12
-            }}>
-              Ready to try it yourself?
-            </h3>
-            <p style={{
-              fontSize: 15,
-              color: '#475569',
-              marginBottom: 24,
-              lineHeight: 1.6
-            }}>
-              Sign your PDF documents online for free. No registration required — start signing in seconds.
-            </p>
-            <Link 
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '14px 28px',
-                background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
-                color: 'white',
-                fontWeight: 700,
-                fontSize: 15,
-                borderRadius: 14,
-                textDecoration: 'none',
-                boxShadow: '0 4px 16px rgba(37,99,235,0.3)'
-              }}
-            >
-              Sign PDF for Free
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </div>
+          {/* SEO Variations */}
+          <SEOVariations />
+
+          {/* FAQ Accordion */}
+          <FAQSection />
+
+          {/* Final CTA */}
+          <FinalCTA />
+
+          {/* Related Articles */}
+          <RelatedArticles currentSlug={slug} />
         </div>
       </article>
-
-      {/* Related Posts */}
-      {relatedPosts.length > 0 && (
-        <div style={{ background: '#f8fafc', padding: '48px 24px' }}>
-          <div className="container" style={{ padding: 0 }}>
-            <h2 style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: '#0f172a',
-              marginBottom: 24
-            }}>
-              Related Articles
-            </h2>
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-              gap: 20 
-            }}>
-              {relatedPosts.map(related => (
-                <Link 
-                  key={related.slug}
-                  href={`/blog/${related.slug}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <div style={{
-                    background: 'white',
-                    borderRadius: 16,
-                    padding: 20,
-                    border: '1px solid #e2e8f0'
-                  }}>
-                    <span style={{ fontSize: 12, color: '#94a3b8' }}>{related.readTime}</span>
-                    <h3 style={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                      color: '#0f172a',
-                      marginTop: 8,
-                      lineHeight: 1.4
-                    }}>
-                      {related.title}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Footer */}
       <footer style={{
@@ -504,7 +635,6 @@ export default async function BlogPostPage({ params }: Props) {
             gap: 32,
             marginBottom: 32
           }}>
-            {/* Company */}
             <div>
               <Link href="/" style={{ 
                 display: 'flex', 
@@ -526,11 +656,7 @@ export default async function BlogPostPage({ params }: Props) {
                 }}>
                   ✍️
                 </div>
-                <span style={{ 
-                  fontWeight: 800, 
-                  color: 'white',
-                  fontSize: 16
-                }}>
+                <span style={{ fontWeight: 800, color: 'white', fontSize: 16 }}>
                   SignMyPDF
                 </span>
               </Link>
@@ -539,7 +665,6 @@ export default async function BlogPostPage({ params }: Props) {
               </p>
             </div>
 
-            {/* Product */}
             <div>
               <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
                 Product
@@ -550,19 +675,17 @@ export default async function BlogPostPage({ params }: Props) {
               </ul>
             </div>
 
-            {/* Resources */}
             <div>
               <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
                 Resources
               </h4>
               <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
-                <li><Link href="/blog/how-to-sign-pdf-online-free" style={{ color: '#94a3b8', textDecoration: 'none' }}>How to Sign PDF</Link></li>
-                <li><Link href="/blog/electronic-signature-legality" style={{ color: '#94a3b8', textDecoration: 'none' }}>E-Signature Legal Guide</Link></li>
-                <li><Link href="/blog/sign-pdf-iphone-ipad" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign on iPhone/iPad</Link></li>
+                <li><Link href="/blog/how-to-sign-pdf-online" style={{ color: '#94a3b8', textDecoration: 'none' }}>How to Sign PDF</Link></li>
+                <li><Link href="/blog/sign-pdf-on-iphone-free" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign on iPhone</Link></li>
+                <li><Link href="/blog/sign-pdf-without-adobe" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign Without Adobe</Link></li>
               </ul>
             </div>
 
-            {/* Legal */}
             <div>
               <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
                 Legal
