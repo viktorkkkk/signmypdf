@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllPosts } from './blog/posts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://signmypdf.vercel.app';
+  const baseUrl = 'https://signmypdf.io';
   
   // Static pages
   const staticPages = [

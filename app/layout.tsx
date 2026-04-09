@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'SignMyPDF — Sign PDF Online Free',
     description: 'Sign PDF documents in seconds. No registration, no software. Draw or type your signature.',
-    url: 'https://signmypdf.vercel.app',
+    url: 'https://signmypdf.io',
     siteName: 'SignMyPDF',
     type: 'website',
     locale: 'en_US',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: 'Sign PDF documents online for free. No registration required.',
   },
   alternates: {
-    canonical: 'https://signmypdf.vercel.app',
+    canonical: 'https://signmypdf.io',
   },
   verification: {
     google: 'your-google-verification-code', // Replace with actual code when available
