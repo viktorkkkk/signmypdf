@@ -316,6 +316,80 @@ export default async function BlogPostPage({ params }: Props) {
             ))}
           </div>
 
+          {/* HERO CTA Banner - Upload PDF */}
+          <div style={{
+            marginBottom: 48,
+            padding: 40,
+            background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+            borderRadius: 24,
+            textAlign: 'center',
+            boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)'
+          }}>
+            <div style={{
+              width: 64,
+              height: 64,
+              background: 'rgba(255,255,255,0.2)',
+              borderRadius: 20,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px',
+              fontSize: 32
+            }}>
+              📄
+            </div>
+            <h2 style={{
+              fontSize: 28,
+              fontWeight: 800,
+              color: 'white',
+              marginBottom: 12,
+              letterSpacing: -0.5
+            }}>
+              Upload your file and sign in seconds
+            </h2>
+            <p style={{
+              fontSize: 16,
+              color: 'rgba(255,255,255,0.9)',
+              marginBottom: 28,
+              lineHeight: 1.6,
+              maxWidth: 480,
+              marginLeft: 'auto',
+              marginRight: 'auto'
+            }}>
+              No registration required. Sign 2 PDFs per day completely free.
+            </p>
+            <Link 
+              href="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '18px 36px',
+                background: 'white',
+                color: '#2563eb',
+                fontWeight: 800,
+                fontSize: 16,
+                borderRadius: 16,
+                textDecoration: 'none',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.2)'
+              }}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload PDF & Sign Free
+            </Link>
+            <p style={{
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.7)',
+              marginTop: 16
+            }}>
+              ✓ No credit card required • ✓ No watermark
+            </p>
+          </div>
+
           {/* Content */}
           <div style={{ fontSize: 16 }}>
             {formatContent(post.content)}
