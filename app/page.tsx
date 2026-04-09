@@ -124,8 +124,6 @@ export default function Home() {
     setIsProcessing(true);
     try {
       const activePlacements = placements.filter(p => selectedPages.includes(p.page));
-      console.log('[handleSign] Active placements:', activePlacements);
-      console.log('[handleSign] Selected pages:', selectedPages);
       
       // 100% client-side — no server, no size limits
       const blob = await signPdfInBrowser({

@@ -37,6 +37,36 @@ export interface SignOptions {
   placements: SignaturePlacement[];  // Multiple signature placements
 }
 
+/**
+ * Calculate image dimensions that fit within container while preserving aspect ratio.
+ * Returns dimensions that fit entirely within the container (contain mode).
+ */
+function fitImageToContainer(
+  imgWidth: number,
+  imgHeight: number,
+  containerWidth: number,
+  containerHeight: number
+): { width: number; height: number } {
+  const imgAspect = imgWidth / imgHeight;
+  const containerAspect = containerWidth / containerHeight;
+
+  if (imgAspect > containerAspect) {
+    // Image is wider than container (relative to height)
+    // Fit to width
+    return {
+      width: containerWidth,
+      height: containerWidth / imgAspect,
+    };
+  } else {
+    // Image is taller than container (relative to width)
+    // Fit to height
+    return {
+      width: containerHeight * imgAspect,
+      height: containerHeight,
+    };
+  }
+}
+
 export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
   const { pdfFile, signatureDataUrl, typedName, signMode, placements } = opts;
 
@@ -65,46 +95,55 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     const pg = pages[pageIdx];
     const { width: pw, height: ph } = pg.getSize();
 
-    const sigW = (w / 100) * pw;
-    const sigH = (h / 100) * ph;
+    // Container size from placement (in PDF points)
+    const containerW = (w / 100) * pw;
+    const containerH = (h / 100) * ph;
+    
+    // Position (top-left in CSS % to bottom-left in PDF coordinates)
     const pdfX = (x / 100) * pw;
-    // PDF coordinates: origin at bottom-left, Y goes up
-    // CSS coordinates: origin at top-left, Y goes down
-    // pdfY is the distance from the bottom of the page to the bottom of the image
-    const pdfY = ph - ((y / 100) * ph) - sigH;
-    
-    console.log('[SignPDF] Placement:', { page, x, y, w, h });
-    console.log('[SignPDF] Page size:', { pw, ph });
-    console.log('[SignPDF] Calculated:', { pdfX, pdfY, sigW, sigH });
-    
-    const safeX = Math.max(0, Math.min(pw - sigW, pdfX));
-    const safeY = Math.max(0, pdfY);
+    const pdfY = ph - ((y / 100) * ph) - containerH;
 
+    let img: any;
+    
     if (signMode === 'draw' && signatureDataUrl?.startsWith('data:image/png')) {
       const base64 = signatureDataUrl.split(',')[1];
       const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-      const img = await pdfDoc.embedPng(bytes);
-      pg.drawImage(img, {
-        x: safeX,
-        y: safeY,
-        width: sigW,
-        height: Math.min(sigH, ph - safeY),
-        opacity: 0.95,
-      });
+      img = await pdfDoc.embedPng(bytes);
     } else if (signMode === 'type' && typedName.trim()) {
       // Generate image from text to support any characters (including Cyrillic)
-      const textDataUrl = await renderTextToDataUrl(typedName.trim(), sigW, sigH);
+      const textDataUrl = await renderTextToDataUrl(typedName.trim(), containerW, containerH);
       const base64 = textDataUrl.split(',')[1];
       const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-      const img = await pdfDoc.embedPng(bytes);
-      pg.drawImage(img, {
-        x: safeX,
-        y: safeY,
-        width: sigW,
-        height: Math.min(sigH, ph - safeY),
-        opacity: 0.95,
-      });
+      img = await pdfDoc.embedPng(bytes);
+    } else {
+      continue;
     }
+
+    // Get original image dimensions
+    const imgWidth = img.width;
+    const imgHeight = img.height;
+
+    // Calculate dimensions that preserve aspect ratio
+    const fitted = fitImageToContainer(imgWidth, imgHeight, containerW, containerH);
+
+    // Center the image within the container
+    const offsetX = (containerW - fitted.width) / 2;
+    const offsetY = (containerH - fitted.height) / 2;
+
+    const finalX = pdfX + offsetX;
+    const finalY = pdfY + offsetY;
+
+    // Ensure we don't go outside page bounds
+    const safeX = Math.max(0, Math.min(pw - fitted.width, finalX));
+    const safeY = Math.max(0, Math.min(ph - fitted.height, finalY));
+
+    pg.drawImage(img, {
+      x: safeX,
+      y: safeY,
+      width: fitted.width,
+      height: fitted.height,
+      opacity: 0.95,
+    });
   }
 
   pdfDoc.setModificationDate(new Date());
