@@ -113,21 +113,9 @@ export default function BlogPage() {
             <Link 
               key={post.slug}
               href={`/blog/${post.slug}`}
-              style={{ textDecoration: 'none' }}
+              className="blog-card-link"
             >
-              <article style={{
-                background: 'white',
-                borderRadius: 20,
-                padding: 24,
-                border: '1px solid #f1f5f9',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                transition: 'all 0.2s',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-
-              >
+              <article className="blog-card">
                 {/* Meta */}
                 <div style={{ 
                   display: 'flex', 
@@ -155,13 +143,7 @@ export default function BlogPage() {
                 </div>
 
                 {/* Title */}
-                <h2 style={{
-                  fontSize: 18,
-                  fontWeight: 700,
-                  color: '#0f172a',
-                  marginBottom: 12,
-                  lineHeight: 1.4
-                }}>
+                <h2 className="blog-card-title">
                   {post.title}
                 </h2>
 
@@ -192,14 +174,7 @@ export default function BlogPage() {
                 </div>
 
                 {/* Read more */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  color: '#2563eb',
-                  fontWeight: 600,
-                  fontSize: 14
-                }}>
+                <div className="blog-card-arrow">
                   Read article
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
