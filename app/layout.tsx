@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     canonical: 'https://signmypdf.io',
   },
   verification: {
-    google: 'your-google-verification-code', // Replace with actual code when available
+    google: 'T8qgvPjWrXpKbKE-O6pwBD3xir2SKHBGo1vxdikCEyo',
   },
 };
 
