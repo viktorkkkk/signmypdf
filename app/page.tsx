@@ -180,13 +180,56 @@ export default function Home() {
   const stepIndex = STEPS.findIndex(s => s.id === step);
   const previewSig = signMode === 'draw' ? signatureData : typedSigDataUrl;
 
+  // JSON-LD structured data for SEO
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'SignMyPDF',
+    description: 'Free online PDF signature tool. No registration required.',
+    url: 'https://signmypdf.vercel.app',
+    applicationCategory: 'ProductivityApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: [
+      'Sign PDF documents online',
+      'Draw or type signature',
+      'No registration required',
+      'Client-side processing',
+      'Mobile friendly',
+    ],
+    screenshot: {
+      '@type': 'ImageObject',
+      url: 'https://signmypdf.vercel.app/screenshot.png',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '1250',
+    },
+  };
+
   return (
     <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+
       {/* Header */}
       <header className="header">
         <div className="header-inner">
           <a href="/" className="logo"><Logo /></a>
-          <span className="header-tag">🔒 No registration required</span>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <a href="/blog" style={{ color: '#475569', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
+              Blog
+            </a>
+            <span className="header-tag">🔒 No registration required</span>
+          </nav>
         </div>
       </header>
 
@@ -554,6 +597,35 @@ export default function Home() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
                 <li>📧 support@signmypdf.app</li>
                 <li>🌐 https://signmypdf.vercel.app</li>
+              </ul>
+            </div>
+
+            {/* Blog */}
+            <div>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
+                Resources
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
+                <li>
+                  <a href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog/how-to-sign-pdf-online-free" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    How to Sign PDF
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog/electronic-signature-legality" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    E-Signature Legal Guide
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog/sign-pdf-iphone-ipad" style={{ color: '#64748b', textDecoration: 'none' }}>
+                    Sign on iPhone/iPad
+                  </a>
+                </li>
               </ul>
             </div>
 

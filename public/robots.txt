@@ -1,0 +1,11 @@
+User-Agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://signmypdf.vercel.app/sitemap.xml
+
+# Disallow API routes
+Disallow: /api/
+
+# Crawl delay for bots
+Crawl-delay: 1
