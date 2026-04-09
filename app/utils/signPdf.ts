@@ -68,7 +68,15 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     const sigW = (w / 100) * pw;
     const sigH = (h / 100) * ph;
     const pdfX = (x / 100) * pw;
+    // PDF coordinates: origin at bottom-left, Y goes up
+    // CSS coordinates: origin at top-left, Y goes down
+    // pdfY is the distance from the bottom of the page to the bottom of the image
     const pdfY = ph - ((y / 100) * ph) - sigH;
+    
+    console.log('[SignPDF] Placement:', { page, x, y, w, h });
+    console.log('[SignPDF] Page size:', { pw, ph });
+    console.log('[SignPDF] Calculated:', { pdfX, pdfY, sigW, sigH });
+    
     const safeX = Math.max(0, Math.min(pw - sigW, pdfX));
     const safeY = Math.max(0, pdfY);
 

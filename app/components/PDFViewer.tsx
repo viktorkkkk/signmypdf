@@ -183,6 +183,7 @@ export default function PDFViewer({
       window.removeEventListener('touchend',  onUp);
       // Save placement on drag end using current sig values
       setSig(currentSig => {
+        console.log('[PDFViewer] Drag end, saving placement:', { page: curPage, x: currentSig.x, y: currentSig.y, w: currentSig.w, h: currentSig.h });
         if (selectedPages.includes(curPage)) {
           const newPlacements = [...placements.filter(p => p.page !== curPage)];
           newPlacements.push({ page: curPage, x: currentSig.x, y: currentSig.y, w: currentSig.w, h: currentSig.h });
