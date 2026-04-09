@@ -1,8 +1,8 @@
-import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPostBySlug, getAllPosts } from '../../blog/posts';
+import Logo from '../../components/Logo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -54,26 +54,63 @@ function formatContent(content: string) {
       
       // H1
       if (trimmed.startsWith('# ')) {
-        return <h1 key={i} className="text-3xl md:text-4xl font-bold text-slate-900 mt-12 mb-6">{trimmed.slice(2)}</h1>;
+        return (
+          <h1 key={i} style={{ 
+            fontSize: 32, 
+            fontWeight: 800, 
+            color: '#0f172a', 
+            marginTop: 48, 
+            marginBottom: 20,
+            letterSpacing: -0.5 
+          }}>
+            {trimmed.slice(2)}
+          </h1>
+        );
       }
       
       // H2
       if (trimmed.startsWith('## ')) {
-        return <h2 key={i} className="text-2xl font-bold text-slate-900 mt-10 mb-4">{trimmed.slice(3)}</h2>;
+        return (
+          <h2 key={i} style={{ 
+            fontSize: 24, 
+            fontWeight: 700, 
+            color: '#0f172a', 
+            marginTop: 40, 
+            marginBottom: 16 
+          }}>
+            {trimmed.slice(3)}
+          </h2>
+        );
       }
       
       // H3
       if (trimmed.startsWith('### ')) {
-        return <h3 key={i} className="text-xl font-semibold text-slate-900 mt-8 mb-3">{trimmed.slice(4)}</h3>;
+        return (
+          <h3 key={i} style={{ 
+            fontSize: 20, 
+            fontWeight: 600, 
+            color: '#1e293b', 
+            marginTop: 32, 
+            marginBottom: 12 
+          }}>
+            {trimmed.slice(4)}
+          </h3>
+        );
       }
       
       // Lists
       if (trimmed.startsWith('- ')) {
         const items = trimmed.split('\n').filter(line => line.trim().startsWith('- '));
         return (
-          <ul key={i} className="list-disc list-inside space-y-2 mb-6 text-slate-700">
+          <ul key={i} style={{ 
+            listStyle: 'disc', 
+            paddingLeft: 24, 
+            marginBottom: 20,
+            color: '#475569',
+            lineHeight: 1.8
+          }}>
             {items.map((item, j) => (
-              <li key={j} className="leading-relaxed">{item.trim().slice(2)}</li>
+              <li key={j}>{item.trim().slice(2)}</li>
             ))}
           </ul>
         );
@@ -83,9 +120,15 @@ function formatContent(content: string) {
       if (/^\d+\./.test(trimmed)) {
         const items = trimmed.split('\n').filter(line => /^\d+\./.test(line.trim()));
         return (
-          <ol key={i} className="list-decimal list-inside space-y-2 mb-6 text-slate-700">
+          <ol key={i} style={{ 
+            listStyle: 'decimal', 
+            paddingLeft: 24, 
+            marginBottom: 20,
+            color: '#475569',
+            lineHeight: 1.8
+          }}>
             {items.map((item, j) => (
-              <li key={j} className="leading-relaxed">{item.trim().replace(/^\d+\.\s*/, '')}</li>
+              <li key={j}>{item.trim().replace(/^\d+\.\s*/, '')}</li>
             ))}
           </ol>
         );
@@ -103,7 +146,7 @@ function formatContent(content: string) {
         if (match.index > lastIndex) {
           boldParts.push(text.slice(lastIndex, match.index));
         }
-        boldParts.push(<strong key={keyCounter++} className="font-semibold text-slate-900">{match[1]}</strong>);
+        boldParts.push(<strong key={keyCounter++} style={{ color: '#0f172a' }}>{match[1]}</strong>);
         lastIndex = match.index + match[0].length;
       }
       if (lastIndex < text.length) {
@@ -113,21 +156,34 @@ function formatContent(content: string) {
       // Blockquote
       if (trimmed.startsWith('> ')) {
         return (
-          <blockquote key={i} className="border-l-4 border-blue-500 pl-4 py-2 my-6 bg-blue-50 rounded-r-lg">
-            <p className="text-slate-700 italic">{boldParts.length > 0 ? boldParts : trimmed.slice(2)}</p>
+          <blockquote key={i} style={{
+            borderLeft: '4px solid #2563eb',
+            padding: '16px 20px',
+            marginBottom: 20,
+            background: '#f8fafc',
+            borderRadius: '0 12px 12px 0'
+          }}>
+            <p style={{ color: '#475569', fontStyle: 'italic', margin: 0 }}>
+              {boldParts.length > 0 ? boldParts : trimmed.slice(2)}
+            </p>
           </blockquote>
         );
       }
       
       // Horizontal rule
       if (trimmed === '---') {
-        return <hr key={i} className="my-8 border-slate-200" />;
+        return <hr key={i} style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '32px 0' }} />;
       }
       
       // Regular paragraph
       if (trimmed) {
         return (
-          <p key={i} className="mb-4 text-slate-700 leading-relaxed">
+          <p key={i} style={{ 
+            marginBottom: 16, 
+            color: '#475569', 
+            lineHeight: 1.8,
+            fontSize: 16
+          }}>
             {boldParts.length > 0 ? boldParts : trimmed}
           </p>
         );
@@ -150,27 +206,37 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="12" y1="18" x2="12" y2="12"/>
-              <line x1="9" y1="15" x2="15" y2="15"/>
-            </svg>
-            <span className="font-bold text-lg">SignMyPDF</span>
+      <header className="header">
+        <div className="header-inner">
+          <Link href="/" className="logo">
+            <Logo />
           </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/" className="text-slate-600 hover:text-blue-600 transition-colors font-medium">
-              Sign PDF
-            </Link>
-            <Link href="/blog" className="text-blue-600 font-medium">
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <Link 
+              href="/blog" 
+              style={{ 
+                color: '#2563eb', 
+                textDecoration: 'none', 
+                fontSize: 14, 
+                fontWeight: 600,
+                padding: '6px 12px',
+                background: '#eff6ff',
+                borderRadius: 8
+              }}
+            >
               Blog
             </Link>
-            <Link href="/privacy" className="text-slate-600 hover:text-blue-600 transition-colors font-medium">
+            <Link 
+              href="/privacy" 
+              style={{ 
+                color: '#475569', 
+                textDecoration: 'none', 
+                fontSize: 14, 
+                fontWeight: 500 
+              }}
+            >
               Privacy
             </Link>
           </nav>
@@ -178,74 +244,126 @@ export default async function BlogPostPage({ params }: Props) {
       </header>
 
       {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+      <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="container" style={{ paddingTop: 12, paddingBottom: 12 }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#64748b' }}>
+            <Link href="/" style={{ color: '#64748b', textDecoration: 'none' }}>Home</Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+            <Link href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>Blog</Link>
             <span>/</span>
-            <span className="text-slate-700 truncate">{post.title}</span>
+            <span style={{ color: '#334155' }}>{post.title}</span>
           </nav>
         </div>
       </div>
 
       {/* Article */}
-      <article className="py-12 px-4">
-        <div className="max-w-3xl mx-auto">
+      <article className="container" style={{ paddingTop: 48, paddingBottom: 64 }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-slate-500">
-            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium">
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            alignItems: 'center', 
+            gap: 16, 
+            marginBottom: 20 
+          }}>
+            <span style={{
+              padding: '6px 14px',
+              background: '#eff6ff',
+              color: '#2563eb',
+              borderRadius: 20,
+              fontSize: 13,
+              fontWeight: 600
+            }}>
               {post.readTime}
             </span>
-            <time dateTime={post.date}>
+            <time dateTime={post.date} style={{ fontSize: 14, color: '#64748b' }}>
               {new Date(post.date).toLocaleDateString('en-US', { 
                 month: 'long', 
                 day: 'numeric', 
                 year: 'numeric' 
               })}
             </time>
-            <span>by {post.author}</span>
+            <span style={{ fontSize: 14, color: '#64748b' }}>
+              by {post.author}
+            </span>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+          <h1 style={{
+            fontSize: 36,
+            fontWeight: 800,
+            color: '#0f172a',
+            marginBottom: 24,
+            lineHeight: 1.2,
+            letterSpacing: -0.5
+          }}>
             {post.title}
           </h1>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
             {post.tags.map(tag => (
-              <Link 
-                key={tag}
-                href={`/blog?tag=${tag}`}
-                className="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors"
-              >
+              <span key={tag} style={{
+                padding: '6px 12px',
+                background: '#f8fafc',
+                color: '#64748b',
+                borderRadius: 20,
+                fontSize: 13
+              }}>
                 #{tag}
-              </Link>
+              </span>
             ))}
           </div>
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none">
+          <div style={{ fontSize: 16 }}>
             {formatContent(post.content)}
           </div>
 
           {/* CTA Box */}
-          <div className="mt-12 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+          <div style={{
+            marginTop: 48,
+            padding: 32,
+            background: 'linear-gradient(135deg, #eff6ff, #e0e7ff)',
+            borderRadius: 20,
+            border: '1px solid #dbeafe'
+          }}>
+            <h3 style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: '#0f172a',
+              marginBottom: 12
+            }}>
               Ready to try it yourself?
             </h3>
-            <p className="text-slate-600 mb-6">
+            <p style={{
+              fontSize: 15,
+              color: '#475569',
+              marginBottom: 24,
+              lineHeight: 1.6
+            }}>
               Sign your PDF documents online for free. No registration required — start signing in seconds.
             </p>
             <Link 
               href="/"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '14px 28px',
+                background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
+                color: 'white',
+                fontWeight: 700,
+                fontSize: 15,
+                borderRadius: 14,
+                textDecoration: 'none',
+                boxShadow: '0 4px 16px rgba(37,99,235,0.3)'
+              }}
             >
               Sign PDF for Free
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
           </div>
@@ -254,71 +372,144 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="py-16 px-4 bg-slate-50">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-slate-900 mb-8">Related Articles</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+        <div style={{ background: '#f8fafc', padding: '48px 24px' }}>
+          <div className="container" style={{ padding: 0 }}>
+            <h2 style={{
+              fontSize: 24,
+              fontWeight: 700,
+              color: '#0f172a',
+              marginBottom: 24
+            }}>
+              Related Articles
+            </h2>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+              gap: 20 
+            }}>
               {relatedPosts.map(related => (
                 <Link 
                   key={related.slug}
                   href={`/blog/${related.slug}`}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-200 transition-all"
+                  style={{ textDecoration: 'none' }}
                 >
-                  <span className="text-sm text-slate-500">{related.readTime}</span>
-                  <h3 className="text-lg font-semibold text-slate-900 mt-2 mb-3 line-clamp-2 hover:text-blue-600 transition-colors">
-                    {related.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm line-clamp-2">{related.excerpt}</p>
+                  <div style={{
+                    background: 'white',
+                    borderRadius: 16,
+                    padding: 20,
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    <span style={{ fontSize: 12, color: '#94a3b8' }}>{related.readTime}</span>
+                    <h3 style={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: '#0f172a',
+                      marginTop: 8,
+                      lineHeight: 1.4
+                    }}>
+                      {related.title}
+                    </h3>
+                  </div>
                 </Link>
               ))}
             </div>
           </div>
-        </section>
+        </div>
       )}
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <footer style={{
+        background: '#0f172a',
+        color: '#94a3b8',
+        padding: '48px 24px 24px'
+      }}>
+        <div className="container" style={{ padding: 0 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 32,
+            marginBottom: 32
+          }}>
+            {/* Company */}
             <div>
-              <Link href="/" className="flex items-center gap-2 text-white mb-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="12" y1="18" x2="12" y2="12"/>
-                  <line x1="9" y1="15" x2="15" y2="15"/>
-                </svg>
-                <span className="font-bold">SignMyPDF</span>
+              <Link href="/" style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 10, 
+                textDecoration: 'none',
+                marginBottom: 12 
+              }}>
+                <div style={{
+                  width: 32,
+                  height: 32,
+                  background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
+                  borderRadius: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontSize: 16
+                }}>
+                  ✍️
+                </div>
+                <span style={{ 
+                  fontWeight: 800, 
+                  color: 'white',
+                  fontSize: 16
+                }}>
+                  SignMyPDF
+                </span>
               </Link>
-              <p className="text-sm">Free, secure PDF signing. No registration required.</p>
+              <p style={{ fontSize: 13, lineHeight: 1.6 }}>
+                Free, secure PDF signing. No registration required.
+              </p>
             </div>
+
+            {/* Product */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/" className="hover:text-white transition-colors">Sign PDF</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
+                Product
+              </h4>
+              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
+                <li><Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign PDF</Link></li>
+                <li><Link href="/blog" style={{ color: '#94a3b8', textDecoration: 'none' }}>Blog</Link></li>
               </ul>
             </div>
+
+            {/* Resources */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
+                Resources
+              </h4>
+              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
+                <li><Link href="/blog/how-to-sign-pdf-online-free" style={{ color: '#94a3b8', textDecoration: 'none' }}>How to Sign PDF</Link></li>
+                <li><Link href="/blog/electronic-signature-legality" style={{ color: '#94a3b8', textDecoration: 'none' }}>E-Signature Legal Guide</Link></li>
+                <li><Link href="/blog/sign-pdf-iphone-ipad" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign on iPhone/iPad</Link></li>
               </ul>
             </div>
+
+            {/* Legal */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/blog/how-to-sign-pdf-online-free" className="hover:text-white transition-colors">How to Sign PDF</Link></li>
-                <li><Link href="/blog/electronic-signature-legality" className="hover:text-white transition-colors">Is E-Signature Legal?</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
+                Legal
+              </h4>
+              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
+                <li><Link href="/privacy" style={{ color: '#94a3b8', textDecoration: 'none' }}>Privacy Policy</Link></li>
+                <li><Link href="/terms" style={{ color: '#94a3b8', textDecoration: 'none' }}>Terms of Service</Link></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-800 pt-8 text-sm text-center">
+
+          <div style={{
+            borderTop: '1px solid #1e293b',
+            paddingTop: 24,
+            textAlign: 'center',
+            fontSize: 12
+          }}>
             © {new Date().getFullYear()} SignMyPDF. All rights reserved.
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
