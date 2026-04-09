@@ -362,6 +362,8 @@ export default function Home() {
                   currentText={typedName}
                   currentFont={selectedFont}
                   selectedId={selectedSigId}
+                  hasSubscription={hasSubscription}
+                  onShowPricing={() => setShowPricing(true)}
                   onSelect={(sig: SavedSig) => { 
                     setSelectedSigId(sig.id);
                     if (sig.type === 'type' && sig.text) {
@@ -480,7 +482,7 @@ export default function Home() {
               <p className="pricing-sub">
                 {todayCount >= DAILY_LIMIT 
                   ? `Free plan: ${DAILY_LIMIT} signatures per day. Upgrade to save your signed document.`
-                  : 'Download history and unlimited signing with premium'
+                  : 'Unlimited signing, saved signatures, and download history with premium'
                 }
               </p>
             </div>
@@ -493,6 +495,7 @@ export default function Home() {
                 <div className="plan-desc">Perfect for short-term needs</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited signatures</li>
+                  <li>✓ Save signatures for reuse</li>
                   <li>✓ Download history</li>
                   <li>✓ 7 days access</li>
                 </ul>
@@ -517,6 +520,7 @@ export default function Home() {
                 <div className="plan-desc">$39/year — save 35%</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited signatures</li>
+                  <li>✓ Save signatures for reuse</li>
                   <li>✓ Download history</li>
                   <li>✓ 1 year file storage</li>
                   <li>✓ Priority support</li>
@@ -541,6 +545,7 @@ export default function Home() {
                 <div className="plan-desc">Pay once, use forever</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited signatures</li>
+                  <li>✓ Save signatures for reuse</li>
                   <li>✓ Lifetime storage</li>
                   <li>✓ All future features</li>
                   <li>✓ Priority support</li>

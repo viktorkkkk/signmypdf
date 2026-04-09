@@ -50,9 +50,11 @@ interface Props {
   currentFont?: string;
   onSaveCurrent: () => void;
   selectedId?: string | null;
+  hasSubscription: boolean;
+  onShowPricing: () => void;
 }
 
-export default function SavedSignatures({ onSelect, currentSig, currentType, currentText, currentFont, onSaveCurrent, selectedId }: Props) {
+export default function SavedSignatures({ onSelect, currentSig, currentType, currentText, currentFont, onSaveCurrent, selectedId, hasSubscription, onShowPricing }: Props) {
   const [sigs, setSigs] = useState<SavedSig[]>([]);
 
   useEffect(() => {
@@ -72,14 +74,18 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
         </span>
         {currentSig && (
           <button
-            onClick={onSaveCurrent}
+            onClick={hasSubscription ? onSaveCurrent : onShowPricing}
             style={{
-              fontSize: 11, fontWeight: 600, color: '#2563eb',
-              background: '#eff6ff', border: '1px solid #bfdbfe',
+              fontSize: 11, fontWeight: 600, color: hasSubscription ? '#2563eb' : '#d97706',
+              background: hasSubscription ? '#eff6ff' : '#fffbeb', 
+              border: hasSubscription ? '1px solid #bfdbfe' : '1px solid #fcd34d',
               borderRadius: 8, padding: '4px 10px', cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
             }}
           >
-            + Save current
+            {hasSubscription ? '+ Save current' : '🔒 Save current'}
           </button>
         )}
       </div>
