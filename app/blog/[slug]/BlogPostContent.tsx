@@ -323,6 +323,11 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             </p>
           </div>
 
+          {/* Subtitle under Hero */}
+          <p style={{ fontSize: 16, color: '#475569', textAlign: 'center', marginBottom: 48, lineHeight: 1.6 }}>
+            Upload your PDF, add your signature, and download instantly. Works on any device.
+          </p>
+
           {/* Content */}
           <div style={{ fontSize: 16 }}>
             {formatContent(post.content)}
