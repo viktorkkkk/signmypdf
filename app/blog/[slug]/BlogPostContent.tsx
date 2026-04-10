@@ -317,15 +317,9 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
           {/* HERO: PDF Uploader */}
           <div style={{ marginBottom: 48, padding: 40, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)' }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: 'white', marginBottom: 8, textAlign: 'center', letterSpacing: -0.5 }}>
-              Upload your file and sign in seconds
-            </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', marginBottom: 24, textAlign: 'center' }}>
-              No registration required • Free • No watermark
-            </p>
             <BlogPdfUploader />
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 16, textAlign: 'center' }}>
-              Your files are processed locally in your browser
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', marginTop: 20, textAlign: 'center' }}>
+              Sign your PDF in seconds — no registration, no downloads
             </p>
           </div>
 
