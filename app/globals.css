@@ -818,3 +818,25 @@ body { padding-bottom: 160px; }
 .blog-card:hover .blog-card-arrow {
   gap: 10px;
 }
+
+/* ── Sticky Mobile CTA ── */
+@media (min-width: 768px) {
+  .sticky-cta-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .sticky-cta-mobile {
+    display: block;
+  }
+  .blog-footer {
+    padding-bottom: 80px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .blog-footer {
+    padding-bottom: 24px !important;
+  }
+}

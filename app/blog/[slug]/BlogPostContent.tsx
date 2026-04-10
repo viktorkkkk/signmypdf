@@ -1,10 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BlogPost } from '../posts';
 import Logo from '../../components/Logo';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
+
+// Sticky CTA Component
+function StickyCTA() {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show CTA after scrolling past 400px (past hero section)
+      setIsVisible(window.scrollY > 400);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return (
+    <div 
+      className="sticky-cta-mobile"
+      style={{ 
+        position: 'fixed', 
+        bottom: 0, 
+        left: 0, 
+        right: 0, 
+        padding: '12px 16px', 
+        background: 'white', 
+        borderTop: '1px solid #e2e8f0',
+        boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
+        zIndex: 100,
+        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+        transition: 'transform 0.3s ease',
+      }}
+    >
+      <Link 
+        href="/" 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          gap: 8, 
+          padding: '14px 24px', 
+          background: '#2563eb', 
+          color: 'white', 
+          fontWeight: 700, 
+          fontSize: 15, 
+          borderRadius: 12, 
+          textDecoration: 'none',
+          width: '100%',
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Sign PDF Now — Free
+      </Link>
+    </div>
+  );
+}
 
 // FAQ Accordion Component
 function FAQItem({ question, answer }: { question: string; answer: string }) {
@@ -437,8 +496,11 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
         </div>
       </article>
 
+      {/* Sticky Mobile CTA */}
+      <StickyCTA />
+
       {/* Footer */}
-      <footer style={{ background: '#0f172a', color: '#94a3b8', padding: '48px 24px 24px' }}>
+      <footer style={{ background: '#0f172a', color: '#94a3b8', padding: '48px 24px 80px' }} className="blog-footer">
         <div className="container" style={{ padding: 0 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 32, marginBottom: 32 }}>
             <div>
