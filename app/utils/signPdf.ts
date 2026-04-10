@@ -100,8 +100,12 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     const containerH = (h / 100) * ph;
     
     // Position (top-left in CSS % to bottom-left in PDF coordinates)
+    // PDF coords: origin at bottom-left, Y increases upward
+    // Viewer coords: origin at top-left, Y increases downward
+    // y is % from TOP of page, so we need to flip it
     const pdfX = (x / 100) * pw;
-    const pdfY = ph - ((y / 100) * ph) - containerH;
+    const topY = (y / 100) * ph;  // Distance from top
+    const pdfY = ph - topY - containerH;  // Convert to PDF coords (from bottom)
 
     let img: any;
     

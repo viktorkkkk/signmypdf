@@ -94,11 +94,25 @@ export default function SignatureCanvas({ onSave }: Props) {
     const ctx = canvasRef.current!.getContext('2d')!;
     ctx.strokeStyle = colorRef.current;
     ctx.lineWidth   = widthRef.current;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
     const pos = getTouchPos(e);
+    
+    // Smooth curve drawing
+    const midX = (lastPos.current.x + pos.x) / 2;
+    const midY = (lastPos.current.y + pos.y) / 2;
+    
     ctx.beginPath();
     ctx.moveTo(lastPos.current.x, lastPos.current.y);
+    ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, midX, midY);
+    ctx.stroke();
+    
+    // Draw segment to current position
+    ctx.beginPath();
+    ctx.moveTo(midX, midY);
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
+    
     lastPos.current = pos;
     setIsEmpty(false); isEmptyRef.current = false;
   };
@@ -136,11 +150,25 @@ export default function SignatureCanvas({ onSave }: Props) {
     const ctx = canvasRef.current!.getContext('2d')!;
     ctx.strokeStyle = color;
     ctx.lineWidth   = width;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
     const pos = getPos(e);
+    
+    // Smooth curve drawing
+    const midX = (lastPos.current.x + pos.x) / 2;
+    const midY = (lastPos.current.y + pos.y) / 2;
+    
     ctx.beginPath();
     ctx.moveTo(lastPos.current.x, lastPos.current.y);
+    ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, midX, midY);
+    ctx.stroke();
+    
+    // Draw segment to current position
+    ctx.beginPath();
+    ctx.moveTo(midX, midY);
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
+    
     lastPos.current = pos;
     setIsEmpty(false);
     isEmptyRef.current = false;
