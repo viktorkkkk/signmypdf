@@ -24,6 +24,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const isDrawingRef = useRef(false);
   const [isEmpty, setIsEmpty]     = useState(true);
   const isEmptyRef = useRef(true);
   const [color, setColor]         = useState(COLORS[0].value);
@@ -32,6 +33,8 @@ export default function SignatureCanvas({ onSave }: Props) {
   const widthRef = useRef(3);
   const lastPos  = useRef<{ x: number; y: number } | null>(null);
   const strokes  = useRef<ImageData[]>([]);
+
+  useEffect(() => { isDrawingRef.current = isDrawing; }, [isDrawing]);
 
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -90,11 +93,12 @@ export default function SignatureCanvas({ onSave }: Props) {
   const startDrawingTouch = (e: TouchEvent) => {
     saveStroke();
     setIsDrawing(true);
+    isDrawingRef.current = true;
     lastPos.current = getTouchPos(e);
   };
 
   const drawTouch = (e: TouchEvent) => {
-    if (!isDrawing || !lastPos.current) return;
+    if (!isDrawingRef.current || !lastPos.current) return;
     const ctx = canvasRef.current!.getContext('2d')!;
     ctx.strokeStyle = colorRef.current;
     ctx.lineWidth   = widthRef.current;
@@ -205,6 +209,7 @@ export default function SignatureCanvas({ onSave }: Props) {
 
   const stopDrawing = () => {
     setIsDrawing(false);
+    isDrawingRef.current = false;
     lastPos.current = null;
     if (!isEmptyRef.current) {
       const { dataUrl, w, h } = getCropped();
