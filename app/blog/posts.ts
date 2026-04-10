@@ -39,6 +39,24 @@ Drag and drop or click to browse. File loads instantly.
 ### 3. Download Your Signed File
 Click "Sign & Download" — done.
 
+## Sign PDF on iPhone
+
+Sign PDFs on your iPhone without installing apps. Works perfectly in Safari and Chrome — no App Store downloads needed. Draw your signature with your finger or type it professionally. Save directly to Files app or share via email and Messages.
+
+**[ Sign PDF on iPhone — Free ]**
+
+## Sign PDF without Adobe
+
+Skip the expensive Adobe Acrobat subscription. Our free online tool provides the same PDF signing capabilities without installation, accounts, or monthly fees. Draw or type your signature, place it anywhere on the document, and download instantly.
+
+**[ Sign Without Adobe — Free ]**
+
+## Sign PDF without Registration
+
+No email. No passwords. No personal information required. Upload your PDF and sign in seconds — we collect zero data and never send spam. Your files stay in your browser, completely private and secure.
+
+**[ Sign Without Registration — Free ]**
+
 ## Is It Legal?
 
 Yes. Electronic signatures are legally binding in the US, EU, UK, Canada, Australia, and 100+ countries.
@@ -84,6 +102,24 @@ Draw with finger/mouse or type your name.
 ### 3. Download Instantly
 Save your signed PDF immediately. No processing wait.
 
+## Sign PDF on iPhone
+
+Sign PDFs on iPhone without installing apps. Works in Safari and Chrome with full signature drawing and typing support. Save to Files or share instantly — no account needed.
+
+**[ Sign on iPhone — No Account ]**
+
+## Sign PDF without Adobe
+
+Ditch Adobe Acrobat's $15/month subscription. Our tool signs PDFs free with no software installation. Same professional results, zero cost.
+
+**[ Free Alternative to Adobe ]**
+
+## Sign PDF Online
+
+Works on any device with a browser — Windows, Mac, iPhone, Android, or tablet. Upload, sign, and download in under 60 seconds from anywhere in the world.
+
+**[ Sign PDF Online Now ]**
+
 ## Privacy First
 
 We collect zero personal data — no spam, no breaches, we can't see your documents.
@@ -128,6 +164,24 @@ Drag & drop or click to browse.
 
 ### 3. Place and Download
 Click on PDF to place, drag to move, resize with handles. Download when done.
+
+## Sign PDF without Adobe
+
+Add signatures to PDFs free without Adobe Acrobat. Our browser-based tool handles everything — no installation, no subscription, no watermarks. Professional results in seconds.
+
+**[ Add Signature Free — No Adobe ]**
+
+## Sign PDF without Registration
+
+No account needed to add your signature. Upload, sign, and download instantly — we never ask for email or personal information. Your privacy is guaranteed.
+
+**[ No Registration Required ]**
+
+## Sign PDF on iPhone
+
+Adding signatures on iPhone is seamless. Use your finger to draw or type your name with professional fonts. Works in Safari and Chrome without app downloads.
+
+**[ Sign on iPhone ]**
 
 ## FAQ
 
