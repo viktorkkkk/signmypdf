@@ -42,6 +42,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const pointsRef = useRef<Point[]>([]);
   const lastDrawRef = useRef<Point | null>(null);
   const lastTouchRef = useRef<Point | null>(null);
+  const dprRef = useRef(1);
 
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -50,9 +51,18 @@ export default function SignatureCanvas({ onSave }: Props) {
     const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
     const cssH   = canvas.offsetHeight || 260;
     const dpr    = window.devicePixelRatio || 1;
+    dprRef.current = dpr;
+    
+    // Set canvas size in actual pixels (for crisp rendering)
     canvas.width  = cssW * dpr;
     canvas.height = cssH * dpr;
+    
+    // Set display size via CSS
+    canvas.style.width = `${cssW}px`;
+    canvas.style.height = `${cssH}px`;
+    
     const ctx = canvas.getContext('2d')!;
+    // Scale context so we draw in CSS pixels
     ctx.scale(dpr, dpr);
     ctx.strokeStyle = color;
     ctx.lineWidth   = width;
@@ -88,31 +98,31 @@ export default function SignatureCanvas({ onSave }: Props) {
   const getTouchPos = (e: TouchEvent): Point => {
     const canvas = canvasRef.current!;
     const rect   = canvas.getBoundingClientRect();
-    const dpr    = window.devicePixelRatio || 1;
     return {
-      x: (e.touches[0].clientX - rect.left),
-      y: (e.touches[0].clientY - rect.top),
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top,
     };
   };
 
-  // Smooth curve drawing function
-  const drawSmoothCurve = (ctx: CanvasRenderingContext2D, points: Point[]) => {
-    if (points.length < 2) return;
-    
+  // Simple line drawing between two points with interpolation
+  const drawLine = (ctx: CanvasRenderingContext2D, from: Point, to: Point) => {
     ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
+    ctx.moveTo(from.x, from.y);
     
-    // Draw quadratic curves between points for smoothness
-    for (let i = 1; i < points.length - 1; i++) {
-      const midX = (points[i].x + points[i + 1].x) / 2;
-      const midY = (points[i].y + points[i + 1].y) / 2;
-      ctx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
-    }
+    // Distance for interpolation
+    const dist = Math.hypot(to.x - from.x, to.y - from.y);
     
-    // Draw last segment
-    if (points.length >= 2) {
-      const last = points[points.length - 1];
-      ctx.lineTo(last.x, last.y);
+    if (dist > 3) {
+      // Interpolate for smoothness
+      const steps = Math.ceil(dist / 3);
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const x = from.x + (to.x - from.x) * t;
+        const y = from.y + (to.y - from.y) * t;
+        ctx.lineTo(x, y);
+      }
+    } else {
+      ctx.lineTo(to.x, to.y);
     }
     
     ctx.stroke();
@@ -122,7 +132,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     saveStroke();
     setIsDrawing(true);
     const pos = getTouchPos(e);
-    pointsRef.current = [pos];
     lastTouchRef.current = pos;
     
     // Draw initial dot
@@ -135,31 +144,14 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.arc(pos.x, pos.y, widthRef.current / 2, 0, Math.PI * 2);
     ctx.fillStyle = colorRef.current;
     ctx.fill();
+    
+    setIsEmpty(false);
+    isEmptyRef.current = false;
   };
 
   const drawTouch = (e: TouchEvent) => {
-    if (!isDrawing) return;
+    if (!isDrawing || !lastTouchRef.current) return;
     const pos = getTouchPos(e);
-    
-    // Add interpolation for smoother lines on fast movements
-    if (lastTouchRef.current) {
-      const dist = Math.hypot(pos.x - lastTouchRef.current.x, pos.y - lastTouchRef.current.y);
-      const maxDist = 5; // Interpolate if distance > 5px
-      
-      if (dist > maxDist) {
-        const steps = Math.ceil(dist / maxDist);
-        for (let i = 1; i < steps; i++) {
-          const t = i / steps;
-          pointsRef.current.push({
-            x: lastTouchRef.current.x + (pos.x - lastTouchRef.current.x) * t,
-            y: lastTouchRef.current.y + (pos.y - lastTouchRef.current.y) * t
-          });
-        }
-      }
-    }
-    
-    pointsRef.current.push(pos);
-    lastTouchRef.current = pos;
     
     const ctx = canvasRef.current!.getContext('2d')!;
     ctx.strokeStyle = colorRef.current;
@@ -167,14 +159,9 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
     
-    // Draw smooth curve with last points
-    if (pointsRef.current.length >= 2) {
-      const recentPoints = pointsRef.current.slice(-5);
-      drawSmoothCurve(ctx, recentPoints);
-    }
+    drawLine(ctx, lastTouchRef.current, pos);
     
-    setIsEmpty(false);
-    isEmptyRef.current = false;
+    lastTouchRef.current = pos;
   };
 
   const getPos = (e: React.MouseEvent | React.TouchEvent): Point => {
@@ -201,7 +188,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     saveStroke();
     setIsDrawing(true);
     const pos = getPos(e);
-    pointsRef.current = [pos];
     lastDrawRef.current = pos;
     
     // Draw initial dot
@@ -214,32 +200,15 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.arc(pos.x, pos.y, width / 2, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
+    
+    setIsEmpty(false);
+    isEmptyRef.current = false;
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    if (!isDrawing) return;
+    if (!isDrawing || !lastDrawRef.current) return;
     const pos = getPos(e);
-    
-    // Add interpolation for smoother lines on fast movements
-    if (lastDrawRef.current) {
-      const dist = Math.hypot(pos.x - lastDrawRef.current.x, pos.y - lastDrawRef.current.y);
-      const maxDist = 5; // Interpolate if distance > 5px
-      
-      if (dist > maxDist) {
-        const steps = Math.ceil(dist / maxDist);
-        for (let i = 1; i < steps; i++) {
-          const t = i / steps;
-          pointsRef.current.push({
-            x: lastDrawRef.current.x + (pos.x - lastDrawRef.current.x) * t,
-            y: lastDrawRef.current.y + (pos.y - lastDrawRef.current.y) * t
-          });
-        }
-      }
-    }
-    
-    pointsRef.current.push(pos);
-    lastDrawRef.current = pos;
     
     const ctx = canvasRef.current!.getContext('2d')!;
     ctx.strokeStyle = color;
@@ -247,14 +216,9 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
     
-    // Draw smooth curve with last points
-    if (pointsRef.current.length >= 2) {
-      const recentPoints = pointsRef.current.slice(-5);
-      drawSmoothCurve(ctx, recentPoints);
-    }
+    drawLine(ctx, lastDrawRef.current, pos);
     
-    setIsEmpty(false);
-    isEmptyRef.current = false;
+    lastDrawRef.current = pos;
   };
 
   const getCropped = (): { dataUrl: string; w: number; h: number } => {
