@@ -217,16 +217,16 @@ function SEOVariations() {
 // FAQ Section
 function FAQSection() {
   const faqs = [
-    { question: 'Is it free?', answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. For unlimited signing, we offer premium plans starting at $2.99/week.' },
-    { question: 'Is it legal?', answer: 'Absolutely. Electronic signatures are legally binding in the US (ESIGN Act, UETA), EU (eIDAS), UK, Canada, Australia, and 100+ countries worldwide.' },
-    { question: 'Do I need to install anything?', answer: 'No installation required. Our PDF signer works entirely in your web browser. Simply open the website, upload your PDF, and start signing.' },
-    { question: 'Is my file safe?', answer: 'Yes, your files are completely safe. All PDF processing happens locally in your browser. Your documents are never uploaded to our servers.' },
+    { question: 'Is it free?', answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. Need more? Premium plans start at $2.99/week for unlimited signing.' },
+    { question: 'Is it legal to sign PDF online?', answer: 'Absolutely. Electronic signatures are legally binding in the US (ESIGN Act, UETA), EU (eIDAS), UK, Canada, Australia, and 100+ countries worldwide. Our signed documents meet all legal requirements.' },
+    { question: 'Do I need to install anything?', answer: 'No installation required. Our PDF signer works entirely in your web browser — Chrome, Safari, Firefox, Edge. Simply open the website, upload your PDF, and start signing instantly.' },
+    { question: 'Is my document secure?', answer: 'Yes, your documents are 100% secure. All PDF processing happens locally in your browser. Your files are never uploaded to our servers, and we collect zero personal data.' },
   ];
 
   return (
     <div style={{ marginTop: 48 }}>
       <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 24 }}>
-        Frequently Asked Questions
+        FAQ
       </h2>
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e2e8f0', padding: '0 24px' }}>
         {faqs.map((faq, index) => <FAQItem key={index} question={faq.question} answer={faq.answer} />)}
@@ -251,7 +251,7 @@ function FinalCTA() {
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        Sign PDF Free
+        Sign PDF Now – Free
       </Link>
     </div>
   );
