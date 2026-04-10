@@ -101,11 +101,12 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     
     // Position (top-left in CSS % to bottom-left in PDF coordinates)
     // PDF coords: origin at bottom-left, Y increases upward
-    // Viewer coords: origin at top-left, Y increases downward
-    // y is % from TOP of page, so we need to flip it
+    // CSS coords: origin at top-left, Y increases downward
+    // pdf-lib draws image from bottom-left corner UPWARD
+    // So we place bottom-left of image at: y-from-bottom = ph - topY
     const pdfX = (x / 100) * pw;
-    const topY = (y / 100) * ph;  // Distance from top
-    const pdfY = ph - topY - containerH;  // Convert to PDF coords (from bottom)
+    const topY = (y / 100) * ph;  // Distance from top of page
+    const pdfY = ph - topY - containerH;  // Bottom-left corner of container
 
     let img: any;
     
