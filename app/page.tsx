@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useSearchParams } from 'next/navigation';
 import SignatureCanvas from './components/SignatureCanvas';
 import PDFViewer, { SignaturePlacement } from './components/PDFViewer';
 import SavedSignatures, { saveSig, SavedSig } from './components/SavedSignatures';
@@ -61,13 +60,11 @@ export default function Home() {
   const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
   const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
-  
-  // Dev mode check
-  const searchParams = useSearchParams();
-  const isDevMode = searchParams.get('dev') === '1';
 
   // Check subscription and count on mount
   useEffect(() => {
+    // Dev mode check via URL
+    const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');
     setHasSubscription(isSubscribed() || isDevMode);
     setTodayCount(getTodayCount());
     
