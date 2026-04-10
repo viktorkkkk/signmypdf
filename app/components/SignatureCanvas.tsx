@@ -195,7 +195,11 @@ export default function SignatureCanvas({ onSave }: Props) {
     const sh = Math.min(canvas.height - sy, maxY - minY + pad * 2);
     const tmp = document.createElement('canvas');
     tmp.width = sw; tmp.height = sh;
-    tmp.getContext('2d')!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+    const tmpCtx = tmp.getContext('2d')!;
+    // Flip Y to match PDF coordinate system (bottom-left origin)
+    tmpCtx.translate(0, sh);
+    tmpCtx.scale(1, -1);
+    tmpCtx.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
     return { dataUrl: tmp.toDataURL('image/png'), w: sw / dpr, h: sh / dpr };
   };
 
