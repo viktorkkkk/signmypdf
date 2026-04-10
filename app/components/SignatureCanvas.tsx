@@ -36,9 +36,20 @@ export default function SignatureCanvas({ onSave }: Props) {
 
   useEffect(() => { isDrawingRef.current = isDrawing; }, [isDrawing]);
 
-  const initCanvas = useCallback(() => {
+  const initCanvas = useCallback((preserveContent = false) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Save existing content if needed
+    let savedData: ImageData | null = null;
+    if (preserveContent && canvas.width > 0 && canvas.height > 0) {
+      try {
+        savedData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      } catch {}
+    }
+    
     const parent = canvas.parentElement!;
     const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
     const cssH   = 380;
@@ -47,16 +58,26 @@ export default function SignatureCanvas({ onSave }: Props) {
     canvas.height = Math.floor(cssH * dpr);
     canvas.style.width  = `${cssW}px`;
     canvas.style.height = `${cssH}px`;
-    const ctx = canvas.getContext('2d')!;
     ctx.scale(dpr, dpr);
     ctx.strokeStyle = color;
     ctx.lineWidth   = width;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
+    
+    // Restore content if available
+    if (savedData) {
+      const tmp = document.createElement('canvas');
+      tmp.width = savedData.width;
+      tmp.height = savedData.height;
+      tmp.getContext('2d')!.putImageData(savedData, 0, 0);
+      ctx.drawImage(tmp, 0, 0, canvas.width / dpr, canvas.height / dpr);
+    }
   }, []);
 
   useEffect(() => {
     initCanvas();
+    const handleResize = () => initCanvas(true);
+    window.addEventListener('resize', handleResize);
     const canvas = canvasRef.current!;
     const onTouchStart = (e: TouchEvent) => { e.preventDefault(); startDrawingTouch(e); };
     const onTouchMove  = (e: TouchEvent) => { e.preventDefault(); drawTouch(e); };
@@ -65,6 +86,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     canvas.addEventListener('touchmove',  onTouchMove,  { passive: false });
     canvas.addEventListener('touchend',   onTouchEnd,   { passive: false });
     return () => {
+      window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('touchstart', onTouchStart);
       canvas.removeEventListener('touchmove',  onTouchMove);
       canvas.removeEventListener('touchend',   onTouchEnd);
@@ -262,7 +284,7 @@ export default function SignatureCanvas({ onSave }: Props) {
         <canvas
           ref={canvasRef}
           className="sig-canvas"
-          style={{ height: '380px', touchAction: 'none' }}
+          style={{ touchAction: 'none' }}
           onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
         />
         <div className="sig-baseline" />
