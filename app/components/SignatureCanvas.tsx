@@ -41,7 +41,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     if (!canvas) return;
     const parent = canvas.parentElement!;
     const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
-    const cssH   = 380; // Fixed height like current version
+    const cssH   = 380;
     const dpr    = window.devicePixelRatio || 1;
     canvas.width  = Math.floor(cssW * dpr);
     canvas.height = Math.floor(cssH * dpr);
@@ -80,14 +80,23 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
   }, [color, width]);
 
-  // Get touch position in CSS pixels (ctx.scale handles DPR)
-  const getTouchPos = (e: TouchEvent) => {
+  // Get position accounting for canvas scaling (mobile zoom, etc.)
+  const getCanvasPoint = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current!;
-    const rect   = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
+    // Calculate scale factors in case canvas is displayed at different size than its dimensions
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    // Convert to canvas coordinates (accounting for DPR via ctx.scale)
     return {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top,
+      x: (clientX - rect.left) * (rect.width / canvas.width),
+      y: (clientY - rect.top) * (rect.height / canvas.height),
     };
+  };
+
+  const getTouchPos = (e: TouchEvent) => {
+    const touch = e.touches[0];
+    return getCanvasPoint(touch.clientX, touch.clientY);
   };
 
   const startDrawingTouch = (e: TouchEvent) => {
@@ -106,7 +115,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineJoin    = 'round';
     const pos = getTouchPos(e);
     
-    // Smooth curve drawing
     const midX = (lastPos.current.x + pos.x) / 2;
     const midY = (lastPos.current.y + pos.y) / 2;
     
@@ -125,33 +133,14 @@ export default function SignatureCanvas({ onSave }: Props) {
     isEmptyRef.current = false;
   };
 
-  const getPos = (e: React.MouseEvent | React.TouchEvent) => {
-    const canvas = canvasRef.current!;
-    const rect   = canvas.getBoundingClientRect();
-    let cx: number, cy: number;
-    if ('touches' in e) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-    else { cx = (e as React.MouseEvent).clientX; cy = (e as React.MouseEvent).clientY; }
-    return {
-      x: cx - rect.left,
-      y: cy - rect.top,
-    };
-  };
-
-  const saveStroke = () => {
-    const canvas = canvasRef.current!;
-    const ctx    = canvas.getContext('2d')!;
-    strokes.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    if (strokes.current.length > 40) strokes.current.shift();
-  };
-
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+  const startDrawing = (e: React.MouseEvent) => {
     e.preventDefault();
     saveStroke();
     setIsDrawing(true);
-    lastPos.current = getPos(e);
+    lastPos.current = getCanvasPoint(e.clientX, e.clientY);
   };
 
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+  const draw = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isDrawing || !lastPos.current) return;
     const ctx = canvasRef.current!.getContext('2d')!;
@@ -159,9 +148,8 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
-    const pos = getPos(e);
+    const pos = getCanvasPoint(e.clientX, e.clientY);
     
-    // Smooth curve drawing
     const midX = (lastPos.current.x + pos.x) / 2;
     const midY = (lastPos.current.y + pos.y) / 2;
     
@@ -178,6 +166,13 @@ export default function SignatureCanvas({ onSave }: Props) {
     lastPos.current = pos;
     setIsEmpty(false);
     isEmptyRef.current = false;
+  };
+
+  const saveStroke = () => {
+    const canvas = canvasRef.current!;
+    const ctx    = canvas.getContext('2d')!;
+    strokes.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (strokes.current.length > 40) strokes.current.shift();
   };
 
   const getCropped = (): { dataUrl: string; w: number; h: number } => {
