@@ -39,6 +39,8 @@ Drag and drop or click to browse. File loads instantly.
 ### 3. Download Your Signed File
 Click "Sign & Download" — done.
 
+Need to sign on mobile? Learn [how to sign a PDF on iPhone](/blog/sign-pdf-on-iphone-free) without installing any apps.
+
 ## Sign PDF on iPhone
 
 Sign PDFs on your iPhone without installing apps. Works perfectly in Safari and Chrome — no App Store downloads needed. Draw your signature with your finger or type it professionally. Save directly to Files app or share via email and Messages.
@@ -56,6 +58,8 @@ Skip the expensive Adobe Acrobat subscription. Our free online tool provides the
 No email. No passwords. No personal information required. Upload your PDF and sign in seconds — we collect zero data and never send spam. Your files stay in your browser, completely private and secure.
 
 **[ Sign Without Registration — Free ](/)**
+
+Prefer typing your signature? Check out [how to add signature to PDF](/blog/how-to-add-signature-to-pdf) with 3 different methods.
 
 ## Is It Legal?
 
@@ -102,6 +106,8 @@ Draw with finger/mouse or type your name.
 ### 3. Download Instantly
 Save your signed PDF immediately. No processing wait.
 
+Looking for iPhone instructions? See our guide on [signing PDF on iPhone free](/blog/sign-pdf-on-iphone-free).
+
 ## Sign PDF on iPhone
 
 Sign PDFs on iPhone without installing apps. Works in Safari and Chrome with full signature drawing and typing support. Save to Files or share instantly — no account needed.
@@ -133,7 +139,9 @@ Never. No email, no password.
 Yes. 2 signatures per day.
 
 **Is my data safe?**
-Yes. PDFs never leave your browser.`,
+Yes. PDFs never leave your browser.
+
+Want to learn more ways to sign? Read our complete guide on [how to sign PDF online](/blog/how-to-sign-pdf-online).`,
     date: '2026-04-09',
     author: 'SignMyPDF Team',
     readTime: '2 min read',
@@ -164,6 +172,8 @@ Drag & drop or click to browse.
 
 ### 3. Place and Download
 Click on PDF to place, drag to move, resize with handles. Download when done.
+
+For a complete step-by-step, see [how to sign PDF online](/blog/how-to-sign-pdf-online).
 
 ## Sign PDF without Adobe
 
@@ -226,6 +236,8 @@ Tap "Select File" — choose from Files, iCloud, or email.
 
 ### 4. Place and Download
 Tap to place, drag to move, pinch to resize. Save to Files or share.
+
+For desktop instructions, read our guide on [how to sign PDF online](/blog/how-to-sign-pdf-online).
 
 ## FAQ
 

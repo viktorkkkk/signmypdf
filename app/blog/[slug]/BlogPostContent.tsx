@@ -154,9 +154,41 @@ function formatContent(content: string) {
       }
       
       if (trimmed) {
+        // Parse any remaining markdown links in the text
+        const parseLinksInText = (content: string | React.ReactNode[]): React.ReactNode => {
+          if (Array.isArray(content)) {
+            return content.map((part, idx) => 
+              typeof part === 'string' ? parseLinksInText(part) : part
+            );
+          }
+          if (typeof content !== 'string') return content;
+          
+          const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+          const parts: React.ReactNode[] = [];
+          let linkLastIndex = 0;
+          let linkMatch;
+          let linkKey = 0;
+          
+          while ((linkMatch = linkRegex.exec(content)) !== null) {
+            if (linkMatch.index > linkLastIndex) {
+              parts.push(content.slice(linkLastIndex, linkMatch.index));
+            }
+            parts.push(
+              <Link key={linkKey++} href={linkMatch[2]} style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>
+                {linkMatch[1]}
+              </Link>
+            );
+            linkLastIndex = linkMatch.index + linkMatch[0].length;
+          }
+          if (linkLastIndex < content.length) {
+            parts.push(content.slice(linkLastIndex));
+          }
+          return parts.length > 0 ? parts : content;
+        };
+        
         return (
           <p key={i} style={{ marginBottom: 16, color: '#475569', lineHeight: 1.8, fontSize: 16 }}>
-            {boldParts.length > 0 ? boldParts : trimmed}
+            {boldParts.length > 0 ? parseLinksInText(boldParts) : parseLinksInText(trimmed)}
           </p>
         );
       }
@@ -263,9 +295,9 @@ function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPo
 
   return (
     <div style={{ marginTop: 48 }}>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 24 }}>
+      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 24 }}>
         Related Articles
-      </h2>
+      </h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
         {relatedPosts.map(post => (
           <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
