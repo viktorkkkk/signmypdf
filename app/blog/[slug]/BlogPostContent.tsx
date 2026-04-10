@@ -101,9 +101,40 @@ function formatContent(content: string) {
       let match;
       let keyCounter = 0;
       
+      // Helper to parse links within text
+      const parseLinks = (content: string): React.ReactNode[] => {
+        const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+        const parts: React.ReactNode[] = [];
+        let linkLastIndex = 0;
+        let linkMatch;
+        let linkKey = 0;
+        
+        while ((linkMatch = linkRegex.exec(content)) !== null) {
+          if (linkMatch.index > linkLastIndex) {
+            parts.push(content.slice(linkLastIndex, linkMatch.index));
+          }
+          parts.push(
+            <Link key={linkKey++} href={linkMatch[2]} style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 700 }}>
+              {linkMatch[1]}
+            </Link>
+          );
+          linkLastIndex = linkMatch.index + linkMatch[0].length;
+        }
+        if (linkLastIndex < content.length) {
+          parts.push(content.slice(linkLastIndex));
+        }
+        return parts.length > 0 ? parts : [content];
+      };
+      
       while ((match = boldRegex.exec(text)) !== null) {
         if (match.index > lastIndex) boldParts.push(text.slice(lastIndex, match.index));
-        boldParts.push(<strong key={keyCounter++} style={{ color: '#0f172a' }}>{match[1]}</strong>);
+        const innerContent = match[1];
+        // Check if inner content has links
+        if (innerContent.includes('](')) {
+          boldParts.push(<strong key={keyCounter++} style={{ color: '#0f172a' }}>{parseLinks(innerContent)}</strong>);
+        } else {
+          boldParts.push(<strong key={keyCounter++} style={{ color: '#0f172a' }}>{innerContent}</strong>);
+        }
         lastIndex = match.index + match[0].length;
       }
       if (lastIndex < text.length) boldParts.push(text.slice(lastIndex));
