@@ -301,9 +301,9 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             <span style={{ fontSize: 14, color: '#64748b' }}>by {post.author}</span>
           </div>
 
-          {/* H1 Title */}
+          {/* H1 Title - SEO Optimized */}
           <h1 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 24, lineHeight: 1.2, letterSpacing: -0.5 }}>
-            {post.title}
+            {post.title} (Free & No Registration)
           </h1>
 
           {/* Tags */}
