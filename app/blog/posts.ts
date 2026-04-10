@@ -18,61 +18,41 @@ const posts: BlogPost[] = [
     slug: 'how-to-sign-pdf-online',
     title: 'How to Sign PDF Online: Free & Instant (2026)',
     excerpt: 'Upload your PDF and sign in seconds. No registration, no downloads, 100% free. Works on any device.',
-    content: `## Sign PDF Online — Free & Instant
+    content: `Sign PDFs online in seconds — no registration, no software, 100% free. Draw or type your signature and download instantly.
 
-**[ Upload PDF & Sign Now — Free ]**
+**Why use our PDF signer?**
 
-Upload your PDF and sign in seconds. No registration, no software downloads, completely free.
+- ✓ Free — 2 documents per day
+- ✓ Fast — under 60 seconds
+- ✓ Secure — files stay in your browser
+- ✓ Works on any device
 
-**Why use our online PDF signer?**
+## How to Sign a PDF Online
 
-- ✓ Free — sign 2 documents per day at no cost
-- ✓ Fast — get your signed PDF in under 60 seconds  
-- ✓ Easy — draw or type your signature
-- ✓ Secure — files processed in your browser only
-- ✓ Universal — works on phone, tablet, or computer
+### 1. Upload Your PDF
+Drag and drop or click to browse. File loads instantly.
 
-**[ Start Signing Now — Free ]**
+### 2. Add Your Signature
+**Draw** — Use mouse, trackpad, or finger  
+**Type** — Enter name, pick a font
 
-## How to Sign a PDF Online (3 Steps)
-
-### Step 1: Upload Your PDF
-Drag and drop your file or click to browse. Your PDF loads instantly in your browser.
-
-### Step 2: Add Your Signature
-**Draw signature** — Use your mouse, trackpad, or finger for a handwritten look
-
-**Type signature** — Enter your name and pick a professional font style
-
-### Step 3: Download Signed PDF
-Click "Sign & Download" and save your completed document. That's it.
-
-**[ Try It Now — No Registration Required ]**
-
-## Why Sign PDFs Online?
-
-**The old way:** Print → Sign → Scan → Email (10+ minutes)
-
-**Our way:** Upload → Sign → Download (under 1 minute)
+### 3. Download Your Signed File
+Click "Sign & Download" — done.
 
 ## Is It Legal?
 
-Yes. Electronic signatures are legally binding in the US (ESIGN Act), EU (eIDAS), UK, Canada, Australia, and 100+ countries worldwide.
-
-**[ Sign Your First PDF — Free ]**
+Yes. Electronic signatures are legally binding in the US, EU, UK, Canada, Australia, and 100+ countries.
 
 ## FAQ
 
 **Is it really free?**
-Yes. Sign up to 2 PDFs per day completely free.
+Yes. 2 PDFs per day, no credit card.
 
-**Do I need to create an account?**
-No. No registration, no email, no passwords.
+**Do I need an account?**
+No. No email, no passwords.
 
-**Will there be a watermark?**
-No. Your signed PDF is clean with no branding or watermarks.
-
-**[ Upload PDF & Sign Free — 60 Seconds ]**`,
+**Any watermark?**
+No. Clean PDF output.`,
     date: '2026-04-09',
     author: 'SignMyPDF Team',
     readTime: '2 min read',
@@ -84,63 +64,40 @@ No. Your signed PDF is clean with no branding or watermarks.
     slug: 'sign-pdf-free-without-registration',
     title: 'Sign PDF Free Without Registration | No Email Required',
     excerpt: 'Sign PDF documents instantly without creating an account. No email, no personal info, 100% free. Upload and sign in seconds.',
-    content: `## Sign PDF Without Registration — Free
+    content: `Sign PDFs instantly without creating an account. No email, no personal data, 100% free.
 
-**[ Sign PDF Now — No Account Needed ]**
+**Benefits:**
 
-No registration. No email. No personal information required. Upload your PDF and sign in seconds — completely free.
-
-**What makes us different:**
-
-Most PDF tools force you to create an account. We don't.
-
-- ✓ Zero registration required
-- ✓ No email address needed
-- ✓ No personal data collected
-- ✓ Start immediately
+- ✓ No registration ever
+- ✓ No email required
+- ✓ No data collected
 - ✓ 2 free signatures per day
 
-**[ Start Signing — No Strings Attached ]**
+## How to Sign Without Registration
 
-## Why No-Registration Signing Matters
+### 1. Upload Your PDF
+Open the site, drag & drop your file. No login screen.
 
-**Other tools:**
-1. Enter email → 2. Create password → 3. Verify email → 4. Fill profile → 5. Finally sign
+### 2. Add Your Signature
+Draw with finger/mouse or type your name.
 
-**Our tool:**
-1. Upload PDF → 2. Sign → 3. Download
-
-**Time saved:** 5+ minutes per document
-
-## How It Works
-
-1. **Open the Website** — No login screen, no signup forms
-2. **Upload Your PDF** — From computer, phone, or cloud
-3. **Create Your Signature** — Draw or type
-4. **Download Instantly** — No waiting, no processing
-
-**[ Try It Free — No Account Required ]**
+### 3. Download Instantly
+Save your signed PDF immediately. No processing wait.
 
 ## Privacy First
 
-Since we don't collect your email or personal information:
-
-- No spam emails ever
-- No data breaches to worry about
-- We literally cannot see what you're signing
+We collect zero personal data — no spam, no breaches, we can't see your documents.
 
 ## FAQ
 
-**Do I really not need an account?**
-Correct. No account, no email, no password. Ever.
+**Do I need an account?**
+Never. No email, no password.
 
-**Is it completely free?**
-Yes. 2 signatures per day are 100% free.
+**Is it free?**
+Yes. 2 signatures per day.
 
 **Is my data safe?**
-Yes. We collect zero personal data. Your PDFs never leave your device.
-
-**[ Upload & Sign — No Account Needed ]**`,
+Yes. PDFs never leave your browser.`,
     date: '2026-04-09',
     author: 'SignMyPDF Team',
     readTime: '2 min read',
@@ -152,68 +109,36 @@ Yes. We collect zero personal data. Your PDFs never leave your device.
     slug: 'how-to-add-signature-to-pdf',
     title: 'How to Add Signature to PDF: 3 Ways (Free & Fast)',
     excerpt: 'Add your signature to any PDF in seconds. Draw, type, or upload — choose the method that works for you. 100% free.',
-    content: `## Add Signature to PDF — 3 Methods
+    content: `Add signatures to PDFs instantly. Three methods — choose what works for you. 100% free.
 
-**[ Add Signature Now — Free ]**
+**Methods:**
 
-Upload your PDF and add your signature instantly. Three methods available — pick what works best for you.
+- ✓ **Draw** — mouse, trackpad, or finger
+- ✓ **Type** — professional fonts
+- ✓ **Saved** — create once, reuse (Premium)
 
-**Method 1: Draw Signature** — Use your mouse, trackpad, or finger. Most natural option.
+## How to Add Signature to PDF
 
-**Method 2: Type Signature** — Professional fonts, instant results.
+### 1. Upload Your PDF
+Drag & drop or click to browse.
 
-**Method 3: Saved Signature** (Premium) — Create once, use forever.
+### 2. Create Your Signature
+**Draw** — Click and hold, sign naturally  
+**Type** — Enter name, pick font
 
-**[ Start Signing — Choose Your Method ]**
-
-## Method 1: Draw Your Signature (Recommended)
-
-Most people prefer drawing for an authentic handwritten look.
-
-**How to draw:**
-1. Select "Draw Signature"
-2. Click and hold on the canvas
-3. Sign naturally with your mouse or finger
-4. Release when done
-
-**Tips:**
-- Sign large — you can resize later
-- Use a stylus if you have one
-- Landscape mode gives more room on phones
-
-**[ Try Drawing Your Signature ]**
-
-## Method 2: Type Your Signature
-
-Fast and professional. Perfect for business documents.
-
-**Font styles available:**
-- **Script** — elegant, handwritten look
-- **Handwritten** — casual, friendly style
-- **Elegant** — formal, professional
-- **Modern** — clean, contemporary
-
-**[ Type Your Signature — Free ]**
-
-## How to Place Your Signature
-
-1. **Click anywhere** on the PDF to place it
-2. **Drag** to reposition
-3. **Resize** using corner handles
-4. **Add multiple signatures** if needed
+### 3. Place and Download
+Click on PDF to place, drag to move, resize with handles. Download when done.
 
 ## FAQ
 
-**Which method is best?**
+**Best method?**
 Drawing for authenticity, typing for speed.
 
-**Can I resize my signature?**
-Yes. Drag corners to resize after placing.
+**Can I resize?**
+Yes. Drag corners after placing.
 
-**Can I sign multiple times?**
-Yes. Add as many signatures as you need.
-
-**[ Upload PDF & Add Signature — Free ]**`,
+**Multiple signatures?**
+Yes. Add as many as needed.`,
     date: '2026-04-08',
     author: 'SignMyPDF Team',
     readTime: '2 min read',
@@ -225,62 +150,36 @@ Yes. Add as many signatures as you need.
     slug: 'sign-pdf-on-iphone-free',
     title: 'Sign PDF on iPhone Free: No App Required (2026)',
     excerpt: 'Sign PDF documents on your iPhone without installing apps. Works in Safari and Chrome. Upload and sign in seconds — free.',
-    content: `## Sign PDF on iPhone — Free, No App Needed
+    content: `Sign PDFs on iPhone without apps. Works in Safari and Chrome. Free.
 
-**[ Sign on iPhone Now — Free ]**
+**Benefits:**
 
-Sign PDFs on your iPhone without installing anything. Works in Safari, Chrome, or any browser.
-
-**Why this beats iPhone's built-in tools:**
-
-- ✓ No Markup limitations
-- ✓ Better signature options
-- ✓ Works with any PDF
-- ✓ Professional results
-- ✓ Completely free
-
-**[ Start Signing on iPhone ]**
+- ✓ No App Store downloads
+- ✓ Draw with finger or type
+- ✓ Save to Files or share
 
 ## How to Sign PDF on iPhone
 
-### Step 1: Open Safari (or Chrome)
-Navigate to the PDF signer. No app download required.
+### 1. Open Safari or Chrome
+Navigate to the signer. No app needed.
 
-### Step 2: Upload Your PDF
-Tap "Select File" and choose from Files app, iCloud Drive, or email attachments.
+### 2. Upload Your PDF
+Tap "Select File" — choose from Files, iCloud, or email.
 
-### Step 3: Create Your Signature
+### 3. Create Your Signature
+**Draw** — Finger on canvas (rotate to landscape for more room)  
+**Type** — Enter name, pick font
 
-**Draw with Finger:**
-- Use your finger on the canvas
-- Rotate phone to landscape for more room
-
-**Type Your Name:**
-- Enter your name
-- Pick a professional font
-
-**[ Try It on Your iPhone — Free ]**
-
-### Step 4: Place and Sign
-- Tap where you want the signature
-- Drag to position
-- Pinch to resize
-
-### Step 5: Download
-Save to Files app or share via email/Messages.
-
-## iPhone Tips
-
-- **Rotate to landscape** — More space for drawing
-- **Zoom in** — Pinch for precise placement
+### 4. Place and Download
+Tap to place, drag to move, pinch to resize. Save to Files or share.
 
 ## FAQ
 
-**Do I need to download an app?**
-No. Works in Safari or any browser.
+**Need an app?**
+No. Works in any browser.
 
-**Does it work on older iPhones?**
-Yes. iPhone 6 and newer with iOS 12+.
+**Works on old iPhones?**
+Yes. iPhone 6+ with iOS 12+.
 
 **[ Sign PDF on iPhone — No App Required ]**`,
     date: '2026-04-08',
