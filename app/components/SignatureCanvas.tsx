@@ -20,7 +20,6 @@ const WIDTHS = [
   { label: 'Thick',  value: 5   },
 ];
 
-// Point type for smooth curves
 interface Point {
   x: number;
   y: number;
@@ -37,35 +36,28 @@ export default function SignatureCanvas({ onSave }: Props) {
   const colorRef = useRef(COLORS[0].value);
   const widthRef = useRef(3);
   const strokes  = useRef<ImageData[]>([]);
-  
-  // Points array for smooth curve drawing
-  const pointsRef = useRef<Point[]>([]);
-  const lastDrawRef = useRef<Point | null>(null);
-  const lastTouchRef = useRef<Point | null>(null);
-  const dprRef = useRef(1);
+  const lastPosRef = useRef<Point | null>(null);
 
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const parent = canvas.parentElement!;
-    const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
-    const cssH   = canvas.offsetHeight || 260;
+    const cssW   = parent.clientWidth  || 320;
+    const cssH   = 380; // Fixed height
     const dpr    = window.devicePixelRatio || 1;
-    dprRef.current = dpr;
     
-    // Set canvas size in actual pixels (for crisp rendering)
-    canvas.width  = cssW * dpr;
-    canvas.height = cssH * dpr;
+    // Set actual canvas size (for crisp rendering on high-DPI)
+    canvas.width  = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
     
-    // Set display size via CSS
+    // Set display size
     canvas.style.width = `${cssW}px`;
     canvas.style.height = `${cssH}px`;
     
     const ctx = canvas.getContext('2d')!;
-    // Scale context so we draw in CSS pixels
-    ctx.scale(dpr, dpr);
+    // NO ctx.scale! We handle DPR manually
     ctx.strokeStyle = color;
-    ctx.lineWidth   = width;
+    ctx.lineWidth   = width * dpr;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
   }, []);
@@ -89,60 +81,84 @@ export default function SignatureCanvas({ onSave }: Props) {
   useEffect(() => {
     colorRef.current = color;
     widthRef.current = width;
-    const ctx = canvasRef.current?.getContext('2d');
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
     ctx.strokeStyle = color;
-    ctx.lineWidth   = width;
+    ctx.lineWidth   = width * dpr;
   }, [color, width]);
 
-  const getTouchPos = (e: TouchEvent): Point => {
+  const getCanvasPoint = (clientX: number, clientY: number): Point => {
     const canvas = canvasRef.current!;
     const rect   = canvas.getBoundingClientRect();
+    const dpr    = window.devicePixelRatio || 1;
+    // Convert CSS coordinates to canvas pixel coordinates
     return {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top,
+      x: (clientX - rect.left) * dpr,
+      y: (clientY - rect.top) * dpr,
     };
   };
 
-  // Simple line drawing between two points with interpolation
-  const drawLine = (ctx: CanvasRenderingContext2D, from: Point, to: Point) => {
+  const drawSegment = (from: Point, to: Point) => {
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext('2d')!;
+    const dpr = window.devicePixelRatio || 1;
+    
+    ctx.strokeStyle = colorRef.current;
+    ctx.lineWidth   = widthRef.current * dpr;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
-    
-    // Distance for interpolation
-    const dist = Math.hypot(to.x - from.x, to.y - from.y);
-    
-    if (dist > 3) {
-      // Interpolate for smoothness
-      const steps = Math.ceil(dist / 3);
-      for (let i = 1; i <= steps; i++) {
-        const t = i / steps;
-        const x = from.x + (to.x - from.x) * t;
-        const y = from.y + (to.y - from.y) * t;
-        ctx.lineTo(x, y);
-      }
-    } else {
-      ctx.lineTo(to.x, to.y);
-    }
-    
+    ctx.lineTo(to.x, to.y);
     ctx.stroke();
+  };
+
+  const startDrawingMouse = (e: React.MouseEvent) => {
+    e.preventDefault();
+    saveStroke();
+    setIsDrawing(true);
+    const pos = getCanvasPoint(e.clientX, e.clientY);
+    lastPosRef.current = pos;
+    
+    // Draw dot
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext('2d')!;
+    const dpr = window.devicePixelRatio || 1;
+    ctx.fillStyle = colorRef.current;
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, (widthRef.current * dpr) / 2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    setIsEmpty(false);
+    isEmptyRef.current = false;
+  };
+
+  const drawMouse = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isDrawing || !lastPosRef.current) return;
+    const pos = getCanvasPoint(e.clientX, e.clientY);
+    drawSegment(lastPosRef.current, pos);
+    lastPosRef.current = pos;
   };
 
   const startDrawingTouch = (e: TouchEvent) => {
     saveStroke();
     setIsDrawing(true);
-    const pos = getTouchPos(e);
-    lastTouchRef.current = pos;
+    const touch = e.touches[0];
+    const pos = getCanvasPoint(touch.clientX, touch.clientY);
+    lastPosRef.current = pos;
     
-    // Draw initial dot
-    const ctx = canvasRef.current!.getContext('2d')!;
-    ctx.strokeStyle = colorRef.current;
-    ctx.lineWidth   = widthRef.current;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, widthRef.current / 2, 0, Math.PI * 2);
+    // Draw dot
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext('2d')!;
+    const dpr = window.devicePixelRatio || 1;
     ctx.fillStyle = colorRef.current;
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, (widthRef.current * dpr) / 2, 0, Math.PI * 2);
     ctx.fill();
     
     setIsEmpty(false);
@@ -150,30 +166,11 @@ export default function SignatureCanvas({ onSave }: Props) {
   };
 
   const drawTouch = (e: TouchEvent) => {
-    if (!isDrawing || !lastTouchRef.current) return;
-    const pos = getTouchPos(e);
-    
-    const ctx = canvasRef.current!.getContext('2d')!;
-    ctx.strokeStyle = colorRef.current;
-    ctx.lineWidth   = widthRef.current;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    
-    drawLine(ctx, lastTouchRef.current, pos);
-    
-    lastTouchRef.current = pos;
-  };
-
-  const getPos = (e: React.MouseEvent | React.TouchEvent): Point => {
-    const canvas = canvasRef.current!;
-    const rect   = canvas.getBoundingClientRect();
-    let cx: number, cy: number;
-    if ('touches' in e) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-    else { cx = (e as React.MouseEvent).clientX; cy = (e as React.MouseEvent).clientY; }
-    return {
-      x: cx - rect.left,
-      y: cy - rect.top,
-    };
+    if (!isDrawing || !lastPosRef.current) return;
+    const touch = e.touches[0];
+    const pos = getCanvasPoint(touch.clientX, touch.clientY);
+    drawSegment(lastPosRef.current, pos);
+    lastPosRef.current = pos;
   };
 
   const saveStroke = () => {
@@ -183,78 +180,55 @@ export default function SignatureCanvas({ onSave }: Props) {
     if (strokes.current.length > 40) strokes.current.shift();
   };
 
-  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    saveStroke();
-    setIsDrawing(true);
-    const pos = getPos(e);
-    lastDrawRef.current = pos;
-    
-    // Draw initial dot
-    const ctx = canvasRef.current!.getContext('2d')!;
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = width;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, width / 2, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    
-    setIsEmpty(false);
-    isEmptyRef.current = false;
+  const stopDrawing = () => {
+    setIsDrawing(false);
+    lastPosRef.current = null;
+    if (!isEmptyRef.current) {
+      const result = getCropped();
+      onSave(result.dataUrl, result.w, result.h);
+    }
   };
 
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    if (!isDrawing || !lastDrawRef.current) return;
-    const pos = getPos(e);
-    
-    const ctx = canvasRef.current!.getContext('2d')!;
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = width;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    
-    drawLine(ctx, lastDrawRef.current, pos);
-    
-    lastDrawRef.current = pos;
-  };
-
-  const getCropped = (): { dataUrl: string; w: number; h: number } => {
+  const getCropped = () => {
     const canvas = canvasRef.current!;
     const ctx    = canvas.getContext('2d')!;
     const dpr    = window.devicePixelRatio || 1;
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let minX = canvas.width, minY = canvas.height, maxX = 0, maxY = 0;
-    for (let y = 0; y < canvas.height; y++) {
-      for (let x = 0; x < canvas.width; x++) {
-        if (imgData.data[(y * canvas.width + x) * 4 + 3] > 10) {
-          if (x < minX) minX = x; if (x > maxX) maxX = x;
-          if (y < minY) minY = y; if (y > maxY) maxY = y;
+    const w = canvas.width;
+    const h = canvas.height;
+    
+    const imgData = ctx.getImageData(0, 0, w, h);
+    let minX = w, minY = h, maxX = 0, maxY = 0;
+    
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (imgData.data[(y * w + x) * 4 + 3] > 10) {
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
         }
       }
     }
+    
     if (minX > maxX) return { dataUrl: '', w: 0, h: 0 };
+    
     const pad = Math.ceil(12 * dpr);
-    const sx = Math.max(0, minX - pad), sy = Math.max(0, minY - pad);
-    const sw = Math.min(canvas.width  - sx, maxX - minX + pad * 2);
-    const sh = Math.min(canvas.height - sy, maxY - minY + pad * 2);
+    const sx = Math.max(0, minX - pad);
+    const sy = Math.max(0, minY - pad);
+    const sw = Math.min(w - sx, maxX - minX + pad * 2);
+    const sh = Math.min(h - sy, maxY - minY + pad * 2);
+    
     const tmp = document.createElement('canvas');
-    tmp.width = sw; tmp.height = sh;
+    tmp.width = sw;
+    tmp.height = sh;
     tmp.getContext('2d')!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
-    return { dataUrl: tmp.toDataURL('image/png'), w: sw / dpr, h: sh / dpr };
-  };
-
-  const stopDrawing = () => {
-    setIsDrawing(false);
-    pointsRef.current = [];
-    lastDrawRef.current = null;
-    lastTouchRef.current = null;
-    if (!isEmptyRef.current) {
-      const { dataUrl, w, h } = getCropped();
-      onSave(dataUrl, w, h);
-    }
+    
+    // Return dimensions in CSS pixels
+    return { 
+      dataUrl: tmp.toDataURL('image/png'), 
+      w: sw / dpr, 
+      h: sh / dpr 
+    };
   };
 
   const undo = () => {
@@ -264,9 +238,14 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.putImageData(strokes.current.pop()!, 0, 0);
     const data  = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     const blank = !data.some(v => v !== 0);
-    setIsEmpty(blank); isEmptyRef.current = blank;
-    if (blank) { onSave('', 0, 0); }
-    else { const c = getCropped(); onSave(c.dataUrl, c.w, c.h); }
+    setIsEmpty(blank); 
+    isEmptyRef.current = blank;
+    if (blank) { 
+      onSave('', 0, 0); 
+    } else { 
+      const c = getCropped(); 
+      onSave(c.dataUrl, c.w, c.h); 
+    }
   };
 
   const clear = () => {
@@ -274,11 +253,10 @@ export default function SignatureCanvas({ onSave }: Props) {
     const ctx    = canvas.getContext('2d')!;
     saveStroke();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setIsEmpty(true); isEmptyRef.current = true;
+    setIsEmpty(true); 
+    isEmptyRef.current = true;
     strokes.current = [];
-    pointsRef.current = [];
-    lastDrawRef.current = null;
-    lastTouchRef.current = null;
+    lastPosRef.current = null;
     onSave('', 0, 0);
   };
 
@@ -319,8 +297,11 @@ export default function SignatureCanvas({ onSave }: Props) {
         <canvas
           ref={canvasRef}
           className="sig-canvas"
-          style={{ height: '380px' }}
-          onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
+          style={{ height: '380px', touchAction: 'none' }}
+          onMouseDown={startDrawingMouse} 
+          onMouseMove={drawMouse} 
+          onMouseUp={stopDrawing} 
+          onMouseLeave={stopDrawing}
         />
         <div className="sig-baseline" />
         <div className="sig-baseline-label">Sign here</div>
