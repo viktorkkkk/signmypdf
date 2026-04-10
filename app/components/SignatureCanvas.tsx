@@ -29,6 +29,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const isDrawingRef = useRef(false); // For touch handlers
   const [isEmpty, setIsEmpty]     = useState(true);
   const isEmptyRef = useRef(true);
   const [color, setColor]         = useState(COLORS[0].value);
@@ -38,24 +39,25 @@ export default function SignatureCanvas({ onSave }: Props) {
   const strokes  = useRef<ImageData[]>([]);
   const lastPosRef = useRef<Point | null>(null);
 
+  // Sync isDrawing state with ref
+  useEffect(() => {
+    isDrawingRef.current = isDrawing;
+  }, [isDrawing]);
+
   const initCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const parent = canvas.parentElement!;
     const cssW   = parent.clientWidth  || 320;
-    const cssH   = 380; // Fixed height
+    const cssH   = 380;
     const dpr    = window.devicePixelRatio || 1;
     
-    // Set actual canvas size (for crisp rendering on high-DPI)
     canvas.width  = Math.floor(cssW * dpr);
     canvas.height = Math.floor(cssH * dpr);
-    
-    // Set display size
     canvas.style.width = `${cssW}px`;
     canvas.style.height = `${cssH}px`;
     
     const ctx = canvas.getContext('2d')!;
-    // NO ctx.scale! We handle DPR manually
     ctx.strokeStyle = color;
     ctx.lineWidth   = width * dpr;
     ctx.lineCap     = 'round';
@@ -65,66 +67,110 @@ export default function SignatureCanvas({ onSave }: Props) {
   useEffect(() => {
     initCanvas();
     const canvas = canvasRef.current!;
-    const onTouchStart = (e: TouchEvent) => { e.preventDefault(); startDrawingTouch(e); };
-    const onTouchMove  = (e: TouchEvent) => { e.preventDefault(); drawTouch(e); };
-    const onTouchEnd   = (e: TouchEvent) => { e.preventDefault(); stopDrawing(); };
+    
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      saveStroke();
+      isDrawingRef.current = true;
+      setIsDrawing(true);
+      
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const pos = {
+        x: (touch.clientX - rect.left) * dpr,
+        y: (touch.clientY - rect.top) * dpr,
+      };
+      lastPosRef.current = pos;
+      
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = colorRef.current;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, (widthRef.current * dpr) / 2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      setIsEmpty(false);
+      isEmptyRef.current = false;
+    };
+    
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (!isDrawingRef.current || !lastPosRef.current) return;
+      
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const pos = {
+        x: (touch.clientX - rect.left) * dpr,
+        y: (touch.clientY - rect.top) * dpr,
+      };
+      
+      const ctx = canvas.getContext('2d')!;
+      ctx.strokeStyle = colorRef.current;
+      ctx.lineWidth = widthRef.current * dpr;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+      
+      lastPosRef.current = pos;
+    };
+    
+    const onTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      isDrawingRef.current = false;
+      setIsDrawing(false);
+      lastPosRef.current = null;
+      if (!isEmptyRef.current) {
+        const result = getCropped();
+        onSave(result.dataUrl, result.w, result.h);
+      }
+    };
+    
     canvas.addEventListener('touchstart', onTouchStart, { passive: false });
-    canvas.addEventListener('touchmove',  onTouchMove,  { passive: false });
-    canvas.addEventListener('touchend',   onTouchEnd,   { passive: false });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+    
     return () => {
       canvas.removeEventListener('touchstart', onTouchStart);
-      canvas.removeEventListener('touchmove',  onTouchMove);
-      canvas.removeEventListener('touchend',   onTouchEnd);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', onTouchEnd);
     };
-  }, [initCanvas]);
+  }, [initCanvas, onSave]);
 
   useEffect(() => {
     colorRef.current = color;
     widthRef.current = width;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const dpr = window.devicePixelRatio || 1;
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = width * dpr;
   }, [color, width]);
 
   const getCanvasPoint = (clientX: number, clientY: number): Point => {
     const canvas = canvasRef.current!;
     const rect   = canvas.getBoundingClientRect();
     const dpr    = window.devicePixelRatio || 1;
-    // Convert CSS coordinates to canvas pixel coordinates
     return {
       x: (clientX - rect.left) * dpr,
       y: (clientY - rect.top) * dpr,
     };
   };
 
-  const drawSegment = (from: Point, to: Point) => {
+  const saveStroke = () => {
     const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
-    const dpr = window.devicePixelRatio || 1;
-    
-    ctx.strokeStyle = colorRef.current;
-    ctx.lineWidth   = widthRef.current * dpr;
-    ctx.lineCap     = 'round';
-    ctx.lineJoin    = 'round';
-    
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.stroke();
+    const ctx    = canvas.getContext('2d')!;
+    strokes.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (strokes.current.length > 40) strokes.current.shift();
   };
 
   const startDrawingMouse = (e: React.MouseEvent) => {
     e.preventDefault();
     saveStroke();
     setIsDrawing(true);
+    isDrawingRef.current = true;
+    
     const pos = getCanvasPoint(e.clientX, e.clientY);
     lastPosRef.current = pos;
     
-    // Draw dot
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     const dpr = window.devicePixelRatio || 1;
@@ -139,48 +185,27 @@ export default function SignatureCanvas({ onSave }: Props) {
 
   const drawMouse = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!isDrawing || !lastPosRef.current) return;
-    const pos = getCanvasPoint(e.clientX, e.clientY);
-    drawSegment(lastPosRef.current, pos);
-    lastPosRef.current = pos;
-  };
-
-  const startDrawingTouch = (e: TouchEvent) => {
-    saveStroke();
-    setIsDrawing(true);
-    const touch = e.touches[0];
-    const pos = getCanvasPoint(touch.clientX, touch.clientY);
-    lastPosRef.current = pos;
+    if (!isDrawingRef.current || !lastPosRef.current) return;
     
-    // Draw dot
+    const pos = getCanvasPoint(e.clientX, e.clientY);
+    
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     const dpr = window.devicePixelRatio || 1;
-    ctx.fillStyle = colorRef.current;
+    ctx.strokeStyle = colorRef.current;
+    ctx.lineWidth = widthRef.current * dpr;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.arc(pos.x, pos.y, (widthRef.current * dpr) / 2, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
     
-    setIsEmpty(false);
-    isEmptyRef.current = false;
-  };
-
-  const drawTouch = (e: TouchEvent) => {
-    if (!isDrawing || !lastPosRef.current) return;
-    const touch = e.touches[0];
-    const pos = getCanvasPoint(touch.clientX, touch.clientY);
-    drawSegment(lastPosRef.current, pos);
     lastPosRef.current = pos;
   };
 
-  const saveStroke = () => {
-    const canvas = canvasRef.current!;
-    const ctx    = canvas.getContext('2d')!;
-    strokes.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    if (strokes.current.length > 40) strokes.current.shift();
-  };
-
   const stopDrawing = () => {
+    isDrawingRef.current = false;
     setIsDrawing(false);
     lastPosRef.current = null;
     if (!isEmptyRef.current) {
@@ -223,7 +248,6 @@ export default function SignatureCanvas({ onSave }: Props) {
     tmp.height = sh;
     tmp.getContext('2d')!.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
     
-    // Return dimensions in CSS pixels
     return { 
       dataUrl: tmp.toDataURL('image/png'), 
       w: sw / dpr, 
@@ -262,7 +286,6 @@ export default function SignatureCanvas({ onSave }: Props) {
 
   return (
     <div>
-      {/* Toolbar */}
       <div className="sig-toolbar">
         <div className="sig-tool-group">
           {COLORS.map(c => (
@@ -292,7 +315,6 @@ export default function SignatureCanvas({ onSave }: Props) {
         </div>
       </div>
 
-      {/* Canvas */}
       <div ref={containerRef} className="sig-container">
         <canvas
           ref={canvasRef}
