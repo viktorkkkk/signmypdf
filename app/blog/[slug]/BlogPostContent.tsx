@@ -324,9 +324,36 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
           </div>
 
           {/* Subtitle under Hero */}
-          <p style={{ fontSize: 16, color: '#475569', textAlign: 'center', marginBottom: 48, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 16, color: '#475569', textAlign: 'center', marginBottom: 24, lineHeight: 1.6 }}>
             Upload your PDF, add your signature, and download instantly. Works on any device.
           </p>
+
+          {/* CTA after subtitle */}
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <Link 
+              href="/" 
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: 8, 
+                padding: '14px 28px', 
+                background: '#2563eb', 
+                color: 'white', 
+                fontWeight: 700, 
+                fontSize: 15, 
+                borderRadius: 12, 
+                textDecoration: 'none',
+                boxShadow: '0 4px 16px rgba(37, 99, 235, 0.3)',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Start Signing Now
+            </Link>
+          </div>
 
           {/* Content */}
           <div style={{ fontSize: 16 }}>
