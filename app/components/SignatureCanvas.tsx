@@ -80,30 +80,22 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
   }, [color, width]);
 
-  // Get position accounting for canvas scaling (mobile zoom, etc.)
-  const getCanvasPoint = (clientX: number, clientY: number) => {
+  // Simple coordinate calculation - ctx.scale handles DPR
+  const getPos = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current!;
-    const rect = canvas.getBoundingClientRect();
-    // Calculate scale factors in case canvas is displayed at different size than its dimensions
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    // Convert to canvas coordinates (accounting for DPR via ctx.scale)
+    const rect   = canvas.getBoundingClientRect();
     return {
-      x: (clientX - rect.left) * (rect.width / canvas.width),
-      y: (clientY - rect.top) * (rect.height / canvas.height),
+      x: clientX - rect.left,
+      y: clientY - rect.top,
     };
-  };
-
-  const getTouchPos = (e: TouchEvent) => {
-    const touch = e.touches[0];
-    return getCanvasPoint(touch.clientX, touch.clientY);
   };
 
   const startDrawingTouch = (e: TouchEvent) => {
     saveStroke();
     setIsDrawing(true);
     isDrawingRef.current = true;
-    lastPos.current = getTouchPos(e);
+    const touch = e.touches[0];
+    lastPos.current = getPos(touch.clientX, touch.clientY);
   };
 
   const drawTouch = (e: TouchEvent) => {
@@ -113,7 +105,8 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = widthRef.current;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
-    const pos = getTouchPos(e);
+    const touch = e.touches[0];
+    const pos = getPos(touch.clientX, touch.clientY);
     
     const midX = (lastPos.current.x + pos.x) / 2;
     const midY = (lastPos.current.y + pos.y) / 2;
@@ -137,7 +130,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     e.preventDefault();
     saveStroke();
     setIsDrawing(true);
-    lastPos.current = getCanvasPoint(e.clientX, e.clientY);
+    lastPos.current = getPos(e.clientX, e.clientY);
   };
 
   const draw = (e: React.MouseEvent) => {
@@ -148,7 +141,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
-    const pos = getCanvasPoint(e.clientX, e.clientY);
+    const pos = getPos(e.clientX, e.clientY);
     
     const midX = (lastPos.current.x + pos.x) / 2;
     const midY = (lastPos.current.y + pos.y) / 2;
