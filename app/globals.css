@@ -728,8 +728,8 @@ body { padding-bottom: 160px; }
   .card { padding: 16px; }
   .card-title { font-size: 12px; margin-bottom: 12px; }
 
-  /* Signature canvas — shorter on mobile */
-  .sig-canvas { height: 220px !important; }
+  /* Signature canvas — controlled by JS, not CSS */
+  /* Height is set dynamically in SignatureCanvas.tsx */
 
   /* Toolbar — wrap if needed */
   .sig-toolbar { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }

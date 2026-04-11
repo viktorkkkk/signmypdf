@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, pushGraphicsState, popGraphicsState, translate, scale } from 'pdf-lib';
+import { PDFDocument, rgb } from 'pdf-lib';
 
 // Render text to PNG image (supports any Unicode including Cyrillic)
 function renderTextToDataUrl(text: string, width: number, height: number): string {
@@ -142,20 +142,15 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
     const safeX = Math.max(0, Math.min(pw - fitted.width, finalX));
     const safeY = Math.max(0, Math.min(ph - fitted.height, finalY));
 
-    // Flip Y axis because canvas has top-down coordinates, PDF has bottom-up
-    pg.pushOperators(
-      pushGraphicsState(),
-      translate(safeX, safeY + fitted.height),
-      scale(1, -1)
-    );
+    // Draw image at calculated position
+    // Canvas and PDF both use Y=0 at bottom for images, no flip needed
     pg.drawImage(img, {
-      x: 0,
-      y: 0,
+      x: safeX,
+      y: safeY,
       width: fitted.width,
       height: fitted.height,
       opacity: 0.95,
     });
-    pg.pushOperators(popGraphicsState());
   }
 
   pdfDoc.setModificationDate(new Date());

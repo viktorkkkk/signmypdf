@@ -52,7 +52,9 @@ export default function SignatureCanvas({ onSave }: Props) {
     
     const parent = canvas.parentElement!;
     const cssW   = parent.clientWidth  || parent.offsetWidth  || 320;
-    const cssH   = 380;
+    // Adaptive height: smaller on mobile
+    const isMobile = window.innerWidth <= 680;
+    const cssH   = isMobile ? 240 : 380;
     const dpr    = window.devicePixelRatio || 1;
     canvas.width  = Math.floor(cssW * dpr);
     canvas.height = Math.floor(cssH * dpr);
