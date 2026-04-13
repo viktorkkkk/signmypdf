@@ -104,13 +104,16 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineWidth   = width;
   }, [color, width]);
 
-  // Simple coordinate calculation - ctx.scale handles DPR
+  // Coordinate calculation - handles iOS Safari visual viewport offset
   const getPos = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current!;
     const rect   = canvas.getBoundingClientRect();
+    // On iOS, visualViewport may have an offset when the address bar is transitioning
+    const vvTop  = (window.visualViewport?.offsetTop  ?? 0);
+    const vvLeft = (window.visualViewport?.offsetLeft ?? 0);
     return {
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+      x: clientX - rect.left - vvLeft,
+      y: clientY - rect.top  - vvTop,
     };
   };
 
@@ -300,7 +303,7 @@ export default function SignatureCanvas({ onSave }: Props) {
       </div>
 
       <div className="sig-footer">
-        <span className="sig-hint">Use mouse or trackpad to sign</span>
+        <span className="sig-hint">Use mouse, trackpad or finger to sign</span>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="clear-btn" onClick={undo} type="button">↩ Undo</button>
           <button className="clear-btn" onClick={clear} type="button">✕ Clear</button>

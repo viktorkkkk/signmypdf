@@ -1,4 +1,4 @@
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 
 // Render text to PNG image (supports any Unicode including Cyrillic)
 function renderTextToDataUrl(text: string, width: number, height: number): string {
@@ -6,25 +6,20 @@ function renderTextToDataUrl(text: string, width: number, height: number): strin
   canvas.width = Math.max(400, Math.round(width * 2));
   canvas.height = Math.max(100, Math.round(height * 2));
   const ctx = canvas.getContext('2d')!;
-  
-  // Transparent background
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw text with nice font
   const fontSize = Math.min(canvas.height * 0.6, canvas.width / text.length * 1.5);
   ctx.font = `italic ${fontSize}px "Brush Script MT", "Dancing Script", "Pacifico", cursive`;
-  ctx.fillStyle = '#1e3a8a'; // Dark blue
+  ctx.fillStyle = '#1e3a8a';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-  
   return canvas.toDataURL('image/png');
 }
 
 export interface SignaturePlacement {
   page: number;
-  x: number;      // % from left
-  y: number;      // % from top
+  x: number;      // % from left (as seen by viewer)
+  y: number;      // % from top (as seen by viewer)
   w: number;      // % width
   h: number;      // % height
 }
@@ -34,36 +29,19 @@ export interface SignOptions {
   signatureDataUrl: string;
   typedName: string;
   signMode: 'draw' | 'type';
-  placements: SignaturePlacement[];  // Multiple signature placements
+  placements: SignaturePlacement[];
 }
 
-/**
- * Calculate image dimensions that fit within container while preserving aspect ratio.
- * Returns dimensions that fit entirely within the container (contain mode).
- */
 function fitImageToContainer(
-  imgWidth: number,
-  imgHeight: number,
-  containerWidth: number,
-  containerHeight: number
+  imgWidth: number, imgHeight: number,
+  containerWidth: number, containerHeight: number
 ): { width: number; height: number } {
   const imgAspect = imgWidth / imgHeight;
   const containerAspect = containerWidth / containerHeight;
-
   if (imgAspect > containerAspect) {
-    // Image is wider than container (relative to height)
-    // Fit to width
-    return {
-      width: containerWidth,
-      height: containerWidth / imgAspect,
-    };
+    return { width: containerWidth, height: containerWidth / imgAspect };
   } else {
-    // Image is taller than container (relative to width)
-    // Fit to height
-    return {
-      width: containerHeight * imgAspect,
-      height: containerHeight,
-    };
+    return { width: containerHeight * imgAspect, height: containerHeight };
   }
 }
 
@@ -71,7 +49,6 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
   const { pdfFile, signatureDataUrl, typedName, signMode, placements } = opts;
 
   const arrayBuffer = await pdfFile.arrayBuffer();
-
   let pdfDoc: PDFDocument;
   try {
     pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
@@ -81,69 +58,61 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
 
   const pages = pdfDoc.getPages();
 
-  // Apply each signature placement
   for (const placement of placements) {
     const { page, x, y, w, h } = placement;
-    
-    // Validate page number
-    if (page < 1 || page > pages.length) {
-      console.warn(`Skipping invalid page number: ${page}`);
-      continue;
-    }
+    if (page < 1 || page > pages.length) continue;
 
-    const pageIdx = page - 1; // Convert to 0-indexed
-    const pg = pages[pageIdx];
+    const pg = pages[page - 1];
     const { width: pw, height: ph } = pg.getSize();
 
-    // Container size from placement (in PDF points)
+    // Get page rotation so we can place signature in viewer coordinates
+    const rotation = pg.getRotation().angle; // 0, 90, 180, 270
+
     const containerW = (w / 100) * pw;
     const containerH = (h / 100) * ph;
-    
-    // Position (top-left in CSS % to bottom-left in PDF coordinates)
-    // PDF coords: origin at bottom-left, Y increases upward
-    // CSS coords: origin at top-left, Y increases downward
-    // pdf-lib draws image from bottom-left corner UPWARD
-    // So we place bottom-left of image at: y-from-bottom = ph - topY
-    const pdfX = (x / 100) * pw;
-    const topY = (y / 100) * ph;  // Distance from top of page
-    const pdfY = ph - topY - containerH;  // Bottom-left corner of container
 
-    let img: any;
-    
+    // Convert viewer % coords → raw PDF coords accounting for rotation.
+    // PDF origin is always bottom-left of raw page; rotation changes which corner
+    // the viewer treats as "top-left".
+    let pdfX: number, pdfY: number;
+    if (rotation === 90) {
+      // Viewer top-left = PDF bottom-left corner. Axes swapped.
+      pdfX = (y / 100) * pw;
+      pdfY = (x / 100) * ph;
+    } else if (rotation === 180) {
+      // Viewer top-left = PDF top-right corner.
+      pdfX = pw - (x / 100) * pw - containerW;
+      pdfY = (y / 100) * ph;
+    } else if (rotation === 270) {
+      // Viewer top-left = PDF top-right corner. Axes swapped.
+      pdfX = pw - (y / 100) * pw - containerW;
+      pdfY = ph - (x / 100) * ph - containerH;
+    } else {
+      // rotation === 0 (normal)
+      pdfX = (x / 100) * pw;
+      pdfY = ph - (y / 100) * ph - containerH;
+    }
+
+    let dataUrl: string;
     if (signMode === 'draw' && signatureDataUrl?.startsWith('data:image/png')) {
-      const base64 = signatureDataUrl.split(',')[1];
-      const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-      img = await pdfDoc.embedPng(bytes);
+      dataUrl = signatureDataUrl;
     } else if (signMode === 'type' && typedName.trim()) {
-      // Generate image from text to support any characters (including Cyrillic)
-      const textDataUrl = await renderTextToDataUrl(typedName.trim(), containerW, containerH);
-      const base64 = textDataUrl.split(',')[1];
-      const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-      img = await pdfDoc.embedPng(bytes);
+      dataUrl = renderTextToDataUrl(typedName.trim(), containerW, containerH);
     } else {
       continue;
     }
 
-    // Get original image dimensions
-    const imgWidth = img.width;
-    const imgHeight = img.height;
+    const base64 = dataUrl.split(',')[1];
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const img = await pdfDoc.embedPng(bytes);
 
-    // Calculate dimensions that preserve aspect ratio
-    const fitted = fitImageToContainer(imgWidth, imgHeight, containerW, containerH);
-
-    // Center the image within the container
+    const fitted = fitImageToContainer(img.width, img.height, containerW, containerH);
     const offsetX = (containerW - fitted.width) / 2;
     const offsetY = (containerH - fitted.height) / 2;
 
-    const finalX = pdfX + offsetX;
-    const finalY = pdfY + offsetY;
+    const safeX = Math.max(0, Math.min(pw - fitted.width,  pdfX + offsetX));
+    const safeY = Math.max(0, Math.min(ph - fitted.height, pdfY + offsetY));
 
-    // Ensure we don't go outside page bounds
-    const safeX = Math.max(0, Math.min(pw - fitted.width, finalX));
-    const safeY = Math.max(0, Math.min(ph - fitted.height, finalY));
-
-    // Draw image at calculated position
-    // Canvas and PDF both use Y=0 at bottom for images, no flip needed
     pg.drawImage(img, {
       x: safeX,
       y: safeY,

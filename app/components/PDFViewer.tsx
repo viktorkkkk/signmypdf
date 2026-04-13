@@ -146,6 +146,11 @@ export default function PDFViewer({
 
   const onPointerDown = (mode: 'move' | 'resize') => (e: React.MouseEvent | React.TouchEvent) => {
     if (!selectedPages.includes(curPage)) return;
+    // Ignore mouse events when a touch is active (prevents double-fire on Android)
+    if (e.type === 'mousedown' && 'ontouchstart' in window && (e as React.MouseEvent).buttons === 1) {
+      const ev = e.nativeEvent as MouseEvent;
+      if ((ev as any).sourceCapabilities?.firesTouchEvents) return;
+    }
     e.preventDefault(); e.stopPropagation();
     dragging.current = mode;
     const { cx, cy } = getClientXY(e as any);

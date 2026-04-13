@@ -589,58 +589,10 @@ body {
 /* Adjust sig-container when toolbar is above */
 .sig-toolbar + .sig-container { border-radius: 0 0 14px 14px; }
 
-/* ── File History bar ── */
-.history-wrap {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: white;
-  border-top: 1.5px solid #e2e8f0;
-  padding: 12px 24px;
-  z-index: 50;
-  box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
-}
-.history-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.history-title { font-size: 13px; font-weight: 700; color: #334155; }
-.history-sub   { font-size: 12px; color: #94a3b8; }
-.history-list  { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
-.history-item {
-  display: flex; align-items: center; gap: 10px;
-  background: #f8fafc; border: 1.5px solid #e2e8f0;
-  border-radius: 12px; padding: 8px 12px;
-  min-width: 220px; flex-shrink: 0;
-}
-.history-item.locked { opacity: 0.7; }
-.history-icon  { font-size: 20px; flex-shrink: 0; }
-.history-meta  { flex: 1; min-width: 0; }
-.history-name  { font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.history-info  { font-size: 11px; color: #94a3b8; margin-top: 1px; }
-.history-dl-btn {
-  font-size: 12px; font-weight: 600; color: #2563eb;
-  background: #eff6ff; border: none; border-radius: 8px;
-  padding: 5px 10px; cursor: pointer; white-space: nowrap;
-  flex-shrink: 0;
-}
-.history-dl-btn:hover { background: #dbeafe; }
-.history-lock-btn {
-  font-size: 12px; font-weight: 600; color: #64748b;
-  background: #f1f5f9; border: none; border-radius: 8px;
-  padding: 5px 10px; cursor: pointer; white-space: nowrap;
-  flex-shrink: 0;
-}
-.history-lock-btn:hover { background: #fef9c3; color: #854d0e; }
-.history-note {
-  font-size: 11px; color: #94a3b8; margin-top: 8px;
-}
-.history-upgrade-link {
-  background: none; border: none; color: #2563eb; cursor: pointer;
-  font-size: 11px; text-decoration: underline; padding: 0;
-}
+/* ── File History (inline section) ── */
 
-/* Padding so content doesn't hide behind history bar */
-body { padding-bottom: 160px; }
+/* Bottom breathing room */
+body { padding-bottom: 40px; }
 
 /* ── Modal ── */
 .modal-overlay {
@@ -747,7 +699,7 @@ body { padding-bottom: 160px; }
   /* History bar — compact */
   .history-wrap { padding: 10px 14px; }
   .history-item { min-width: 180px; padding: 7px 10px; }
-  body { padding-bottom: 140px; }
+  body { padding-bottom: 24px; }
 
   /* Logo */
   .logo > div:first-child { width: 40px !important; height: 40px !important; border-radius: 11px !important; }

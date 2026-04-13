@@ -124,8 +124,8 @@ export default function Home() {
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1,
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+    onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1, noClick: true,
   });
 
   const canSign = (signMode === 'draw' ? !!signatureData : !!typedName.trim()) && selectedPages.length > 0;
@@ -155,11 +155,16 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
-      // Auto-download immediately
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `signed-${pdfFile.name}`;
-      a.click();
+      // Auto-download on desktop (iOS Safari blocks programmatic clicks without user gesture)
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (!isIOS) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `signed-${pdfFile.name}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
 
       // Save to history
       const reader = new FileReader();
@@ -284,7 +289,20 @@ export default function Home() {
               <div className="dz-icon">📄</div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
-              <button className="btn-primary" type="button">Choose PDF file</button>
+              {/* Native label+input for reliable mobile file picking */}
+              <label className="btn-primary" style={{ cursor: 'pointer' }}>
+                Choose PDF file
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) onDrop([file]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
             </div>
             <div className="features">
               {[
@@ -456,13 +474,23 @@ export default function Home() {
             <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
 
             <div className="done-btns">
-              <a href={signedPdfUrl!} download={`signed-${pdfFile?.name}`} className="btn-primary" style={{ padding: '15px 36px', fontSize: 16 }}>
+              <a
+                href={signedPdfUrl!}
+                download={`signed-${pdfFile?.name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ padding: '15px 36px', fontSize: 16 }}
+              >
                 ⬇️  Download Signed PDF
               </a>
               <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
+            <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: -20, marginBottom: 8 }}>
+              On iPhone/iPad: tap the button, then tap Share → Save to Files
+            </p>
 
             <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
               ✅ Document saved — check your downloads folder
