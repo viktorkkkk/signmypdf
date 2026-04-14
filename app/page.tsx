@@ -723,8 +723,9 @@ export default function Home() {
                 Company
               </h4>
               <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
-                SignMyPDF Inc.<br />
-                Making document signing simple and secure.
+                PIXELTIDE LLC<br />
+                833 Saint Vincent<br />
+                Irvine, CA 92618, USA
               </p>
             </div>
           </div>
@@ -737,7 +738,7 @@ export default function Home() {
             fontSize: 12,
             color: '#94a3b8',
           }}>
-            © {new Date().getFullYear()} SignMyPDF. All rights reserved.
+            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · <a href="/terms" style={{ color: '#94a3b8' }}>Terms</a> · <a href="/privacy" style={{ color: '#94a3b8' }}>Privacy</a>
           </div>
         </div>
       </footer>
