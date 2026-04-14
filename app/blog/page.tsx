@@ -233,95 +233,49 @@ export default function BlogPage() {
       </div>
 
       {/* Footer */}
-      <footer style={{
-        background: '#0f172a',
-        color: '#94a3b8',
-        padding: '48px 24px 24px'
-      }}>
-        <div className="container" style={{ padding: 0 }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 32,
-            marginBottom: 32
-          }}>
-            {/* Company */}
+      <footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '32px 0 24px', marginTop: 48 }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24, marginBottom: 24 }}>
             <div>
-              <Link href="/" style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: 10, 
-                textDecoration: 'none',
-                marginBottom: 12 
-              }}>
-                <div style={{
-                  width: 32,
-                  height: 32,
-                  background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
-                  borderRadius: 8,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontSize: 16
-                }}>
-                  ✍️
-                </div>
-                <span style={{ 
-                  fontWeight: 800, 
-                  color: 'white',
-                  fontSize: 16
-                }}>
-                  SignMyPDF
-                </span>
-              </Link>
-              <p style={{ fontSize: 13, lineHeight: 1.6 }}>
-                Free, secure PDF signing. No registration required.
+              <Link href="/" className="logo" style={{ display: 'inline-block', marginBottom: 8 }}><Logo /></Link>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
+                Simple and secure PDF signing tool. No registration required.
               </p>
             </div>
-
-            {/* Product */}
             <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
-                Product
-              </h4>
-              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
-                <li><Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign PDF</Link></li>
-                <li><Link href="/blog" style={{ color: '#94a3b8', textDecoration: 'none' }}>Blog</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Contact</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
+                <li>📧 support@signmypdf.io</li>
+                <li>🌐 https://signmypdf.io</li>
               </ul>
             </div>
-
-            {/* Resources */}
             <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
-                Resources
-              </h4>
-              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
-                <li><Link href="/blog/how-to-sign-pdf-online-free" style={{ color: '#94a3b8', textDecoration: 'none' }}>How to Sign PDF</Link></li>
-                <li><Link href="/blog/electronic-signature-legality" style={{ color: '#94a3b8', textDecoration: 'none' }}>E-Signature Legal Guide</Link></li>
-                <li><Link href="/blog/sign-pdf-iphone-ipad" style={{ color: '#94a3b8', textDecoration: 'none' }}>Sign on iPhone/iPad</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Resources</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
+                <li><Link href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>Blog</Link></li>
+                <li><Link href="/blog/how-to-sign-pdf-online-free" style={{ color: '#64748b', textDecoration: 'none' }}>How to Sign PDF</Link></li>
+                <li><Link href="/blog/electronic-signature-legality" style={{ color: '#64748b', textDecoration: 'none' }}>E-Signature Legal Guide</Link></li>
+                <li><Link href="/blog/sign-pdf-iphone-ipad" style={{ color: '#64748b', textDecoration: 'none' }}>Sign on iPhone/iPad</Link></li>
               </ul>
             </div>
-
-            {/* Legal */}
             <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: 'white', marginBottom: 12 }}>
-                Legal
-              </h4>
-              <ul style={{ listStyle: 'none', fontSize: 13, lineHeight: 2 }}>
-                <li><Link href="/privacy" style={{ color: '#94a3b8', textDecoration: 'none' }}>Privacy Policy</Link></li>
-                <li><Link href="/terms" style={{ color: '#94a3b8', textDecoration: 'none' }}>Terms of Service</Link></li>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Legal</h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
+                <li><Link href="/terms" style={{ color: '#64748b', textDecoration: 'none' }}>Terms of Service</Link></li>
+                <li><Link href="/privacy" style={{ color: '#64748b', textDecoration: 'none' }}>Privacy Policy</Link></li>
               </ul>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Company</h4>
+              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
+                PIXELTIDE LLC<br />
+                833 Saint Vincent<br />
+                Irvine, CA 92618, USA
+              </p>
             </div>
           </div>
-
-          <div style={{
-            borderTop: '1px solid #1e293b',
-            paddingTop: 24,
-            textAlign: 'center',
-            fontSize: 12
-          }}>
-            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · 833 Saint Vincent, Irvine, CA 92618 · <a href="mailto:support@signmypdf.io" style={{ color: '#64748b' }}>support@signmypdf.io</a>
+          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 16, textAlign: 'center', fontSize: 12, color: '#94a3b8' }}>
+            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · <Link href="/terms" style={{ color: '#94a3b8' }}>Terms</Link> · <Link href="/privacy" style={{ color: '#94a3b8' }}>Privacy</Link>
           </div>
         </div>
       </footer>
