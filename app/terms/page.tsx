@@ -47,9 +47,8 @@ export default function TermsPage() {
         Premium access is available on the following plans:
       </p>
       <ul style={{ paddingLeft: 24, marginBottom: 16 }}>
-        <li><strong>Weekly:</strong> $2.99 per week, recurring.</li>
-        <li><strong>Annual:</strong> $39.00 per year (equivalent to $3.25/month), recurring.</li>
-        <li><strong>Lifetime:</strong> $79.00 one-time payment, no recurring charges.</li>
+        <li><strong>Monthly:</strong> $9.00 per month, recurring.</li>
+        <li><strong>Annual:</strong> $90.00 per year (equivalent to $7.50/month), recurring.</li>
       </ul>
       <p style={{ marginBottom: 16 }}>
         Payments are processed by our authorized payment processor. Subscriptions renew
