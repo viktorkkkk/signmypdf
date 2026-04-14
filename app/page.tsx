@@ -179,11 +179,8 @@ export default function Home() {
       incrementTodayCount();
       setTodayCount(getTodayCount());
 
-      // Show done screen after short delay
-      setTimeout(() => {
-        setStep('done');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 500);
+      // Show done screen
+      setTimeout(() => setStep('done'), 300);
     } catch (err: any) {
       console.error('handleSign error:', err);
       alert('Error signing PDF: ' + (err?.message || 'unknown'));
@@ -228,6 +225,11 @@ export default function Home() {
     setSelectedPages([]);
     setPlacements([]);
   };
+
+  // Scroll to top whenever step changes (after render)
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [step]);
 
   const stepIndex = STEPS.findIndex(s => s.id === step);
   const previewSig = signMode === 'draw' ? signatureData : typedSigDataUrl;
@@ -497,26 +499,22 @@ export default function Home() {
         {/* ── DONE ── */}
         {step === 'done' && (
           <div className="done-wrap">
-            <div className="done-icon">🎉</div>
+            <div className="done-icon">✅</div>
             <h2 className="done-title">Document signed!</h2>
-            <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
+            <p className="done-sub">Your PDF is ready. Save it to your device.</p>
 
-            <div className="done-btns">
-              <button
-                className="btn-primary"
-                style={{ padding: '15px 36px', fontSize: 16 }}
-                onClick={() => downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`)}
-              >
-                ⬇️  Save Signed PDF
-              </button>
-              <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
-                Sign another document
-              </button>
-            </div>
+            {/* Primary action — save */}
+            <button
+              className="btn-primary"
+              style={{ width: '100%', padding: '18px', fontSize: 18, marginBottom: 12, borderRadius: 16 }}
+              onClick={() => downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`)}
+            >
+              ⬇️  Save Signed PDF
+            </button>
 
-            <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
-              ✅ Tap the button above to save your document
-            </p>
+            <button className="btn-ghost" style={{ width: '100%', padding: '14px', fontSize: 15 }} onClick={reset}>
+              📄 Sign another document
+            </button>
           </div>
         )}
 
