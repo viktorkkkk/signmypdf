@@ -140,15 +140,6 @@ export default function Home() {
       return;
     }
 
-    // iOS Safari blocks window.open() after await — open the window NOW (within user gesture)
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    let iosWin: Window | null = null;
-    if (isIOS) {
-      iosWin = window.open('', '_blank');
-      if (iosWin) iosWin.document.write('<p style="font-family:sans-serif;padding:40px;font-size:18px">⏳ Signing your PDF…</p>');
-    }
-
     setIsProcessing(true);
     try {
       const activePlacements = placements.filter(p => selectedPages.includes(p.page));
@@ -164,15 +155,10 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
-      // Trigger download / open PDF
-      if (isIOS) {
-        // Navigate the pre-opened window to the blob → Safari shows PDF with Share sheet
-        if (iosWin) {
-          iosWin.location.href = url;
-        } else {
-          window.open(url, '_blank');
-        }
-      } else {
+      // Auto-download on desktop; on iOS user taps the button on done screen
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (!isIOS) {
         const a = document.createElement('a');
         a.href = url;
         a.download = `signed-${pdfFile.name}`;
@@ -489,21 +475,12 @@ export default function Home() {
             <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
 
             <div className="done-btns">
+              {/* Direct <a download> — iOS Safari 13+ downloads on user tap */}
               <a
                 href={signedPdfUrl!}
                 download={`signed-${pdfFile?.name}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="btn-primary"
                 style={{ padding: '15px 36px', fontSize: 16 }}
-                onClick={() => {
-                  // iOS: open blob in new tab so user gets Share sheet
-                  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-                  if (isIOS && signedPdfUrl) {
-                    window.open(signedPdfUrl, '_blank');
-                  }
-                }}
               >
                 ⬇️  Save Signed PDF
               </a>
