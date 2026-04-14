@@ -321,7 +321,7 @@ export default function BlogPage() {
             textAlign: 'center',
             fontSize: 12
           }}>
-            © {new Date().getFullYear()} SignMyPDF. All rights reserved.
+            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · 833 Saint Vincent, Irvine, CA 92618 · <a href="mailto:support@signmypdf.io" style={{ color: '#64748b' }}>support@signmypdf.io</a>
           </div>
         </div>
       </footer>

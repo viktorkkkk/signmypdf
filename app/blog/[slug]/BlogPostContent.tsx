@@ -314,7 +314,7 @@ function SEOVariations() {
 // FAQ Section
 function FAQSection() {
   const faqs = [
-    { question: 'Is it free?', answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. Need more? Premium plans start at $2.99/week for unlimited signing.' },
+    { question: 'Is it free?', answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. Need more? Premium plans start at $9/month for unlimited signing.' },
     { question: 'Is it legal to sign PDF online?', answer: 'Absolutely. Electronic signatures are legally binding in the US (ESIGN Act, UETA), EU (eIDAS), UK, Canada, Australia, and 100+ countries worldwide. Our signed documents meet all legal requirements.' },
     { question: 'Do I need to install anything?', answer: 'No installation required. Our PDF signer works entirely in your web browser — Chrome, Safari, Firefox, Edge. Simply open the website, upload your PDF, and start signing instantly.' },
     { question: 'Is my document secure?', answer: 'Yes, your documents are 100% secure. All PDF processing happens locally in your browser. Your files are never uploaded to our servers, and we collect zero personal data.' },
@@ -542,7 +542,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             </div>
           </div>
           <div style={{ borderTop: '1px solid #1e293b', paddingTop: 24, textAlign: 'center', fontSize: 12 }}>
-            © {new Date().getFullYear()} SignMyPDF. All rights reserved.
+            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · 833 Saint Vincent, Irvine, CA 92618 · <a href="mailto:support@signmypdf.io" style={{ color: '#64748b' }}>support@signmypdf.io</a>
           </div>
         </div>
       </footer>
