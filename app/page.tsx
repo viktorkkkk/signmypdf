@@ -155,9 +155,13 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
-      // Auto-download on desktop (iOS Safari blocks programmatic clicks without user gesture)
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      if (!isIOS) {
+      // Trigger download / open PDF
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) {
+        // iOS Safari: open blob in new tab → user gets Share sheet to Save to Files
+        window.open(url, '_blank');
+      } else {
         const a = document.createElement('a');
         a.href = url;
         a.download = `signed-${pdfFile.name}`;
