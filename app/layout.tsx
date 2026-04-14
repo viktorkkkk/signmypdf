@@ -54,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap"
           rel="stylesheet"

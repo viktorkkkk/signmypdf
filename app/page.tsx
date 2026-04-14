@@ -241,7 +241,7 @@ export default function Home() {
     '@type': 'WebApplication',
     name: 'SignMyPDF',
     description: 'Free online PDF signature tool. No registration required.',
-    url: 'https://signmypdf.vercel.app',
+    url: 'https://signmypdf.io',
     applicationCategory: 'ProductivityApplication',
     operatingSystem: 'Any',
     offers: {
@@ -258,7 +258,7 @@ export default function Home() {
     ],
     screenshot: {
       '@type': 'ImageObject',
-      url: 'https://signmypdf.vercel.app/screenshot.png',
+      url: 'https://signmypdf.io/screenshot.png',
     },
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -663,8 +663,8 @@ export default function Home() {
                 Contact
               </h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
-                <li>📧 support@signmypdf.app</li>
-                <li>🌐 https://signmypdf.vercel.app</li>
+                <li>📧 support@signmypdf.io</li>
+                <li>🌐 https://signmypdf.io</li>
               </ul>
             </div>
 
