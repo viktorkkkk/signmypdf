@@ -192,6 +192,33 @@ export default function Home() {
     }
   };
 
+  // Universal download: uses Web Share API on iOS (opens native Share Sheet → Save to Files)
+  // Falls back to <a download> on desktop
+  const downloadOrShare = async (url: string, filename: string) => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (isIOS && navigator.share) {
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const file = new File([blob], filename, { type: 'application/pdf' });
+        await navigator.share({ files: [file], title: filename });
+        return;
+      } catch (e: any) {
+        // User cancelled share or share failed — fall through to link
+        if (e?.name === 'AbortError') return;
+      }
+    }
+    // Desktop / fallback
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const reset = () => {
     setPdfFile(null); 
     setSignedPdfUrl(null);
@@ -475,22 +502,20 @@ export default function Home() {
             <p className="done-sub">Your PDF with {selectedPages.length} signature{selectedPages.length > 1 ? 's' : ''} is ready.</p>
 
             <div className="done-btns">
-              {/* Direct <a download> — iOS Safari 13+ downloads on user tap */}
-              <a
-                href={signedPdfUrl!}
-                download={`signed-${pdfFile?.name}`}
+              <button
                 className="btn-primary"
                 style={{ padding: '15px 36px', fontSize: 16 }}
+                onClick={() => downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`)}
               >
                 ⬇️  Save Signed PDF
-              </a>
+              </button>
               <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
 
             <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
-              ✅ Document saved — check your downloads folder
+              ✅ Tap the button above to save your document
             </p>
           </div>
         )}
@@ -503,10 +528,7 @@ export default function Home() {
         hasSubscription={hasSubscription}
         onDownload={(item: HistoryItem, canDownload: boolean) => {
           if (canDownload) {
-            const a = document.createElement('a');
-            a.href = item.dataUrl;
-            a.download = `signed-${item.name}`;
-            a.click();
+            downloadOrShare(item.dataUrl, `signed-${item.name}`);
           } else {
             setPendingDownload(item);
             setShowPricing(true);
