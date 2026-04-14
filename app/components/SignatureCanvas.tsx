@@ -32,6 +32,7 @@ export default function SignatureCanvas({ onSave }: Props) {
   const colorRef = useRef(COLORS[0].value);
   const widthRef = useRef(3);
   const lastPos  = useRef<{ x: number; y: number } | null>(null);
+  const lastMid  = useRef<{ x: number; y: number } | null>(null);
   const strokes  = useRef<ImageData[]>([]);
 
   useEffect(() => { isDrawingRef.current = isDrawing; }, [isDrawing]);
@@ -123,6 +124,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     isDrawingRef.current = true;
     const touch = e.touches[0];
     lastPos.current = getPos(touch.clientX, touch.clientY);
+    lastMid.current = null;
   };
 
   const drawTouch = (e: TouchEvent) => {
@@ -134,20 +136,19 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineJoin    = 'round';
     const touch = e.touches[0];
     const pos = getPos(touch.clientX, touch.clientY);
-    
-    const midX = (lastPos.current.x + pos.x) / 2;
-    const midY = (lastPos.current.y + pos.y) / 2;
-    
+    const mid = { x: (lastPos.current.x + pos.x) / 2, y: (lastPos.current.y + pos.y) / 2 };
+
     ctx.beginPath();
-    ctx.moveTo(lastPos.current.x, lastPos.current.y);
-    ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, midX, midY);
+    if (lastMid.current) {
+      ctx.moveTo(lastMid.current.x, lastMid.current.y);
+      ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, mid.x, mid.y);
+    } else {
+      ctx.moveTo(lastPos.current.x, lastPos.current.y);
+      ctx.lineTo(mid.x, mid.y);
+    }
     ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(midX, midY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
+
+    lastMid.current = mid;
     lastPos.current = pos;
     setIsEmpty(false);
     isEmptyRef.current = false;
@@ -158,6 +159,7 @@ export default function SignatureCanvas({ onSave }: Props) {
     saveStroke();
     setIsDrawing(true);
     lastPos.current = getPos(e.clientX, e.clientY);
+    lastMid.current = null;
   };
 
   const draw = (e: React.MouseEvent) => {
@@ -169,20 +171,19 @@ export default function SignatureCanvas({ onSave }: Props) {
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
     const pos = getPos(e.clientX, e.clientY);
-    
-    const midX = (lastPos.current.x + pos.x) / 2;
-    const midY = (lastPos.current.y + pos.y) / 2;
-    
+    const mid = { x: (lastPos.current.x + pos.x) / 2, y: (lastPos.current.y + pos.y) / 2 };
+
     ctx.beginPath();
-    ctx.moveTo(lastPos.current.x, lastPos.current.y);
-    ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, midX, midY);
+    if (lastMid.current) {
+      ctx.moveTo(lastMid.current.x, lastMid.current.y);
+      ctx.quadraticCurveTo(lastPos.current.x, lastPos.current.y, mid.x, mid.y);
+    } else {
+      ctx.moveTo(lastPos.current.x, lastPos.current.y);
+      ctx.lineTo(mid.x, mid.y);
+    }
     ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(midX, midY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
+
+    lastMid.current = mid;
     lastPos.current = pos;
     setIsEmpty(false);
     isEmptyRef.current = false;

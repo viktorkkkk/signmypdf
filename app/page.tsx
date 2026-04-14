@@ -133,17 +133,26 @@ export default function Home() {
 
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
-    
+
     // Check daily limit
     if (!canSignToday) {
       setShowPricing(true);
       return;
     }
-    
+
+    // iOS Safari blocks window.open() after await — open the window NOW (within user gesture)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    let iosWin: Window | null = null;
+    if (isIOS) {
+      iosWin = window.open('', '_blank');
+      if (iosWin) iosWin.document.write('<p style="font-family:sans-serif;padding:40px;font-size:18px">⏳ Signing your PDF…</p>');
+    }
+
     setIsProcessing(true);
     try {
       const activePlacements = placements.filter(p => selectedPages.includes(p.page));
-      
+
       // 100% client-side — no server, no size limits
       const blob = await signPdfInBrowser({
         pdfFile,
@@ -156,11 +165,13 @@ export default function Home() {
       setSignedPdfUrl(url);
 
       // Trigger download / open PDF
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       if (isIOS) {
-        // iOS Safari: open blob in new tab → user gets Share sheet to Save to Files
-        window.open(url, '_blank');
+        // Navigate the pre-opened window to the blob → Safari shows PDF with Share sheet
+        if (iosWin) {
+          iosWin.location.href = url;
+        } else {
+          window.open(url, '_blank');
+        }
       } else {
         const a = document.createElement('a');
         a.href = url;
@@ -485,16 +496,21 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="btn-primary"
                 style={{ padding: '15px 36px', fontSize: 16 }}
+                onClick={() => {
+                  // iOS: open blob in new tab so user gets Share sheet
+                  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                  if (isIOS && signedPdfUrl) {
+                    window.open(signedPdfUrl, '_blank');
+                  }
+                }}
               >
-                ⬇️  Download Signed PDF
+                ⬇️  Save Signed PDF
               </a>
               <button className="btn-ghost" style={{ padding: '15px 28px', fontSize: 15 }} onClick={reset}>
                 Sign another document
               </button>
             </div>
-            <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: -20, marginBottom: 8 }}>
-              On iPhone/iPad: tap the button, then tap Share → Save to Files
-            </p>
 
             <p style={{ fontSize: 12, color: '#22c55e', textAlign: 'center', marginTop: -12, marginBottom: 24, fontWeight: 600 }}>
               ✅ Document saved — check your downloads folder
