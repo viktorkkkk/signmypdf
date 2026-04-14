@@ -573,33 +573,6 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Annual - FEATURED */}
-              <div className="plan-card plan-featured" style={{ transform: 'scale(1.04)', zIndex: 1 }}>
-                <div className="plan-badge">Best Value — Save 17%</div>
-                <div className="plan-name">Annual</div>
-                <div className="plan-price">$7.50<span>/mo</span></div>
-                <div className="plan-desc" style={{ color: '#2563eb', fontWeight: 600 }}>That's $7.50/mo — less than a coffee</div>
-                <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 16 }}>Billed $90/year</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited PDF signing</li>
-                  <li>✓ Save & reuse signatures</li>
-                  <li>✓ No watermark</li>
-                  <li>✓ Download history</li>
-                  <li>✓ Priority support</li>
-                </ul>
-                <button
-                  className="plan-btn plan-btn-featured"
-                  onClick={() => {
-                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
-                    setHasSubscription(true);
-                    setShowPricing(false);
-                    alert('✅ Premium activated! (Demo mode)');
-                  }}
-                >
-                  Get Annual Plan
-                </button>
-              </div>
-
               {/* Monthly */}
               <div className="plan-card">
                 <div className="plan-name">Monthly</div>
@@ -622,6 +595,32 @@ export default function Home() {
                   }}
                 >
                   Get Monthly
+                </button>
+              </div>
+
+              {/* Annual - FEATURED */}
+              <div className="plan-card plan-featured" style={{ transform: 'scale(1.04)', zIndex: 1 }}>
+                <div className="plan-badge">Best Value — Save 17%</div>
+                <div className="plan-name">Annual</div>
+                <div className="plan-price">$7.50<span>/mo</span></div>
+                <div className="plan-desc">Billed $90/year</div>
+                <ul className="plan-perks">
+                  <li>✓ Unlimited PDF signing</li>
+                  <li>✓ Save & reuse signatures</li>
+                  <li>✓ No watermark</li>
+                  <li>✓ Download history</li>
+                  <li>✓ Priority support</li>
+                </ul>
+                <button
+                  className="plan-btn plan-btn-featured"
+                  onClick={() => {
+                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+                    setHasSubscription(true);
+                    setShowPricing(false);
+                    alert('✅ Premium activated! (Demo mode)');
+                  }}
+                >
+                  Get Annual Plan
                 </button>
               </div>
 
