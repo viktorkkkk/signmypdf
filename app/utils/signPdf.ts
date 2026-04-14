@@ -1,4 +1,4 @@
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // Render text to PNG image (supports any Unicode including Cyrillic)
 function renderTextToDataUrl(text: string, width: number, height: number): string {
@@ -34,7 +34,8 @@ export interface SignOptions {
   signatureDataUrl: string;
   typedName: string;
   signMode: 'draw' | 'type';
-  placements: SignaturePlacement[];  // Multiple signature placements
+  placements: SignaturePlacement[];
+  addWatermark?: boolean;
 }
 
 /**
@@ -68,7 +69,7 @@ function fitImageToContainer(
 }
 
 export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
-  const { pdfFile, signatureDataUrl, typedName, signMode, placements } = opts;
+  const { pdfFile, signatureDataUrl, typedName, signMode, placements, addWatermark } = opts;
 
   const arrayBuffer = await pdfFile.arrayBuffer();
 
@@ -151,6 +152,26 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
       height: fitted.height,
       opacity: 0.95,
     });
+  }
+
+  // Add watermark on free plan — bottom center of every page, small grey text
+  if (addWatermark) {
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const watermarkText = 'Signed via SignMyPDF.io — Remove watermark with Pro';
+    const fontSize = 8;
+
+    for (const pg of pages) {
+      const { width: pw, height: ph } = pg.getSize();
+      const textWidth = font.widthOfTextAtSize(watermarkText, fontSize);
+      pg.drawText(watermarkText, {
+        x: (pw - textWidth) / 2,
+        y: 14,
+        size: fontSize,
+        font,
+        color: rgb(0.5, 0.5, 0.5),
+        opacity: 0.4,
+      });
+    }
   }
 
   pdfDoc.setModificationDate(new Date());

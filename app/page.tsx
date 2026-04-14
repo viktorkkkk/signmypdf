@@ -151,6 +151,7 @@ export default function Home() {
         typedName,
         signMode: signMode as 'draw' | 'type',
         placements: activePlacements,
+        addWatermark: !hasSubscription,
       });
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
