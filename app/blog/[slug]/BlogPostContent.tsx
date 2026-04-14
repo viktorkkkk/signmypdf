@@ -65,14 +65,15 @@ function StickyCTA() {
   );
 }
 
-// FAQ Accordion Component
+// FAQ Accordion Component — answer always in DOM for SEO, CSS controls visibility
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div style={{ borderBottom: '1px solid #e2e8f0' }}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         style={{
           width: '100%',
           padding: '20px 0',
@@ -88,18 +89,23 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <span style={{ fontSize: 16, fontWeight: 600, color: '#0f172a' }}>
           {question}
         </span>
-        <svg 
+        <svg
           width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"
-          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }}
         >
           <path d="M6 9l6 6 6-6"/>
         </svg>
       </button>
-      {isOpen && (
-        <div style={{ paddingBottom: 20, fontSize: 15, color: '#475569', lineHeight: 1.7 }}>
-          {answer}
-        </div>
-      )}
+      {/* Always rendered in DOM so Googlebot can index the answer text */}
+      <div style={{
+        overflow: 'hidden',
+        maxHeight: isOpen ? '400px' : '0',
+        transition: 'max-height 0.3s ease',
+        paddingBottom: isOpen ? 20 : 0,
+        fontSize: 15, color: '#475569', lineHeight: 1.7,
+      }}>
+        {answer}
+      </div>
     </div>
   );
 }
