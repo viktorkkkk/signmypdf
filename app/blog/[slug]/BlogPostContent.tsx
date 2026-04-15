@@ -550,7 +550,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
       {/* Article */}
       <article className="container" style={{ paddingTop: 48, paddingBottom: 64 }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        <div style={{ maxWidth: 768, margin: '0 auto' }}>
           {/* Meta */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, marginBottom: 20 }}>
             <span style={{ padding: '6px 14px', background: '#eff6ff', color: '#2563eb', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
