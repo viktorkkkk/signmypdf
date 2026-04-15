@@ -110,13 +110,84 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+// Render inline bold/links within a string
+function renderInline(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const regex = /(\*\*[^*]+\*\*|\[([^\]]+)\]\(([^)]+)\))/g;
+  let last = 0, match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > last) parts.push(text.slice(last, match.index));
+    if (match[0].startsWith('**')) {
+      parts.push(<strong key={key++} style={{ color: '#0f172a' }}>{match[0].slice(2, -2)}</strong>);
+    } else {
+      parts.push(<a key={key++} href={match[3]} style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>{match[2]}</a>);
+    }
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts;
+}
+
 // Parse content
 function formatContent(content: string) {
   return content
     .split('\n\n')
     .map((block, i) => {
       const trimmed = block.trim();
-      
+
+      // CTA Block
+      if (trimmed.startsWith('[CTA]')) {
+        const parts = trimmed.slice(5).split('|');
+        const ctaTitle = parts[0]?.trim() || 'Ready to Sign Your PDF?';
+        const ctaSub = parts[1]?.trim() || '';
+        const ctaBtn = parts[2]?.trim() || 'Sign PDF Free Now';
+        return (
+          <div key={i} style={{ margin: '48px 0', padding: '40px 32px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, textAlign: 'center', boxShadow: '0 20px 60px rgba(37,99,235,0.3)' }}>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: 'white', marginBottom: 12, letterSpacing: -0.3 }}>{ctaTitle}</h2>
+            {ctaSub && <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', marginBottom: 28 }}>{ctaSub}</p>}
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', background: 'white', color: '#2563eb', fontWeight: 800, fontSize: 16, borderRadius: 14, textDecoration: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+              {ctaBtn} →
+            </Link>
+          </div>
+        );
+      }
+
+      // Table (lines starting with |)
+      if (trimmed.startsWith('|')) {
+        const rows = trimmed.split('\n').map(r => r.trim()).filter(r => r.startsWith('|'));
+        const isSep = (r: string) => /^\|[-| :]+\|$/.test(r);
+        const parseRow = (r: string) => r.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map(c => c.trim());
+        const headers = parseRow(rows[0] || '');
+        const dataRows = rows.slice(2).filter(r => !isSep(r)).map(parseRow);
+        return (
+          <div key={i} style={{ overflowX: 'auto', marginBottom: 28, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, minWidth: 360 }}>
+              <thead>
+                <tr style={{ background: '#f1f5f9' }}>
+                  {headers.map((cell, j) => (
+                    <th key={j} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: '#0f172a', borderBottom: '2px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                      {renderInline(cell)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {dataRows.map((row, j) => (
+                  <tr key={j} style={{ borderBottom: '1px solid #e2e8f0', background: j % 2 === 0 ? 'white' : '#f8fafc' }}>
+                    {row.map((cell, k) => (
+                      <td key={k} style={{ padding: '12px 16px', color: '#475569' }}>
+                        {renderInline(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+
       if (trimmed.startsWith('# ')) {
         return (
           <h1 key={i} style={{ fontSize: 32, fontWeight: 800, color: '#0f172a', marginTop: 48, marginBottom: 20, letterSpacing: -0.5 }}>
@@ -431,7 +502,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
           {/* H1 Title - SEO Optimized */}
           <h1 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 24, lineHeight: 1.2, letterSpacing: -0.5 }}>
-            {post.title} (Free & No Registration)
+            {post.title}
           </h1>
 
           {/* Tags */}
