@@ -134,6 +134,11 @@ export default function Home() {
   // Watermark is added starting from the 3rd PDF in a day (free plan only)
   const willHaveWatermark = !hasSubscription && todayCount >= DAILY_LIMIT;
 
+  // GA4 event helper — safe to call even before gtag is loaded
+  const trackEvent = (name: string, params?: Record<string, string | boolean | number>) => {
+    try { (window as any).gtag?.('event', name, params); } catch {}
+  };
+
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
 
@@ -154,6 +159,14 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
+      // Track signing event
+      trackEvent('pdf_signed', {
+        plan: hasSubscription ? 'pro' : 'free',
+        mode: signMode,
+        pages: activePlacements.length,
+        watermark: willHaveWatermark,
+      });
+
       // Auto-download on desktop; on iOS user taps the button on done screen
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -164,6 +177,8 @@ export default function Home() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        // Track desktop auto-download
+        trackEvent('pdf_downloaded', { plan: hasSubscription ? 'pro' : 'free', watermark: willHaveWatermark, method: 'auto' });
         if (willHaveWatermark) setTimeout(() => showToast(), 400);
       }
 
@@ -515,6 +530,7 @@ export default function Home() {
               style={{ width: '100%', padding: '18px', fontSize: 18, marginBottom: 12, borderRadius: 16 }}
               onClick={async () => {
                 await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
+                trackEvent('pdf_downloaded', { plan: hasSubscription ? 'pro' : 'free', watermark: willHaveWatermark, method: 'button' });
                 if (willHaveWatermark) setTimeout(() => showToast(), 400);
               }}
             >
@@ -673,7 +689,7 @@ export default function Home() {
               </div>
               <a
                 href="#pricing"
-                onClick={e => { e.preventDefault(); setShowWatermarkToast(false); setShowPricing(true); }}
+                onClick={e => { e.preventDefault(); setShowWatermarkToast(false); setShowPricing(true); trackEvent('toast_upgrade_clicked'); }}
                 style={{ fontSize: 13, color: '#60a5fa', textDecoration: 'none', fontWeight: 500 }}
               >
                 Remove with Pro →
