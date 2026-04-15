@@ -693,8 +693,19 @@ body { padding-bottom: 40px; }
   /* Pricing */
   .pricing-wrap { padding: 24px 16px; }
   .pricing-title { font-size: 20px; }
-  .pricing-grid { grid-template-columns: 1fr; }
-  .modal-box { padding: 24px 16px; border-radius: 16px; }
+  .pricing-grid { grid-template-columns: 1fr; gap: 10px; }
+  .modal-box { padding: 20px 14px 16px; border-radius: 16px; }
+  .pricing-header { margin-bottom: 16px; }
+  .pricing-title { font-size: 19px; margin-bottom: 4px; }
+  .pricing-sub { font-size: 13px; }
+  .plan-card { padding: 14px 14px 12px; border-radius: 14px; }
+  .plan-name { font-size: 12px; margin-bottom: 4px; }
+  .plan-price { font-size: 28px; margin-bottom: 2px; }
+  .plan-price span { font-size: 13px; }
+  .plan-desc { font-size: 11px; margin-bottom: 10px; }
+  .plan-perks { font-size: 12px; gap: 4px; margin-bottom: 12px; }
+  .plan-btn { padding: 9px; font-size: 13px; border-radius: 10px; }
+  .pricing-fine { margin-top: 12px; font-size: 11px; }
 
   /* History bar — compact */
   .history-wrap { padding: 10px 14px; }
