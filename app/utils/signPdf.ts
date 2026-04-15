@@ -157,7 +157,7 @@ export async function signPdfInBrowser(opts: SignOptions): Promise<Blob> {
   // Add watermark on free plan — bottom center of every page, small grey text
   if (addWatermark) {
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const watermarkText = 'Signed via SignMyPDF.io - Remove watermark with Pro';
+    const watermarkText = 'SignMyPDF.io';
     const fontSize = 8;
 
     for (const pg of pages) {
