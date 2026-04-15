@@ -110,6 +110,32 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+// Quick Summary component shown at top of every article
+function QuickSummary() {
+  const items = [
+    { icon: '⏱', label: 'Time', value: 'Under 60 seconds' },
+    { icon: '💰', label: 'Cost', value: 'Free (2 PDFs/day)' },
+    { icon: '📱', label: 'Works on', value: 'All devices' },
+    { icon: '✍️', label: 'Registration', value: 'Not required' },
+  ];
+  return (
+    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: '20px 24px', marginBottom: 40 }}>
+      <div style={{ fontWeight: 700, fontSize: 14, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Quick Summary</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
+        {items.map(item => (
+          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 22 }}>{item.icon}</span>
+            <div>
+              <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.label}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{item.value}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Render inline bold/links within a string
 function renderInline(text: string): React.ReactNode[] {
   const parts: React.ReactNode[] = [];
@@ -135,6 +161,42 @@ function formatContent(content: string) {
     .split('\n\n')
     .map((block, i) => {
       const trimmed = block.trim();
+
+      // Callout block [CALLOUT]text
+      if (trimmed.startsWith('[CALLOUT]')) {
+        const text = trimmed.slice(9).trim();
+        return (
+          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 20px', background: '#eff6ff', borderLeft: '4px solid #2563eb', borderRadius: '0 12px 12px 0', marginBottom: 24, marginTop: 8 }}>
+            <p style={{ margin: 0, fontSize: 15, color: '#1e40af', lineHeight: 1.7, fontWeight: 500 }}>{text}</p>
+          </div>
+        );
+      }
+
+      // Step card: ### Step N: Title\nBody text
+      if (/^### Step \d+[:.]/i.test(trimmed)) {
+        const lines = trimmed.split('\n');
+        const headerLine = lines[0];
+        const bodyText = lines.slice(1).join(' ').trim();
+        const stepMatch = headerLine.match(/^### Step (\d+)[:.]\s*(.+)/i);
+        if (stepMatch) {
+          const stepNum = parseInt(stepMatch[1]);
+          const stepTitle = stepMatch[2].trim();
+          const stepEmojis = ['📄', '✍️', '📍', '⬇️', '🔗', '📤'];
+          const emoji = stepEmojis[(stepNum - 1) % stepEmojis.length];
+          return (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '20px 24px', background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+              <div style={{ flexShrink: 0, width: 40, height: 40, background: '#2563eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 18 }}>
+                {stepNum}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 17, color: '#0f172a', marginBottom: bodyText ? 8 : 0 }}>{stepTitle}</div>
+                {bodyText && <p style={{ margin: 0, fontSize: 15, color: '#475569', lineHeight: 1.7 }}>{renderInline(bodyText)}</p>}
+              </div>
+              <span style={{ fontSize: 26, flexShrink: 0, lineHeight: 1 }}>{emoji}</span>
+            </div>
+          );
+        }
+      }
 
       // CTA Block
       if (trimmed.startsWith('[CTA]')) {
@@ -522,37 +584,8 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             </p>
           </div>
 
-          {/* Subtitle under Hero */}
-          <p style={{ fontSize: 16, color: '#475569', textAlign: 'center', marginBottom: 24, lineHeight: 1.6 }}>
-            Upload your PDF, add your signature, and download instantly. Works on any device.
-          </p>
-
-          {/* CTA after subtitle */}
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <Link 
-              href="/" 
-              style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: 8, 
-                padding: '14px 28px', 
-                background: '#2563eb', 
-                color: 'white', 
-                fontWeight: 700, 
-                fontSize: 15, 
-                borderRadius: 12, 
-                textDecoration: 'none',
-                boxShadow: '0 4px 16px rgba(37, 99, 235, 0.3)',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              Start Signing Now
-            </Link>
-          </div>
+          {/* Quick Summary */}
+          <QuickSummary />
 
           {/* Content */}
           <div style={{ fontSize: 16 }}>

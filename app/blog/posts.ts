@@ -108,6 +108,8 @@ Need to sign on a specific device or situation? We have step-by-step guides for 
 
 > "As a freelancer I sign client agreements constantly. Not needing to create an account or remember another password makes this my go-to tool every single time. Simple, fast, and free." — **Rachel K., Portland, OR**
 
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+
 [CTA]Ready to Sign Your PDF? Start Free — No Registration|Join 50,000+ users. Upgrade to Pro for unlimited signing at $7.50/mo|Sign PDF Free Now
 
 ## Frequently Asked Questions
@@ -210,6 +212,8 @@ The only situation where you might need a more sophisticated signing service is 
 > "Used this to sign my job offer letter the same day I received it. Took me three minutes from opening the site to sending the signed copy back. My new employer was impressed." — **Stephanie L., Seattle, WA**
 
 > "I helped my elderly father sign some medical paperwork remotely. The fact that there was no confusing registration process meant he could actually use it himself. Life saver." — **Tom B., Phoenix, AZ**
+
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
 
 [CTA]Sign Your PDF Free — No Registration, No Email|Join 50,000+ users who sign PDFs the easy way. Pro plan available at $7.50/mo|Sign PDF Free Now
 
@@ -322,6 +326,8 @@ Once you have created your signature using any of the three methods, placement i
 
 > "I uploaded a photo of my actual signature and it came out perfectly clean with no background. Placed it on my lease agreement and it looked completely professional." — **Diane F., Miami, FL**
 
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+
 [CTA]Add Your Signature to Any PDF — Free & Instant|No registration needed. Works on desktop, iPhone, and Android.|Sign PDF Free Now
 
 ## Frequently Asked Questions
@@ -424,6 +430,8 @@ Tap the download button to save your signed PDF. On iPhone, the file will be sav
 > "I was skeptical about signing legally binding documents on my phone, but after reading about the ESIGN Act I tried it. Works perfectly and my attorney confirmed it is fully valid." — **Lisa P., San Diego, CA**
 
 > "My old PDF signing app kept asking for a subscription every time I opened it. Found SignMyPDF, signed my documents for free, and deleted the app immediately." — **Nathan B., Dallas, TX**
+
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
 
 [CTA]Sign PDF on Your iPhone Right Now — Free|No app download. No registration. Works in Safari and Chrome.|Sign PDF Free Now
 
@@ -533,6 +541,8 @@ Click download to save the signed PDF to your Mac. The file saves to your Downlo
 
 > "I use a Wacom tablet for design work anyway, so signing PDFs through SignMyPDF with my stylus gives me signatures that look better than my actual pen signature." — **Amy S., Los Angeles, CA**
 
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+
 [CTA]Sign PDFs on Your Mac Right Now — No Installation Needed|Better than Preview. Faster than Adobe. Free for up to 2 documents per day.|Sign PDF Free Now
 
 ## Frequently Asked Questions
@@ -631,6 +641,8 @@ Tap the download button. On Android, the signed PDF saves to your Downloads fold
 > "Every PDF signing app I tried was either full of ads or wanted me to subscribe for $15/month. Signed up for neither. SignMyPDF in Chrome is free and works perfectly." — **Kendra L., Philadelphia, PA**
 
 > "My Samsung S23 with the S Pen makes signatures look incredibly professional in SignMyPDF. Better than most desktop setups I have used." — **Derek W., Charlotte, NC**
+
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
 
 [CTA]Sign PDF on Your Android — Free & Instant|No app download. No Play Store. Open Chrome and sign in 2 minutes.|Sign PDF Free Now
 
@@ -733,6 +745,8 @@ Click the download button to save the signed PDF to your Downloads folder or you
 > "Cancelled my Adobe subscription after 3 years when I realized I was only using it to sign PDFs. SignMyPDF does exactly that for free. Saving $180 a year." — **Theresa M., Columbus, OH**
 
 > "Works great on my old Windows 10 laptop. I expected browser-based tools to be slow but this was actually faster than my previous desktop software." — **Gary N., Richmond, VA**
+
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
 
 [CTA]Sign PDFs on Windows — Free, No Software Install|Works in Chrome, Edge, and Firefox. No Adobe subscription needed.|Sign PDF Free Now
 
@@ -860,6 +874,8 @@ None of these factors depend on which software was used to create the signature.
 
 > "My accountant recommended Adobe for signing tax documents. Tried SignMyPDF instead. Signed everything in 10 minutes for free. Tax attorney confirmed it was fully valid." — **Michelle K., Seattle, WA**
 
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+
 [CTA]Sign PDFs Free — No Adobe Subscription Needed|Save $180/year. Same quality, zero cost. No registration required.|Sign PDF Free Now
 
 ## Frequently Asked Questions
@@ -976,6 +992,8 @@ For users who sign more than 2 documents per day or need completely clean output
 
 > "As a real estate agent, watermarked documents are a non-starter. SignMyPDF gave me the clean output I needed without forcing me into a subscription immediately." — **Frank D., Phoenix, AZ**
 
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+
 [CTA]Get Clean, Watermark-Free Signed PDFs — Free|Professional results without the ugly stamps. Up to 2 documents/day free.|Sign PDF Free Now
 
 ## Frequently Asked Questions
@@ -1091,6 +1109,8 @@ The combination of speed and privacy that SignMyPDF provides makes it particular
 > "Closed on a property last year. The title company needed my signature on 40 pages of documents within two hours. SignMyPDF handled the entire stack in under 20 minutes on my laptop." — **Craig T., Austin, TX**
 
 > "I am a cybersecurity consultant and I reviewed the technical approach SignMyPDF uses. The local processing architecture is exactly what privacy-conscious users should be looking for. Genuinely secure." — **Alex M., San Jose, CA**
+
+[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
 
 [CTA]Sign PDFs Securely in Under 2 Minutes — Free|Your file never leaves your device. No registration. No upload.|Sign PDF Free Now
 
