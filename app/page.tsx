@@ -136,7 +136,15 @@ export default function Home() {
 
   // GA4 event helper — safe to call even before gtag is loaded
   const trackEvent = (name: string, params?: Record<string, string | boolean | number>) => {
-    try { (window as any).gtag?.('event', name, params); } catch {}
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isMobile = isIOS || /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    try {
+      (window as any).gtag?.('event', name, {
+        device: isMobile ? 'mobile' : 'desktop',
+        ...params,
+      });
+    } catch {}
   };
 
   const handleSign = async () => {
