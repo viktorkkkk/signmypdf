@@ -60,6 +60,8 @@ export default function Home() {
   const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
   const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
+  const [showWatermarkToast, setShowWatermarkToast] = useState(false);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Check subscription and count on mount
   useEffect(() => {
@@ -166,6 +168,7 @@ export default function Home() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        if (!hasSubscription) setTimeout(() => showToast(), 400);
       }
 
       // Save to history
@@ -215,6 +218,12 @@ export default function Home() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  };
+
+  const showToast = () => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setShowWatermarkToast(true);
+    toastTimerRef.current = setTimeout(() => setShowWatermarkToast(false), 5000);
   };
 
   const reset = () => {
@@ -508,7 +517,10 @@ export default function Home() {
             <button
               className="btn-primary"
               style={{ width: '100%', padding: '18px', fontSize: 18, marginBottom: 12, borderRadius: 16 }}
-              onClick={() => downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`)}
+              onClick={async () => {
+                await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
+                if (!hasSubscription) setTimeout(() => showToast(), 400);
+              }}
             >
               ⬇️  Save Signed PDF
             </button>
@@ -563,6 +575,7 @@ export default function Home() {
                   <li>✓ 2 PDF signings/day</li>
                   <li>✓ Draw or type signature</li>
                   <li>✓ No registration needed</li>
+                  <li style={{ color: '#cbd5e1' }}>✗ SignMyPDF watermark</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Save signatures</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Download history</li>
                 </ul>
@@ -631,6 +644,93 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Watermark Toast */}
+      {showWatermarkToast && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 24,
+            right: 24,
+            left: 'auto',
+            zIndex: 9999,
+            background: '#1a1a1a',
+            color: '#fff',
+            borderRadius: 14,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.28)',
+            padding: '14px 16px 10px',
+            minWidth: 300,
+            maxWidth: 360,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0,
+          }}
+          // Mobile override via inline media — handled below via window check
+          className="watermark-toast"
+        >
+          {/* Top row: icon + text + close */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+            <span style={{ fontSize: 18, lineHeight: 1.3, flexShrink: 0 }}>✅</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35, marginBottom: 3 }}>
+                PDF signed — contains SignMyPDF watermark
+              </div>
+              <a
+                href="#pricing"
+                onClick={e => { e.preventDefault(); setShowWatermarkToast(false); setShowPricing(true); }}
+                style={{ fontSize: 13, color: '#60a5fa', textDecoration: 'none', fontWeight: 500 }}
+              >
+                Remove with Pro →
+              </a>
+            </div>
+            <button
+              onClick={() => setShowWatermarkToast(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#9ca3af',
+                cursor: 'pointer',
+                fontSize: 16,
+                lineHeight: 1,
+                padding: '2px 4px',
+                flexShrink: 0,
+                marginTop: -2,
+              }}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+          {/* Progress bar */}
+          <div style={{ marginTop: 10, height: 3, background: '#333', borderRadius: 2, overflow: 'hidden' }}>
+            <div
+              style={{
+                height: '100%',
+                background: '#2563eb',
+                borderRadius: 2,
+                animation: 'toastProgress 5s linear forwards',
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Toast CSS */}
+      <style>{`
+        @keyframes toastProgress {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+        @media (max-width: 767px) {
+          .watermark-toast {
+            left: 10px !important;
+            right: 10px !important;
+            bottom: 16px !important;
+            min-width: 0 !important;
+            max-width: none !important;
+          }
+        }
+      `}</style>
 
       {/* Footer */}
       <footer style={{
