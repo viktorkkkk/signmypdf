@@ -131,29 +131,25 @@ export default function Home() {
   });
 
   const canSign = (signMode === 'draw' ? !!signatureData : !!typedName.trim()) && selectedPages.length > 0;
-  const canSignToday = hasSubscription || todayCount < DAILY_LIMIT;
+  // Watermark is added starting from the 3rd PDF in a day (free plan only)
+  const willHaveWatermark = !hasSubscription && todayCount >= DAILY_LIMIT;
 
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
-
-    // Check daily limit
-    if (!canSignToday) {
-      setShowPricing(true);
-      return;
-    }
 
     setIsProcessing(true);
     try {
       const activePlacements = placements.filter(p => selectedPages.includes(p.page));
 
       // 100% client-side — no server, no size limits
+      // First DAILY_LIMIT PDFs per day are watermark-free; subsequent ones get watermark
       const blob = await signPdfInBrowser({
         pdfFile,
         signatureDataUrl: signatureData,
         typedName,
         signMode: signMode as 'draw' | 'type',
         placements: activePlacements,
-        addWatermark: !hasSubscription,
+        addWatermark: willHaveWatermark,
       });
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
@@ -168,7 +164,7 @@ export default function Home() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        if (!hasSubscription) setTimeout(() => showToast(), 400);
+        if (willHaveWatermark) setTimeout(() => showToast(), 400);
       }
 
       // Save to history
@@ -367,9 +363,9 @@ export default function Home() {
               <h2 className="step-title">Sign your document</h2>
               {!hasSubscription && (
                 <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}` }}>
-                  {todayCount >= DAILY_LIMIT 
-                    ? `📄 ${todayCount}/${DAILY_LIMIT} used — upgrade to save`
-                    : `📄 ${todayCount}/${DAILY_LIMIT} free signatures today`
+                  {todayCount >= DAILY_LIMIT
+                    ? `⚠️ Watermark added from PDF #${DAILY_LIMIT + 1}`
+                    : `📄 ${todayCount}/${DAILY_LIMIT} free (no watermark) today`
                   }
                 </div>
               )}
@@ -519,7 +515,7 @@ export default function Home() {
               style={{ width: '100%', padding: '18px', fontSize: 18, marginBottom: 12, borderRadius: 16 }}
               onClick={async () => {
                 await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
-                if (!hasSubscription) setTimeout(() => showToast(), 400);
+                if (willHaveWatermark) setTimeout(() => showToast(), 400);
               }}
             >
               ⬇️  Save Signed PDF
@@ -557,9 +553,9 @@ export default function Home() {
               <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
               <h3 className="pricing-title">Unlock Unlimited Signing</h3>
               <p className="pricing-sub">
-                {todayCount >= DAILY_LIMIT 
-                  ? `Free plan: ${DAILY_LIMIT} signatures per day. Upgrade to save your signed document.`
-                  : 'Unlimited signing, saved signatures, and download history with premium'
+                {todayCount >= DAILY_LIMIT
+                  ? `Free plan: watermark added after ${DAILY_LIMIT} PDFs/day. Upgrade to remove it.`
+                  : 'Unlimited signing, no watermark, saved signatures and download history'
                 }
               </p>
             </div>
@@ -570,12 +566,12 @@ export default function Home() {
               <div className="plan-card">
                 <div className="plan-name">Free</div>
                 <div className="plan-price">$0<span>/mo</span></div>
-                <div className="plan-desc">2 PDFs per day</div>
+                <div className="plan-desc">2 PDFs/day without watermark</div>
                 <ul className="plan-perks">
-                  <li>✓ 2 PDF signings/day</li>
+                  <li>✓ 2 PDF signings/day (no watermark)</li>
                   <li>✓ Draw or type signature</li>
                   <li>✓ No registration needed</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ SignMyPDF watermark</li>
+                  <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Save signatures</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Download history</li>
                 </ul>
