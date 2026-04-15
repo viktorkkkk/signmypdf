@@ -278,7 +278,7 @@ function formatContent(content: string) {
         const items = trimmed.split('\n').filter(line => line.trim().startsWith('- '));
         return (
           <ul key={i} style={{ listStyle: 'disc', paddingLeft: 24, marginBottom: 20, color: '#475569', lineHeight: 1.8 }}>
-            {items.map((item, j) => <li key={j}>{item.trim().slice(2)}</li>)}
+            {items.map((item, j) => <li key={j}>{renderInline(item.trim().slice(2))}</li>)}
           </ul>
         );
       }
@@ -287,7 +287,7 @@ function formatContent(content: string) {
         const items = trimmed.split('\n').filter(line => /^\d+\./.test(line.trim()));
         return (
           <ol key={i} style={{ listStyle: 'decimal', paddingLeft: 24, marginBottom: 20, color: '#475569', lineHeight: 1.8 }}>
-            {items.map((item, j) => <li key={j}>{item.trim().replace(/^\d+\.\s*/, '')}</li>)}
+            {items.map((item, j) => <li key={j}>{renderInline(item.trim().replace(/^\d+\.\s*/, ''))}</li>)}
           </ol>
         );
       }
