@@ -219,7 +219,7 @@ export default function Home() {
   const showToast = () => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setShowWatermarkToast(true);
-    toastTimerRef.current = setTimeout(() => setShowWatermarkToast(false), 5000);
+    toastTimerRef.current = setTimeout(() => setShowWatermarkToast(false), 8000);
   };
 
   const reset = () => {
@@ -704,7 +704,7 @@ export default function Home() {
                 height: '100%',
                 background: '#2563eb',
                 borderRadius: 2,
-                animation: 'toastProgress 5s linear forwards',
+                animation: 'toastProgress 8s linear forwards',
               }}
             />
           </div>
