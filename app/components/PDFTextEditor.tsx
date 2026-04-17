@@ -154,11 +154,12 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
     if (editingId === id) setEditingId(null);
   }, [onTextFieldsChange, editingId]);
 
+  const isTouchDevice = typeof window !== 'undefined' &&
+    (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+
   // ── Add field ─────────────────────────────────────────────────────────────
-  // fromTouch=true: DON'T open edit mode immediately — prevents iOS keyboard
-  // from auto-scrolling the page, which would shift the field visually and
-  // create a mismatch between editor position and saved PDF position.
-  const addFieldAt = useCallback((clientX: number, clientY: number, fromTouch = false) => {
+  const addFieldAt = useCallback((clientX: number, clientY: number) => {
     const overlay = overlayRef.current;
     if (!overlay) return;
     const rect = overlay.getBoundingClientRect();
@@ -173,12 +174,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
       y: Math.max(0, Math.min(95, y)),
       text: '', fontSize: 14, color: '#000000', width: 200,
     }]);
-    // On touch: stay in display mode so iOS keyboard doesn't open immediately
-    // (keyboard scroll would visually shift the field vs. the stored y%).
-    // User taps the green field to start editing.
-    if (!fromTouch) {
-      setEditingId(id);
-    }
+    setEditingId(id);
     setFontSizeInputs(prev => ({ ...prev, [id]: '14' }));
   }, [curPage, onTextFieldsChange]);
 
@@ -202,7 +198,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
     const start = touchStartPos.current;
     touchStartPos.current = null;
     if (start && (Math.abs(t.clientX - start.x) > 10 || Math.abs(t.clientY - start.y) > 10)) return;
-    addFieldAt(t.clientX, t.clientY, true); // fromTouch=true — stay in display mode
+    addFieldAt(t.clientX, t.clientY);
     preventNextTap.current = true;
   }, [addFieldAt]);
 
@@ -454,7 +450,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           if (el) { textareasRef.current.set(field.id, el); autoResize(el); }
                           else textareasRef.current.delete(field.id);
                         }}
-                        autoFocus={field.text === ''}
+                        autoFocus={field.text === '' && !isTouchDevice}
                         value={field.text}
                         rows={1}
                         onChange={e => { updateField(field.id, { text: e.target.value }); autoResize(e.target); }}
