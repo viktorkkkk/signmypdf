@@ -1,0 +1,76 @@
+name: Daily Blog Publisher
+
+on:
+  schedule:
+    # 10:00 AM Bangkok (UTC+7) = 03:00 UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (generate but do not deploy)'
+        required: false
+        default: 'false'
+
+jobs:
+  publish-blog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Google Search Console credentials
+        run: |
+          echo "${{ secrets.GSC_CREDENTIALS }}" | base64 -d > signmypdf-seo-97022bc5390f.json
+
+      - name: Write next 2 blog articles via Claude API
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/write-blog-articles.mjs
+
+      - name: Commit and push articles
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config user.name "SignMyPDF Blog Bot"
+          git config user.email "bot@signmypdf.io"
+          git add app/blog/posts.ts scripts/index-pages.mjs .claude/last-run.json
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Blog: auto-publish $(date +'%Y-%m-%d')"
+          git remote set-url origin "https://x-access-token:${GH_PAT}@github.com/viktorkkkk/signmypdf.git"
+          git push origin main
+
+      - name: Deploy to Vercel
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          VERCEL_ORG_ID=$VERCEL_ORG_ID \
+          VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID \
+          npx --yes vercel@latest deploy --prod --token "$VERCEL_TOKEN"
+
+      - name: Submit to Google Search Console
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: node scripts/index-pages.mjs
+
+      - name: Print results summary
+        run: |
+          if [ -f .claude/last-run.json ]; then
+            node -e "
+              const s = JSON.parse(require('fs').readFileSync('.claude/last-run.json','utf8'));
+              console.log('\n✅ Published today:');
+              s.publishedUrls.forEach(u => console.log('  ' + u));
+              console.log('\n📊 Progress: ' + s.totalPublished + ' / ' + s.totalPlanned + ' | ' + s.remaining + ' remaining\n');
+            "
+          fi
