@@ -57,6 +57,56 @@ body {
   font-weight: 500;
 }
 
+/* ── Nav Tools dropdown ── */
+.nav-tools-btn {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 2px;
+  transition: color 0.15s;
+}
+.nav-tools-btn:hover { color: #2563eb; }
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  min-width: 170px;
+  z-index: 200;
+  overflow: hidden;
+  animation: dropdownFade 0.12s ease;
+}
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  color: #334155;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.12s;
+}
+.nav-dropdown-item:hover { background: #f8fafc; color: #2563eb; }
+.nav-dropdown-item--active { background: #eff6ff; color: #2563eb; font-weight: 600; }
+.nav-dropdown-item + .nav-dropdown-item { border-top: 1px solid #f1f5f9; }
+
 /* ── Progress bar ── */
 .progress-wrap {
   max-width: 1200px;
@@ -674,6 +724,12 @@ body { padding-bottom: 40px; }
   }
   .sign-left  { order: 2; } /* canvas goes below */
   .sign-right { order: 1; } /* PDF preview goes top */
+
+  /* Fill layout: single column on mobile — sidebar moves below editor */
+  .fill-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
 
   /* Step header */
   .step-title { font-size: 18px; }
