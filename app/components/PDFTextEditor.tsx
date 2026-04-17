@@ -155,7 +155,10 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
   }, [onTextFieldsChange, editingId]);
 
   // ── Add field ─────────────────────────────────────────────────────────────
-  const addFieldAt = useCallback((clientX: number, clientY: number) => {
+  // fromTouch=true: DON'T open edit mode immediately — prevents iOS keyboard
+  // from auto-scrolling the page, which would shift the field visually and
+  // create a mismatch between editor position and saved PDF position.
+  const addFieldAt = useCallback((clientX: number, clientY: number, fromTouch = false) => {
     const overlay = overlayRef.current;
     if (!overlay) return;
     const rect = overlay.getBoundingClientRect();
@@ -170,14 +173,19 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
       y: Math.max(0, Math.min(95, y)),
       text: '', fontSize: 14, color: '#000000', width: 200,
     }]);
-    setEditingId(id);
+    // On touch: stay in display mode so iOS keyboard doesn't open immediately
+    // (keyboard scroll would visually shift the field vs. the stored y%).
+    // User taps the green field to start editing.
+    if (!fromTouch) {
+      setEditingId(id);
+    }
     setFontSizeInputs(prev => ({ ...prev, [id]: '14' }));
   }, [curPage, onTextFieldsChange]);
 
   const handleOverlayClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (preventNextTap.current) { preventNextTap.current = false; return; }
     if ((e.target as HTMLElement).closest('[data-textfield]')) return;
-    addFieldAt(e.clientX, e.clientY);
+    addFieldAt(e.clientX, e.clientY, false);
   }, [addFieldAt]);
 
   const handleOverlayTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
@@ -194,7 +202,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
     const start = touchStartPos.current;
     touchStartPos.current = null;
     if (start && (Math.abs(t.clientX - start.x) > 10 || Math.abs(t.clientY - start.y) > 10)) return;
-    addFieldAt(t.clientX, t.clientY);
+    addFieldAt(t.clientX, t.clientY, true); // fromTouch=true — stay in display mode
     preventNextTap.current = true;
   }, [addFieldAt]);
 
@@ -614,7 +622,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                         }}
                       >
                         {field.text || (
-                          <span style={{ color: 'rgba(22,163,74,0.5)', fontStyle: 'italic', fontSize: 11 }}>tap to edit</span>
+                          <span style={{ color: 'rgba(22,163,74,0.7)', fontStyle: 'italic', fontSize: 13, fontWeight: 500 }}>✏️ tap to type</span>
                         )}
                       </div>
 

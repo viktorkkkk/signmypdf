@@ -351,6 +351,45 @@ export default function FillPage() {
 
       <div className="container">
 
+        {/* ── STEPS BAR (fill / preview / done) ── */}
+        {step !== 'upload' && (
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20, gap: 0 }}>
+            {[
+              { id: 'fill',    label: 'Edit',    n: 1 },
+              { id: 'preview', label: 'Preview', n: 2 },
+              { id: 'done',    label: 'Done',    n: 3 },
+            ].map((s, i) => {
+              const stepOrder = { fill: 1, preview: 2, done: 3 } as Record<string, number>;
+              const curOrder  = stepOrder[step] ?? 1;
+              const sOrder    = s.n;
+              const isActive  = sOrder === curOrder;
+              const isDone    = sOrder < curOrder;
+              return (
+                <div key={s.id} style={{ display: 'flex', alignItems: 'center', flex: s.n < 3 ? 1 : 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+                    <div style={{
+                      width: 32, height: 32, borderRadius: '50%',
+                      background: isDone ? '#16a34a' : isActive ? '#2563eb' : '#e2e8f0',
+                      color: isDone || isActive ? 'white' : '#94a3b8',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: isDone ? 14 : 13, fontWeight: 700,
+                      transition: 'all 0.2s',
+                    }}>
+                      {isDone ? '✓' : s.n}
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: isActive ? 700 : 400, color: isActive ? '#2563eb' : isDone ? '#16a34a' : '#94a3b8', whiteSpace: 'nowrap' }}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {s.n < 3 && (
+                    <div style={{ flex: 1, height: 2, background: isDone ? '#16a34a' : '#e2e8f0', margin: '0 6px', marginBottom: 18, transition: 'background 0.3s' }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* ── UPLOAD ── */}
         {step === 'upload' && (
           <div>
