@@ -143,8 +143,18 @@ function FilledPDFPreview({ url }: { url: string }) {
   );
 }
 
-const DAILY_LIMIT   = 2;
+const DAILY_LIMIT      = 2;
 const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
+const DRAFT_KEY        = 'signmypdf_draft_v1';
+
+interface DraftData { filename: string; fields: any[]; savedAt: string; }
+function saveDraft(filename: string, fields: any[]) {
+  localStorage.setItem(DRAFT_KEY, JSON.stringify({ filename, fields, savedAt: new Date().toISOString() }));
+}
+function loadDraft(): DraftData | null {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch { return null; }
+}
+function clearDraft() { localStorage.removeItem(DRAFT_KEY); }
 
 function getTodayCount(): number {
   const key = `signmypdf_count_${new Date().toISOString().split('T')[0]}`;
@@ -168,12 +178,18 @@ export default function FillPage() {
   const [todayCount, setTodayCount]           = useState(0);
   const [showPricing, setShowPricing]         = useState(false);
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
+  const [savedDraft, setSavedDraft]           = useState<DraftData | null>(null);
+  const [draftSaved, setDraftSaved]           = useState(false); // toast after save
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draftFileRef  = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');
-    setHasSubscription(isSubscribed() || isDevMode);
+    const sub = isSubscribed() || isDevMode;
+    setHasSubscription(sub);
     setTodayCount(getTodayCount());
+    // Load existing draft (shown only to Pro users)
+    if (sub) setSavedDraft(loadDraft());
   }, []);
 
   useEffect(() => {
@@ -301,6 +317,23 @@ export default function FillPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleSaveDraft = () => {
+    if (!pdfFile || !hasContent) return;
+    saveDraft(pdfFile.name, textFields);
+    setSavedDraft(loadDraft());
+    setDraftSaved(true);
+    setTimeout(() => setDraftSaved(false), 2500);
+  };
+
+  const handleRestoreDraft = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f || !savedDraft) return;
+    setPdfFile(f);
+    setTextFields(savedDraft.fields);
+    setStep('fill');
+    e.target.value = '';
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f?.type === 'application/pdf') {
@@ -343,6 +376,23 @@ export default function FillPage() {
                 />
               </label>
             </div>
+
+            {/* Draft restore banner — Pro only */}
+            {savedDraft && hasSubscription && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, padding: '12px 16px', marginBottom: 20, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1d4ed8', marginBottom: 2 }}>📂 Continue where you left off</div>
+                  <div style={{ fontSize: 12, color: '#3b82f6', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {savedDraft.filename} · {savedDraft.fields.filter((f: any) => f.text?.trim()).length} fields · {new Date(savedDraft.savedAt).toLocaleDateString()}
+                  </div>
+                </div>
+                <label style={{ fontSize: 13, fontWeight: 600, color: 'white', background: '#2563eb', borderRadius: 10, padding: '8px 16px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                  Restore draft
+                  <input ref={draftFileRef} type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleRestoreDraft} />
+                </label>
+                <button onClick={() => { clearDraft(); setSavedDraft(null); }} style={{ fontSize: 18, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px', flexShrink: 0 }}>×</button>
+              </div>
+            )}
 
             <div className="features">
               {[
@@ -457,6 +507,25 @@ export default function FillPage() {
                   {textFields.filter(f => f.text.trim()).length} of {textFields.length} field{textFields.length !== 1 ? 's' : ''} filled
                 </div>
               )}
+
+              {/* Save draft — visible to all, gated for free users */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  style={{
+                    width: '100%', padding: '10px', fontSize: 13, borderRadius: 10,
+                    border: '1.5px dashed #cbd5e1',
+                    background: hasSubscription ? '#f8fafc' : '#f8fafc',
+                    color: hasSubscription ? '#475569' : '#94a3b8',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  }}
+                  onClick={() => hasSubscription ? handleSaveDraft() : setShowPricing(true)}
+                  disabled={hasSubscription && (!hasContent || isProcessing)}
+                >
+                  {draftSaved ? '✅ Draft saved!' : (
+                    <>💾 Save draft{!hasSubscription && <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>PRO</span>}</>
+                  )}
+                </button>
+              </div>
 
               {/* Action buttons — at bottom of sidebar */}
               <button
