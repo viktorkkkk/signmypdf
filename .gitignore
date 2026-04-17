@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Google service account credentials — never commit
 signmypdf-seo-*.json
+
+# Local tokens — never commit
+.claude/tokens.local

@@ -28,17 +28,17 @@
 ## How to Deploy
 
 ```bash
-# Deploy to production (get token from vercel.com/account/tokens → "claude-deploy2")
+# Deploy to production
 VERCEL_ORG_ID=team_KV06sgJAaYS4OqFZHaskKPj2 \
 VERCEL_PROJECT_ID=prj_vINyT8bno6KjwutaPoX05rZaXQNI \
 npx --yes vercel@latest deploy --prod \
-  --token "<VERCEL_TOKEN>"
+  --token "$VERCEL_TOKEN"
 
-# Push to GitHub (get token from github.com/settings/tokens)
-git push https://<GITHUB_TOKEN>@github.com/viktorkkkk/signmypdf.git main
+# Push to GitHub
+git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 ```
 
-> ⚠️ Tokens are stored locally only — never commit them to the repo.
+> ⚠️ Tokens are stored in `.claude/tokens.local` (gitignored) — never commit them.
 
 ---
 
@@ -106,12 +106,30 @@ git push https://<GITHUB_TOKEN>@github.com/viktorkkkk/signmypdf.git main
 - [x] Bold text `**text**` rendering in list items (renderInline applied)
 - [x] Blog copyright updated to `© PIXELTIDE LLC`
 - [x] Pricing modal compact on mobile (all 3 plans visible without excessive scroll)
+- [x] Signature bugs fixed on web and mobile (canvas drawing, placement, download)
+
+### Fill PDF Tool (`/fill`) — built from scratch
+- [x] `app/fill/page.tsx` — full fill tool: upload → edit → preview → done flow
+- [x] `app/components/PDFTextEditor.tsx` — editor with drag, resize, multi-page, zoom
+- [x] `app/utils/fillPdf.ts` — pdf-lib based PDF text injection
+- [x] WYSIWYG: text size in editor = text size in saved PDF (pageScale × zoom)
+- [x] Mobile: `maximum-scale=1` viewport lock prevents iOS zoom on input focus
+- [x] Mobile: `autoFocus={!isTouchDevice}` prevents keyboard scroll shifting field position
+- [x] Mobile top bar: filename + Change file (opens picker directly) + plan badge
+- [x] Two-column layout on desktop (editor + sticky sidebar), single column on mobile
+- [x] Steps progress bar: Edit → Preview → Done
+- [x] Preview step: renders filled PDF as images with page tabs (no download needed first)
+- [x] Y-position formula: `height - (y/100)*height - fontSize*0.97` (matches CSS baseline)
+- [x] Zoom: −/+ buttons, ZOOM_STEPS=[1,1.5,2,3], pan enabled when zoomed
+- [x] Draft save (Pro): 💾 Save draft button; free users see PRO badge + paywall on click
+- [x] Draft restore: banner on upload page for Pro users with saved draft
 
 ### Infrastructure
 - [x] Domain: `signmypdf.io` → Vercel
 - [x] Email: `support@signmypdf.io` via ImprovMX → gmail (active ✅)
 - [x] GitHub repo: `github.com/viktorkkkk/signmypdf`
-- [x] Vercel deploy token: created at vercel.com/account/tokens → "claude-deploy2"
+- [x] Vercel deploy token: stored in `.claude/tokens.local` (gitignored)
+- [x] GitHub token: stored in `.claude/tokens.local` (expires May 2026)
 
 ---
 
