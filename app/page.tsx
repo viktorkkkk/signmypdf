@@ -21,6 +21,20 @@ const STEPS = [
 const DAILY_LIMIT = 2;
 const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
 
+// Paddle config
+const PADDLE_CLIENT_TOKEN = 'live_63effd9da9446a56e2d73f7a280';
+const PADDLE_PRICE_MONTHLY = 'pri_01kpea3gjy6wkgdha3qwbhr1dd';
+const PADDLE_PRICE_ANNUAL  = 'pri_01kpea99a37j2ecg9vxq8xr9zt';
+
+declare global {
+  interface Window {
+    Paddle?: {
+      Initialize: (opts: { token: string; eventCallback?: (e: { name: string }) => void }) => void;
+      Checkout: { open: (opts: { items: { priceId: string; quantity: number }[] }) => void };
+    };
+  }
+}
+
 function getTodayCount(): number {
   const today = new Date().toISOString().split('T')[0];
   const key = `signmypdf_count_${today}`;
@@ -70,6 +84,26 @@ export default function Home() {
     const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');
     setHasSubscription(isSubscribed() || isDevMode);
     setTodayCount(getTodayCount());
+
+    // Load Paddle.js
+    if (!document.getElementById('paddle-js')) {
+      const script = document.createElement('script');
+      script.id = 'paddle-js';
+      script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+      script.onload = () => {
+        window.Paddle?.Initialize({
+          token: PADDLE_CLIENT_TOKEN,
+          eventCallback(e) {
+            if (e.name === 'checkout.completed') {
+              localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+              setHasSubscription(true);
+              setShowPricing(false);
+            }
+          },
+        });
+      };
+      document.head.appendChild(script);
+    }
     
     // Check for pending PDF from blog
     const pendingPdf = localStorage.getItem('blog_pending_pdf');
@@ -642,10 +676,9 @@ export default function Home() {
                 <button
                   className="plan-btn"
                   onClick={() => {
-                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
-                    setHasSubscription(true);
-                    setShowPricing(false);
-                    alert('✅ Premium activated! (Demo mode)');
+                    window.Paddle?.Checkout.open({
+                      items: [{ priceId: PADDLE_PRICE_MONTHLY, quantity: 1 }],
+                    });
                   }}
                 >
                   Get Monthly
@@ -668,10 +701,9 @@ export default function Home() {
                 <button
                   className="plan-btn plan-btn-featured"
                   onClick={() => {
-                    localStorage.setItem(SUBSCRIPTION_KEY, 'true');
-                    setHasSubscription(true);
-                    setShowPricing(false);
-                    alert('✅ Premium activated! (Demo mode)');
+                    window.Paddle?.Checkout.open({
+                      items: [{ priceId: PADDLE_PRICE_ANNUAL, quantity: 1 }],
+                    });
                   }}
                 >
                   Get Annual Plan
