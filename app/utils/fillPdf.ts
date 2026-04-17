@@ -39,11 +39,12 @@ export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: Fi
     const { width, height } = page.getSize();
 
     // Convert % from top-left (CSS) to PDF coordinates (bottom-left origin).
-    // field.y = top of the field container (CSS percentage).
-    // drawText y = baseline. For Helvetica: baseline = container_top + ascender(0.718) + half-leading(0.175) = 0.893×fontSize.
-    // We use 0.85 to account for browser rendering variance.
+    // field.y = top of the textarea div (% of overlay/page height).
+    // drawText y = PDF baseline from bottom.
+    // CSS baseline from div-top = half-leading(0.175) + em-ascender(0.796) = 0.971 × fontSize.
+    // This holds regardless of pageScale because both dimensions scale together.
     const pdfX = (field.x / 100) * width;
-    const pdfY = height - (field.y / 100) * height - field.fontSize * 0.85;
+    const pdfY = height - (field.y / 100) * height - field.fontSize * 0.97;
 
     // Parse hex color → rgb
     const hex = (field.color || '#000000').replace('#', '');
