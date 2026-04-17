@@ -6,6 +6,7 @@ import SignatureCanvas from './components/SignatureCanvas';
 import PDFViewer, { SignaturePlacement } from './components/PDFViewer';
 import SavedSignatures, { saveSig, SavedSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
+import NavHeader from './components/NavHeader';
 import FileHistory, { saveToHistory, HistoryItem } from './components/FileHistory';
 import { signPdfInBrowser } from './utils/signPdf';
 
@@ -304,17 +305,7 @@ export default function Home() {
       />
 
       {/* Header */}
-      <header className="header">
-        <div className="header-inner">
-          <a href="/" className="logo"><Logo /></a>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <a href="/blog" style={{ color: '#475569', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
-              Blog
-            </a>
-            <span className="header-tag">🔒 No registration required</span>
-          </nav>
-        </div>
-      </header>
+      <NavHeader activeTool="sign" />
 
       {/* Progress */}
       {step !== 'upload' && (
@@ -376,6 +367,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
           </div>
         )}
 
@@ -553,20 +545,48 @@ export default function Home() {
 
       </div>
 
-      {/* File History — sticky bottom bar */}
+      {/* File History */}
       <div className="container">
-      <FileHistory 
-        hasSubscription={hasSubscription}
-        onDownload={(item: HistoryItem, canDownload: boolean) => {
-          if (canDownload) {
-            downloadOrShare(item.dataUrl, `signed-${item.name}`);
-          } else {
-            setPendingDownload(item);
-            setShowPricing(true);
-          }
-        }}
-      />
+        <FileHistory
+          hasSubscription={hasSubscription}
+          onDownload={(item: HistoryItem, canDownload: boolean) => {
+            if (canDownload) {
+              downloadOrShare(item.dataUrl, `signed-${item.name}`);
+            } else {
+              setPendingDownload(item);
+              setShowPricing(true);
+            }
+          }}
+        />
       </div>
+
+      {/* More PDF Tools — only on upload step */}
+      {step === 'upload' && (
+        <div className="container" style={{ paddingTop: 0, paddingBottom: 32 }}>
+          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 28 }}>
+            <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              More PDF Tools
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, maxWidth: 440, margin: '0 auto' }}>
+              <div style={{ background: 'white', borderRadius: 16, padding: '20px', border: '2px solid #2563eb', boxShadow: '0 4px 16px rgba(37,99,235,0.1)' }}>
+                <div style={{ fontSize: 26, marginBottom: 8 }}>✍️</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Sign PDF</div>
+                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Draw or type your signature</div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>Current tool</span>
+              </div>
+              <a href="/fill" style={{ background: 'white', borderRadius: 16, padding: '20px', border: '1.5px solid #e2e8f0', textDecoration: 'none', display: 'block', transition: 'all 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+              >
+                <div style={{ fontSize: 26, marginBottom: 8 }}>📝</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Fill PDF Form</div>
+                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Click to type in any field</div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Pricing modal */}
       {showPricing && (
