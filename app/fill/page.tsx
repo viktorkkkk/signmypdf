@@ -180,21 +180,14 @@ export default function FillPage() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [step]);
 
-  // Prevent iOS Safari from zooming in when small inputs get focus
+  // Lock viewport zoom for the entire fill page — prevents iOS Safari
+  // from zooming on input focus, canvas resize, or any layout shift
   useEffect(() => {
     const viewport = document.querySelector('meta[name=viewport]');
     if (!viewport) return;
     const orig = viewport.getAttribute('content') || '';
-    const lock  = orig + ', maximum-scale=1';
-    const onFocus = () => viewport.setAttribute('content', lock);
-    const onBlur  = () => viewport.setAttribute('content', orig);
-    document.addEventListener('focusin',  onFocus);
-    document.addEventListener('focusout', onBlur);
-    return () => {
-      document.removeEventListener('focusin',  onFocus);
-      document.removeEventListener('focusout', onBlur);
-      viewport.setAttribute('content', orig);
-    };
+    viewport.setAttribute('content', orig + ', maximum-scale=1');
+    return () => viewport.setAttribute('content', orig);
   }, []);
 
   const willHaveWatermark = !hasSubscription && todayCount >= DAILY_LIMIT;
@@ -384,8 +377,8 @@ export default function FillPage() {
         {step === 'fill' && (
           /* Two-column on desktop: editor (left) + sidebar (right) */
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24, alignItems: 'start' }} className="fill-layout">
-            {/* Left — PDF editor */}
-            <div>
+            {/* Left — PDF editor — min-width:0 prevents canvas from blowing grid width */}
+            <div style={{ minWidth: 0 }}>
               {/* Hint */}
               <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#1d4ed8' }}>
                 👆 <strong>Click anywhere on the document</strong> to add a text field · drag <strong>⠿</strong> to move
@@ -403,29 +396,6 @@ export default function FillPage() {
 
             {/* Right — sticky sidebar */}
             <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-              {/* Action buttons FIRST — on mobile they appear right after editor */}
-              <button
-                className="btn-ghost"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
-                onClick={handlePreview}
-                disabled={isProcessing || !hasContent}
-              >
-                {isProcessing ? <><span className="spinner" /></> : '👁 Preview'}
-              </button>
-              <button
-                className="btn-primary"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
-                onClick={handleDownload}
-                disabled={isProcessing || !hasContent}
-              >
-                {isProcessing ? <><span className="spinner" /> Processing…</> : '⬇️ Save PDF'}
-              </button>
-              {!hasContent && (
-                <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', margin: 0 }}>
-                  Add text to the document to continue
-                </p>
-              )}
 
               {/* File info */}
               <div style={{ background: 'white', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '12px 14px' }}>
@@ -454,6 +424,29 @@ export default function FillPage() {
                   {textFields.filter(f => f.text.trim()).length} of {textFields.length} field{textFields.length !== 1 ? 's' : ''} filled
                 </div>
               )}
+
+              {/* Action buttons — at bottom of sidebar */}
+              <button
+                className="btn-ghost"
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                onClick={handlePreview}
+                disabled={isProcessing || !hasContent}
+              >
+                {isProcessing ? <><span className="spinner" /></> : '👁 Preview'}
+              </button>
+              <button
+                className="btn-primary"
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                onClick={handleDownload}
+                disabled={isProcessing || !hasContent}
+              >
+                {isProcessing ? <><span className="spinner" /> Processing…</> : '⬇️ Save PDF'}
+              </button>
+              {!hasContent && (
+                <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', margin: 0 }}>
+                  Add text to the document to continue
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -462,7 +455,9 @@ export default function FillPage() {
         {step === 'preview' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 24, alignItems: 'start' }} className="fill-layout">
             {/* Left — preview */}
-            <FilledPDFPreview url={filledPdfUrl!} />
+            <div style={{ minWidth: 0 }}>
+              <FilledPDFPreview url={filledPdfUrl!} />
+            </div>
 
             {/* Right — sticky sidebar */}
             <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
