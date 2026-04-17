@@ -46,6 +46,9 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
   const [editingId,      setEditingId]      = useState<string | null>(null);
   const [fontSizeInputs, setFontSizeInputs] = useState<Record<string, string>>({});
   const [zoom,           setZoom]           = useState(1);
+  // pageScale = ratio of canvas CSS pixels to PDF points at zoom=1
+  // field.fontSize is in PDF pts; multiply by pageScale*zoom to get CSS px on screen
+  const [pageScale,      setPageScale]      = useState(1);
 
   const ZOOM_STEPS = [1, 1.5, 2, 3];
 
@@ -101,6 +104,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
         const vp0   = page.getViewport({ scale: 1 });
         const dpr   = window.devicePixelRatio || 1;
         const baseScale = Math.min((baseW - 2) / vp0.width, 2);
+        setPageScale(baseScale); // expose to field rendering so text matches PDF size
         // Bake zoom into render scale for crisp output at every zoom level
         const scale = baseScale * zoom;
         const vp    = page.getViewport({ scale: scale * dpr });
@@ -455,13 +459,14 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           border: 'none', outline: 'none',
                           padding: '0',
                           margin: '0',
-                          fontSize: field.fontSize * zoom,
+                          // field.fontSize is PDF pts; pageScale converts to screen px
+                          fontSize: field.fontSize * pageScale * zoom,
                           fontFamily: 'Helvetica, Arial, sans-serif',
                           color: field.color,
                           background: 'transparent',
                           resize: 'none', overflow: 'hidden',
                           lineHeight: 1.35,
-                          minHeight: field.fontSize * zoom * 1.5,
+                          minHeight: field.fontSize * pageScale * zoom * 1.5,
                           boxSizing: 'border-box',
                         }}
                       />
@@ -601,11 +606,11 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                         }}
                         style={{
                           padding: '0',
-                          fontSize: field.fontSize * zoom,
+                          fontSize: field.fontSize * pageScale * zoom,
                           fontFamily: 'Helvetica, Arial, sans-serif',
                           color: field.color, lineHeight: 1.35,
                           cursor: 'text', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                          minHeight: field.fontSize * zoom * 1.5,
+                          minHeight: field.fontSize * pageScale * zoom * 1.5,
                         }}
                       >
                         {field.text || (
