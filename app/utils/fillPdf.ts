@@ -39,10 +39,11 @@ export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: Fi
     const { width, height } = page.getSize();
 
     // Convert % from top-left (CSS) to PDF coordinates (bottom-left origin).
-    // field.y marks the visual TOP of the text. In PDF, drawText y = baseline.
-    // For Helvetica, cap-height ≈ 0.72×em, so baseline = top + 0.72×fontSize.
+    // field.y = top of the field container (CSS percentage).
+    // drawText y = baseline. For Helvetica: baseline = container_top + ascender(0.718) + half-leading(0.175) = 0.893×fontSize.
+    // We use 0.85 to account for browser rendering variance.
     const pdfX = (field.x / 100) * width;
-    const pdfY = height - (field.y / 100) * height - field.fontSize * 0.72;
+    const pdfY = height - (field.y / 100) * height - field.fontSize * 0.85;
 
     // Parse hex color → rgb
     const hex = (field.color || '#000000').replace('#', '');
@@ -52,7 +53,7 @@ export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: Fi
 
     // Handle multi-line text (newlines from textarea)
     const lines = field.text.split('\n');
-    const lineHeight = field.fontSize * 1.3;
+    const lineHeight = field.fontSize * 1.35; // match CSS lineHeight:1.35
     lines.forEach((line, i) => {
       const lineY = Math.max(0, pdfY - i * lineHeight);
       if (lineY < 0) return;

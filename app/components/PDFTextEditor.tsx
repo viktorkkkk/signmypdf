@@ -475,23 +475,25 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                       <div style={{
                         display: 'flex', alignItems: 'center',
                         borderTop: '1px dashed rgba(37,99,235,0.3)',
-                        background: 'rgba(239,246,255,0.7)',
+                        background: 'rgba(239,246,255,0.85)',
                         borderRadius: '0 0 4px 4px',
-                        gap: 4, padding: '3px 4px',
+                        gap: 6, padding: '5px 6px',
+                        minHeight: 40,
                       }}>
-                        {/* Drag handle — bottom left, finger below text */}
+                        {/* Drag handle — big touch target */}
                         <span
                           onMouseDown={e => { e.preventDefault(); e.stopPropagation(); handleDragMouse(e, field.id, field.x, field.y, field.width); }}
                           onTouchStart={e => { e.stopPropagation(); handleDragTouch(e, field.id, field.x, field.y, field.width); }}
                           title="Drag to move"
                           style={{
-                            color: '#2563eb', fontSize: 15,
+                            color: '#2563eb', fontSize: 20,
                             cursor: 'grab', userSelect: 'none', touchAction: 'none',
-                            padding: '2px 4px', flexShrink: 0,
+                            padding: '4px 6px', flexShrink: 0,
+                            minWidth: 32, minHeight: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}
                         >⠿</span>
 
-                        <div style={{ width: 1, height: 12, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
+                        <div style={{ width: 1, height: 20, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
 
                         {/* Font size */}
                         <input
@@ -503,56 +505,54 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           onClick={e => e.stopPropagation()}
                           onMouseDown={e => e.stopPropagation()}
                           style={{
-                            width: 36, border: '1px solid #bfdbfe', borderRadius: 4,
-                            fontSize: 16, fontWeight: 700, color: '#334155',
-                            textAlign: 'center', padding: '1px 0', outline: 'none', background: 'white',
+                            width: 44, height: 34, border: '1.5px solid #bfdbfe', borderRadius: 6,
+                            fontSize: 14, fontWeight: 700, color: '#334155',
+                            textAlign: 'center', padding: '0', outline: 'none', background: 'white',
                             flexShrink: 0,
-                            transform: 'scale(0.7)', transformOrigin: 'center center',
                           }}
                         />
-                        <span style={{ fontSize: 9, color: '#93c5fd', userSelect: 'none', flexShrink: 0 }}>px</span>
 
-                        <div style={{ width: 1, height: 12, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
+                        <div style={{ width: 1, height: 20, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
 
-                        {/* Color dots */}
+                        {/* Color dots — bigger touch targets */}
                         {TEXT_COLORS.map(c => (
                           <button key={c.value}
                             onClick={e => { e.stopPropagation(); updateField(field.id, { color: c.value }); }}
                             onMouseDown={e => e.stopPropagation()}
                             title={c.label}
                             style={{
-                              width: 14, height: 14, borderRadius: '50%',
+                              width: 24, height: 24, borderRadius: '50%',
                               background: c.value, cursor: 'pointer', padding: 0, border: 'none',
-                              outline: field.color === c.value ? `2px solid ${c.value === '#000000' ? '#64748b' : '#2563eb'}` : '1px solid #e2e8f0',
-                              outlineOffset: 1.5, flexShrink: 0,
+                              outline: field.color === c.value ? `3px solid ${c.value === '#000000' ? '#64748b' : '#2563eb'}` : '1.5px solid #e2e8f0',
+                              outlineOffset: 2, flexShrink: 0,
                             }}
                           />
                         ))}
 
                         <div style={{ flex: 1 }} />
 
-                        {/* Resize grip — drag right edge to resize */}
+                        {/* Resize grip */}
                         <div
                           onMouseDown={e => { e.preventDefault(); e.stopPropagation(); handleResizeMouse(e, field.id, field.width, field.fontSize); }}
                           onTouchStart={e => { e.stopPropagation(); handleResizeTouch(e, field.id, field.width, field.fontSize); }}
                           title="Drag to resize"
                           style={{
                             cursor: 'ew-resize', touchAction: 'none', flexShrink: 0,
-                            width: 32, height: 24,
+                            width: 40, height: 36,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             background: 'rgba(37,99,235,0.08)',
-                            borderRadius: 4,
+                            borderRadius: 6,
                             userSelect: 'none',
                           }}
                         >
-                          <svg width="16" height="14" viewBox="0 0 16 14" style={{ display: 'block', pointerEvents: 'none' }}>
-                            <line x1="2" y1="7" x2="14" y2="7" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                            <polyline points="10,3 14,7 10,11" fill="none" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
-                            <polyline points="6,3 2,7 6,11" fill="none" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+                          <svg width="20" height="16" viewBox="0 0 20 16" style={{ display: 'block', pointerEvents: 'none' }}>
+                            <line x1="2" y1="8" x2="18" y2="8" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" opacity="0.7"/>
+                            <polyline points="13,3 18,8 13,13" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+                            <polyline points="7,3 2,8 7,13" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
                           </svg>
                         </div>
 
-                        <div style={{ width: 1, height: 12, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
+                        <div style={{ width: 1, height: 20, background: 'rgba(37,99,235,0.2)', flexShrink: 0 }} />
 
                         {/* ✓ Done */}
                         <button
@@ -560,10 +560,10 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           onMouseDown={e => e.stopPropagation()}
                           title="Done"
                           style={{
-                            minWidth: 28, height: 24, borderRadius: 5,
+                            minWidth: 40, height: 36, borderRadius: 8,
                             border: 'none', background: '#16a34a',
                             color: 'white', cursor: 'pointer',
-                            fontSize: 13, fontWeight: 800,
+                            fontSize: 16, fontWeight: 800,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             flexShrink: 0,
                           }}
@@ -575,10 +575,10 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           onMouseDown={e => e.stopPropagation()}
                           title="Delete"
                           style={{
-                            minWidth: 28, height: 24, borderRadius: 5,
+                            minWidth: 40, height: 36, borderRadius: 8,
                             border: 'none', background: '#fee2e2',
                             color: '#dc2626', cursor: 'pointer',
-                            fontSize: 13, fontWeight: 800,
+                            fontSize: 16, fontWeight: 800,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             flexShrink: 0,
                           }}
@@ -622,26 +622,28 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                       <div style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         borderTop: '1px solid rgba(22,163,74,0.2)',
-                        background: 'rgba(240,253,244,0.6)',
+                        background: 'rgba(240,253,244,0.85)',
                         borderRadius: '0 0 4px 4px',
-                        padding: '2px 6px',
+                        padding: '4px 6px',
+                        minHeight: 36,
                       }}>
-                        {/* Drag handle — bottom left */}
+                        {/* Drag handle */}
                         <span
                           onMouseDown={e => { e.preventDefault(); e.stopPropagation(); handleDragMouse(e, field.id, field.x, field.y, field.width); }}
                           onTouchStart={e => { e.stopPropagation(); handleDragTouch(e, field.id, field.x, field.y, field.width); }}
                           style={{
-                            color: '#86efac', fontSize: 14,
+                            color: '#86efac', fontSize: 20,
                             cursor: 'grab', userSelect: 'none', touchAction: 'none',
-                            padding: '2px 2px',
+                            padding: '4px 6px', minWidth: 36, minHeight: 36,
+                            display: 'flex', alignItems: 'center',
                           }}
                           title="Drag to move"
-                        >⠿ <span style={{ fontSize: 10, color: '#86efac', fontWeight: 400 }}>move</span></span>
+                        >⠿</span>
 
-                        {/* ✓ badge — bottom right */}
+                        {/* ✓ badge */}
                         <span style={{
-                          color: '#16a34a', fontSize: 13, fontWeight: 700,
-                          userSelect: 'none',
+                          color: '#16a34a', fontSize: 16, fontWeight: 700,
+                          userSelect: 'none', padding: '4px 6px',
                         }}>✓</span>
                       </div>
                     </div>
