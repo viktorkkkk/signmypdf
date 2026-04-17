@@ -299,6 +299,17 @@ export default function FillPage() {
     setStep('upload');
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (f?.type === 'application/pdf') {
+      setPdfFile(f);
+      setTextFields([]);
+    }
+    e.target.value = '';
+  };
+
   const hasContent = textFields.some(f => f.text.trim());
 
   return (
@@ -379,6 +390,25 @@ export default function FillPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24, alignItems: 'start' }} className="fill-layout">
             {/* Left — PDF editor — min-width:0 prevents canvas from blowing grid width */}
             <div style={{ minWidth: 0 }}>
+              {/* Mobile-only top bar: file change + plan badge */}
+              <div className="fill-mobile-top">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
+                  <div className="doc-badge" style={{ width: 22, height: 22, fontSize: 7, flexShrink: 0 }}>PDF</div>
+                  <span style={{ fontSize: 12, color: '#334155', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{pdfFile?.name}</span>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                    🔄 Change
+                    <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                  </label>
+                </div>
+                {!hasSubscription && (
+                  <div style={{ fontSize: 11, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '5px 10px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, flexShrink: 0, whiteSpace: 'nowrap' }}>
+                    {todayCount >= DAILY_LIMIT ? `⚠️ Watermark` : `📄 ${todayCount}/${DAILY_LIMIT} free`}
+                  </div>
+                )}
+                {hasSubscription && (
+                  <div style={{ fontSize: 11, color: '#16a34a', background: '#f0fdf4', padding: '5px 10px', borderRadius: 8, border: '1px solid #bbf7d0', flexShrink: 0 }}>⭐ Pro</div>
+                )}
+              </div>
               {/* Hint */}
               <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#1d4ed8' }}>
                 👆 <strong>Click anywhere on the document</strong> to add a text field · drag <strong>⠿</strong> to move
@@ -397,26 +427,29 @@ export default function FillPage() {
             {/* Right — sticky sidebar */}
             <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-              {/* File info */}
-              <div style={{ background: 'white', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '12px 14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <div className="doc-badge" style={{ width: 28, height: 28, fontSize: 8, flexShrink: 0 }}>PDF</div>
-                  <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
+              <div className="fill-sidebar-info">
+                {/* File info */}
+                <div style={{ background: 'white', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '12px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div className="doc-badge" style={{ width: 28, height: 28, fontSize: 8, flexShrink: 0 }}>PDF</div>
+                    <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
+                  </div>
+                  <label style={{ display: 'block', width: '100%', fontSize: 12, fontWeight: 600, color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px', cursor: 'pointer', textAlign: 'center' }}>
+                    🔄 Change file
+                    <input type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                  </label>
                 </div>
-                <button onClick={reset} style={{ width: '100%', fontSize: 12, fontWeight: 600, color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px', cursor: 'pointer' }}>
-                  🔄 Change file
-                </button>
-              </div>
 
-              {/* Plan badge */}
-              {!hasSubscription && (
-                <div style={{ fontSize: 12, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '8px 12px', borderRadius: 10, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, textAlign: 'center' }}>
-                  {todayCount >= DAILY_LIMIT ? `⚠️ Watermark after PDF #${DAILY_LIMIT + 1}` : `📄 ${todayCount}/${DAILY_LIMIT} free today`}
-                </div>
-              )}
-              {hasSubscription && (
-                <div style={{ fontSize: 12, color: '#16a34a', background: '#f0fdf4', padding: '8px 12px', borderRadius: 10, border: '1px solid #bbf7d0', textAlign: 'center' }}>⭐ Premium active</div>
-              )}
+                {/* Plan badge */}
+                {!hasSubscription && (
+                  <div style={{ fontSize: 12, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '8px 12px', borderRadius: 10, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, textAlign: 'center' }}>
+                    {todayCount >= DAILY_LIMIT ? `⚠️ Watermark after PDF #${DAILY_LIMIT + 1}` : `📄 ${todayCount}/${DAILY_LIMIT} free today`}
+                  </div>
+                )}
+                {hasSubscription && (
+                  <div style={{ fontSize: 12, color: '#16a34a', background: '#f0fdf4', padding: '8px 12px', borderRadius: 10, border: '1px solid #bbf7d0', textAlign: 'center' }}>⭐ Premium active</div>
+                )}
+              </div>
 
               {/* Field count */}
               {textFields.length > 0 && (

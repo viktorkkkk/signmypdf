@@ -246,8 +246,8 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
     const overlay = overlayRef.current;
     const overlayW = overlay?.offsetWidth || 600;
     const move = (cx: number) => {
-      const rawW   = Math.max(60, origWidth + (cx - sx));
-      const maxW   = overlayW * 0.98;
+      const rawW   = Math.max(60, origWidth + (cx - sx) / zoom);
+      const maxW   = overlayW * 0.98 / zoom;
       const newWidth = Math.min(rawW, maxW);
       const newSize  = Math.round(Math.max(8, Math.min(72, origFontSize * newWidth / origWidth)));
       onTextFieldsChange(fieldsRef.current.map(f => f.id !== id ? f : { ...f, width: newWidth, fontSize: newSize }));
@@ -403,7 +403,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
               position: 'absolute',
               cursor: 'crosshair',
               borderRadius: 8,
-              touchAction: 'pan-y',
+              touchAction: zoom > 1 ? 'pan-x pan-y' : 'pan-y',
               // overflow: visible so toolbars can show above/below
               overflow: 'visible',
             }}
@@ -430,7 +430,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                   {isEditing ? (
                     <div style={{
                       position: 'relative',
-                      width: field.width,
+                      width: field.width * zoom,
                       minWidth: 60,
                       border: '1.5px dashed #2563eb',
                       borderRadius: 4,
@@ -455,13 +455,13 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                           border: 'none', outline: 'none',
                           padding: '0',
                           margin: '0',
-                          fontSize: field.fontSize,
+                          fontSize: field.fontSize * zoom,
                           fontFamily: 'Helvetica, Arial, sans-serif',
                           color: field.color,
                           background: 'transparent',
                           resize: 'none', overflow: 'hidden',
                           lineHeight: 1.35,
-                          minHeight: field.fontSize * 1.5,
+                          minHeight: field.fontSize * zoom * 1.5,
                           boxSizing: 'border-box',
                         }}
                       />
@@ -584,7 +584,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                     /* ── DISPLAY MODE ─────────────────────────────────── */
                     <div style={{
                       position: 'relative',
-                      width: field.width, minWidth: 60,
+                      width: field.width * zoom, minWidth: 60,
                       border: '1.5px solid #16a34a',
                       borderRadius: 4,
                       background: 'rgba(240,253,244,0.15)',
@@ -601,11 +601,11 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                         }}
                         style={{
                           padding: '0',
-                          fontSize: field.fontSize,
+                          fontSize: field.fontSize * zoom,
                           fontFamily: 'Helvetica, Arial, sans-serif',
                           color: field.color, lineHeight: 1.35,
                           cursor: 'text', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                          minHeight: field.fontSize * 1.5,
+                          minHeight: field.fontSize * zoom * 1.5,
                         }}
                       >
                         {field.text || (

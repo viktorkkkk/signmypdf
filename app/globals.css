@@ -688,6 +688,18 @@ body { padding-bottom: 40px; }
   display: inline-block;
 }
 
+/* Mobile top bar: shown only on mobile */
+.fill-mobile-top {
+  display: none;
+}
+
+/* Sidebar info section */
+.fill-sidebar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 /* ── Mobile ── */
 @media (max-width: 680px) {
 
@@ -729,6 +741,22 @@ body { padding-bottom: 40px; }
   .fill-layout {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
+  }
+
+  .fill-mobile-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  /* Hide desktop sidebar file info + plan on mobile (shown in top bar instead) */
+  .fill-sidebar-info {
+    display: none;
   }
 
   /* Step header */
