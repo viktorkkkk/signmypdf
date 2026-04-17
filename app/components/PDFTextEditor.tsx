@@ -181,7 +181,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
   const handleOverlayClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (preventNextTap.current) { preventNextTap.current = false; return; }
     if ((e.target as HTMLElement).closest('[data-textfield]')) return;
-    addFieldAt(e.clientX, e.clientY, false);
+    addFieldAt(e.clientX, e.clientY);
   }, [addFieldAt]);
 
   const handleOverlayTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
