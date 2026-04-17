@@ -180,6 +180,23 @@ export default function FillPage() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [step]);
 
+  // Prevent iOS Safari from zooming in when small inputs get focus
+  useEffect(() => {
+    const viewport = document.querySelector('meta[name=viewport]');
+    if (!viewport) return;
+    const orig = viewport.getAttribute('content') || '';
+    const lock  = orig + ', maximum-scale=1';
+    const onFocus = () => viewport.setAttribute('content', lock);
+    const onBlur  = () => viewport.setAttribute('content', orig);
+    document.addEventListener('focusin',  onFocus);
+    document.addEventListener('focusout', onBlur);
+    return () => {
+      document.removeEventListener('focusin',  onFocus);
+      document.removeEventListener('focusout', onBlur);
+      viewport.setAttribute('content', orig);
+    };
+  }, []);
+
   const willHaveWatermark = !hasSubscription && todayCount >= DAILY_LIMIT;
 
   const trackEvent = (name: string, params?: Record<string, string | boolean | number>) => {
@@ -386,6 +403,30 @@ export default function FillPage() {
 
             {/* Right — sticky sidebar */}
             <div style={{ position: 'sticky', top: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+              {/* Action buttons FIRST — on mobile they appear right after editor */}
+              <button
+                className="btn-ghost"
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                onClick={handlePreview}
+                disabled={isProcessing || !hasContent}
+              >
+                {isProcessing ? <><span className="spinner" /></> : '👁 Preview'}
+              </button>
+              <button
+                className="btn-primary"
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                onClick={handleDownload}
+                disabled={isProcessing || !hasContent}
+              >
+                {isProcessing ? <><span className="spinner" /> Processing…</> : '⬇️ Save PDF'}
+              </button>
+              {!hasContent && (
+                <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', margin: 0 }}>
+                  Add text to the document to continue
+                </p>
+              )}
+
               {/* File info */}
               <div style={{ background: 'white', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '12px 14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -413,29 +454,6 @@ export default function FillPage() {
                   {textFields.filter(f => f.text.trim()).length} of {textFields.length} field{textFields.length !== 1 ? 's' : ''} filled
                 </div>
               )}
-
-              {/* Action buttons */}
-              <button
-                className="btn-primary"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
-                onClick={handleDownload}
-                disabled={isProcessing || !hasContent}
-              >
-                {isProcessing ? <><span className="spinner" /> Processing…</> : '⬇️ Save PDF'}
-              </button>
-              <button
-                className="btn-ghost"
-                style={{ width: '100%', padding: '11px', fontSize: 14, borderRadius: 12 }}
-                onClick={handlePreview}
-                disabled={isProcessing || !hasContent}
-              >
-                {isProcessing ? <><span className="spinner" /></> : '👁 Preview first'}
-              </button>
-              {!hasContent && (
-                <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', margin: 0 }}>
-                  Add text to the document to continue
-                </p>
-              )}
             </div>
           </div>
         )}
@@ -452,18 +470,18 @@ export default function FillPage() {
                 Looks good?
               </div>
               <button
-                className="btn-primary"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
-                onClick={handleSaveFromPreview}
-              >
-                ⬇️ Save PDF
-              </button>
-              <button
                 className="btn-ghost"
                 style={{ width: '100%', padding: '11px', fontSize: 14, borderRadius: 12 }}
                 onClick={() => setStep('fill')}
               >
                 ✏️ Back to edit
+              </button>
+              <button
+                className="btn-primary"
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                onClick={handleSaveFromPreview}
+              >
+                ⬇️ Save PDF
               </button>
               <button
                 style={{ width: '100%', padding: '10px', fontSize: 13, borderRadius: 12, border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer' }}
