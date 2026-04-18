@@ -40,6 +40,12 @@ const URLS = [
   BASE_URL + '/blog/signmypdf-vs-docusign-freelancers',
   BASE_URL + '/blog/real-estate-agents-sign-documents',
   BASE_URL + '/blog/fill-w9-form-online-free',
+  BASE_URL + '/blog/electronic-signature-legal-rental',
+  BASE_URL + '/blog/sign-nda-online-without-printing',
+  BASE_URL + '/blog/pdf-wont-let-me-type-fix',
+  BASE_URL + '/blog/ilovepdf-vs-signmypdf',
+  BASE_URL + '/blog/fill-irs-form-online-free',
+  BASE_URL + '/blog/freelancers-sign-contracts-free',
 ];
 
 // --- JWT helpers (no dependencies) ---
