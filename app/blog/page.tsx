@@ -77,32 +77,6 @@ export default function BlogPage() {
           </p>
         </div>
 
-        {/* Tags */}
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          justifyContent: 'center', 
-          gap: 8,
-          marginBottom: 40 
-        }}>
-          {tags.map(tag => (
-            <span 
-              key={tag}
-              style={{
-                padding: '8px 16px',
-                background: 'white',
-                border: '1px solid #e2e8f0',
-                borderRadius: 20,
-                fontSize: 13,
-                color: '#64748b',
-                fontWeight: 500
-              }}
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-
         {/* Posts Grid */}
         <div style={{ 
           display: 'grid', 
@@ -232,8 +206,19 @@ export default function BlogPage() {
         </div>
       </div>
 
+      {/* Tags — bottom, subtle */}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 0', borderTop: '1px solid #f1f5f9' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {tags.map(tag => (
+            <span key={tag} style={{ fontSize: 11, color: '#cbd5e1', padding: '2px 8px', background: '#f8fafc', borderRadius: 20, border: '1px solid #f1f5f9' }}>
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* Footer */}
-      <footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '32px 0 24px', marginTop: 48 }}>
+      <footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '32px 0 24px', marginTop: 24 }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24, marginBottom: 24 }}>
             <div>
