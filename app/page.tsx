@@ -9,6 +9,19 @@ import Logo from './components/Logo';
 import NavHeader from './components/NavHeader';
 import FileHistory, { saveToHistory, HistoryItem } from './components/FileHistory';
 import { signPdfInBrowser } from './utils/signPdf';
+import {
+  SUBSCRIPTION_KEY,
+  DAILY_LIMIT,
+  PADDLE_CLIENT_TOKEN,
+  PADDLE_PRICE_MONTHLY,
+  PADDLE_PRICE_ANNUAL,
+} from './constants';
+import {
+  getTodayCount,
+  incrementTodayCount,
+  isProActive,
+  activateSubscription,
+} from './utils/subscription';
 
 type Step = 'upload' | 'sign' | 'done';
 
@@ -18,14 +31,6 @@ const STEPS = [
   { id: 'done',   label: 'Download' },
 ];
 
-const DAILY_LIMIT = 2;
-const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
-
-// Paddle config
-const PADDLE_CLIENT_TOKEN = 'live_63effd9da9446a56e2d73f7a280';
-const PADDLE_PRICE_MONTHLY = 'pri_01kpea3gjy6wkgdha3qwbhr1dd';
-const PADDLE_PRICE_ANNUAL  = 'pri_01kpea99a37j2ecg9vxq8xr9zt';
-
 declare global {
   interface Window {
     Paddle?: {
@@ -33,24 +38,6 @@ declare global {
       Checkout: { open: (opts: { items: { priceId: string; quantity: number }[] }) => void };
     };
   }
-}
-
-function getTodayCount(): number {
-  const today = new Date().toISOString().split('T')[0];
-  const key = `signmypdf_count_${today}`;
-  const raw = localStorage.getItem(key);
-  return raw ? parseInt(raw, 10) : 0;
-}
-
-function incrementTodayCount() {
-  const today = new Date().toISOString().split('T')[0];
-  const key = `signmypdf_count_${today}`;
-  const count = getTodayCount();
-  localStorage.setItem(key, String(count + 1));
-}
-
-function isSubscribed(): boolean {
-  return localStorage.getItem(SUBSCRIPTION_KEY) === 'true';
 }
 
 export default function Home() {
@@ -80,9 +67,7 @@ export default function Home() {
 
   // Check subscription and count on mount
   useEffect(() => {
-    // Dev mode check via URL
-    const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');
-    setHasSubscription(isSubscribed() || isDevMode);
+    setHasSubscription(isProActive());
     setTodayCount(getTodayCount());
 
     // Load Paddle.js
@@ -95,7 +80,7 @@ export default function Home() {
           token: PADDLE_CLIENT_TOKEN,
           eventCallback(e) {
             if (e.name === 'checkout.completed') {
-              localStorage.setItem(SUBSCRIPTION_KEY, 'true');
+              activateSubscription();
               setHasSubscription(true);
               setShowPricing(false);
             }
