@@ -38,6 +38,8 @@ const URLS = [
   BASE_URL + '/blog/docusign-alternative-free',
   BASE_URL + '/blog/fill-pdf-form-online-free',
   BASE_URL + '/blog/signmypdf-vs-docusign-freelancers',
+  BASE_URL + '/blog/real-estate-agents-sign-documents',
+  BASE_URL + '/blog/fill-w9-form-online-free',
 ];
 
 // --- JWT helpers (no dependencies) ---
