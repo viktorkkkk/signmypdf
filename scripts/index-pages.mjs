@@ -46,6 +46,8 @@ const URLS = [
   BASE_URL + '/blog/ilovepdf-vs-signmypdf',
   BASE_URL + '/blog/fill-irs-form-online-free',
   BASE_URL + '/blog/freelancers-sign-contracts-free',
+  BASE_URL + '/blog/electronic-signature-laws-by-state',
+  BASE_URL + '/blog/sign-employment-offer-letter-online',
 ];
 
 // --- JWT helpers (no dependencies) ---
