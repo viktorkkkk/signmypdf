@@ -59,11 +59,17 @@ export default function Home() {
   ];
   const [showPricing, setShowPricing] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [showRestore, setShowRestore] = useState(false);
+  const [restoreEmail, setRestoreEmail] = useState('');
+  const [restoreStatus, setRestoreStatus] = useState<'idle' | 'loading' | 'success' | 'notfound' | 'error'>('idle');
   const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
   const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [activatingPro, setActivatingPro] = useState(false);
+  const [activatingEmail, setActivatingEmail] = useState('');
+  const [showFillBanner, setShowFillBanner] = useState(false);
 
   // Check subscription and count on mount
   useEffect(() => {
@@ -83,6 +89,34 @@ export default function Home() {
               activateSubscription();
               setHasSubscription(true);
               setShowPricing(false);
+              const email = (e as any).data?.customer?.email;
+              if (email) {
+                setActivatingEmail(email);
+                setActivatingPro(true);
+                localStorage.setItem('signmypdf_user_email', email);
+                // Start polling
+                let attempts = 0;
+                const poll = setInterval(async () => {
+                  attempts++;
+                  try {
+                    const r = await fetch('/api/auth/auto-token', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ email }),
+                    });
+                    const d = await r.json();
+                    if (d.token) {
+                      clearInterval(poll);
+                      localStorage.setItem('signmypdf_dashboard_token', d.token);
+                      window.location.href = '/dashboard';
+                    }
+                  } catch {}
+                  if (attempts >= 15) { // 30 seconds max
+                    clearInterval(poll);
+                    setActivatingPro(false);
+                  }
+                }, 2000);
+              }
             }
           },
         });
@@ -94,16 +128,32 @@ export default function Home() {
     const pendingPdf = localStorage.getItem('blog_pending_pdf');
     const pendingPdfName = localStorage.getItem('blog_pending_pdf_name');
     if (pendingPdf && pendingPdfName) {
-      // Convert base64 to File
       fetch(pendingPdf)
         .then(res => res.blob())
         .then(blob => {
           const file = new File([blob], pendingPdfName, { type: 'application/pdf' });
           setPdfFile(file);
           setStep('sign');
-          // Clear pending
           localStorage.removeItem('blog_pending_pdf');
           localStorage.removeItem('blog_pending_pdf_name');
+        });
+    }
+
+    // Check for pending filled PDF from /fill page
+    const fillPdf = sessionStorage.getItem('signmypdf_pending_fill_pdf');
+    const fillName = sessionStorage.getItem('signmypdf_pending_fill_name');
+    if (fillPdf && fillName) {
+      sessionStorage.removeItem('signmypdf_pending_fill_pdf');
+      sessionStorage.removeItem('signmypdf_pending_fill_name');
+      fetch(fillPdf)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], fillName, { type: 'application/pdf' });
+          setPdfFile(file);
+          setSelectedPages([1]);
+          setPlacements([{ page: 1, x: 5, y: 75, w: 30, h: 12 }]);
+          setStep('sign');
+          setShowFillBanner(true);
         });
     }
   }, []);
@@ -165,6 +215,34 @@ export default function Home() {
         ...params,
       });
     } catch {}
+  };
+
+  const handleRestorePro = async () => {
+    if (!restoreEmail.trim()) return;
+    setRestoreStatus('loading');
+    try {
+      const res = await fetch(`/api/check-subscription?email=${encodeURIComponent(restoreEmail.trim())}`);
+      const data = await res.json();
+      if (data.active) {
+        activateSubscription();
+        setHasSubscription(true);
+        setRestoreStatus('success');
+        // Save email + auto-get dashboard token
+        localStorage.setItem('signmypdf_user_email', restoreEmail.trim());
+        fetch('/api/auth/auto-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: restoreEmail.trim() }),
+        }).then(r => r.json()).then(d => {
+          if (d.token) localStorage.setItem('signmypdf_dashboard_token', d.token);
+        }).catch(() => {});
+        setTimeout(() => setShowPricing(false), 1500);
+      } else {
+        setRestoreStatus('notfound');
+      }
+    } catch {
+      setRestoreStatus('error');
+    }
   };
 
   const handleSign = async () => {
@@ -393,6 +471,16 @@ export default function Home() {
         {/* ── SIGN ── */}
         {step === 'sign' && (
           <div>
+            {/* Banner: filled PDF loaded from /fill */}
+            {showFillBanner && (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 20 }}>✅</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#166534' }}>Your filled PDF is ready to sign</span>
+                </div>
+                <button onClick={() => setShowFillBanner(false)} style={{ background: 'none', border: 'none', fontSize: 16, color: '#86efac', cursor: 'pointer', padding: '2px 6px' }}>✕</button>
+              </div>
+            )}
             <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h2 className="step-title">Sign your document</h2>
               {!hasSubscription && (
@@ -698,6 +786,80 @@ export default function Home() {
             </div>
 
             <p className="pricing-fine">Cancel anytime · Secure payment · No hidden fees</p>
+
+            {/* Restore Pro */}
+            {!showRestore ? (
+              <div style={{
+                marginTop: 16, padding: '14px 20px',
+                background: '#f8fafc', borderRadius: 12,
+                border: '1px solid #e2e8f0',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12
+              }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Already have Pro?</div>
+                  <div style={{ fontSize: 12, color: '#94a3b8' }}>Restore access on this device</div>
+                </div>
+                <button
+                  onClick={() => { setShowRestore(true); setRestoreStatus('idle'); }}
+                  style={{
+                    background: '#fff', border: '1px solid #e2e8f0',
+                    color: '#2563eb', cursor: 'pointer', fontSize: 13,
+                    fontWeight: 700, padding: '8px 16px', borderRadius: 8,
+                    whiteSpace: 'nowrap', flexShrink: 0
+                  }}
+                >
+                  Restore Pro →
+                </button>
+              </div>
+            ) : (
+              <div style={{ marginTop: 16, padding: '16px', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 10 }}>Enter your email to restore Pro access</p>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={restoreEmail}
+                    onChange={e => setRestoreEmail(e.target.value)}
+                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 14, outline: 'none' }}
+                    onKeyDown={async e => { if (e.key === 'Enter') await handleRestorePro(); }}
+                  />
+                  <button
+                    onClick={handleRestorePro}
+                    disabled={restoreStatus === 'loading'}
+                    style={{ padding: '8px 16px', background: '#2563eb', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                  >
+                    {restoreStatus === 'loading' ? '...' : 'Check'}
+                  </button>
+                </div>
+                {restoreStatus === 'success' && (
+                  <p style={{ marginTop: 8, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>
+                    ✅ Pro restored!{' '}
+                    <a href="/dashboard" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 700 }}>Go to dashboard →</a>
+                  </p>
+                )}
+                {restoreStatus === 'notfound' && (
+                  <p style={{ marginTop: 8, fontSize: 13, color: '#dc2626' }}>No active subscription found for this email.</p>
+                )}
+                {restoreStatus === 'error' && (
+                  <p style={{ marginTop: 8, fontSize: 13, color: '#dc2626' }}>Something went wrong. Try again.</p>
+                )}
+                <button onClick={() => setShowRestore(false)} style={{ marginTop: 8, background: 'none', border: 'none', fontSize: 12, color: '#94a3b8', cursor: 'pointer', padding: 0 }}>Cancel</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Pro activation overlay */}
+      {activatingPro && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.85)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div style={{ background: '#fff', borderRadius: 24, padding: '48px 40px', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 40px 80px rgba(0,0,0,0.3)' }}>
+            <div style={{ width: 56, height: 56, border: '4px solid #e0e7ff', borderTopColor: '#2563eb', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 24px' }} />
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: '0 0 12px' }}>Activating your Pro plan…</h2>
+            <p style={{ fontSize: 15, color: '#64748b', margin: '0 0 8px', lineHeight: 1.6 }}>
+              Payment confirmed! Setting up your account.
+            </p>
+            <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>{activatingEmail}</p>
           </div>
         </div>
       )}

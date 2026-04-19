@@ -9,16 +9,21 @@ body {
 
 /* ── Header ── */
 .header {
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 20px 32px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e8edf4;
+  padding: 0 32px;
+  height: 64px;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
 }
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -49,27 +54,29 @@ body {
 }
 .logo-name span { color: #2563eb; }
 .header-tag {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
   background: #f1f5f9;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-weight: 500;
+  border: 1px solid #e8edf4;
 }
 
 /* ── Nav Tools dropdown ── */
 .nav-tools-btn {
-  color: #475569;
+  color: #374151;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   background: none;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 2px;
+  gap: 4px;
+  padding: 6px 4px;
   transition: color 0.15s;
+  letter-spacing: -0.1px;
 }
 .nav-tools-btn:hover { color: #2563eb; }
 

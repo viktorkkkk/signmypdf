@@ -8,13 +8,53 @@ export interface TextFieldData {
   text: string;
   fontSize: number;
   color: string;
-  width?: number; // px (UI only, not needed for PDF output)
+  width?: number; // px (UI only)
 }
 
 interface FillPdfOptions {
   pdfFile: File;
   textFields: TextFieldData[];
   addWatermark: boolean;
+}
+
+/**
+ * Render a text field to a PNG data URL via canvas.
+ * Supports any unicode (Cyrillic, CJK, etc.) — no WinAnsi limitation.
+ */
+function renderFieldToPng(
+  lines: string[],
+  fontSize: number,       // in PDF points
+  color: string,
+  lineHeightPts: number,  // in PDF points
+): { dataUrl: string; widthPts: number; heightPts: number } {
+  const SCALE = 3; // retina quality
+  const fsPx = fontSize * SCALE;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+
+  // Measure widest line
+  ctx.font = `${fsPx}px -apple-system, "Helvetica Neue", Arial, sans-serif`;
+  const maxWidth = Math.max(...lines.map(l => ctx.measureText(l || ' ').width));
+
+  const PAD = 4 * SCALE; // small padding so glyphs aren't clipped
+  canvas.width  = Math.ceil(maxWidth) + PAD;
+  canvas.height = Math.ceil(lineHeightPts * SCALE * lines.length) + PAD;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = `${fsPx}px -apple-system, "Helvetica Neue", Arial, sans-serif`;
+  ctx.fillStyle = color;
+  ctx.textBaseline = 'top';
+
+  lines.forEach((line, i) => {
+    ctx.fillText(line, PAD / 2, PAD / 2 + i * lineHeightPts * SCALE);
+  });
+
+  return {
+    dataUrl:   canvas.toDataURL('image/png'),
+    widthPts:  canvas.width  / SCALE,
+    heightPts: canvas.height / SCALE,
+  };
 }
 
 export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: FillPdfOptions): Promise<Blob> {
@@ -28,7 +68,6 @@ export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: Fi
   }
 
   const pages = pdfDoc.getPages();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   for (const field of textFields) {
     if (!field.text.trim()) continue;
@@ -36,39 +75,41 @@ export async function fillPdfInBrowser({ pdfFile, textFields, addWatermark }: Fi
     if (pageIndex < 0 || pageIndex >= pages.length) continue;
 
     const page = pages[pageIndex];
-    const { width, height } = page.getSize();
+    const { width: pw, height: ph } = page.getSize();
 
-    // Convert % from top-left (CSS) to PDF coordinates (bottom-left origin).
-    // field.y = top of the textarea div (% of overlay/page height).
-    // drawText y = PDF baseline from bottom.
-    // CSS baseline from div-top = half-leading(0.175) + em-ascender(0.796) = 0.971 × fontSize.
-    // This holds regardless of pageScale because both dimensions scale together.
-    const pdfX = (field.x / 100) * width;
-    const pdfY = height - (field.y / 100) * height - field.fontSize * 0.97;
-
-    // Parse hex color → rgb
-    const hex = (field.color || '#000000').replace('#', '');
-    const r = parseInt(hex.slice(0, 2), 16) / 255;
-    const g = parseInt(hex.slice(2, 4), 16) / 255;
-    const b = parseInt(hex.slice(4, 6), 16) / 255;
-
-    // Handle multi-line text (newlines from textarea)
     const lines = field.text.split('\n');
-    const lineHeight = field.fontSize * 1.35; // match CSS lineHeight:1.35
-    lines.forEach((line, i) => {
-      const lineY = Math.max(0, pdfY - i * lineHeight);
-      if (lineY < 0) return;
-      page.drawText(line, {
-        x: Math.max(0, pdfX),
-        y: lineY,
-        size: field.fontSize,
-        font,
-        color: rgb(r, g, b),
-      });
+    const lineHeightPts = field.fontSize * 1.35; // matches CSS line-height
+
+    // Parse hex color
+    const hex = (field.color || '#000000').replace('#', '');
+    const colorStr = `#${hex}`;
+
+    // Render text to PNG via canvas — unicode safe
+    const { dataUrl, widthPts, heightPts } = renderFieldToPng(lines, field.fontSize, colorStr, lineHeightPts);
+
+    // Embed PNG
+    const base64 = dataUrl.split(',')[1];
+    const imgBytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const img = await pdfDoc.embedPng(imgBytes);
+
+    // Position:
+    // field.x / field.y are % from top-left of page (CSS origin).
+    // PDF origin is bottom-left; drawImage places from bottom-left of the image upward.
+    const pdfX = (field.x / 100) * pw;
+    const topYpdf = (field.y / 100) * ph;           // distance from top in PDF units
+    const pdfY = ph - topYpdf - heightPts;           // bottom-left corner in PDF coords
+
+    page.drawImage(img, {
+      x: Math.max(0, pdfX),
+      y: Math.max(0, pdfY),
+      width:  widthPts,
+      height: heightPts,
     });
   }
 
+  // Watermark — ASCII only, Helvetica is fine
   if (addWatermark) {
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const watermarkText = 'SignMyPDF.io';
     const fontSize = 8;
     for (const page of pages) {

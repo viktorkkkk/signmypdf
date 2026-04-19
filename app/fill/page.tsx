@@ -6,6 +6,7 @@ import NavHeader from '../components/NavHeader';
 import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
 import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
+import FileHistory, { saveToHistory, HistoryItem } from '../components/FileHistory';
 
 type Step = 'upload' | 'fill' | 'preview' | 'done';
 
@@ -180,6 +181,9 @@ export default function FillPage() {
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
   const [savedDraft, setSavedDraft]           = useState<DraftData | null>(null);
   const [draftSaved, setDraftSaved]           = useState(false); // toast after save
+  // "PDF ready" modal
+  const [showReadyModal, setShowReadyModal]   = useState(false);
+  const [pendingPdfUrl, setPendingPdfUrl]     = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const draftFileRef  = useRef<HTMLInputElement>(null);
 
@@ -247,7 +251,7 @@ export default function FillPage() {
     }
   };
 
-  // Generate PDF and download immediately
+  // Generate PDF and show "ready" modal
   const handleDownload = async () => {
     if (!pdfFile) return;
     setIsProcessing(true);
@@ -255,11 +259,9 @@ export default function FillPage() {
       const blob = await fillPdfInBrowser({ pdfFile, textFields, addWatermark: willHaveWatermark });
       const url  = URL.createObjectURL(blob);
       setFilledPdfUrl(url);
+      setPendingPdfUrl(url);
       trackEvent('pdf_filled', { plan: hasSubscription ? 'pro' : 'free', fields: textFields.length, watermark: willHaveWatermark });
-      await doSave(url);
-      incrementTodayCount();
-      setTodayCount(getTodayCount());
-      setStep('done');
+      setShowReadyModal(true);
     } catch (err: any) {
       alert('Error: ' + (err?.message || 'unknown'));
     } finally {
@@ -267,19 +269,58 @@ export default function FillPage() {
     }
   };
 
-  // Save from preview step
+  // Save from preview step — also show ready modal
   const handleSaveFromPreview = async () => {
     if (!filledPdfUrl) return;
+    setPendingPdfUrl(filledPdfUrl);
     trackEvent('pdf_filled', { plan: hasSubscription ? 'pro' : 'free', fields: textFields.length, watermark: willHaveWatermark });
-    await doSave(filledPdfUrl);
+    setShowReadyModal(true);
+  };
+
+  // "Download as is" from ready modal
+  const handleDownloadAsIs = async () => {
+    setShowReadyModal(false);
+    await doSave(pendingPdfUrl!);
     incrementTodayCount();
     setTodayCount(getTodayCount());
     setStep('done');
   };
 
+  // "Add Signature →" — save filled PDF to sessionStorage, redirect to /
+  const handleGoToSign = async () => {
+    if (!pendingPdfUrl || !pdfFile) return;
+    setShowReadyModal(false);
+    try {
+      const res  = await fetch(pendingPdfUrl);
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        sessionStorage.setItem('signmypdf_pending_fill_pdf', reader.result as string);
+        sessionStorage.setItem('signmypdf_pending_fill_name', `filled-${pdfFile.name}`);
+        window.location.href = '/';
+      };
+      reader.readAsDataURL(blob);
+    } catch {
+      // Fallback: just redirect
+      window.location.href = '/';
+    }
+  };
+
   const doSave = async (url: string) => {
     const filename = `filled-${pdfFile?.name || 'document.pdf'}`;
     await downloadOrShare(url, filename);
+    // Save to history
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        saveToHistory(filename, blob.size, dataUrl);
+        window.dispatchEvent(new Event('signmypdf:saved'));
+      };
+      reader.readAsDataURL(blob);
+    } catch {}
     if (willHaveWatermark) setTimeout(() => showToast(), 400);
   };
 
@@ -446,6 +487,21 @@ export default function FillPage() {
                 </div>
               ))}
             </div>
+
+            {/* File History */}
+            <FileHistory
+              hasSubscription={hasSubscription}
+              onDownload={(item: HistoryItem, canDownload: boolean) => {
+                if (canDownload) {
+                  const a = document.createElement('a');
+                  a.href = item.dataUrl;
+                  a.download = item.name;
+                  a.click();
+                } else {
+                  setShowPricing(true);
+                }
+              }}
+            />
 
             {/* More PDF Tools */}
             <div style={{ marginTop: 48, borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
@@ -650,6 +706,20 @@ export default function FillPage() {
                 Need to sign a PDF instead? →
               </a>
             </div>
+
+            <FileHistory
+              hasSubscription={hasSubscription}
+              onDownload={(item: HistoryItem, canDownload: boolean) => {
+                if (canDownload) {
+                  const a = document.createElement('a');
+                  a.href = item.dataUrl;
+                  a.download = item.name;
+                  a.click();
+                } else {
+                  setShowPricing(true);
+                }
+              }}
+            />
           </div>
         )}
 
@@ -756,6 +826,37 @@ export default function FillPage() {
           </div>
           <div style={{ marginTop: 10, height: 3, background: '#333', borderRadius: 2, overflow: 'hidden' }}>
             <div style={{ height: '100%', background: '#2563eb', borderRadius: 2, animation: 'toastProgress 8s linear forwards' }} />
+          </div>
+        </div>
+      )}
+
+      {/* ── "PDF ready" modal ── */}
+      {showReadyModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={() => setShowReadyModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 24, padding: '36px 32px', maxWidth: 420, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.18)', textAlign: 'center' }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ fontSize: 44, marginBottom: 12 }}>📄✅</div>
+            <h3 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: '0 0 8px', letterSpacing: -0.3 }}>
+              Your PDF is ready!
+            </h3>
+            <p style={{ fontSize: 15, color: '#64748b', margin: '0 0 28px', lineHeight: 1.6 }}>
+              Want to also add your signature?
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={handleGoToSign}
+                style={{ padding: '14px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 14, fontSize: 16, fontWeight: 700, cursor: 'pointer', letterSpacing: -0.2 }}
+              >
+                ✍️ Add Signature →
+              </button>
+              <button
+                onClick={handleDownloadAsIs}
+                style={{ padding: '13px 24px', background: '#f8fafc', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 14, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+              >
+                ⬇️ Download as is
+              </button>
+            </div>
           </div>
         </div>
       )}
