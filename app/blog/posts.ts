@@ -778,7 +778,7 @@ More guides:
 - [Sign PDF without Adobe Acrobat — full comparison](/blog/sign-pdf-without-adobe)
 - [Sign PDF without registration or email](/blog/sign-pdf-free-without-registration)
 - [Sign PDF fast and securely](/blog/sign-pdf-fast-secure)`,
-    date: '2026-04-09',
+    date: '2026-04-21',
     author: 'SignMyPDF Team',
     readTime: '7 min read',
     tags: ['windows', 'pc', 'desktop', 'free', 'pdf signing'],
@@ -3053,7 +3053,7 @@ Some older IRS forms or scanned versions may not have pre-defined fillable field
 - [How to Fill PDF Form Online Free](/blog/fill-pdf-form-online-free)
 - [Sign PDF Free Without Registration](/blog/sign-pdf-free-without-registration)
 - [How to Add Signature to PDF](/blog/how-to-add-signature-to-pdf)`,
-    date: '2026-04-10',
+    date: '2026-04-09',
     author: 'SignMyPDF Team',
     readTime: '8 min read',
     tags: ["fill irs form online free","irs form pdf filler","free tax form tool","fill out w9 online","sign irs forms digitally"],

@@ -173,17 +173,6 @@ export default function BlogPage() {
         </div>
       </div>
 
-      {/* Tags — bottom, subtle */}
-      <div className="container" style={{ paddingTop: 24, paddingBottom: 0, borderTop: '1px solid #f1f5f9' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {tags.map(tag => (
-            <span key={tag} style={{ fontSize: 11, color: '#cbd5e1', padding: '2px 8px', background: '#f8fafc', borderRadius: 20, border: '1px solid #f1f5f9' }}>
-              #{tag}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <SiteFooter />
     </>
   );
