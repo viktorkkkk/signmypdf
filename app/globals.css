@@ -895,16 +895,20 @@ body { padding-bottom: 40px; }
 
 /* Footer grid */
 .footer-grid {
+  display: grid;
   grid-template-columns: 2fr 1fr 1.5fr 1fr 1.2fr;
+  gap: 40px;
 }
 @media (max-width: 900px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 }
 @media (max-width: 480px) {
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 
