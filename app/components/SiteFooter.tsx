@@ -3,11 +3,10 @@ import Logo from './Logo';
 
 export default function SiteFooter() {
   return (
-    <footer style={{ background: '#0f172a', paddingTop: 56, paddingBottom: 0, marginTop: 'auto' }}>
-      {/* Uses same .container as the rest of the site: max-width 1200px, padding 0 24px */}
+    <footer style={{ background: '#0f172a', paddingTop: 64, paddingBottom: 0, marginTop: 'auto' }}>
       <div className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
 
-        <div className="footer-grid" style={{ marginBottom: 48 }}>
+        <div className="footer-grid" style={{ marginBottom: 52 }}>
 
           {/* Col 1 — Brand (2fr) */}
           <div>
@@ -19,11 +18,11 @@ export default function SiteFooter() {
               </div>
             </Link>
 
-            <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.7, maxWidth: 240, margin: '16px 0 20px' }}>
-              Fast, private PDF tools. No software. No account required.
+            <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.75, maxWidth: 220, margin: '16px 0 24px' }}>
+              Fast, private PDF tools.<br />No software. No account required.
             </p>
 
-            {/* Facebook only */}
+            {/* Facebook */}
             <a
               href="https://web.facebook.com/profile.php?id=61572329731082"
               target="_blank"
@@ -43,7 +42,7 @@ export default function SiteFooter() {
             </a>
           </div>
 
-          {/* Col 2 — Tools (1fr) */}
+          {/* Col 2 — Tools */}
           <div>
             <h4 className="footer-heading">Tools</h4>
             <ul className="footer-links">
@@ -52,10 +51,11 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          {/* Col 3 — Guides (1fr) */}
+          {/* Col 3 — Blog */}
           <div>
-            <h4 className="footer-heading">Guides</h4>
+            <h4 className="footer-heading">Blog</h4>
             <ul className="footer-links">
+              <li><Link href="/blog" className="footer-link">All Articles</Link></li>
               <li><Link href="/blog/how-to-sign-pdf-online" className="footer-link">How to Sign PDF Online</Link></li>
               <li><Link href="/blog/docusign-alternative-free" className="footer-link">Free DocuSign Alternative</Link></li>
               <li><Link href="/blog/sign-pdf-on-iphone-free" className="footer-link">Sign PDF on iPhone</Link></li>
@@ -64,22 +64,38 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          {/* Col 4 — Company + Support (1fr) */}
+          {/* Col 4 — Company */}
           <div>
             <h4 className="footer-heading">Company</h4>
             <ul className="footer-links">
               <li><Link href="/terms" className="footer-link">Terms of Service</Link></li>
               <li><Link href="/privacy" className="footer-link">Privacy Policy</Link></li>
             </ul>
-            <div style={{ marginTop: 20 }}>
-              <a href="mailto:support@signmypdf.io" className="footer-link" style={{ display: 'block', marginBottom: 8 }}>
-                support@signmypdf.io
-              </a>
-              <p style={{ fontSize: 12, color: '#334155', lineHeight: 1.6, margin: 0 }}>
-                PIXELTIDE LLC<br />Irvine, CA, USA
+          </div>
+
+          {/* Col 5 — Support */}
+          <div>
+            <h4 className="footer-heading">Support</h4>
+            <ul className="footer-links">
+              <li>
+                <a href="mailto:support@signmypdf.io" className="footer-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.5 }}>
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  </svg>
+                  support@signmypdf.io
+                </a>
+              </li>
+            </ul>
+            <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #1e293b' }}>
+              <p style={{ fontSize: 12, color: '#334155', lineHeight: 1.7, margin: 0 }}>
+                <span style={{ color: '#475569', fontWeight: 600 }}>PIXELTIDE LLC</span><br />
+                833 Saint Vincent<br />
+                Irvine, CA 92618, USA
               </p>
             </div>
           </div>
+
         </div>
 
         {/* Divider + Copyright */}

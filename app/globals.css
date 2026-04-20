@@ -911,23 +911,41 @@ body > div > footer { margin-top: auto; }
   }
 }
 
-/* Footer grid — matches .container max-width 1200px / padding 0 24px */
+/* Footer grid — 5 cols: Brand(2fr) + Tools + Blog + Company + Support */
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
   align-items: start;
+}
+@media (max-width: 1100px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 28px;
+  }
+  /* Company + Support shift to second row under Brand */
+  .footer-grid > :nth-child(4),
+  .footer-grid > :nth-child(5) {
+    grid-column: auto;
+  }
 }
 @media (max-width: 900px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 28px;
+  }
+  /* Brand spans full width on tablet */
+  .footer-grid > :first-child {
+    grid-column: 1 / -1;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 540px) {
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
+  }
+  .footer-grid > :first-child {
+    grid-column: auto;
   }
 }
 
