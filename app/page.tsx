@@ -427,7 +427,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="container" style={{ paddingTop: 48, paddingBottom: 64 }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: step === 'upload' ? 0 : 64 }}>
 
         {/* ── UPLOAD ── */}
         {step === 'upload' && (
@@ -667,8 +667,8 @@ export default function Home() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 80, paddingBottom: 80 }}>
-          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 40 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
             </h2>
