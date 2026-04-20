@@ -427,7 +427,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="container" style={{ paddingTop: 48, paddingBottom: 0 }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 64 }}>
 
         {/* ── UPLOAD ── */}
         {step === 'upload' && (
