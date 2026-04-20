@@ -178,7 +178,6 @@ export default function FillPage() {
   const [showReadyModal, setShowReadyModal]   = useState(false);
   const [pendingPdfUrl, setPendingPdfUrl]     = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const draftFileRef  = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');

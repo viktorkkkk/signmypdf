@@ -7,7 +7,7 @@ import PDFViewer, { SignaturePlacement } from './components/PDFViewer';
 import SavedSignatures, { saveSig, SavedSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
 import NavHeader from './components/NavHeader';
-import FileHistory, { saveToHistory, HistoryItem } from './components/FileHistory';
+import FileHistory, { saveToHistory } from './components/FileHistory';
 import { signPdfInBrowser } from './utils/signPdf';
 import {
   SUBSCRIPTION_KEY,
@@ -64,7 +64,6 @@ export default function Home() {
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'loading' | 'success' | 'notfound' | 'error'>('idle');
   const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
-  const [pendingDownload, setPendingDownload] = useState<HistoryItem | null>(null);
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activatingPro, setActivatingPro] = useState(false);
