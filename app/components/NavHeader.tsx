@@ -34,7 +34,7 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
           <Logo />
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.25 }}>
             <span style={{ fontSize: 17, fontWeight: 800, color: '#0f172a', letterSpacing: -0.3 }}>SignMyPDF</span>
-            <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>Free PDF Signing Tool</span>
+            <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>Sign &amp; Fill PDF — No Registration</span>
           </div>
         </a>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
