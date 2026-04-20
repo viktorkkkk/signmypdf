@@ -164,6 +164,49 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## Blog Publication Plan (60 articles)
+
+**Rule**: 2 articles per day. One about SIGN (links to `/`), one about FILL (links to `/fill`).
+**Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
+**After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
+
+### Progress
+
+| Day | Article 1 (SIGN) | Article 2 (FILL/other) | Status |
+|-----|-----------------|------------------------|--------|
+| 1 | how-to-sign-lease-agreement-online | signmypdf-vs-docusign-freelancers | ✅ done |
+| 2 | real-estate-agents-sign-documents | fill-w9-form-online-free | ✅ done |
+| 3 | electronic-signature-legal-rental | sign-nda-online-without-printing | ✅ done |
+| 4 | pdf-wont-let-me-type-fix | ilovepdf-vs-signmypdf | ✅ done |
+| 5 | fill-irs-form-online-free | freelancers-sign-contracts-free | ✅ done |
+| 6 | electronic-signature-laws-by-state | sign-employment-offer-letter-online | ✅ done |
+| 7 | cant-sign-pdf-iphone-fix | adobe-acrobat-vs-signmypdf | ⏳ next |
+| 8 | fill-rental-application-pdf-free | small-business-document-signing | ⬜ |
+| 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ⬜ |
+| 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ⬜ |
+| 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ⬜ |
+| 12 | esign-act-explained | fill-job-application-pdf-online | ⬜ |
+| 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⬜ |
+| 14 | sign-construction-contract-online | remote-teams-sign-documents | ⬜ |
+| 15 | digital-signatures-admissible-court | fill-government-forms-online-free | ⬜ |
+| 16 | signature-disappears-pdf-fix | pandadoc-free-alternative | ⬜ |
+| 17 | sign-divorce-papers-online | property-managers-tenant-signatures | ⬜ |
+| 18 | electronic-signature-business-contracts | fill-visa-application-form-pdf | ⬜ |
+| 19 | pdf-read-only-add-text-fix | docusign-free-plan-vs-signmypdf | ⬜ |
+| 20 | sign-contractor-agreement-online | accountants-tax-documents-signature | ⬜ |
+| 21 | hipaa-electronic-signatures | fill-bank-form-pdf-online | ⬜ |
+| 22 | sign-multiple-pdf-pages | zoho-sign-vs-signmypdf | ⬜ |
+| 23 | sign-car-purchase-agreement-online | law-firms-free-pdf-tools | ⬜ |
+| 24 | electronic-signature-real-estate-legal | fill-college-application-pdf | ⬜ |
+| 25 | signed-pdf-looks-different-fix | signnow-free-alternative | ⬜ |
+| 26 | sign-service-agreement-online | consultants-proposals-digital-signature | ⬜ |
+| 27 | electronic-signature-international-contracts | fill-insurance-claim-form-pdf | ⬜ |
+| 28 | add-multiple-signatures-one-pdf | adobe-fill-sign-vs-signmypdf | ⬜ |
+| 29 | sign-non-compete-agreement-online | photographers-digital-signatures | ⬜ |
+| 30 | electronic-signature-security | fill-medical-history-form-pdf | ⬜ |
+
+---
+
 ## Key Files
 
 ```
