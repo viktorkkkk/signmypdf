@@ -19,7 +19,7 @@ body > div > footer { margin-top: auto; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid #e8edf4;
-  padding: 0 40px;
+  padding: 0 48px;
   height: 68px;
   position: sticky;
   top: 0;
@@ -177,11 +177,7 @@ body > div > footer { margin-top: auto; }
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 24px;
-}
-/* Page-level container keeps bottom breathing room */
-.container--page {
-  padding-bottom: 64px;
+  padding: 0 48px;
 }
 
 /* ── Upload ── */
@@ -234,7 +230,7 @@ body > div > footer { margin-top: auto; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-top: 28px;
+  margin-top: 80px;
 }
 .feat {
   background: white;
@@ -724,8 +720,7 @@ body > div > footer { margin-top: auto; }
   .header-tag { display: none; }
 
   /* Container */
-  .container { padding: 20px 16px; }
-  .container--page { padding-bottom: 40px; }
+  .container { padding: 0 20px; }
 
   /* Hero */
   .hero-title { font-size: 26px; }

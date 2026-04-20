@@ -49,7 +49,6 @@ export default function SiteFooter() {
             <ul className="footer-links">
               <li><Link href="/" className="footer-link">Sign PDF</Link></li>
               <li><Link href="/fill" className="footer-link">Fill PDF Form</Link></li>
-              <li><Link href="/blog" className="footer-link">Blog</Link></li>
             </ul>
           </div>
 
@@ -72,14 +71,14 @@ export default function SiteFooter() {
               <li><Link href="/terms" className="footer-link">Terms of Service</Link></li>
               <li><Link href="/privacy" className="footer-link">Privacy Policy</Link></li>
             </ul>
-
-            <h4 className="footer-heading" style={{ marginTop: 24 }}>Support</h4>
-            <a href="mailto:support@signmypdf.io" className="footer-link" style={{ display: 'block', marginBottom: 8 }}>
-              support@signmypdf.io
-            </a>
-            <p style={{ fontSize: 12, color: '#334155', lineHeight: 1.6, margin: 0 }}>
-              PIXELTIDE LLC<br />Irvine, CA, USA
-            </p>
+            <div style={{ marginTop: 20 }}>
+              <a href="mailto:support@signmypdf.io" className="footer-link" style={{ display: 'block', marginBottom: 8 }}>
+                support@signmypdf.io
+              </a>
+              <p style={{ fontSize: 12, color: '#334155', lineHeight: 1.6, margin: 0 }}>
+                PIXELTIDE LLC<br />Irvine, CA, USA
+              </p>
+            </div>
           </div>
         </div>
 
