@@ -7,6 +7,7 @@ import PDFViewer, { SignaturePlacement } from './components/PDFViewer';
 import SavedSignatures, { saveSig, SavedSig } from './components/SavedSignatures';
 import Logo from './components/Logo';
 import NavHeader from './components/NavHeader';
+import SiteFooter from './components/SiteFooter';
 import FileHistory, { saveToHistory } from './components/FileHistory';
 import { signPdfInBrowser } from './utils/signPdf';
 import {
@@ -950,115 +951,7 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Footer */}
-      <footer style={{
-        background: '#f8fafc',
-        borderTop: '1px solid #e2e8f0',
-        padding: '32px 0 24px',
-        marginTop: 48,
-      }}>
-        <div className="container">
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 24,
-            marginBottom: 24,
-          }}>
-            {/* Company Info */}
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-                SignMyPDF
-              </h4>
-              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
-                Simple and secure PDF signing tool. No registration required. 
-                Sign your documents online.
-              </p>
-            </div>
-
-            {/* Contacts */}
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-                Contact
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
-                <li>📧 support@signmypdf.io</li>
-                <li>🌐 https://signmypdf.io</li>
-              </ul>
-            </div>
-
-            {/* Blog */}
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-                Resources
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
-                <li>
-                  <a href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="/blog/how-to-sign-pdf-online-free" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    How to Sign PDF
-                  </a>
-                </li>
-                <li>
-                  <a href="/blog/electronic-signature-legality" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    E-Signature Legal Guide
-                  </a>
-                </li>
-                <li>
-                  <a href="/blog/sign-pdf-iphone-ipad" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    Sign on iPhone/iPad
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-                Legal
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
-                <li>
-                  <a href="/terms" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="/privacy" style={{ color: '#64748b', textDecoration: 'none' }}>
-                    Privacy Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* About */}
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-                Company
-              </h4>
-              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>
-                PIXELTIDE LLC<br />
-                833 Saint Vincent<br />
-                Irvine, CA 92618, USA
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom bar */}
-          <div style={{
-            borderTop: '1px solid #e2e8f0',
-            paddingTop: 16,
-            textAlign: 'center',
-            fontSize: 12,
-            color: '#94a3b8',
-          }}>
-            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · <a href="/terms" style={{ color: '#94a3b8' }}>Terms</a> · <a href="/privacy" style={{ color: '#94a3b8' }}>Privacy</a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

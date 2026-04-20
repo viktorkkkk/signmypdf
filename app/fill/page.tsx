@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import NavHeader from '../components/NavHeader';
+import SiteFooter from '../components/SiteFooter';
 import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
 import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
@@ -856,42 +857,7 @@ export default function FillPage() {
         }
       `}</style>
 
-      {/* Footer */}
-      <footer style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '32px 0 24px', marginTop: 48 }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24, marginBottom: 24 }}>
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>SignMyPDF</h4>
-              <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.6 }}>Simple and secure PDF tools. No registration required.</p>
-            </div>
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Contact</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 14, color: '#64748b', lineHeight: 2 }}>
-                <li>📧 support@signmypdf.io</li>
-                <li>🌐 https://signmypdf.io</li>
-              </ul>
-            </div>
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>PDF Tools</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
-                <li><a href="/" style={{ color: '#64748b', textDecoration: 'none' }}>Sign PDF</a></li>
-                <li><a href="/fill" style={{ color: '#64748b', textDecoration: 'none' }}>Fill PDF Form</a></li>
-                <li><a href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>Blog</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>Legal</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, lineHeight: 1.8 }}>
-                <li><a href="/terms" style={{ color: '#64748b', textDecoration: 'none' }}>Terms of Service</a></li>
-                <li><a href="/privacy" style={{ color: '#64748b', textDecoration: 'none' }}>Privacy Policy</a></li>
-              </ul>
-            </div>
-          </div>
-          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 16, textAlign: 'center', fontSize: 12, color: '#94a3b8' }}>
-            © {new Date().getFullYear()} PIXELTIDE LLC. All rights reserved. · <a href="/terms" style={{ color: '#94a3b8' }}>Terms</a> · <a href="/privacy" style={{ color: '#94a3b8' }}>Privacy</a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }
