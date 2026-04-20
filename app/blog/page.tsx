@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPosts, getAllTags } from './posts';
+import NavHeader from '../components/NavHeader';
 import Logo from '../components/Logo';
 
 export const metadata: Metadata = {
@@ -20,41 +21,7 @@ export default function BlogPage() {
 
   return (
     <>
-      {/* Header */}
-      <header className="header">
-        <div className="header-inner">
-          <Link href="/" className="logo">
-            <Logo />
-          </Link>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <Link 
-              href="/blog" 
-              style={{ 
-                color: '#2563eb', 
-                textDecoration: 'none', 
-                fontSize: 14, 
-                fontWeight: 600,
-                padding: '6px 12px',
-                background: '#eff6ff',
-                borderRadius: 8
-              }}
-            >
-              Blog
-            </Link>
-            <Link 
-              href="/privacy" 
-              style={{ 
-                color: '#475569', 
-                textDecoration: 'none', 
-                fontSize: 14, 
-                fontWeight: 500 
-              }}
-            >
-              Privacy
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <NavHeader />
 
       {/* Hero */}
       <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>

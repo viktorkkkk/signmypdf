@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BlogPost } from '../posts';
+import NavHeader from '../../components/NavHeader';
 import Logo from '../../components/Logo';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
 
@@ -520,20 +521,7 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {
   return (
     <>
-      {/* Header */}
-      <header className="header">
-        <div className="header-inner">
-          <Link href="/" className="logo"><Logo /></Link>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <Link href="/blog" style={{ color: '#2563eb', textDecoration: 'none', fontSize: 14, fontWeight: 600, padding: '6px 12px', background: '#eff6ff', borderRadius: 8 }}>
-              Blog
-            </Link>
-            <Link href="/privacy" style={{ color: '#475569', textDecoration: 'none', fontSize: 14, fontWeight: 500 }}>
-              Privacy
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <NavHeader />
 
       {/* Breadcrumb */}
       <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
