@@ -33,14 +33,15 @@ export default function BlogPage() {
             marginBottom: 12,
             letterSpacing: -0.5 
           }}>
-            PDF Signing Tips & Guides
+            PDF Tips & Guides
           </h1>
-          <p style={{ 
-            fontSize: 17, 
-            color: '#64748b', 
-            lineHeight: 1.6 
+          <p style={{
+            fontSize: 17,
+            color: '#64748b',
+            lineHeight: 1.6
           }}>
-            Learn how to sign PDFs online, master electronic signatures, and keep your documents secure.
+            Learn how to sign, fill, and manage<br />
+            PDF documents online — free guides for every device.
           </p>
         </div>
 
