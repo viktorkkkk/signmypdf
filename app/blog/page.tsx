@@ -140,36 +140,61 @@ export default function BlogPage() {
             color: 'white',
             marginBottom: 12
           }}>
-            Ready to sign your PDF?
+            Ready to work with your PDF?
           </h2>
           <p style={{
             fontSize: 16,
             color: '#bfdbfe',
-            marginBottom: 28
+            marginBottom: 32,
+            lineHeight: 1.6
           }}>
-            Join thousands who trust SignMyPDF for fast, secure document signing.
+            Join thousands who trust SignMyPDF<br />
+            for fast, private document signing and filling.
           </p>
-          <Link 
-            href="/"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '16px 32px',
-              background: 'white',
-              color: '#2563eb',
-              fontWeight: 700,
-              fontSize: 15,
-              borderRadius: 14,
-              textDecoration: 'none',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
-            }}
-          >
-            Sign PDF for Free
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </Link>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '15px 28px',
+                background: 'white',
+                color: '#2563eb',
+                fontWeight: 700,
+                fontSize: 15,
+                borderRadius: 14,
+                textDecoration: 'none',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
+              }}
+            >
+              Sign PDF Free
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+            <Link
+              href="/fill"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '15px 28px',
+                background: 'transparent',
+                color: 'white',
+                fontWeight: 700,
+                fontSize: 15,
+                borderRadius: 14,
+                textDecoration: 'none',
+                border: '2px solid rgba(255,255,255,0.6)'
+              }}
+            >
+              Fill PDF Form
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
 
