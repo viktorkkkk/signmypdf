@@ -13,13 +13,24 @@ body > * { flex-shrink: 0; }
 body > footer,
 body > div > footer { margin-top: auto; }
 
+/* ── Site-wide grid container ── */
+/* Single source of truth: all inner wrappers (header, content, footer)
+   use this to get identical left/right edges at every viewport width. */
+.site-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* ── Header ── */
 .header {
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid #e8edf4;
-  padding: 0 48px;
+  /* NO horizontal padding here — inner .site-container handles it */
   height: 68px;
   position: sticky;
   top: 0;
@@ -27,8 +38,7 @@ body > div > footer { margin-top: auto; }
   box-shadow: 0 1px 0 rgba(0,0,0,0.04);
 }
 .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+  /* max-width / margin / padding come from .site-container applied together */
   height: 100%;
   display: flex;
   align-items: center;
@@ -173,11 +183,13 @@ body > div > footer { margin-top: auto; }
 }
 .step-line.done { background: #22c55e; }
 
-/* ── Container ── */
+/* ── Container (alias of .site-container for content sections) ── */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 48px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Upload ── */
@@ -715,12 +727,13 @@ body > div > footer { margin-top: auto; }
 /* ── Mobile ── */
 @media (max-width: 680px) {
 
-  /* Header */
-  .header { padding: 10px 20px; }
+  /* Header — no horizontal padding, inner .site-container handles it */
+  .header { padding: 0; }
   .header-tag { display: none; }
 
-  /* Container */
+  /* Container + site-container — same 20px gutter on mobile */
   .container { padding: 0 20px; }
+  .site-container { padding: 0 20px; }
 
   /* Hero */
   .hero-title { font-size: 26px; }

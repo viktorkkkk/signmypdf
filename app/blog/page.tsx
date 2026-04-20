@@ -174,7 +174,7 @@ export default function BlogPage() {
       </div>
 
       {/* Tags — bottom, subtle */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 0', borderTop: '1px solid #f1f5f9' }}>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 0, borderTop: '1px solid #f1f5f9' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {tags.map(tag => (
             <span key={tag} style={{ fontSize: 11, color: '#cbd5e1', padding: '2px 8px', background: '#f8fafc', borderRadius: 20, border: '1px solid #f1f5f9' }}>

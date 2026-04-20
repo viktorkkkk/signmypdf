@@ -29,7 +29,7 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
 
   return (
     <header className="header">
-      <div className="header-inner">
+      <div className="header-inner site-container">
         <a href="/" className="logo">
           <Logo />
           <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.25 }}>
