@@ -4266,7 +4266,7 @@ For a small business doing fewer than 60 documents per month, the free tier of S
 
 **Create document templates**: For contracts, invoices, and NDAs you use repeatedly, create master templates with your standard terms. Store these as original PDFs and fill/sign fresh copies for each client.
 
-**Name files consistently**: `ClientName_Contract_2026-04-20.pdf` is infinitely easier to find than `Scan0047.pdf`. Download your signed PDFs with descriptive names.
+**Name files consistently**: ClientName_Contract_2026-04-20.pdf is infinitely easier to find than Scan0047.pdf. Download your signed PDFs with descriptive names.
 
 **Keep signed originals**: After signing a contract or agreement, download and store the signed PDF immediately. For Pro users, SignMyPDF's download history keeps track automatically.
 
