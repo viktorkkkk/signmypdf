@@ -77,7 +77,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>{children}</body>
     </html>
   );
 }

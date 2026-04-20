@@ -5,7 +5,13 @@ body {
   background: #f0f4ff;
   min-height: 100vh;
   color: #1e293b;
+  display: flex;
+  flex-direction: column;
 }
+body > * { flex-shrink: 0; }
+/* Push footer to bottom */
+body > footer,
+body > div > footer { margin-top: auto; }
 
 /* ── Header ── */
 .header {
@@ -648,8 +654,7 @@ body {
 
 /* ── File History (inline section) ── */
 
-/* Bottom breathing room */
-body { padding-bottom: 40px; }
+/* Bottom breathing room — removed, footer handles spacing */
 
 /* ── Modal ── */
 .modal-overlay {
@@ -801,7 +806,7 @@ body { padding-bottom: 40px; }
   /* History bar — compact */
   .history-wrap { padding: 10px 14px; }
   .history-item { min-width: 180px; padding: 7px 10px; }
-  body { padding-bottom: 24px; }
+  /* body padding-bottom removed — footer handles spacing */
 
   /* Logo */
   .logo > div:first-child { width: 40px !important; height: 40px !important; border-radius: 11px !important; }
@@ -898,6 +903,7 @@ body { padding-bottom: 40px; }
   display: grid;
   grid-template-columns: 2fr 1fr 1.5fr 1fr 1.2fr;
   gap: 40px;
+  align-items: start;
 }
 @media (max-width: 900px) {
   .footer-grid {
@@ -905,7 +911,7 @@ body { padding-bottom: 40px; }
     gap: 32px;
   }
 }
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 24px;

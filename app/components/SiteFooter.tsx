@@ -8,7 +8,7 @@ export default function SiteFooter() {
       borderTop: '1px solid #e2e8f0',
       paddingTop: 48,
       paddingBottom: 32,
-      marginTop: 64,
+      marginTop: 'auto',
     }}>
       <div className="container">
         <div className="footer-grid" style={{ marginBottom: 40 }}>
@@ -74,7 +74,7 @@ export default function SiteFooter() {
 
         {/* Bottom copyright */}
         <div style={{
-          borderTop: '1px solid #e2e8f0',
+          borderTop: '0.5px solid #e2e8f0',
           paddingTop: 20,
           display: 'flex',
           justifyContent: 'space-between',
