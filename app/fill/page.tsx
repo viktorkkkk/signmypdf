@@ -6,7 +6,9 @@ import NavHeader from '../components/NavHeader';
 import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
 import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
-import FileHistory, { saveToHistory, HistoryItem } from '../components/FileHistory';
+import FileHistory, { saveToHistory } from '../components/FileHistory';
+import { saveDraft as saveDraftUtil, consumePendingDraft } from '../utils/drafts';
+import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
 
 type Step = 'upload' | 'fill' | 'preview' | 'done';
 
@@ -146,16 +148,6 @@ function FilledPDFPreview({ url }: { url: string }) {
 
 const DAILY_LIMIT      = 2;
 const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
-const DRAFT_KEY        = 'signmypdf_draft_v1';
-
-interface DraftData { filename: string; fields: any[]; savedAt: string; }
-function saveDraft(filename: string, fields: any[]) {
-  localStorage.setItem(DRAFT_KEY, JSON.stringify({ filename, fields, savedAt: new Date().toISOString() }));
-}
-function loadDraft(): DraftData | null {
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch { return null; }
-}
-function clearDraft() { localStorage.removeItem(DRAFT_KEY); }
 
 function getTodayCount(): number {
   const key = `signmypdf_count_${new Date().toISOString().split('T')[0]}`;
@@ -179,8 +171,9 @@ export default function FillPage() {
   const [todayCount, setTodayCount]           = useState(0);
   const [showPricing, setShowPricing]         = useState(false);
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
-  const [savedDraft, setSavedDraft]           = useState<DraftData | null>(null);
   const [draftSaved, setDraftSaved]           = useState(false); // toast after save
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const [loadedDraftName, setLoadedDraftName] = useState<string | null>(null);
   // "PDF ready" modal
   const [showReadyModal, setShowReadyModal]   = useState(false);
   const [pendingPdfUrl, setPendingPdfUrl]     = useState<string | null>(null);
@@ -192,8 +185,14 @@ export default function FillPage() {
     const sub = isSubscribed() || isDevMode;
     setHasSubscription(sub);
     setTodayCount(getTodayCount());
-    // Load existing draft (shown only to Pro users)
-    if (sub) setSavedDraft(loadDraft());
+
+    // Check for pending draft from dashboard
+    const pendingDraft = consumePendingDraft();
+    if (pendingDraft) {
+      setTextFields(pendingDraft.fields);
+      setLoadedDraftName(pendingDraft.name);
+      setShowDraftBanner(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -236,12 +235,12 @@ export default function FillPage() {
     noClick: true,
   });
 
-  // Generate PDF and go to preview (no download yet)
+  // Generate PDF and go to preview (no watermark on preview)
   const handlePreview = async () => {
     if (!pdfFile) return;
     setIsProcessing(true);
     try {
-      const blob = await fillPdfInBrowser({ pdfFile, textFields, addWatermark: willHaveWatermark });
+      const blob = await fillPdfInBrowser({ pdfFile, textFields, addWatermark: false });
       setFilledPdfUrl(URL.createObjectURL(blob));
       setStep('preview');
     } catch (err: any) {
@@ -256,10 +255,22 @@ export default function FillPage() {
     if (!pdfFile) return;
     setIsProcessing(true);
     try {
-      const blob = await fillPdfInBrowser({ pdfFile, textFields, addWatermark: willHaveWatermark });
-      const url  = URL.createObjectURL(blob);
-      setFilledPdfUrl(url);
-      setPendingPdfUrl(url);
+      // Always generate clean PDF for history
+      const cleanBlob = await fillPdfInBrowser({ pdfFile, textFields, addWatermark: false });
+      const cleanUrl = URL.createObjectURL(cleanBlob);
+
+      // For download: add watermark if needed
+      let downloadUrl = cleanUrl;
+      if (willHaveWatermark) {
+        const wBlob = await addWatermarkToBlob(cleanBlob);
+        downloadUrl = URL.createObjectURL(wBlob);
+      }
+
+      setFilledPdfUrl(cleanUrl);
+      setPendingPdfUrl(cleanUrl);
+      // Store downloadUrl so doSave can use it
+      (window as any).__fillDownloadUrl = downloadUrl;
+
       trackEvent('pdf_filled', { plan: hasSubscription ? 'pro' : 'free', fields: textFields.length, watermark: willHaveWatermark });
       setShowReadyModal(true);
     } catch (err: any) {
@@ -273,6 +284,18 @@ export default function FillPage() {
   const handleSaveFromPreview = async () => {
     if (!filledPdfUrl) return;
     setPendingPdfUrl(filledPdfUrl);
+    // If watermark needed, generate watermarked version
+    if (willHaveWatermark) {
+      try {
+        const res = await fetch(filledPdfUrl);
+        const blob = await res.blob();
+        const wBlob = await addWatermarkToBlob(blob);
+        const wUrl = URL.createObjectURL(wBlob);
+        (window as any).__fillDownloadUrl = wUrl;
+      } catch {}
+    } else {
+      (window as any).__fillDownloadUrl = undefined;
+    }
     trackEvent('pdf_filled', { plan: hasSubscription ? 'pro' : 'free', fields: textFields.length, watermark: willHaveWatermark });
     setShowReadyModal(true);
   };
@@ -280,7 +303,8 @@ export default function FillPage() {
   // "Download as is" from ready modal
   const handleDownloadAsIs = async () => {
     setShowReadyModal(false);
-    await doSave(pendingPdfUrl!);
+    const downloadUrl = (window as any).__fillDownloadUrl as string | undefined;
+    await doSave(pendingPdfUrl!, downloadUrl);
     incrementTodayCount();
     setTodayCount(getTodayCount());
     setStep('done');
@@ -306,20 +330,17 @@ export default function FillPage() {
     }
   };
 
-  const doSave = async (url: string) => {
+  const doSave = async (cleanUrl: string, downloadUrl?: string) => {
     const filename = `filled-${pdfFile?.name || 'document.pdf'}`;
-    await downloadOrShare(url, filename);
-    // Save to history
+    const urlToDownload = downloadUrl || cleanUrl;
+    await downloadOrShare(urlToDownload, filename);
+    // Save CLEAN version to history
     try {
-      const res = await fetch(url);
+      const res = await fetch(cleanUrl);
       const blob = await res.blob();
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataUrl = reader.result as string;
-        saveToHistory(filename, blob.size, dataUrl);
-        window.dispatchEvent(new Event('signmypdf:saved'));
-      };
-      reader.readAsDataURL(blob);
+      const dataUrl = await blobToDataUrl(blob);
+      saveToHistory(filename, blob.size, dataUrl, 'fill');
+      window.dispatchEvent(new Event('signmypdf:saved'));
     } catch {}
     if (willHaveWatermark) setTimeout(() => showToast(), 400);
   };
@@ -360,19 +381,9 @@ export default function FillPage() {
 
   const handleSaveDraft = () => {
     if (!pdfFile || !hasContent) return;
-    saveDraft(pdfFile.name, textFields);
-    setSavedDraft(loadDraft());
+    saveDraftUtil(pdfFile.name, textFields);
     setDraftSaved(true);
     setTimeout(() => setDraftSaved(false), 2500);
-  };
-
-  const handleRestoreDraft = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f || !savedDraft) return;
-    setPdfFile(f);
-    setTextFields(savedDraft.fields);
-    setStep('fill');
-    e.target.value = '';
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -457,20 +468,14 @@ export default function FillPage() {
               </label>
             </div>
 
-            {/* Draft restore banner — Pro only */}
-            {savedDraft && hasSubscription && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, padding: '12px 16px', marginBottom: 20, flexWrap: 'wrap' }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1d4ed8', marginBottom: 2 }}>📂 Continue where you left off</div>
-                  <div style={{ fontSize: 12, color: '#3b82f6', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {savedDraft.filename} · {savedDraft.fields.filter((f: any) => f.text?.trim()).length} fields · {new Date(savedDraft.savedAt).toLocaleDateString()}
-                  </div>
+            {/* Draft loaded banner */}
+            {showDraftBanner && loadedDraftName && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, padding: '12px 16px', marginBottom: 20 }}>
+                <span style={{ fontSize: 18 }}>📂</span>
+                <div style={{ flex: 1, fontSize: 13, fontWeight: 600, color: '#1d4ed8' }}>
+                  Draft "{loadedDraftName}" loaded — upload a PDF to apply it
                 </div>
-                <label style={{ fontSize: 13, fontWeight: 600, color: 'white', background: '#2563eb', borderRadius: 10, padding: '8px 16px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
-                  Restore draft
-                  <input ref={draftFileRef} type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleRestoreDraft} />
-                </label>
-                <button onClick={() => { clearDraft(); setSavedDraft(null); }} style={{ fontSize: 18, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px', flexShrink: 0 }}>×</button>
+                <button onClick={() => setShowDraftBanner(false)} style={{ fontSize: 18, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
               </div>
             )}
 
@@ -491,16 +496,7 @@ export default function FillPage() {
             {/* File History */}
             <FileHistory
               hasSubscription={hasSubscription}
-              onDownload={(item: HistoryItem, canDownload: boolean) => {
-                if (canDownload) {
-                  const a = document.createElement('a');
-                  a.href = item.dataUrl;
-                  a.download = item.name;
-                  a.click();
-                } else {
-                  setShowPricing(true);
-                }
-              }}
+              onShowPricing={() => setShowPricing(true)}
             />
 
             {/* More PDF Tools */}
@@ -709,16 +705,7 @@ export default function FillPage() {
 
             <FileHistory
               hasSubscription={hasSubscription}
-              onDownload={(item: HistoryItem, canDownload: boolean) => {
-                if (canDownload) {
-                  const a = document.createElement('a');
-                  a.href = item.dataUrl;
-                  a.download = item.name;
-                  a.click();
-                } else {
-                  setShowPricing(true);
-                }
-              }}
+              onShowPricing={() => setShowPricing(true)}
             />
           </div>
         )}
@@ -758,9 +745,10 @@ export default function FillPage() {
                 <div className="plan-desc">Billed monthly</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited PDFs per day</li>
-                  <li>✓ No watermark</li>
-                  <li>✓ Save & reuse signatures</li>
-                  <li>✓ Download history</li>
+                  <li>✓ No watermark ever</li>
+                  <li>✓ Save form drafts</li>
+                  <li>✓ 1 year document history</li>
+                  <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button className="plan-btn" onClick={() => {
                   localStorage.setItem(SUBSCRIPTION_KEY, 'true');
@@ -776,9 +764,10 @@ export default function FillPage() {
                 <div className="plan-desc">Billed $90/year</div>
                 <ul className="plan-perks">
                   <li>✓ Unlimited PDFs per day</li>
-                  <li>✓ No watermark</li>
-                  <li>✓ Save & reuse signatures</li>
-                  <li>✓ Download history</li>
+                  <li>✓ No watermark ever</li>
+                  <li>✓ Save form drafts</li>
+                  <li>✓ 1 year document history</li>
+                  <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button className="plan-btn plan-btn-featured" onClick={() => {
                   localStorage.setItem(SUBSCRIPTION_KEY, 'true');

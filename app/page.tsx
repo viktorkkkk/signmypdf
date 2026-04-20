@@ -252,16 +252,23 @@ export default function Home() {
     try {
       const activePlacements = placements.filter(p => selectedPages.includes(p.page));
 
-      // 100% client-side — no server, no size limits
-      // First DAILY_LIMIT PDFs per day are watermark-free; subsequent ones get watermark
-      const blob = await signPdfInBrowser({
+      // Generate CLEAN PDF for history storage
+      const cleanBlob = await signPdfInBrowser({
         pdfFile,
         signatureDataUrl: signatureData,
         typedName,
         signMode: signMode as 'draw' | 'type',
         placements: activePlacements,
-        addWatermark: willHaveWatermark,
+        addWatermark: false,
       });
+
+      // For download: add watermark if needed
+      let blob = cleanBlob;
+      if (willHaveWatermark) {
+        const { addWatermarkToBlob } = await import('./utils/watermark');
+        blob = await addWatermarkToBlob(cleanBlob);
+      }
+
       const url = URL.createObjectURL(blob);
       setSignedPdfUrl(url);
 
@@ -288,13 +295,11 @@ export default function Home() {
         if (willHaveWatermark) setTimeout(() => showToast(), 400);
       }
 
-      // Save to history
-      const reader = new FileReader();
-      reader.onload = () => {
-        saveToHistory(pdfFile!.name, blob.size, reader.result as string);
-        window.dispatchEvent(new Event('signmypdf:saved'));
-      };
-      reader.readAsDataURL(blob);
+      // Save CLEAN version to history
+      const { blobToDataUrl } = await import('./utils/watermark');
+      const cleanDataUrl = await blobToDataUrl(cleanBlob);
+      saveToHistory(pdfFile!.name, cleanBlob.size, cleanDataUrl, 'sign');
+      window.dispatchEvent(new Event('signmypdf:saved'));
 
       // Increment daily count
       incrementTodayCount();
@@ -656,14 +661,7 @@ export default function Home() {
       <div className="container">
         <FileHistory
           hasSubscription={hasSubscription}
-          onDownload={(item: HistoryItem, canDownload: boolean) => {
-            if (canDownload) {
-              downloadOrShare(item.dataUrl, `signed-${item.name}`);
-            } else {
-              setPendingDownload(item);
-              setShowPricing(true);
-            }
-          }}
+          onShowPricing={() => setShowPricing(true)}
         />
       </div>
 
@@ -723,8 +721,8 @@ export default function Home() {
                   <li>✓ Draw or type signature</li>
                   <li>✓ No registration needed</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ Save signatures</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ Download history</li>
+                  <li style={{ color: '#cbd5e1' }}>✗ Save signatures & drafts</li>
+                  <li style={{ color: '#cbd5e1' }}>✗ History: 7 days only</li>
                 </ul>
                 <button
                   className="plan-btn"
@@ -742,9 +740,10 @@ export default function Home() {
                 <ul className="plan-perks">
                   <li>✓ Unlimited PDF signing</li>
                   <li>✓ Save & reuse signatures</li>
-                  <li>✓ No watermark</li>
-                  <li>✓ Download history</li>
-                  <li>✓ Priority support</li>
+                  <li>✓ No watermark ever</li>
+                  <li>✓ Save form drafts</li>
+                  <li>✓ 1 year document history</li>
+                  <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button
                   className="plan-btn"
@@ -767,9 +766,10 @@ export default function Home() {
                 <ul className="plan-perks">
                   <li>✓ Unlimited PDF signing</li>
                   <li>✓ Save & reuse signatures</li>
-                  <li>✓ No watermark</li>
-                  <li>✓ Download history</li>
-                  <li>✓ Priority support</li>
+                  <li>✓ No watermark ever</li>
+                  <li>✓ Save form drafts</li>
+                  <li>✓ 1 year document history</li>
+                  <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button
                   className="plan-btn plan-btn-featured"

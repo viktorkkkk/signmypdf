@@ -4,6 +4,9 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Logo from '../components/Logo';
+import { getDrafts, deleteDraft, setPendingDraft, Draft } from '../utils/drafts';
+import { getHistory, HistoryItem } from '../components/FileHistory';
+import { addWatermarkToBlob, blobToDataUrl } from '../utils/watermark';
 
 const TOKEN_KEY = 'signmypdf_dashboard_token';
 
@@ -24,6 +27,9 @@ function DashboardContent() {
   const [subData, setSubData] = useState<SubData | null>(null);
   const [loading, setLoading] = useState(true);
   const [todayCount, setTodayCount] = useState(0);
+  const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [dlBusy, setDlBusy] = useState<string | null>(null);
 
   // Modals
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -33,6 +39,10 @@ function DashboardContent() {
     const today = new Date().toISOString().split('T')[0];
     const raw = localStorage.getItem(`signmypdf_count_${today}`);
     setTodayCount(raw ? parseInt(raw, 10) : 0);
+    setDrafts(getDrafts());
+    // History filtered by Pro TTL (dashboard is Pro-only)
+    const PRO_TTL = 365 * 24 * 60 * 60 * 1000;
+    setHistory(getHistory().filter(i => Date.now() - new Date(i.date).getTime() < PRO_TTL));
   }, []);
 
   useEffect(() => {
@@ -209,7 +219,7 @@ function DashboardContent() {
         </div>
 
         {/* Account block */}
-        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: 16 }}>
           <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
             <h2 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>Account</h2>
           </div>
@@ -219,13 +229,97 @@ function DashboardContent() {
                 <div style={{ fontSize: 13, color: '#64748b', marginBottom: 4 }}>Email</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: '#0f172a' }}>{subData.email}</div>
               </div>
-              <button
-                onClick={handleSignOut}
-                style={{ padding: '9px 18px', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
-              >
+              <button onClick={handleSignOut} style={{ padding: '9px 18px', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                 Sign out
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* Saved Drafts */}
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden', marginBottom: 16 }}>
+          <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>Saved Drafts</h2>
+            <Link href="/fill" style={{ fontSize: 13, color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>+ New</Link>
+          </div>
+          <div style={{ padding: '16px 24px' }}>
+            {drafts.length === 0 ? (
+              <p style={{ fontSize: 14, color: '#94a3b8', margin: 0, textAlign: 'center', padding: '12px 0' }}>
+                No saved drafts yet. Fill a PDF and save it as a draft to reuse it.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {drafts.map(d => (
+                  <div key={d.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.name}</div>
+                      <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>
+                        {d.fieldCount} field{d.fieldCount !== 1 ? 's' : ''} · {new Date(d.savedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      <button
+                        onClick={() => { setPendingDraft(d); window.location.href = '/fill'; }}
+                        style={{ padding: '6px 14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                      >Open</button>
+                      <button
+                        onClick={() => { deleteDraft(d.id); setDrafts(getDrafts()); }}
+                        style={{ padding: '6px 10px', background: '#fff', color: '#94a3b8', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 13, cursor: 'pointer' }}
+                      >✕</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Document History */}
+        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+          <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>Document History</h2>
+            <span style={{ fontSize: 12, color: '#94a3b8' }}>{history.length} file{history.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div style={{ padding: '16px 24px' }}>
+            {history.length === 0 ? (
+              <p style={{ fontSize: 14, color: '#94a3b8', margin: 0, textAlign: 'center', padding: '12px 0' }}>
+                Your downloaded PDFs will appear here.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 400, overflowY: 'auto' }}>
+                {history.map(item => (
+                  <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</div>
+                      <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2, display: 'flex', gap: 8, alignItems: 'center' }}>
+                        <span>{(item.size / 1024).toFixed(0)} KB</span>
+                        <span>·</span>
+                        <span>{new Date(item.date).toLocaleDateString()}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, background: item.type === 'sign' ? '#eff6ff' : '#f0fdf4', color: item.type === 'sign' ? '#2563eb' : '#16a34a', padding: '1px 6px', borderRadius: 4 }}>
+                          {item.type === 'sign' ? 'signed' : 'filled'}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      disabled={dlBusy === item.id}
+                      onClick={async () => {
+                        setDlBusy(item.id);
+                        try {
+                          // Pro users always get clean PDF
+                          const a = document.createElement('a');
+                          a.href = item.dataUrl;
+                          a.download = item.name;
+                          a.click();
+                        } finally { setDlBusy(null); }
+                      }}
+                      style={{ padding: '6px 14px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', flexShrink: 0, opacity: dlBusy === item.id ? 0.7 : 1 }}
+                    >
+                      {dlBusy === item.id ? '…' : 'Download'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
