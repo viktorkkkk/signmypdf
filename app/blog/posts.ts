@@ -4058,7 +4058,7 @@ Yes. Electronic signatures created with SignMyPDF are legally valid under the ES
 ];
 
 export function getAllPosts(): BlogPost[] {
-  return posts;
+  return [...posts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
