@@ -401,7 +401,7 @@ export default function FillPage() {
     <>
       <NavHeader activeTool="fill" />
 
-      <div className="container" style={{ minHeight: 'calc(100vh - 300px)', paddingBottom: 80 }}>
+      <div className="container" style={{ paddingTop: 48, minHeight: 'calc(100vh - 300px)', paddingBottom: 80 }}>
 
         {/* ── STEPS BAR (fill / preview / done) ── */}
         {step !== 'upload' && (
