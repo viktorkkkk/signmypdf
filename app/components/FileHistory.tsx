@@ -13,8 +13,9 @@ export interface HistoryItem {
 
 const STORAGE_KEY = 'signmypdf_history_v2';
 const MAX_ITEMS = 20;
-const FREE_TTL  = 7  * 24 * 60 * 60 * 1000;  // 7 days
-const PRO_TTL   = 365 * 24 * 60 * 60 * 1000; // 1 year
+const FREE_TTL       = 7  * 24 * 60 * 60 * 1000;  // 7 days
+const PRO_TTL        = 365 * 24 * 60 * 60 * 1000; // 1 year
+const FREE_DOWNLOAD_LIMIT = 2; // free users can download this many recent files
 
 export function saveToHistory(name: string, size: number, dataUrl: string, type: 'fill' | 'sign' = 'fill') {
   try {
@@ -138,8 +139,13 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
-        {list.map((item) => {
+        {list.map((item, index) => {
           const isDownloading = downloading === item.id;
+          // Free users: only first FREE_DOWNLOAD_LIMIT items are downloadable
+          const isLocked = !hasSubscription && index >= FREE_DOWNLOAD_LIMIT;
+          // Free unlocked items get watermark label
+          const showWatermarkLabel = !hasSubscription && !isLocked;
+
           return (
             <div
               key={item.id}
@@ -148,18 +154,19 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '12px 16px',
-                background: 'white',
+                background: isLocked ? '#fafafa' : 'white',
                 borderRadius: 8,
-                border: '1px solid #e2e8f0',
+                border: `1px solid ${isLocked ? '#e2e8f0' : '#e2e8f0'}`,
+                opacity: isLocked ? 0.7 : 1,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 20 }}>📄</span>
+                <span style={{ fontSize: 20 }}>{isLocked ? '🔒' : '📄'}</span>
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <div style={{
                     fontSize: 14,
                     fontWeight: 500,
-                    color: '#1e293b',
+                    color: isLocked ? '#94a3b8' : '#1e293b',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
@@ -178,31 +185,50 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
                     }}>
                       {item.type === 'sign' ? 'signed' : 'filled'}
                     </span>
-                    {!hasSubscription && (
+                    {showWatermarkLabel && (
                       <span style={{ color: '#d97706', fontSize: 10 }}>watermark</span>
                     )}
                   </div>
                 </div>
               </div>
 
-              <button
-                onClick={() => handleDownload(item)}
-                disabled={isDownloading}
-                style={{
-                  padding: '8px 16px',
-                  background: '#2563eb',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  cursor: isDownloading ? 'default' : 'pointer',
-                  whiteSpace: 'nowrap',
-                  opacity: isDownloading ? 0.7 : 1,
-                }}
-              >
-                {isDownloading ? '...' : 'Download'}
-              </button>
+              {isLocked ? (
+                <button
+                  onClick={onShowPricing}
+                  style={{
+                    padding: '8px 14px',
+                    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  PRO
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleDownload(item)}
+                  disabled={isDownloading}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    cursor: isDownloading ? 'default' : 'pointer',
+                    whiteSpace: 'nowrap',
+                    opacity: isDownloading ? 0.7 : 1,
+                  }}
+                >
+                  {isDownloading ? '...' : 'Download'}
+                </button>
+              )}
             </div>
           );
         })}
@@ -210,7 +236,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
 
       {!hasSubscription && (
         <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, textAlign: 'center' }}>
-          Free plan: downloads include watermark.{' '}
+          Free plan: {FREE_DOWNLOAD_LIMIT} most recent downloads available (with watermark).{' '}
           {onShowPricing && (
             <button
               onClick={onShowPricing}
@@ -223,7 +249,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
                 fontWeight: 500,
               }}
             >
-              Upgrade for clean downloads
+              Upgrade to Pro for unlimited clean downloads →
             </button>
           )}
         </p>
