@@ -306,6 +306,7 @@ function DashboardContent() {
                         setDlBusy(item.id);
                         try {
                           // Pro users always get clean PDF
+                          if (!item.dataUrl) return;
                           const a = document.createElement('a');
                           a.href = item.dataUrl;
                           a.download = item.name;

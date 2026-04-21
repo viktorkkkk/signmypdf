@@ -8,7 +8,7 @@ import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
 import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
-import { saveDraft as saveDraftUtil, consumePendingDraft } from '../utils/drafts';
+import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
 import { isProActive } from '../utils/subscription';
 import { SUBSCRIPTION_KEY as SUB_KEY } from '../constants';
@@ -178,6 +178,8 @@ export default function FillPage() {
   const [showReadyModal, setShowReadyModal]   = useState(false);
   const [pendingPdfUrl, setPendingPdfUrl]     = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [localDrafts, setLocalDrafts] = useState<import('../utils/drafts').Draft[]>([]);
+  const [dismissedDraftBanner, setDismissedDraftBanner] = useState(false);
 
   useEffect(() => {
     const sub = isProActive();
@@ -191,6 +193,10 @@ export default function FillPage() {
       setLoadedDraftName(pendingDraft.name);
       setShowDraftBanner(true);
     }
+
+    // Load localStorage drafts for banner
+    const drafts = getDrafts();
+    if (drafts.length > 0) setLocalDrafts(drafts);
   }, []);
 
   useEffect(() => {
@@ -337,7 +343,7 @@ export default function FillPage() {
       const res = await fetch(cleanUrl);
       const blob = await res.blob();
       const dataUrl = await blobToDataUrl(blob);
-      saveToHistory(filename, blob.size, dataUrl, 'fill');
+      saveToHistory(filename, blob.size, dataUrl, 'fill', willHaveWatermark);
       window.dispatchEvent(new Event('signmypdf:saved'));
     } catch {}
     if (willHaveWatermark) setTimeout(() => showToast(), 400);
@@ -445,6 +451,68 @@ export default function FillPage() {
           <div>
             <h1 className="hero-title">Fill PDF Form Online Free</h1>
             <p className="hero-sub">Click any field and type. No software, no registration.</p>
+
+            {step === 'upload' && localDrafts.length > 0 && !dismissedDraftBanner && (
+              <div style={{
+                background: '#eff6ff',
+                border: '1.5px solid #bfdbfe',
+                borderRadius: 12,
+                padding: '14px 20px',
+                marginBottom: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                flexWrap: 'wrap',
+              }}>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1e40af' }}>
+                    You have a saved draft
+                  </div>
+                  <div style={{ fontSize: 13, color: '#3b82f6', marginTop: 2 }}>
+                    {localDrafts[0].name} &middot; {localDrafts[0].fieldCount} fields
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    onClick={() => {
+                      setTextFields(localDrafts[0].fields);
+                      setDismissedDraftBanner(true);
+                    }}
+                    style={{
+                      padding: '8px 16px',
+                      background: '#2563eb',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 8,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Continue editing
+                  </button>
+                  <button
+                    onClick={() => {
+                      import('../utils/drafts').then(({ deleteDraft }) => deleteDraft(localDrafts[0].id));
+                      setLocalDrafts(prev => prev.slice(1));
+                      setDismissedDraftBanner(true);
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      background: 'transparent',
+                      color: '#64748b',
+                      border: '1.5px solid #cbd5e1',
+                      borderRadius: 8,
+                      fontSize: 13,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Discard
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />

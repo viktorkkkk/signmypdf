@@ -298,7 +298,7 @@ export default function Home() {
       // Save CLEAN version to history
       const { blobToDataUrl } = await import('./utils/watermark');
       const cleanDataUrl = await blobToDataUrl(cleanBlob);
-      saveToHistory(pdfFile!.name, cleanBlob.size, cleanDataUrl, 'sign');
+      saveToHistory(pdfFile!.name, cleanBlob.size, cleanDataUrl, 'sign', willHaveWatermark);
       window.dispatchEvent(new Event('signmypdf:saved'));
 
       // Increment daily count
