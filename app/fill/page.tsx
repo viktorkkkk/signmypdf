@@ -451,7 +451,7 @@ export default function FillPage() {
 
         {/* ── STEPS BAR (fill / preview / done) ── */}
         {step !== 'upload' && (
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20, gap: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20, gap: 0, maxWidth: 480, margin: '0 auto 20px' }}>
             {[
               { id: 'fill',    label: 'Edit',    n: 1 },
               { id: 'preview', label: 'Preview', n: 2 },
@@ -796,50 +796,18 @@ export default function FillPage() {
             <h2 className="done-title">PDF saved!</h2>
             <p className="done-sub">Your filled document has been saved to your device.</p>
 
-            <button className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: 16, marginBottom: 12, borderRadius: 16 }}
-              onClick={() => doSave(filledPdfUrl!)}>
-              ⬇️ Save again
-            </button>
+            <div className="done-btns">
+              <button className="btn-primary" style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
+                onClick={() => doSave(filledPdfUrl!)}>
+                ⬇️ Save again
+              </button>
 
-            {showDlHint && (
-              <div style={{
-                background: '#eff6ff',
-                border: '1px solid #bfdbfe',
-                borderRadius: 10,
-                padding: '11px 16px',
-                marginBottom: 12,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 10,
-                flexWrap: 'wrap',
-              }}>
-                <span style={{ fontSize: 13, color: '#1e40af' }}>
-                  ✓ File saved · Available for re-download for <strong>24h</strong>
-                </span>
-                <button
-                  onClick={() => setShowPricing(true)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#2563eb',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    padding: 0,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Upgrade to Pro to keep files forever →
-                </button>
-              </div>
-            )}
+              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
+                📄 Fill another document
+              </button>
+            </div>
 
-            <button className="btn-ghost" style={{ width: '100%', padding: '14px', fontSize: 15 }} onClick={reset}>
-              📄 Fill another document
-            </button>
-
-            <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <div style={{ marginTop: 16, textAlign: 'center' }}>
               <a href="/" style={{ fontSize: 13, color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}>
                 Need to sign a PDF instead? →
               </a>
@@ -848,6 +816,7 @@ export default function FillPage() {
             <FileHistory
               hasSubscription={hasSubscription}
               onShowPricing={() => setShowPricing(true)}
+              showDlHint={showDlHint}
             />
           </div>
         )}

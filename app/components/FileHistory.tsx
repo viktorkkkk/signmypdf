@@ -94,9 +94,10 @@ function freeTimeLeft(iso: string): string | null {
 interface Props {
   hasSubscription?: boolean;
   onShowPricing?: () => void;
+  showDlHint?: boolean; // show "available 24h" banner above list
 }
 
-export default function FileHistory({ hasSubscription = false, onShowPricing }: Props) {
+export default function FileHistory({ hasSubscription = false, onShowPricing, showDlHint = false }: Props) {
   const [list, setList]               = useState<HistoryItem[]>([]);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [showQuotaOffer, setShowQuotaOffer] = useState(false);
@@ -226,7 +227,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 16,
+            marginBottom: showDlHint && !hasSubscription ? 10 : 16,
           }}>
             <span style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>
               Recent documents
@@ -235,6 +236,33 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
               {list.length} file{list.length !== 1 ? 's' : ''}
             </span>
           </div>
+
+          {showDlHint && !hasSubscription && (
+            <div style={{
+              background: '#eff6ff',
+              border: '1px solid #bfdbfe',
+              borderRadius: 8,
+              padding: '10px 14px',
+              marginBottom: 12,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 8,
+              flexWrap: 'wrap',
+            }}>
+              <span style={{ fontSize: 13, color: '#1e40af' }}>
+                ✓ File saved &middot; Available for re-download for <strong>24h</strong>
+              </span>
+              {onShowPricing && (
+                <button
+                  onClick={onShowPricing}
+                  style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, whiteSpace: 'nowrap' }}
+                >
+                  Keep files forever →
+                </button>
+              )}
+            </div>
+          )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 320, overflowY: 'auto' }}>
             {list.map(item => {
