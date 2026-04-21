@@ -10,6 +10,8 @@ import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import { saveDraft as saveDraftUtil, consumePendingDraft } from '../utils/drafts';
 import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
+import { isProActive } from '../utils/subscription';
+import { SUBSCRIPTION_KEY as SUB_KEY } from '../constants';
 
 type Step = 'upload' | 'fill' | 'preview' | 'done';
 
@@ -148,7 +150,7 @@ function FilledPDFPreview({ url }: { url: string }) {
 }
 
 const DAILY_LIMIT      = 2;
-const SUBSCRIPTION_KEY = 'signmypdf_subscribed';
+const SUBSCRIPTION_KEY = SUB_KEY;
 
 function getTodayCount(): number {
   const key = `signmypdf_count_${new Date().toISOString().split('T')[0]}`;
@@ -157,9 +159,6 @@ function getTodayCount(): number {
 function incrementTodayCount() {
   const key = `signmypdf_count_${new Date().toISOString().split('T')[0]}`;
   localStorage.setItem(key, String(getTodayCount() + 1));
-}
-function isSubscribed(): boolean {
-  return localStorage.getItem(SUBSCRIPTION_KEY) === 'true';
 }
 
 export default function FillPage() {
@@ -181,8 +180,7 @@ export default function FillPage() {
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const isDevMode = typeof window !== 'undefined' && window.location.search.includes('dev=1');
-    const sub = isSubscribed() || isDevMode;
+    const sub = isProActive();
     setHasSubscription(sub);
     setTodayCount(getTodayCount());
 
