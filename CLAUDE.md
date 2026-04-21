@@ -166,7 +166,8 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ## Blog Publication Plan (60 articles)
 
-**Rule**: 2 articles per day. One about SIGN (links to `/`), one about FILL (links to `/fill`).
+**Rule**: Strictly 2 articles per day — exactly 1 SIGN + 1 FILL. Never more than 2 per day. Never 2 articles of the same type on the same day.
+**Before publishing**: always check existing dates in posts.ts to confirm the target date has 0 articles. Only then publish.
 **Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
 **After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
 
