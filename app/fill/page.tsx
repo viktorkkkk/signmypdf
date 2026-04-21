@@ -237,6 +237,14 @@ export default function FillPage() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [step]);
 
+  // Show download hint once when done screen appears (free users only)
+  useEffect(() => {
+    if (step === 'done' && !hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
+      setShowDlHint(true);
+      localStorage.setItem('signmypdf_dl_hint_shown', '1');
+    }
+  }, [step, hasSubscription]);
+
   // Lock viewport zoom for the entire fill page — prevents iOS Safari
   // from zooming on input focus, canvas resize, or any layout shift
   useEffect(() => {
@@ -789,13 +797,7 @@ export default function FillPage() {
             <p className="done-sub">Your filled document has been saved to your device.</p>
 
             <button className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: 16, marginBottom: 12, borderRadius: 16 }}
-              onClick={() => {
-                doSave(filledPdfUrl!);
-                if (!hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
-                  localStorage.setItem('signmypdf_dl_hint_shown', '1');
-                  setShowDlHint(true);
-                }
-              }}>
+              onClick={() => doSave(filledPdfUrl!)}>
               ⬇️ Save again
             </button>
 
@@ -804,17 +806,20 @@ export default function FillPage() {
                 background: '#eff6ff',
                 border: '1px solid #bfdbfe',
                 borderRadius: 10,
-                padding: '12px 16px',
+                padding: '11px 16px',
                 marginBottom: 12,
-                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 10,
+                flexWrap: 'wrap',
               }}>
-                <div style={{ fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
-                  This file will be available for re-download for <strong>24 hours</strong>.
-                </div>
+                <span style={{ fontSize: 13, color: '#1e40af' }}>
+                  ✓ File saved · Available for re-download for <strong>24h</strong>
+                </span>
                 <button
                   onClick={() => setShowPricing(true)}
                   style={{
-                    marginTop: 6,
                     background: 'none',
                     border: 'none',
                     color: '#2563eb',
@@ -822,9 +827,10 @@ export default function FillPage() {
                     fontWeight: 600,
                     cursor: 'pointer',
                     padding: 0,
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  Upgrade to keep your files forever →
+                  Upgrade to Pro to keep files forever →
                 </button>
               </div>
             )}

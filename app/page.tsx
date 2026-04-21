@@ -379,6 +379,14 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [step]);
 
+  // Show download hint once when done screen appears (free users only)
+  useEffect(() => {
+    if (step === 'done' && !hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
+      setShowDlHint(true);
+      localStorage.setItem('signmypdf_dl_hint_shown', '1');
+    }
+  }, [step, hasSubscription]);
+
   const stepIndex = STEPS.findIndex(s => s.id === step);
   const previewSig = signMode === 'draw' ? signatureData : typedSigDataUrl;
 
@@ -660,10 +668,6 @@ export default function Home() {
                 await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
                 trackEvent('pdf_downloaded', { plan: hasSubscription ? 'pro' : 'free', watermark: willHaveWatermark, method: 'button' });
                 if (willHaveWatermark) setTimeout(() => showToast(), 400);
-                if (!hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
-                  localStorage.setItem('signmypdf_dl_hint_shown', '1');
-                  setShowDlHint(true);
-                }
               }}
             >
               ⬇️  Save Signed PDF
@@ -674,17 +678,20 @@ export default function Home() {
                 background: '#eff6ff',
                 border: '1px solid #bfdbfe',
                 borderRadius: 10,
-                padding: '12px 16px',
+                padding: '11px 16px',
                 marginBottom: 12,
-                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 10,
+                flexWrap: 'wrap',
               }}>
-                <div style={{ fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
-                  This file will be available for re-download for <strong>24 hours</strong>.
-                </div>
+                <span style={{ fontSize: 13, color: '#1e40af' }}>
+                  ✓ File saved · Available for re-download for <strong>24h</strong>
+                </span>
                 <button
                   onClick={() => setShowPricing(true)}
                   style={{
-                    marginTop: 6,
                     background: 'none',
                     border: 'none',
                     color: '#2563eb',
@@ -692,9 +699,10 @@ export default function Home() {
                     fontWeight: 600,
                     cursor: 'pointer',
                     padding: 0,
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  Upgrade to keep your files forever →
+                  Upgrade to Pro to keep files forever →
                 </button>
               </div>
             )}
