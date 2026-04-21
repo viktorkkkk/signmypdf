@@ -172,16 +172,31 @@ export default function Home() {
       return;
     }
     const canvas = document.createElement('canvas');
-    canvas.width = 400;
-    canvas.height = 100;
+    const maxW = 600;
+    const H = 100;
+    canvas.height = H;
     const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = 'transparent';
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = `italic 48px ${selectedFont}`;
+
+    // Auto-scale font so text always fits
+    let fontSize = 48;
+    ctx.font = `italic ${fontSize}px ${selectedFont}`;
+    let textW = ctx.measureText(typedName).width;
+    const padding = 24;
+    while (textW > maxW - padding && fontSize > 18) {
+      fontSize -= 2;
+      ctx.font = `italic ${fontSize}px ${selectedFont}`;
+      textW = ctx.measureText(typedName).width;
+    }
+
+    // Canvas width = text width + padding (no clipping)
+    canvas.width = Math.min(maxW, textW + padding);
+
+    ctx.clearRect(0, 0, canvas.width, H);
+    ctx.font = `italic ${fontSize}px ${selectedFont}`;
     ctx.fillStyle = '#1e3a8a';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(typedName, canvas.width / 2, canvas.height / 2);
+    ctx.fillText(typedName, canvas.width / 2, H / 2);
     setTypedSigDataUrl(canvas.toDataURL('image/png'));
   }, [typedName, selectedFont]);
 

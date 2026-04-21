@@ -3,21 +3,34 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 // Render text to PNG image (supports any Unicode including Cyrillic)
 function renderTextToDataUrl(text: string, width: number, height: number): string {
   const canvas = document.createElement('canvas');
-  canvas.width = Math.max(400, Math.round(width * 2));
-  canvas.height = Math.max(100, Math.round(height * 2));
+  const H = Math.max(100, Math.round(height * 2));
+  const maxW = Math.max(600, Math.round(width * 2));
+  canvas.height = H;
+
   const ctx = canvas.getContext('2d')!;
-  
-  // Transparent background
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw text with nice font
-  const fontSize = Math.min(canvas.height * 0.6, canvas.width / text.length * 1.5);
-  ctx.font = `italic ${fontSize}px "Brush Script MT", "Dancing Script", "Pacifico", cursive`;
-  ctx.fillStyle = '#1e3a8a'; // Dark blue
+  const fontFamily = '"Brush Script MT", "Dancing Script", "Pacifico", cursive';
+
+  // Auto-scale font so text always fits within maxW
+  let fontSize = Math.round(H * 0.6);
+  ctx.font = `italic ${fontSize}px ${fontFamily}`;
+  let textW = ctx.measureText(text).width;
+  const padding = 24;
+  while (textW > maxW - padding && fontSize > 16) {
+    fontSize -= 2;
+    ctx.font = `italic ${fontSize}px ${fontFamily}`;
+    textW = ctx.measureText(text).width;
+  }
+
+  // Set canvas width exactly to text width (no clipping)
+  canvas.width = Math.min(maxW, textW + padding);
+
+  ctx.clearRect(0, 0, canvas.width, H);
+  ctx.font = `italic ${fontSize}px ${fontFamily}`;
+  ctx.fillStyle = '#1e3a8a';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-  
+  ctx.fillText(text, canvas.width / 2, H / 2);
+
   return canvas.toDataURL('image/png');
 }
 
