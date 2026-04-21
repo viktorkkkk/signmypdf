@@ -282,8 +282,11 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
                         }}>
                           {item.type === 'sign' ? 'signed' : 'filled'}
                         </span>
-                        {timeLeft && (
-                          <span style={{ color: '#6b7280', fontSize: 11 }}>{timeLeft}</span>
+                        {!locked && !hasSubscription && (
+                          <span style={{ color: '#16a34a', fontSize: 11, fontWeight: 500 }}>Available for 24 hours</span>
+                        )}
+                        {locked && !noData && (
+                          <span style={{ color: '#ef4444', fontSize: 11, fontWeight: 500 }}>Expired</span>
                         )}
                         {noData && (
                           <span style={{ color: '#d97706', fontSize: 11 }}>storage full</span>
@@ -307,7 +310,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing }: 
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {'\uD83D\uDD12'} Pro &rarr;
+                      Unlock with Pro
                     </button>
                   ) : (
                     <button

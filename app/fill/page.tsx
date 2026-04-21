@@ -10,8 +10,8 @@ import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
-import { isProActive } from '../utils/subscription';
-import { SUBSCRIPTION_KEY as SUB_KEY } from '../constants';
+import { isProActive, activateSubscription } from '../utils/subscription';
+import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN, PADDLE_PRICE_MONTHLY, PADDLE_PRICE_ANNUAL } from '../constants';
 
 type Step = 'upload' | 'fill' | 'preview' | 'done';
 
@@ -152,6 +152,8 @@ function FilledPDFPreview({ url }: { url: string }) {
 const DAILY_LIMIT      = 2;
 const SUBSCRIPTION_KEY = SUB_KEY;
 
+// Paddle global already declared in app/page.tsx
+
 function getTodayCount(): number {
   const key = `signmypdf_count_${new Date().toISOString().split('T')[0]}`;
   return parseInt(localStorage.getItem(key) || '0', 10);
@@ -173,6 +175,7 @@ export default function FillPage() {
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
   const [draftSaved, setDraftSaved]           = useState(false); // toast after save
   const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const [showDlHint, setShowDlHint]           = useState(false);
   const [loadedDraftName, setLoadedDraftName] = useState<string | null>(null);
   // "PDF ready" modal
   const [showReadyModal, setShowReadyModal]   = useState(false);
@@ -197,6 +200,37 @@ export default function FillPage() {
     // Load localStorage drafts for banner
     const drafts = getDrafts();
     if (drafts.length > 0) setLocalDrafts(drafts);
+
+    // Load Paddle.js
+    if (!document.getElementById('paddle-js')) {
+      const script = document.createElement('script');
+      script.id = 'paddle-js';
+      script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+      script.onload = () => {
+        window.Paddle?.Initialize({
+          token: PADDLE_CLIENT_TOKEN,
+          eventCallback(e) {
+            if (e.name === 'checkout.completed') {
+              activateSubscription();
+              setHasSubscription(true);
+              setShowPricing(false);
+            }
+          },
+        });
+      };
+      document.head.appendChild(script);
+    } else if (window.Paddle) {
+      window.Paddle.Initialize({
+        token: PADDLE_CLIENT_TOKEN,
+        eventCallback(e) {
+          if (e.name === 'checkout.completed') {
+            activateSubscription();
+            setHasSubscription(true);
+            setShowPricing(false);
+          }
+        },
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -755,9 +789,45 @@ export default function FillPage() {
             <p className="done-sub">Your filled document has been saved to your device.</p>
 
             <button className="btn-primary" style={{ width: '100%', padding: '16px', fontSize: 16, marginBottom: 12, borderRadius: 16 }}
-              onClick={() => doSave(filledPdfUrl!)}>
+              onClick={() => {
+                doSave(filledPdfUrl!);
+                if (!hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
+                  localStorage.setItem('signmypdf_dl_hint_shown', '1');
+                  setShowDlHint(true);
+                }
+              }}>
               ⬇️ Save again
             </button>
+
+            {showDlHint && (
+              <div style={{
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                borderRadius: 10,
+                padding: '12px 16px',
+                marginBottom: 12,
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
+                  This file will be available for re-download for <strong>24 hours</strong>.
+                </div>
+                <button
+                  onClick={() => setShowPricing(true)}
+                  style={{
+                    marginTop: 6,
+                    background: 'none',
+                    border: 'none',
+                    color: '#2563eb',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  Upgrade to keep your files forever →
+                </button>
+              </div>
+            )}
 
             <button className="btn-ghost" style={{ width: '100%', padding: '14px', fontSize: 15 }} onClick={reset}>
               📄 Fill another document
@@ -801,6 +871,7 @@ export default function FillPage() {
                   <li>✓ 2 PDFs/day (no watermark)</li>
                   <li>✓ Sign & fill PDFs</li>
                   <li>✓ No registration needed</li>
+                  <li>✓ File history (24 hours)</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
                 </ul>
                 <button className="plan-btn" onClick={() => setShowPricing(false)}>Current plan</button>
@@ -813,15 +884,10 @@ export default function FillPage() {
                   <li>✓ Unlimited PDFs per day</li>
                   <li>✓ No watermark ever</li>
                   <li>✓ Save form drafts</li>
-                  <li>✓ 1 year document history</li>
+                  <li>✓ Permanent file history (1 year)</li>
                   <li>✓ Sign + Fill in one flow</li>
                 </ul>
-                <button className="plan-btn" onClick={() => {
-                  localStorage.setItem(SUBSCRIPTION_KEY, 'true');
-                  setHasSubscription(true);
-                  setShowPricing(false);
-                  alert('✅ Premium activated! (Demo mode)');
-                }}>Get Monthly</button>
+                <button className="plan-btn" onClick={() => window.Paddle?.Checkout.open({ items: [{ priceId: PADDLE_PRICE_MONTHLY, quantity: 1 }] })}>Get Monthly</button>
               </div>
               <div className="plan-card plan-featured" style={{ transform: 'scale(1.04)', zIndex: 1 }}>
                 <div className="plan-badge">Best Value — Save 17%</div>
@@ -832,15 +898,10 @@ export default function FillPage() {
                   <li>✓ Unlimited PDFs per day</li>
                   <li>✓ No watermark ever</li>
                   <li>✓ Save form drafts</li>
-                  <li>✓ 1 year document history</li>
+                  <li>✓ Permanent file history (1 year)</li>
                   <li>✓ Sign + Fill in one flow</li>
                 </ul>
-                <button className="plan-btn plan-btn-featured" onClick={() => {
-                  localStorage.setItem(SUBSCRIPTION_KEY, 'true');
-                  setHasSubscription(true);
-                  setShowPricing(false);
-                  alert('✅ Premium activated! (Demo mode)');
-                }}>Get Annual Plan</button>
+                <button className="plan-btn plan-btn-featured" onClick={() => window.Paddle?.Checkout.open({ items: [{ priceId: PADDLE_PRICE_ANNUAL, quantity: 1 }] })}>Get Annual Plan</button>
               </div>
             </div>
             <p className="pricing-fine">Cancel anytime · Secure payment · No hidden fees</p>

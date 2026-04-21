@@ -70,6 +70,7 @@ export default function Home() {
   const [activatingPro, setActivatingPro] = useState(false);
   const [activatingEmail, setActivatingEmail] = useState('');
   const [showFillBanner, setShowFillBanner] = useState(false);
+  const [showDlHint, setShowDlHint] = useState(false);
 
   // Check subscription and count on mount
   useEffect(() => {
@@ -659,10 +660,44 @@ export default function Home() {
                 await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
                 trackEvent('pdf_downloaded', { plan: hasSubscription ? 'pro' : 'free', watermark: willHaveWatermark, method: 'button' });
                 if (willHaveWatermark) setTimeout(() => showToast(), 400);
+                if (!hasSubscription && !localStorage.getItem('signmypdf_dl_hint_shown')) {
+                  localStorage.setItem('signmypdf_dl_hint_shown', '1');
+                  setShowDlHint(true);
+                }
               }}
             >
               ⬇️  Save Signed PDF
             </button>
+
+            {showDlHint && (
+              <div style={{
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                borderRadius: 10,
+                padding: '12px 16px',
+                marginBottom: 12,
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 13, color: '#1e40af', lineHeight: 1.5 }}>
+                  This file will be available for re-download for <strong>24 hours</strong>.
+                </div>
+                <button
+                  onClick={() => setShowPricing(true)}
+                  style={{
+                    marginTop: 6,
+                    background: 'none',
+                    border: 'none',
+                    color: '#2563eb',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  Upgrade to keep your files forever →
+                </button>
+              </div>
+            )}
 
             <button className="btn-ghost" style={{ width: '100%', padding: '14px', fontSize: 15 }} onClick={reset}>
               📄 Sign another document
@@ -735,9 +770,9 @@ export default function Home() {
                   <li>✓ 2 PDF signings/day (no watermark)</li>
                   <li>✓ Draw or type signature</li>
                   <li>✓ No registration needed</li>
+                  <li>✓ File history (24 hours)</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
                   <li style={{ color: '#cbd5e1' }}>✗ Save signatures & drafts</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ History: 7 days only</li>
                 </ul>
                 <button
                   className="plan-btn"
@@ -757,7 +792,7 @@ export default function Home() {
                   <li>✓ Save & reuse signatures</li>
                   <li>✓ No watermark ever</li>
                   <li>✓ Save form drafts</li>
-                  <li>✓ 1 year document history</li>
+                  <li>✓ Permanent file history (1 year)</li>
                   <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button
@@ -783,7 +818,7 @@ export default function Home() {
                   <li>✓ Save & reuse signatures</li>
                   <li>✓ No watermark ever</li>
                   <li>✓ Save form drafts</li>
-                  <li>✓ 1 year document history</li>
+                  <li>✓ Permanent file history (1 year)</li>
                   <li>✓ Sign + Fill in one flow</li>
                 </ul>
                 <button
