@@ -48,6 +48,8 @@ const URLS = [
   BASE_URL + '/blog/freelancers-sign-contracts-free',
   BASE_URL + '/blog/electronic-signature-laws-by-state',
   BASE_URL + '/blog/sign-employment-offer-letter-online',
+  BASE_URL + '/blog/hr-teams-collect-signatures',
+  BASE_URL + '/blog/esign-act-explained',
 ];
 
 // --- JWT helpers (no dependencies) ---
