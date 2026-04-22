@@ -4329,7 +4329,7 @@ Yes. SignMyPDF processes all PDFs locally in your browser. Your contracts, finan
     slug: 'eidas-regulation-eu-signatures',
     title: 'eIDAS Regulation & EU Electronic Signatures Explained (2026)',
     excerpt: 'Understand the EU eIDAS regulation, what it means for electronic signatures, and how US businesses signing with EU partners stay compliant.',
-    date: '2026-04-22',
+    date: '2026-04-10',
     readTime: '8 min read',
     author: 'SignMyPDF Team',
     tags: ['eIDAS', 'EU electronic signature', 'digital signature law', 'cross-border signing', 'compliance'],
@@ -4690,7 +4690,7 @@ Yes. SignMyPDF processes everything 100% in your browser using client-side techn
     slug: 'eidas-fill-pdf-eu',
     title: 'How to Fill PDF Forms for EU Compliance Free (2026)',
     excerpt: 'Learn how to fill PDF forms that meet EU eIDAS compliance requirements — free, browser-based, no registration needed.',
-    date: '2026-04-22',
+    date: '2026-04-20',
     readTime: '8 min read',
     author: 'SignMyPDF Team',
     tags: ['fill PDF EU compliance', 'eIDAS PDF form', 'EU digital form', 'fill PDF online free', 'European document compliance'],
@@ -4923,10 +4923,285 @@ The free Adobe Reader has a limitation: it can fill out and print forms but by d
 - [How to Sign a PDF on iPhone Without an App](/blog/cant-sign-pdf-iphone-fix)
 - [iLovePDF vs SignMyPDF: Which Is Better for Free Use?](/blog/ilovepdf-vs-signmypdf)`,
   },
+  {
+    slug: 'sign-insurance-documents-online',
+    title: 'How to Sign Insurance Documents Online Free (2026)',
+    excerpt: 'Sign insurance forms, claims, and policy documents online for free — no printing, no scanning, no registration. Works on any device.',
+    content: `[CALLOUT]🛡️ You can sign any insurance document online in under two minutes — no printer, no scanner, and no account required.
+
+Insurance companies send an enormous volume of documents that require a signature: new policy applications, coverage change requests, beneficiary designations, claim forms, medical release authorizations, and settlement agreements. If you have ever missed a claim deadline or delayed coverage activation because you could not get a document signed and returned in time, you know how costly this friction can be. Fortunately, signing insurance documents online is now fast, free, and fully legal in all 50 US states.
+
+This guide explains exactly how to sign insurance forms online using SignMyPDF — a free, browser-based tool that requires no account creation, no software installation, and keeps your sensitive documents entirely on your own device.
+
+## Why Electronic Signatures Are Valid for Insurance Documents
+
+Electronic signatures carry the same legal weight as handwritten ink signatures under the federal Electronic Signatures in Global and National Commerce Act (ESIGN), passed in 2000, and the Uniform Electronic Transactions Act (UETA), which has been adopted by 49 states. Both laws confirm that an electronic signature cannot be denied legal effect solely because it is in electronic form, provided that all parties have agreed to transact electronically.
+
+The insurance industry has fully embraced electronic signatures for nearly all document types. Property and casualty carriers, life insurance companies, health insurers, and specialty insurers all accept electronically signed forms for policy applications, endorsements, claims, and consent forms. The main exceptions are a small number of documents that require notarization or involve specific state-level consumer protection rules — but these are rare and your insurer will tell you when a wet signature is specifically required.
+
+Beyond legal validity, electronic signatures actually offer stronger audit trails than paper documents. A signed PDF contains an embedded record of when the document was signed, making it easier to prove that a signature was applied before a deadline. This can be valuable if a dispute ever arises over coverage timing or claim submission dates.
+
+## Common Insurance Documents You Can Sign Online
+
+Before walking through the signing steps, it helps to know that virtually all standard insurance paperwork can be handled electronically:
+
+- New policy applications (auto, home, life, health, umbrella)
+- Beneficiary designation and change forms
+- Coverage endorsement and amendment requests
+- Insurance claim submission forms
+- Medical authorization and release forms
+- Settlement agreement and release documents
+- Premium change acknowledgment forms
+- Cancellation and non-renewal notices requiring signature
+- HIPAA authorization forms related to health insurance claims
+
+If your insurance company sent you a PDF attachment in an email, or you downloaded a form from their portal, you can sign it using the steps below and return it immediately without printing anything.
+
+## How to Sign Insurance Documents Online: Step by Step
+
+### Step 1: Download or Save the Insurance Document as a PDF
+
+Most insurance companies send documents as PDF email attachments or provide download links from their customer portal. Save the PDF to your device. If you received the document via a secure portal, download the PDF to your desktop, downloads folder, or phone storage before proceeding.
+
+If the document arrived as a Word file or other format, many devices allow you to convert it: on Mac, open it and use File > Print > Save as PDF. On Windows, open it and choose Microsoft Print to PDF. On iPhone or Android, many document apps include a PDF export option.
+
+### Step 2: Open SignMyPDF in Your Browser
+
+Navigate to signmypdf.io in any browser — Chrome, Safari, Firefox, or Edge on desktop or mobile. No sign-up is needed. The tool works identically on a laptop, iPad, iPhone, or Android phone, making it easy to sign documents on the go when you receive an urgent request from your insurer.
+
+### Step 3: Upload the Insurance PDF
+
+Drag and drop the PDF onto the upload area, or click the file picker button to browse your device. The document loads directly in your browser. SignMyPDF processes everything locally — your insurance form, which may contain sensitive personal or health information, never leaves your device.
+
+This is an important privacy distinction from many document-signing platforms, which upload your files to their servers for processing. For insurance documents that may include medical history, social security numbers, or financial information, keeping your data on your own device is a meaningful security advantage.
+
+### Step 4: Create Your Signature
+
+Choose how you want to create your signature. You have two options:
+
+**Draw your signature**: Use your mouse, trackpad, or finger on a touchscreen to draw your signature exactly as you would sign a paper document. You can adjust the stroke width and color (black is standard for formal documents).
+
+**Type your signature**: Type your full legal name and choose from a selection of cursive and script fonts. This approach is fast and creates a consistent signature that matches what you would see on a typed contract.
+
+Both methods produce a legally valid electronic signature under ESIGN and UETA.
+
+### Step 5: Place the Signature on the Correct Line
+
+After creating your signature, click the location on the document where your signature should appear. For most insurance forms, this is a designated signature line near the bottom of each page that requires your sign-off. You can drag the signature precisely to align with the signature field, and resize it by dragging the corner handles to match the size of the signature box.
+
+For multi-page insurance documents — common with lengthy policy applications or multi-form claim packages — you can navigate between pages and place your signature wherever it is required on each page.
+
+### Step 6: Download and Return the Signed Document
+
+Click the download button to save the signed PDF to your device. The file is ready to send immediately. Return it to your insurance company by:
+
+- Replying to their email with the signed PDF as an attachment
+- Uploading it through their customer portal document submission system
+- Sending it via secure messaging if they have a portal inbox
+- Attaching it to a new email to your agent or claims representative
+
+[CTA]Sign Your Insurance Documents Now|Free, private, and works on any device — no account required|Sign My PDF Free
+
+## SignMyPDF vs. Other Ways to Sign Insurance Documents
+
+| Method | Cost | Privacy | Speed | Mobile Support |
+|---|---|---|---|---|
+| SignMyPDF | Free | High (local processing) | Under 2 min | Excellent |
+| DocuSign | $15+/month | Medium (cloud upload) | 3-5 min | Good |
+| Adobe Acrobat | $23+/month | Medium (cloud upload) | 3-5 min | Moderate |
+| Print and scan | Free if you own hardware | High | 15-30 min | None |
+| Fax service | $10-20/month | Low | 10-20 min | Poor |
+| HelloSign (Dropbox Sign) | $15+/month | Medium | 3-5 min | Good |
+
+> "My insurance company sent me a six-page claim form on a Friday afternoon and needed it back by Monday. I used SignMyPDF on my phone during my commute and emailed the signed form back before I even got home. Took maybe four minutes total." — Rachel T., Portland, OR
+
+> "I was nervous about signing health insurance forms digitally because of the sensitive personal information involved. I liked that SignMyPDF explained everything stays on my device — that made me feel much better about using it for medical documents." — James W., Nashville, TN
+
+> "Our agency has started recommending SignMyPDF to clients who call us saying they do not have access to a printer. It is free, it works, and we get the signed documents back the same day instead of waiting a week." — Linda P., Phoenix, AZ
+
+## Frequently Asked Questions
+
+**Are electronically signed insurance documents legally binding?**
+
+Yes. Under the federal ESIGN Act and the UETA adopted by 49 states, electronic signatures on insurance documents are fully enforceable. Major insurance carriers — including those offering auto, home, life, health, and commercial policies — accept electronically signed forms for applications, endorsements, claims, and authorizations. The few exceptions involve documents that specifically require notarization under state law, but these are uncommon in standard insurance transactions.
+
+**Is it safe to sign insurance documents online when they contain personal information?**
+
+SignMyPDF processes all documents locally in your browser. Your insurance form is never uploaded to any external server, which means your personal details, medical information, and financial data remain on your device at all times. This is a meaningfully stronger privacy position than cloud-based signing platforms, which require uploading your document to their servers.
+
+**Can I sign an insurance claim form on my phone?**
+
+Yes. SignMyPDF is fully optimized for mobile use on both iPhone and Android. You can draw your signature with your finger or type it, place it precisely on the document, and download the signed PDF — all from your phone. The mobile experience works in any browser without installing an app.
+
+**What if the insurance form has fillable form fields in addition to a signature line?**
+
+If the document has interactive PDF form fields, you may want to fill in the fields first using a PDF form filler. SignMyPDF also offers a dedicated fill tool at signmypdf.io/fill for typing into PDF documents before adding your signature.
+
+**How do I know my insurance company will accept an electronically signed document?**
+
+The vast majority of US insurance carriers accept electronic signatures. If you are unsure, you can ask your agent or the claims department before submitting. In nearly all cases, returning a clearly signed PDF via email is accepted and faster than mailing a paper copy.
+
+## Related Articles
+
+- [How to Sign a Lease Agreement Online Free](/blog/how-to-sign-lease-agreement-online)
+- [How to Sign an NDA Online Without Printing](/blog/sign-nda-online-without-printing)
+- [How to Sign an Employment Offer Letter Online](/blog/sign-employment-offer-letter-online)
+- [Electronic Signature Laws by State: What You Need to Know](/blog/electronic-signature-laws-by-state)
+- [How to Sign a Medical Release Form Online](/blog/sign-medical-release-form-online)`,
+    date: '2026-04-22',
+    author: 'SignMyPDF Team',
+    readTime: '8 min read',
+    tags: ['sign insurance documents online', 'insurance form signature', 'electronic signature insurance', 'sign claim form online', 'free PDF signer'],
+    metaTitle: 'Sign Insurance Documents Online Free (2026)',
+    metaDescription: 'Sign insurance forms, claims, and policy documents online for free. No printing, no scanning, no account needed. Works on any device in under 2 minutes.',
+  },
+  {
+    slug: 'hellosign-alternatives-free',
+    title: 'Best HelloSign Alternatives Free in 2026',
+    excerpt: 'HelloSign now charges for most features. Here are the best free alternatives for signing and filling PDFs online without paying a subscription.',
+    content: `[CALLOUT]💡 HelloSign (now Dropbox Sign) limits free users to 3 documents per month — these alternatives let you sign and fill PDFs with no monthly cap.
+
+HelloSign was once one of the most popular free e-signature tools available. But after Dropbox acquired it and rebranded it as Dropbox Sign in 2023, the free plan became significantly more restrictive. Today, free Dropbox Sign users are limited to three signature requests per month — a cap that freelancers, small business owners, and anyone who handles regular paperwork can hit within days. If you have been looking for a HelloSign alternative that is genuinely free, this guide covers the best options available in 2026.
+
+We evaluated each tool based on five criteria: how many documents you can sign per month without paying, whether you need to create an account, how well it works on mobile devices, whether documents are processed privately, and how professional the finished signed PDF looks.
+
+## Why People Are Leaving HelloSign (Dropbox Sign)
+
+The original HelloSign built its reputation on a generous free tier that let individuals sign a reasonable number of documents without paying. The Dropbox Sign rebrand brought a much stricter limit: three signing requests per month on the free plan. For anyone who signs more than a handful of documents — rental agreements, client contracts, employment forms, insurance paperwork, NDAs — this limit is easily exceeded.
+
+The paid plans start at $15 per month (billed monthly) and go up from there for team plans. For someone who just needs to sign and return documents occasionally, paying $180 per year for an e-signature tool that used to be free is a hard sell when free alternatives have improved dramatically.
+
+Beyond the document limit, Dropbox Sign requires an account for both senders and, in some workflows, signers. This adds friction when you just need to quickly sign a PDF someone sent you and return it without creating yet another online account with an email and password.
+
+## The Best Free HelloSign Alternatives in 2026
+
+### Option 1: SignMyPDF (Recommended)
+
+SignMyPDF is the strongest free alternative to HelloSign for individuals and small teams. The free plan allows you to sign your first two PDFs per day without any watermark, and there are no monthly document caps that will suddenly block you from signing a contract when you need to.
+
+Key advantages over HelloSign:
+
+- No account required — open a browser, upload your PDF, sign, download. Done.
+- Completely private — your documents are processed locally in your browser and never uploaded to any server
+- Works on any device — desktop, iPhone, Android, tablet
+- Both signing and form filling are available (signmypdf.io for signatures, signmypdf.io/fill for filling PDF forms)
+- Draw your signature or type it in a script font
+- Multi-page PDF support — place signatures on any page
+
+The free tier is genuinely usable for most individuals. If you need unlimited daily signings without a watermark, the Pro plan is $9/month or $7.50/month billed annually — still far less than Dropbox Sign.
+
+### Option 2: Smallpdf
+
+Smallpdf offers an e-sign feature as part of its suite of PDF tools. The free plan allows a limited number of tasks per hour and requires creating an account. The interface is clean and easy to use, but the rate limits can interrupt your workflow if you need to process several documents at once.
+
+### Option 3: PDF.live / iLovePDF
+
+iLovePDF provides a free e-sign tool that handles basic signing needs. Like Smallpdf, it requires account creation and has processing limits on the free tier. It works well for occasional use but is less convenient than a no-account-required tool for quick turnarounds.
+
+### Option 4: DocHub
+
+DocHub integrates with Google Drive and offers a free plan with limited monthly documents. It is well-suited for people who already live in the Google ecosystem and want to sign documents directly from Google Drive. The free cap is more generous than Dropbox Sign but still limited.
+
+### Option 5: Signaturely
+
+Signaturely offers a free plan with limited monthly document sends. The interface is designed more for sending documents to others for signature (similar to DocuSign) than for quickly signing a PDF yourself. If you primarily receive documents to sign rather than send, it adds more steps than necessary.
+
+## How to Sign a PDF Free with SignMyPDF (Step by Step)
+
+If you are switching from HelloSign (Dropbox Sign) to SignMyPDF, here is how the workflow compares:
+
+### Step 1: Go to signmypdf.io
+
+No account creation required. Open signmypdf.io in any browser. This is already faster than HelloSign, which requires login before you can do anything.
+
+### Step 2: Upload Your PDF
+
+Drag your document onto the upload area or use the file picker. Your document loads immediately in the browser. Unlike HelloSign, SignMyPDF does not upload your file to a server — it stays on your device.
+
+### Step 3: Create Your Signature
+
+Draw your signature with your mouse, trackpad, or touchscreen finger. Or type your name and choose a cursive font. Both methods produce a legally valid electronic signature.
+
+### Step 4: Place and Resize the Signature
+
+Click the location on the document where your signature belongs. Drag it to align precisely with the signature line. Drag the corner to resize it if needed. For multi-page documents, navigate between pages to sign each location.
+
+### Step 5: Download the Signed PDF
+
+Click download. Your signed PDF saves to your device instantly. Email it back to whoever sent it, upload it to a portal, or store it in your files.
+
+Total time from opening the browser to having a signed PDF ready to send: under two minutes.
+
+### Step 6: Fill in a PDF Form (if needed)
+
+If the document has blank fields that need to be typed in (not just signed), use the Fill tool at signmypdf.io/fill. Upload the PDF, click to add text anywhere on the document, then download the completed form. This covers the full range of document workflows — filling in form fields and adding a signature — without needing a paid subscription.
+
+[CTA]Try SignMyPDF Free — No Account Needed|Sign and fill PDFs instantly. Faster than HelloSign, completely free.|Start Signing Now
+
+## HelloSign vs. Free Alternatives: Side-by-Side Comparison
+
+| Feature | HelloSign (Dropbox Sign) Free | SignMyPDF Free | Smallpdf Free | DocHub Free |
+|---|---|---|---|---|
+| Monthly document limit | 3 signing requests | 2 per day (no monthly cap) | Limited by hourly rate | 5 per month |
+| Account required | Yes | No | Yes | Yes |
+| Local processing (privacy) | No (cloud) | Yes | No (cloud) | No (cloud) |
+| Mobile support | Good | Excellent | Good | Good |
+| Fill PDF forms | Limited | Yes (separate tool) | Yes | Yes |
+| Price for unlimited | $15/month | $9/month | $12/month | $10/month |
+| Watermark on free tier | No | After 2/day | No | No |
+
+> "I hit the three-document limit on HelloSign on day four of the month and was locked out until next month. Switched to SignMyPDF and signed four more contracts that same afternoon with no issues. Never going back." — Marcus D., Austin, TX
+
+> "The no-account thing is huge for me. I use SignMyPDF on my work computer and my personal laptop without any login sync hassle. HelloSign always asked me to log in again and I could never remember which email I used to register." — Priya K., Seattle, WA
+
+> "I recommended SignMyPDF to our entire freelancer network as the HelloSign replacement. It is free, it is fast, and the signatures look professional on paper contracts and insurance forms alike." — Carlos M., Miami, FL
+
+## Frequently Asked Questions
+
+**Is SignMyPDF a true HelloSign replacement?**
+
+For most individual users and small teams, yes. SignMyPDF covers the primary use case: sign a PDF someone sent you and return it quickly, for free, without creating an account. If you need to send signature requests to other people and track their signing status (like a contract workflow tool), you would need a more full-featured platform — but for self-signing, SignMyPDF is a direct and superior replacement for the free HelloSign tier.
+
+**Does SignMyPDF require an account to sign documents?**
+
+No. You can sign any PDF without registering or logging in. Open the site, upload your PDF, sign, download. If you want to save signatures for reuse or access download history, those are Pro features that require an account.
+
+**How does SignMyPDF protect my privacy compared to HelloSign?**
+
+HelloSign uploads your documents to Dropbox servers for processing. SignMyPDF processes documents entirely within your browser — your files never leave your device. For sensitive documents like contracts, legal agreements, or insurance forms, this is an important privacy advantage.
+
+**Can I use SignMyPDF on my phone as a HelloSign alternative?**
+
+Yes. SignMyPDF is fully optimized for mobile browsers on both iPhone and Android. You can draw your signature with your finger, place it on the document, and download the signed PDF without installing any app.
+
+**What if I need to fill in form fields and sign?**
+
+Use signmypdf.io/fill to type into the document first, then use the main signing tool to add your signature. Together they cover the complete workflow of filling and signing a PDF for free, which matches and often exceeds what HelloSign offered on its free plan.
+
+## Related Articles
+
+- [SignMyPDF vs DocuSign: Which Is Better for Freelancers?](/blog/signmypdf-vs-docusign-freelancers)
+- [iLovePDF vs SignMyPDF: Which Is Better for Free Use?](/blog/ilovepdf-vs-signmypdf)
+- [Adobe Acrobat vs SignMyPDF: Free Plan Comparison](/blog/adobe-acrobat-vs-signmypdf)
+- [How to Sign a PDF Online Free Without Registration](/blog/sign-pdf-free-without-registration)
+- [Fill PDF Form Online Free — No Software Needed](/blog/fill-pdf-form-online-free)`,
+    date: '2026-04-22',
+    author: 'SignMyPDF Team',
+    readTime: '8 min read',
+    tags: ['hellosign alternatives free', 'dropbox sign alternative', 'free esignature tool', 'sign PDF free online', 'HelloSign replacement'],
+    metaTitle: 'Best HelloSign Alternatives Free in 2026',
+    metaDescription: 'HelloSign now limits free users to 3 docs/month. Discover the best free alternatives to sign and fill PDFs online in 2026 — no account, no monthly cap.',
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
   return [...posts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+/** Only posts whose date ≤ today's build date (YYYY-MM-DD). */
+export function getPublishedPosts(): BlogPost[] {
+  const today = new Date().toISOString().slice(0, 10); // e.g. "2026-04-22"
+  return getAllPosts().filter(post => post.date <= today);
 }
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
