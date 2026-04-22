@@ -50,6 +50,13 @@ const BLOG_SLUGS = [
   'small-business-document-signing',
   'eidas-regulation-eu-signatures',
   'sign-medical-release-form-online',
+  'fill-medical-release-form-online',
+  'eidas-fill-pdf-eu',
+  'pdf-form-fields-not-working-fix',
+  'sign-insurance-documents-online',
+  'hellosign-alternatives-free',
+  'hr-teams-collect-signatures',
+  'esign-act-explained',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
