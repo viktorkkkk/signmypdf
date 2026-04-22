@@ -499,7 +499,7 @@ export default function Home() {
 
         {/* ── SIGN ── */}
         {step === 'sign' && (
-          <div style={{ paddingBottom: 96 }}>
+          <div>
             {/* Banner: filled PDF loaded from /fill */}
             {showFillBanner && (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
@@ -629,28 +629,24 @@ export default function Home() {
               )}
             </div>
 
-            {/* Sticky sign button — rendered via portal below */}
-          </div>
-        )}
-
-        {/* ── STICKY SIGN BUTTON ── */}
-        {step === 'sign' && (
-          <div className={`sticky-sign-wrap${canSign && !isProcessing ? ' ready' : ''}`}>
-            <button
-              className={`sticky-sign-btn${canSign && !isProcessing ? ' ready' : ''}`}
-              onClick={handleSign}
-              disabled={isProcessing || !canSign}
-            >
-              {isProcessing
-                ? <><span className="spinner" /> Signing…</>
-                : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
-            </button>
-            {!canSign && selectedPages.length === 0 && (
-              <p className="sticky-sign-hint">Select at least one page above</p>
-            )}
-            {!canSign && selectedPages.length > 0 && (
-              <p className="sticky-sign-hint">Create your signature above to continue</p>
-            )}
+            {/* Sticky sign button */}
+            <div className={`sticky-sign-wrap${canSign && !isProcessing ? ' ready' : ''}`}>
+              <button
+                className={`sticky-sign-btn${canSign && !isProcessing ? ' ready' : ''}`}
+                onClick={handleSign}
+                disabled={isProcessing || !canSign}
+              >
+                {isProcessing
+                  ? <><span className="spinner" /> Signing…</>
+                  : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
+              </button>
+              {!canSign && selectedPages.length === 0 && (
+                <p className="sticky-sign-hint">Select at least one page above</p>
+              )}
+              {!canSign && selectedPages.length > 0 && (
+                <p className="sticky-sign-hint">Create your signature above to continue</p>
+              )}
+            </div>
           </div>
         )}
 
