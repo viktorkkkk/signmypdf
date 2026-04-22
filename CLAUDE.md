@@ -89,14 +89,19 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Free plan pricing updated: "2 PDFs/day without watermark", "✗ Watermark after 2 PDFs/day"
 
 ### SEO & Blog
-- [x] Blog with 10 articles (1500+ words each)
+- [x] Blog with 40 articles (1500+ words each)
 - [x] Each article: comparison table, US user reviews (blockquotes), CTA block, FAQ, internal links
 - [x] BlogPostContent.tsx: tables, `[CTA]`, `[CALLOUT]`, step cards, bold/links in lists, QuickSummary
 - [x] Blog footer matches main site (light style, PIXELTIDE LLC copyright)
 - [x] Layout width unified to `max-width: 1200px` everywhere
 - [x] Structured data (JSON-LD) on main page
 - [x] Google Search Console verified (`T8qgvPjWrXpKbKE-O6pwBD3xir2SKHBGo1vxdikCEyo`)
-- [x] sitemap.xml at `/sitemap.xml`
+- [x] sitemap.xml at `/sitemap.xml` (dynamic, auto-updates on deploy)
+- [x] Blog CTAs match article topic: Sign articles → `/` CTA, Fill articles → `/fill` CTA
+- [x] FILL_SLUGS set in BlogPostContent.tsx — isFillArticle(slug) detects fill articles
+- [x] getPublishedPosts() filters by date ≤ build date — future-dated articles invisible until deploy
+- [x] Daily trigger (02:00 UTC) auto-publishes 2 articles (1 SIGN + 1 FILL), deploys, submits to Bing + Google
+- [x] All 45 URLs submitted to Google Indexing API + Bing IndexNow (Apr 22 2026)
 
 ### Bugs Fixed
 - [x] Footer email: `support@signmypdf.io` (was `support@signmypdf.app`)
@@ -124,21 +129,34 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Draft save (Pro): 💾 Save draft button; free users see PRO badge + paywall on click
 - [x] Draft restore: banner on upload page for Pro users with saved draft
 
+### Sticky Sign Button
+- [x] `position:sticky` button at bottom of sign step — always visible on scroll
+- [x] Gray when not ready, blue gradient + pulse animation when ready (`canSign`)
+- [x] Shows hint text: "Select at least one page" or "Create your signature"
+- [x] Desktop: centered, margin 32px top/bottom
+- [x] Mobile: no background/border/shadow — floats in air
+
 ### Infrastructure
 - [x] Domain: `signmypdf.io` → Vercel
 - [x] Email: `support@signmypdf.io` via ImprovMX → gmail (active ✅)
 - [x] GitHub repo: `github.com/viktorkkkk/signmypdf`
 - [x] Vercel deploy token: stored in `.claude/tokens.local` (gitignored)
 - [x] GitHub token: stored in `.claude/tokens.local` (expires May 2026)
+- [x] Daily trigger ID: `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (runs 02:00 UTC daily)
+- [x] Google service account: `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com`
+- [x] Google credentials file: `signmypdf-seo-97022bc5390f.json` (gitignored, embedded in trigger)
+- [x] Bing Webmaster Tools: site added, sitemap submitted, Request indexing sent for main pages
+- [x] `scripts/index-pages.mjs` — dynamic Google Indexing API (reads slugs from posts.ts, accepts CLI args)
+- [x] `scripts/submit-indexnow.mjs` — Bing IndexNow bulk submit (all 40 slugs)
 
 ---
 
 ## Next Priorities
 
-### 1. Google Indexing
-- Submit sitemap to Google Search Console: `https://signmypdf.io/sitemap.xml`
-- Request indexing for key pages: `/`, `/blog`, each article
-- Monitor Core Web Vitals in GSC
+### 1. Google Indexing ✅ Done
+- Sitemap submitted, all 45 URLs sent to Google Indexing API
+- Monitor GSC for indexing progress (data lags 2-4 days)
+- Bing: "Discovered but not crawled" — waiting first crawl (3-5 days)
 
 ### 2. Payment Integration (Paddle)
 - PIXELTIDE LLC is the legal entity for Paddle
@@ -195,12 +213,12 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 | 4 | pdf-wont-let-me-type-fix | ilovepdf-vs-signmypdf | ✅ done |
 | 5 | fill-irs-form-online-free | freelancers-sign-contracts-free | ✅ done |
 | 6 | electronic-signature-laws-by-state | sign-employment-offer-letter-online | ✅ done |
-| 7 | cant-sign-pdf-iphone-fix | adobe-acrobat-vs-signmypdf | ⏳ next |
-| 8 | fill-rental-application-pdf-free | small-business-document-signing | ⬜ |
-| 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ⬜ |
-| 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ⬜ |
-| 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ⬜ |
-| 12 | esign-act-explained | fill-job-application-pdf-online | ⬜ |
+| 7 | cant-sign-pdf-iphone-fix | adobe-acrobat-vs-signmypdf | ✅ done |
+| 8 | fill-rental-application-pdf-free | small-business-document-signing | ✅ done |
+| 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ✅ done |
+| 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ✅ done |
+| 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ✅ done |
+| 12 | esign-act-explained | fill-job-application-pdf-online | ⏳ next |
 | 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⬜ |
 | 14 | sign-construction-contract-online | remote-teams-sign-documents | ⬜ |
 | 15 | digital-signatures-admissible-court | fill-government-forms-online-free | ⬜ |
@@ -238,9 +256,18 @@ app/
     FileHistory.tsx     # Download history (Pro)
     Logo.tsx            # Logo component
   blog/
-    page.tsx            # Blog index
-    posts.ts            # All 10 articles content
+    page.tsx            # Blog index (uses getPublishedPosts())
+    posts.ts            # All 40 articles content + getPublishedPosts() filter
     [slug]/
       page.tsx          # Blog post route
       BlogPostContent.tsx  # Renders article: tables, CTA, callouts, step cards
+                           # FILL_SLUGS set + isFillArticle() for CTA routing
+  components/
+    BlogPdfUploader.tsx # isFill prop — redirects to /fill when true
+scripts/
+  submit-indexnow.mjs  # Bing IndexNow bulk submit (all slugs)
+  index-pages.mjs      # Google Indexing API (dynamic from posts.ts, CLI args for new-only)
+  index-pages.mjs usage:
+    node scripts/index-pages.mjs              # submit all
+    node scripts/index-pages.mjs slug1 slug2  # submit specific slugs only
 ```
