@@ -499,7 +499,7 @@ export default function Home() {
 
         {/* ── SIGN ── */}
         {step === 'sign' && (
-          <div>
+          <div style={{ paddingBottom: 96 }}>
             {/* Banner: filled PDF loaded from /fill */}
             {showFillBanner && (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
@@ -629,26 +629,27 @@ export default function Home() {
               )}
             </div>
 
-            {/* Sign button */}
+            {/* Sticky sign button — rendered via portal below */}
+          </div>
+        )}
+
+        {/* ── STICKY SIGN BUTTON ── */}
+        {step === 'sign' && (
+          <div className={`sticky-sign-wrap${canSign && !isProcessing ? ' ready' : ''}`}>
             <button
-              className="btn-primary full"
-              style={{ 
-                padding: '16px', 
-                fontSize: 16, 
-                borderRadius: 16,
-              }}
+              className={`sticky-sign-btn${canSign && !isProcessing ? ' ready' : ''}`}
               onClick={handleSign}
               disabled={isProcessing || !canSign}
             >
               {isProcessing
-                ? <><span className="spinner" /> Signing...</>
+                ? <><span className="spinner" /> Signing…</>
                 : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
             </button>
-            
-            {selectedPages.length === 0 && (
-              <p style={{ fontSize: 12, color: '#94a3b8', textAlign: 'center', marginTop: 8 }}>
-                Select at least one page to sign above
-              </p>
+            {!canSign && selectedPages.length === 0 && (
+              <p className="sticky-sign-hint">Select at least one page above</p>
+            )}
+            {!canSign && selectedPages.length > 0 && (
+              <p className="sticky-sign-hint">Create your signature above to continue</p>
             )}
           </div>
         )}
