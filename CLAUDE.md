@@ -218,8 +218,10 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 | 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ✅ done |
 | 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ✅ done |
 | 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ✅ done |
-| 12 | esign-act-explained | fill-job-application-pdf-online | ⏳ next |
+| 12 | esign-act-explained | fill-job-application-pdf-online | ⚠️ SIGN done, FILL pending |
 | 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⬜ |
+
+**⚠️ Next trigger run**: publish `fill-job-application-pdf-online` (FILL, pair 12) + `sign-pdf-no-editing-allowed` (SIGN, pair 13). After that, pair 13 will have SIGN done + FILL (`smallpdf-vs-signmypdf`) pending — same pattern continues until pairs re-align.
 | 14 | sign-construction-contract-online | remote-teams-sign-documents | ⬜ |
 | 15 | digital-signatures-admissible-court | fill-government-forms-online-free | ⬜ |
 | 16 | signature-disappears-pdf-fix | pandadoc-free-alternative | ⬜ |
