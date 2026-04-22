@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllPosts, getAllTags } from './posts';
+import { getPublishedPosts, getAllTags } from './posts';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const posts = getAllPosts();
+  const posts = getPublishedPosts();
   const tags = getAllTags();
 
   return (

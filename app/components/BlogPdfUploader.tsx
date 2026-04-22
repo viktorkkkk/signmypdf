@@ -3,7 +3,11 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function BlogPdfUploader() {
+interface BlogPdfUploaderProps {
+  isFill?: boolean;
+}
+
+export default function BlogPdfUploader({ isFill = false }: BlogPdfUploaderProps) {
   const router = useRouter();
   const [isDragging, setIsDragging] = useState(false);
 
@@ -19,10 +23,10 @@ export default function BlogPdfUploader() {
       const base64 = reader.result as string;
       localStorage.setItem('blog_pending_pdf', base64);
       localStorage.setItem('blog_pending_pdf_name', file.name);
-      router.push('/');
+      router.push(isFill ? '/fill' : '/');
     };
     reader.readAsDataURL(file);
-  }, [router]);
+  }, [router, isFill]);
 
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();

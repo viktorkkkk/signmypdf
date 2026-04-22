@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPosts } from '../../blog/posts';
+import { getPostBySlug, getAllPosts, getPublishedPosts } from '../../blog/posts';
 import BlogPostContent from './BlogPostContent';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = getPublishedPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -50,7 +50,7 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  const allPosts = getAllPosts();
+  const allPosts = getPublishedPosts();
 
   const articleSchema = {
     '@context': 'https://schema.org',
