@@ -1,13 +1,14 @@
 /**
- * Google Indexing API — submit all signmypdf.io pages for indexing
+ * Google Indexing API — submit signmypdf.io pages for indexing
  *
  * Prerequisites:
  *   1. Service account must be added to Google Search Console as an Owner
  *      (GSC → Settings → Users and permissions → Add user → Owner)
  *      Email: signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com
  *
- * Run:
- *   node scripts/index-pages.mjs
+ * Usage:
+ *   node scripts/index-pages.mjs                    — submit all pages (reads slugs from posts.ts)
+ *   node scripts/index-pages.mjs slug1 slug2        — submit only specific blog slugs
  */
 
 import { readFileSync } from 'fs';
@@ -16,41 +17,32 @@ import { createSign } from 'crypto';
 const CREDENTIALS_PATH = './signmypdf-seo-97022bc5390f.json';
 const BASE_URL = 'https://signmypdf.io';
 
-const URLS = [
+const STATIC_URLS = [
   BASE_URL + '/',
   BASE_URL + '/fill',
   BASE_URL + '/blog',
   BASE_URL + '/privacy',
   BASE_URL + '/terms',
-  // Blog posts
-  BASE_URL + '/blog/how-to-sign-pdf-online',
-  BASE_URL + '/blog/sign-pdf-free-without-registration',
-  BASE_URL + '/blog/how-to-add-signature-to-pdf',
-  BASE_URL + '/blog/sign-pdf-on-iphone-free',
-  BASE_URL + '/blog/sign-pdf-on-mac',
-  BASE_URL + '/blog/sign-pdf-android-free',
-  BASE_URL + '/blog/sign-pdf-windows-free',
-  BASE_URL + '/blog/sign-pdf-without-adobe',
-  BASE_URL + '/blog/sign-pdf-no-watermark',
-  BASE_URL + '/blog/sign-pdf-fast-secure',
-  BASE_URL + '/blog/how-to-sign-lease-agreement-online',
-  BASE_URL + '/blog/how-to-sign-nda-online',
-  BASE_URL + '/blog/docusign-alternative-free',
-  BASE_URL + '/blog/fill-pdf-form-online-free',
-  BASE_URL + '/blog/signmypdf-vs-docusign-freelancers',
-  BASE_URL + '/blog/real-estate-agents-sign-documents',
-  BASE_URL + '/blog/fill-w9-form-online-free',
-  BASE_URL + '/blog/electronic-signature-legal-rental',
-  BASE_URL + '/blog/sign-nda-online-without-printing',
-  BASE_URL + '/blog/pdf-wont-let-me-type-fix',
-  BASE_URL + '/blog/ilovepdf-vs-signmypdf',
-  BASE_URL + '/blog/fill-irs-form-online-free',
-  BASE_URL + '/blog/freelancers-sign-contracts-free',
-  BASE_URL + '/blog/electronic-signature-laws-by-state',
-  BASE_URL + '/blog/sign-employment-offer-letter-online',
-  BASE_URL + '/blog/hr-teams-collect-signatures',
-  BASE_URL + '/blog/esign-act-explained',
 ];
+
+// Read all slugs dynamically from posts.ts
+function getAllSlugsFromPosts() {
+  const content = readFileSync('./app/blog/posts.ts', 'utf8');
+  const matches = [...content.matchAll(/slug:\s*['"]([^'"]+)['"]/g)];
+  return matches.map(m => m[1]).filter(s => s !== 'string'); // filter out type declarations
+}
+
+// Build URL list: if slugs passed as CLI args, use only those; otherwise read all from posts.ts
+const cliSlugs = process.argv.slice(2);
+let URLS;
+if (cliSlugs.length > 0) {
+  // Specific slugs passed — submit those + static pages
+  URLS = [...STATIC_URLS, ...cliSlugs.map(s => `${BASE_URL}/blog/${s}`)];
+} else {
+  // No args — submit everything
+  const allSlugs = getAllSlugsFromPosts();
+  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)];
+}
 
 // --- JWT helpers (no dependencies) ---
 
