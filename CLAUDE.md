@@ -168,6 +168,20 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 **Rule**: Strictly 2 articles per day — exactly 1 SIGN + 1 FILL. Never more than 2 per day. Never 2 articles of the same type on the same day.
 **Before publishing**: always check existing dates in posts.ts to confirm the target date has 0 articles. Only then publish.
+
+### ⚠️ Balance Rules — NEVER violate these
+
+1. **Never rewrite or retype existing published articles** to change their tool type (Sign → Fill or vice versa). Google has already indexed them — changing content on indexed pages is an SEO risk with no benefit.
+
+2. **Balance is maintained only through new publications.** The early Sign-heavy articles (written before the Fill tool existed) are intentional history. The 1 SIGN + 1 FILL daily rule corrects the ratio over time naturally.
+
+3. **Current baseline** (do not "fix" by editing old articles):
+   - Legacy Sign-only articles: ~10 (pre-Fill era, indexed by Google, untouchable)
+   - Queue articles: strictly 1:1 Sign/Fill pairs
+
+4. **For every new PDF tool added to the site** (e.g. Compress PDF, Merge PDF, PDF→Word): follow the same rule — publish articles for each tool at an equal rate (1 per tool per publication day). Never bulk-publish articles for one tool to "catch up".
+
+5. **Signs that something is wrong**: if you see an imbalance > 5 articles between any two tools, the fix is to schedule more articles for the underrepresented tool going forward — NOT to rewrite existing ones.
 **Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
 **After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
 
