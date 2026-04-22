@@ -791,6 +791,7 @@ export default function FillPage() {
 
         {/* ── DONE ── */}
         {step === 'done' && (
+          <>
           <div className="done-wrap">
             <div className="done-icon">✅</div>
             <h2 className="done-title">PDF saved!</h2>
@@ -812,13 +813,14 @@ export default function FillPage() {
                 Need to sign a PDF instead? →
               </a>
             </div>
-
-            <FileHistory
-              hasSubscription={hasSubscription}
-              onShowPricing={() => setShowPricing(true)}
-              showDlHint={showDlHint}
-            />
           </div>
+
+          <FileHistory
+            hasSubscription={hasSubscription}
+            onShowPricing={() => setShowPricing(true)}
+            showDlHint={showDlHint}
+          />
+          </>
         )}
 
       </div>
