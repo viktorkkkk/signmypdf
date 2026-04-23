@@ -4,6 +4,10 @@ import { getPublishedPosts, getAllTags } from './posts';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 
+// Revalidate every hour so date-filtered articles appear
+// automatically when UTC midnight rolls over (no redeploy needed).
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: 'Blog | PDF Signing Tips, Guides & Best Practices',
   description: 'Learn how to sign PDFs online, electronic signature tips, and document security best practices. Expert guides for digital document workflows.',
