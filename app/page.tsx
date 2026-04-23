@@ -674,14 +674,16 @@ export default function Home() {
 
       </div>
 
-      {/* File History */}
-      <div className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
-        <FileHistory
-          hasSubscription={hasSubscription}
-          onShowPricing={() => setShowPricing(true)}
-          showDlHint={showDlHint}
-        />
-      </div>
+      {/* File History — only after download (done step) */}
+      {step === 'done' && (
+        <div className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <FileHistory
+            hasSubscription={hasSubscription}
+            onShowPricing={() => setShowPricing(true)}
+            showDlHint={showDlHint}
+          />
+        </div>
+      )}
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (

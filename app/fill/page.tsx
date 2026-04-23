@@ -596,12 +596,6 @@ export default function FillPage() {
               <span>⚡ 30 seconds</span>
             </p>
 
-            {/* File History */}
-            <FileHistory
-              hasSubscription={hasSubscription}
-              onShowPricing={() => setShowPricing(true)}
-            />
-
             {/* More PDF Tools */}
             <div style={{ marginTop: 48, borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
               <h2 style={{ fontSize: 16, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
