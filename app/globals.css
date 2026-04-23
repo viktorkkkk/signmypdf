@@ -317,13 +317,64 @@ body > div > footer { margin-top: auto; }
   transition: all 0.15s;
 }
 .protect-preview-meta button:hover { background: #dbeafe; }
+/* Wrapper around the Protect CTA — becomes sticky-bottom on mobile. */
+.protect-cta-wrap {
+  /* Desktop: normal flow inline under the permissions card. */
+}
 @media (max-width: 768px) {
   .protect-layout {
     grid-template-columns: 1fr;
     gap: 16px;
   }
   .protect-preview-col { position: static; }
-  .protect-preview-thumb { aspect-ratio: 1.15 / 1; max-height: 220px; }
+
+  /* Shrink preview: small visual confirmation only. */
+  .protect-preview-thumb {
+    aspect-ratio: auto;
+    max-height: 120px;
+    padding: 8px;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  .protect-preview-thumb img { max-height: 104px; }
+  .protect-preview-meta { margin-top: 10px; }
+  .protect-preview-meta .fname { font-size: 13px; }
+
+  /* Stack cards with exactly 16px gap. */
+  .protect-layout .card { margin-bottom: 16px !important; }
+
+  /* Taller touch targets + 16px font to prevent iOS focus-zoom. */
+  .protect-layout input[type='password'],
+  .protect-layout input[type='text'] {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+
+  /* Generate button — prominent touch target, no text clipping. */
+  .protect-layout .card > button[type='button'] {
+    height: 48px !important;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  /* Sticky Protect button. Full-bleed at the bottom of the viewport.
+     Negative horizontal margin breaks out of the parent .container's
+     20px gutter so the white backdrop reaches the screen edges.
+     We pin the CTA wrapper instead of the bare <button> so the white
+     backdrop + shadow only applies on mobile. */
+  .protect-cta-wrap {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 16px -20px 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: #ffffff;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
+    z-index: 10;
+    border-top: 1px solid #f1f5f9;
+  }
+  .protect-cta-wrap .btn-primary-solid { width: 100%; }
 }
 
 /* Password input show/hide icon button */

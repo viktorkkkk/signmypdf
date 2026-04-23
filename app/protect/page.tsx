@@ -664,21 +664,25 @@ export default function ProtectPage() {
                   🔒 Processed locally. No account required.
                 </div>
 
-                {/* Protect button — solid blue, no gradient */}
-                <button
-                  onClick={handleProtect}
-                  disabled={!canProtect || isProcessing}
-                  className="btn-primary-solid"
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    height: 56,
-                    fontSize: 16,
-                    borderRadius: 14,
-                  }}
-                >
-                  {isProcessing ? <><span className="spinner" /> Encrypting…</> : '🔐 Protect PDF'}
-                </button>
+                {/* Protect button — solid blue, no gradient.
+                    Wrapper becomes position:sticky at the bottom on mobile
+                    (see .protect-cta-wrap in globals.css). */}
+                <div className="protect-cta-wrap">
+                  <button
+                    onClick={handleProtect}
+                    disabled={!canProtect || isProcessing}
+                    className="btn-primary-solid"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      height: 56,
+                      fontSize: 16,
+                      borderRadius: 14,
+                    }}
+                  >
+                    {isProcessing ? <><span className="spinner" /> Encrypting…</> : '🔐 Protect PDF'}
+                  </button>
+                </div>
               </div>
 
             </div>
