@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, type ChangeEvent } from 'react';
 import { useDropzone } from 'react-dropzone';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
@@ -66,6 +66,12 @@ export default function ProtectPage() {
   const [protectedPdfUrl, setProtectedPdfUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [thumbnail, setThumbnail] = useState<string | null>(null);
+
+  // Pro-only batch protection: additional files protected with the same
+  // password + permissions in one click. Each file downloads separately.
+  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
+  const [protectedBatch, setProtectedBatch] = useState<Array<{ name: string; url: string; blob: Blob }>>([]);
+  const addFileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Render first-page thumbnail whenever a PDF is loaded
   useEffect(() => {
@@ -205,11 +211,13 @@ export default function ProtectPage() {
     setShowPw(false);
     setShowConfirmPw(false);
     setCopied(false);
-    setPreventEditing(true);
-    setPreventCopying(true);
-    setPreventPrinting(true);
+    setPreventEditing(false);
+    setPreventCopying(false);
+    setPreventPrinting(false);
     setFileError('');
     setShowLimitBlock(false);
+    setAdditionalFiles([]);
+    setProtectedBatch([]);
   };
 
   // ─── Password generation + copy ────────────────────────────────
@@ -242,43 +250,58 @@ export default function ProtectPage() {
       return;
     }
 
+    // Batch: primary file + any Pro-added extras, protected with same settings.
+    const queue: File[] = hasSubscription ? [pdfFile, ...additionalFiles] : [pdfFile];
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     setIsProcessing(true);
+    setProtectedBatch([]);
     try {
-      const blob = await protectPdfInBrowser({
-        pdfFile,
-        userPassword: password,
-        preventEditing,
-        preventCopying,
-        preventPrinting,
-      });
+      const batch: Array<{ name: string; url: string; blob: Blob }> = [];
+      const { blobToDataUrl } = await import('../utils/watermark');
 
-      const url = URL.createObjectURL(blob);
-      setProtectedPdfUrl(url);
+      for (let i = 0; i < queue.length; i++) {
+        const f = queue[i];
+        const blob = await protectPdfInBrowser({
+          pdfFile: f,
+          userPassword: password,
+          preventEditing,
+          preventCopying,
+          preventPrinting,
+        });
+        const url = URL.createObjectURL(blob);
+        batch.push({ name: f.name, url, blob });
 
-      // Auto-download on desktop
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      if (!isIOS) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `protected-${pdfFile.name}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // Sequential auto-download on desktop (iOS uses the save button on done screen).
+        if (!isIOS) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `protected-${f.name}`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          // Small delay so the browser doesn't collapse rapid downloads.
+          if (i < queue.length - 1) await new Promise(r => setTimeout(r, 250));
+        }
+
+        const dataUrl = await blobToDataUrl(blob);
+        saveToHistory(f.name, blob.size, dataUrl, 'protect', false);
       }
 
-      // Save to history (clean PDF — still encrypted, but no watermark concept here)
-      const { blobToDataUrl } = await import('../utils/watermark');
-      const dataUrl = await blobToDataUrl(blob);
-      saveToHistory(pdfFile.name, blob.size, dataUrl, 'protect', false);
+      // Keep the first for the single-file done screen, and the full batch for the multi-file list.
+      setProtectedPdfUrl(batch[0].url);
+      setProtectedBatch(batch);
       window.dispatchEvent(new Event('signmypdf:saved'));
 
+      // Free plan counter: only counts once, since batch is Pro-only.
       incrementTodayProtectCount();
       setTodayCount(getTodayProtectCount());
 
       try {
         (window as any).gtag?.('event', 'pdf_protected', {
           plan: hasSubscription ? 'pro' : 'free',
+          batch_size: queue.length,
         });
       } catch {}
 
@@ -289,6 +312,24 @@ export default function ProtectPage() {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handleAddFileClick = () => {
+    if (!hasSubscription) {
+      setShowPricing(true);
+      return;
+    }
+    addFileInputRef.current?.click();
+  };
+
+  const handleAddFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    const picked = Array.from(e.target.files || []).filter(f => f.type === 'application/pdf' && f.size <= MAX_FILE_SIZE);
+    if (picked.length) setAdditionalFiles(prev => [...prev, ...picked]);
+    e.target.value = '';
+  };
+
+  const removeAdditionalFile = (index: number) => {
+    setAdditionalFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const downloadOrShare = async (url: string, filename: string) => {
@@ -467,7 +508,46 @@ export default function ProtectPage() {
                 <div className="protect-preview-meta">
                   <div className="fname">{pdfFile?.name}</div>
                   <div className="fsize">{pdfFile ? formatFileSize(pdfFile.size) : ''}</div>
-                  <button onClick={reset}>🔄 Change file</button>
+                  <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button onClick={reset}>🔄 Change file</button>
+                    <button
+                      onClick={handleAddFileClick}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                    >
+                      ➕ Add file
+                      {!hasSubscription && (
+                        <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>PRO</span>
+                      )}
+                    </button>
+                  </div>
+                  <input
+                    ref={addFileInputRef}
+                    type="file"
+                    accept="application/pdf"
+                    multiple
+                    onChange={handleAddFileSelected}
+                    style={{ display: 'none' }}
+                  />
+                  {additionalFiles.length > 0 && (
+                    <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6, textAlign: 'left' }}>
+                      <div style={{ fontSize: 11, color: '#64748b', fontWeight: 600, letterSpacing: 0.3, textTransform: 'uppercase' }}>
+                        + {additionalFiles.length} more file{additionalFiles.length > 1 ? 's' : ''}
+                      </div>
+                      {additionalFiles.map((f, i) => (
+                        <div key={`${f.name}-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 12 }}>
+                          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#334155' }}>{f.name}</span>
+                          <span style={{ color: '#94a3b8', fontSize: 11 }}>{formatFileSize(f.size)}</span>
+                          <button
+                            onClick={() => removeAdditionalFile(i)}
+                            style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 2, fontSize: 14, lineHeight: 1 }}
+                            aria-label={`Remove ${f.name}`}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -714,23 +794,51 @@ export default function ProtectPage() {
         {step === 'done' && (
           <div className="done-wrap">
             <div className="done-icon">🔒</div>
-            <h2 className="done-title">PDF protected!</h2>
-            <p className="done-sub">Your PDF is encrypted. Save it to your device.</p>
+            <h2 className="done-title">
+              {protectedBatch.length > 1 ? `${protectedBatch.length} PDFs protected!` : 'PDF protected!'}
+            </h2>
+            <p className="done-sub">
+              {protectedBatch.length > 1
+                ? 'All files encrypted with the same password.'
+                : 'Your PDF is encrypted. Save it to your device.'}
+            </p>
 
-            <div className="done-btns">
-              <button
-                className="btn-primary"
-                style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
-                onClick={async () => {
-                  await downloadOrShare(protectedPdfUrl!, `protected-${pdfFile?.name || 'document.pdf'}`);
-                }}
-              >
-                ⬇️  Save Protected PDF
-              </button>
-              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
-                🔒 Protect another document
-              </button>
-            </div>
+            {protectedBatch.length > 1 ? (
+              <div className="done-btns">
+                <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {protectedBatch.map((b, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12 }}>
+                      <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 14, color: '#334155' }}>{b.name}</span>
+                      <button
+                        className="btn-ghost"
+                        style={{ padding: '8px 14px', fontSize: 13 }}
+                        onClick={() => downloadOrShare(b.url, `protected-${b.name}`)}
+                      >
+                        ⬇️ Save
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
+                  🔒 Protect more documents
+                </button>
+              </div>
+            ) : (
+              <div className="done-btns">
+                <button
+                  className="btn-primary"
+                  style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
+                  onClick={async () => {
+                    await downloadOrShare(protectedPdfUrl!, `protected-${pdfFile?.name || 'document.pdf'}`);
+                  }}
+                >
+                  ⬇️  Save Protected PDF
+                </button>
+                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
+                  🔒 Protect another document
+                </button>
+              </div>
+            )}
           </div>
         )}
 
