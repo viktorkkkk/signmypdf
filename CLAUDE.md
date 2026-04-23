@@ -136,6 +136,17 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Desktop: centered, margin 32px top/bottom
 - [x] Mobile: no background/border/shadow — floats in air
 
+### Protect PDF Tool (`/protect`) — shipped Apr 23 2026
+- [x] `app/protect/page.tsx` — upload → configure → done flow (password + permissions)
+- [x] `app/utils/protectPdf.ts` — client-side encryption (pdf-lib + qpdf.js or equivalent)
+- [x] Password strength scoring + strong password generator
+- [x] Permissions: printing, copying, annotation, form-filling toggles
+- [x] Eye/eye-slash icons for password show/hide (Heroicons-style inline SVG)
+- [x] First-page thumbnail preview (pdfjs-dist) in configure step
+- [x] Mobile layout fixes: shrunk preview, sticky CTA, 52px touch targets, 16px font to block iOS focus-zoom
+- [x] Sticky Protect CTA — floats above content on mobile (no white backdrop, no border, button carries dual-layer shadow)
+- [x] Launch blog article: `password-protect-pdf-online-free` (Apr 23)
+
 ### Infrastructure
 - [x] Domain: `signmypdf.io` → Vercel
 - [x] Email: `support@signmypdf.io` via ImprovMX → gmail (active ✅)
@@ -151,31 +162,55 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## Recently Shipped (Apr 23 2026)
+
+- **`/protect` tool live** — password + permissions PDF protection, fully client-side, deployed to production.
+- **Mobile `/protect` polish** — shrunk preview, larger touch targets (52px inputs, 48px buttons, 16px font), sticky CTA now floats above content (no white backdrop, no top border — button carries its own shadow). Matches `.sticky-sign-wrap` pattern on `/`.
+- **Blog trigger logic fixed** — forward-walk algorithm: starts from today, steps forward day-by-day until it finds a date with `<2` articles. No more overflow onto a single day.
+- **Tri-state CTA routing working** — `getArticleTool(slug)` returns `sign | fill | protect` and drives every in-body CTA, sticky CTA, BlogPdfUploader target, hero subtitle, and button copy. `FILL_SLUGS` + `PROTECT_SLUGS` sets in `BlogPostContent.tsx` override the filename heuristic when needed.
+- **7 hard blog rules codified** — documented in CLAUDE.md AND embedded in the daily trigger prompt (`trig_01Mw8wt1nCK3jpDA7ymfp4g2`). Rules cover: no editing published articles, CTA/tool alignment, forward-walk date selection, metaTitle dedup, no tool-type rewrites, equal-rate publishing for new tools, failure mode detection.
+- **QuickSummary parser fixed** — `BlogPostContent.tsx` now parses inline `[QuickSummary]...[/QuickSummary]` blocks instead of leaking raw-text bracket markup onto the page.
+- **SEO bloat removed from tool pages** — stripped heavy SEO content blocks from `/`, `/fill`, `/protect`; replaced with compact FAQ so conversion-critical pages stay focused on the upload CTA while preserving answer-box FAQ schema for SERP.
+
+---
+
 ## Next Priorities
 
-### 1. Google Indexing ✅ Done
+### 1. Sticky CTA float polish — ✅ done Apr 23
+- `/protect` mobile CTA now floats (no backdrop/border, button shadow does the lifting).
+- `/` already matched the pattern; `/fill` has no mobile sticky CTA (desktop-only sidebar), nothing to strip.
+
+### 2. Product Hunt launch prep
+- Gallery assets (hero image, GIF demo, screenshots of Sign/Fill/Protect flows)
+- Tagline + description copy (emphasize: free forever, no account, 100% client-side, 3 tools in one)
+- Maker comment draft
+- Pick launch day (avoid Mon/Fri; aim mid-week 12:01 AM PT)
+- Hunter outreach / self-post decision
+- Pre-launch email to any existing users, Twitter/LinkedIn teaser
+
+### 3. Google Indexing ✅ Done
 - Sitemap submitted, all 45 URLs sent to Google Indexing API
 - Monitor GSC for indexing progress (data lags 2-4 days)
 - Bing: "Discovered but not crawled" — waiting first crawl (3-5 days)
 
-### 2. Payment Integration (Paddle)
+### 4. Payment Integration (Paddle)
 - PIXELTIDE LLC is the legal entity for Paddle
 - Application ready to submit
 - After Paddle approval: replace demo `alert('Premium activated')` with real Paddle checkout
 - Replace `localStorage.setItem(SUBSCRIPTION_KEY, 'true')` with server-verified subscription
 
-### 3. Email (Brevo DKIM/DMARC)
+### 5. Email (Brevo DKIM/DMARC)
 - Brevo DKIM/DMARC records added to Namecheap DNS
 - Waiting propagation (up to 48h)
 - After verification: set up Gmail to send from `support@signmypdf.io` via Brevo SMTP
 
-### 4. New PDF Tools (planned)
+### 6. New PDF Tools (planned)
 - Compress PDF
 - Merge PDFs
 - PDF → Word / Word → PDF
 - Add each as separate route + blog article for SEO
 
-### 5. A/B Testing & Conversion
+### 7. A/B Testing & Conversion
 - Test toast CTA copy
 - Test pricing modal trigger (show after 1st PDF vs after 2nd)
 - Add email capture on free plan for upsell
