@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Logo from './Logo';
 
 interface NavHeaderProps {
-  activeTool?: 'sign' | 'fill';
+  activeTool?: 'sign' | 'fill' | 'protect';
   onShowPricing?: () => void;
 }
 
@@ -68,6 +68,13 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
                 >
                   <span>📝</span>
                   <span>Fill PDF Form</span>
+                </a>
+                <a
+                  href="/protect"
+                  className={`nav-dropdown-item${activeTool === 'protect' ? ' nav-dropdown-item--active' : ''}`}
+                >
+                  <span>🔒</span>
+                  <span>Protect PDF</span>
                 </a>
               </div>
             )}

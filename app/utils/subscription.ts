@@ -1,6 +1,6 @@
 import { SUBSCRIPTION_KEY, DAILY_LIMIT } from '../constants';
 
-// ─── Today's signing count ────────────────────────────────────────
+// ─── Today's signing count (shared by /sign and /fill) ────────────
 function todayKey(): string {
   const today = new Date().toISOString().split('T')[0];
   return `signmypdf_count_${today}`;
@@ -19,6 +19,27 @@ export function incrementTodayCount(): void {
 
 export function isOverDailyLimit(): boolean {
   return getTodayCount() >= DAILY_LIMIT;
+}
+
+// ─── Today's /protect count (independent from /sign and /fill) ────
+function todayProtectKey(): string {
+  const today = new Date().toISOString().split('T')[0];
+  return `signmypdf_protect_count_${today}`;
+}
+
+export function getTodayProtectCount(): number {
+  if (typeof window === 'undefined') return 0;
+  const raw = localStorage.getItem(todayProtectKey());
+  return raw ? parseInt(raw, 10) : 0;
+}
+
+export function incrementTodayProtectCount(): void {
+  const count = getTodayProtectCount();
+  localStorage.setItem(todayProtectKey(), String(count + 1));
+}
+
+export function isOverDailyProtectLimit(): boolean {
+  return getTodayProtectCount() >= DAILY_LIMIT;
 }
 
 // ─── Subscription status ─────────────────────────────────────────

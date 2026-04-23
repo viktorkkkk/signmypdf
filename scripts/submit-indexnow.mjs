@@ -11,6 +11,7 @@ const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 const STATIC_URLS = [
   `https://${HOST}/`,
   `https://${HOST}/fill`,
+  `https://${HOST}/protect`,
   `https://${HOST}/blog`,
   `https://${HOST}/privacy`,
   `https://${HOST}/terms`,

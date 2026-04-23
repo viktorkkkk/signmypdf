@@ -20,6 +20,7 @@ const BASE_URL = 'https://signmypdf.io';
 const STATIC_URLS = [
   BASE_URL + '/',
   BASE_URL + '/fill',
+  BASE_URL + '/protect',
   BASE_URL + '/blog',
   BASE_URL + '/privacy',
   BASE_URL + '/terms',

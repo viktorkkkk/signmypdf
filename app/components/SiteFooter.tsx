@@ -48,6 +48,7 @@ export default function SiteFooter() {
             <ul className="footer-links">
               <li><Link href="/" className="footer-link">Sign PDF</Link></li>
               <li><Link href="/fill" className="footer-link">Fill PDF Form</Link></li>
+              <li><Link href="/protect" className="footer-link">Protect PDF</Link></li>
             </ul>
           </div>
 
