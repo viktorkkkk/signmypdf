@@ -218,10 +218,16 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 | 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ✅ done |
 | 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ✅ done |
 | 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ✅ done |
-| 12 | esign-act-explained | fill-job-application-pdf-online | ⚠️ SIGN done, FILL pending |
-| 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⬜ |
+| 12 | esign-act-explained | fill-job-application-pdf-online | ✅ done |
+| 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⚠️ SIGN done (dated Apr 24), FILL pending |
 
-**⚠️ Next trigger run**: publish `fill-job-application-pdf-online` (FILL, pair 12) + `sign-pdf-no-editing-allowed` (SIGN, pair 13). After that, pair 13 will have SIGN done + FILL (`smallpdf-vs-signmypdf`) pending — same pattern continues until pairs re-align.
+**⚠️ Next trigger run** (Apr 24 02:00 UTC): publish `smallpdf-vs-signmypdf` (FILL, pair 13) + `sign-construction-contract-online` (SIGN, pair 14). After that, pair 14 will have SIGN done + FILL (`remote-teams-sign-documents`) pending — same 1-article offset pattern continues until pairs re-align.
+
+### Blog index date filter + revalidate
+
+Blog index (`app/blog/page.tsx`) uses `getPublishedPosts()` which filters by `post.date <= today (UTC)`. Articles with future dates (e.g. tomorrow) are hidden from the index but accessible by direct URL.
+
+To surface future-dated articles automatically when UTC midnight rolls over, `export const revalidate = 3600` is set on the blog index page. Combined with the daily trigger's redeploy at 02:00 UTC, this provides double redundancy: even if the trigger fails, the stale-while-revalidate logic refreshes the index within an hour after the date changes.
 | 14 | sign-construction-contract-online | remote-teams-sign-documents | ⬜ |
 | 15 | digital-signatures-admissible-court | fill-government-forms-online-free | ⬜ |
 | 16 | signature-disappears-pdf-fix | pandadoc-free-alternative | ⬜ |
