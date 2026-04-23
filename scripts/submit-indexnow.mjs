@@ -57,6 +57,8 @@ const BLOG_SLUGS = [
   'hellosign-alternatives-free',
   'hr-teams-collect-signatures',
   'esign-act-explained',
+  'fill-job-application-pdf-online',
+  'sign-pdf-no-editing-allowed',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
