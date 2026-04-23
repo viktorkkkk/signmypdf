@@ -15,49 +15,49 @@ type Tariff = 'monthly' | 'annual';
 interface PaywallModalProps {
   open: boolean;
   onClose: () => void;
+  // Kept for telemetry segmentation — the visual content is the same
+  // across tools now, but we still want to know which surface opened it.
   tool: Tool;
   todayCount?: number;
   onProActivated?: () => void;
 }
 
-const TOOL_ICON: Record<Tool, string> = {
-  sign: '✍️',
-  fill: '📝',
-  protect: '🔏',
-};
+const HERO_TITLE = 'Unlock SignMyPDF Premium';
+const HERO_SUBTITLE =
+  'Unlimited PDFs across all tools · No watermarks · Save your work · All future tools included';
 
-const TOOL_TITLE: Record<Tool, string> = {
-  sign: 'Unlock Unlimited Signing',
-  fill: 'Unlock Unlimited PDF Tools',
-  protect: 'Unlock Unlimited Protection',
-};
-
-const SUBTITLE = 'Sign, fill & protect PDFs — no daily limits, saved history, no watermarks.';
-
-// Universal perks, first line is swapped to the tool-specific one so the
-// top bullet speaks to the user's current context.
-const UNIVERSAL_PERKS = [
-  'Unlimited PDFs across all tools',
-  'No watermarks, ever',
-  'Save & reuse signatures',
-  'Save form drafts',
-  'Permanent file history (1 year)',
-  'Priority email support',
+// Universal perks — grouped by user value (not tool features) so the same
+// list works for Sign, Fill, Protect, and any tool we add next.
+const PERKS: Array<{ title: string; desc: string }> = [
+  { title: 'Unlimited PDFs', desc: 'no daily limits on any tool' },
+  { title: 'No watermarks, ever', desc: 'clean, professional documents' },
+  { title: 'Save your work', desc: 'signatures, form data, drafts across all tools' },
+  { title: 'Cloud history', desc: 'access your files for 1 year from any device' },
+  { title: 'All current & future tools', desc: 'Sign, Fill, Protect + everything we launch' },
+  { title: 'Priority support', desc: 'email response within 24h' },
 ];
 
-const TOOL_LEAD_PERK: Record<Tool, string> = {
-  sign: 'Save & reuse signatures',
-  fill: 'Save form drafts',
-  protect: 'Batch protect multiple PDFs',
-};
-
-function getPerks(tool: Tool): string[] {
-  const lead = TOOL_LEAD_PERK[tool];
-  const rest = UNIVERSAL_PERKS.filter(p => p !== lead);
-  // Cap at 6 bullets total — if lead is extra (protect), drop the
-  // least-relevant universal perk to keep the list compact.
-  const capped = [lead, ...rest].slice(0, 6);
-  return capped;
+// Brand-blue crown icon — not an emoji, reads as a premium badge.
+function CrownIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      style={{ display: 'block' }}
+    >
+      <path
+        d="M4 17L2.5 6l5.5 4L12 3l4 7 5.5-4L20 17H4z"
+        fill="#2563eb"
+      />
+      <path
+        d="M4 19.5C4 19.224 4.224 19 4.5 19h15c.276 0 .5.224.5.5v.5c0 .276-.224.5-.5.5h-15c-.276 0-.5-.224-.5-.5v-.5z"
+        fill="#1d4ed8"
+      />
+    </svg>
+  );
 }
 
 function track(event: string, params: Record<string, string | number | boolean> = {}) {
@@ -193,7 +193,6 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
   if (!open) return null;
 
   const priceInfo = PAYWALL_PRICES[tariff];
-  const perks = getPerks(tool);
 
   return (
     <div
@@ -218,7 +217,7 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
         >
           <div className="pw-drag-handle" aria-hidden="true" />
           <div className="pw-header-row">
-            <span className="pw-header-icon" aria-hidden="true">{TOOL_ICON[tool]}</span>
+            <span className="pw-header-icon" aria-hidden="true"><CrownIcon /></span>
             <span className="pw-header-title">Premium</span>
             <button
               className="pw-close"
@@ -234,8 +233,8 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
         {/* Scrollable middle */}
         <div className="pw-scroll" ref={scrollRef} onScroll={handleScroll}>
           <div className="pw-hero">
-            <h2 className="pw-title">{TOOL_TITLE[tool]}</h2>
-            <p className="pw-subtitle">{SUBTITLE}</p>
+            <h2 className="pw-title">{HERO_TITLE}</h2>
+            <p className="pw-subtitle">{HERO_SUBTITLE}</p>
           </div>
 
           <div className="pw-plan-strip">
@@ -245,10 +244,14 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
           <div className="pw-perks">
             <div className="pw-perks-title">Premium unlocks:</div>
             <ul>
-              {perks.map((p, i) => (
+              {PERKS.map((p, i) => (
                 <li key={i}>
                   <span className="pw-perk-check" aria-hidden="true">✓</span>
-                  <span>{p}</span>
+                  <span>
+                    <strong className="pw-perk-title">{p.title}</strong>
+                    <span className="pw-perk-dash"> — </span>
+                    <span className="pw-perk-desc">{p.desc}</span>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -297,7 +300,20 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
             </label>
           </div>
 
-          {/* Restore */}
+        </div>
+
+        {/* Sticky CTA */}
+        <div className="pw-cta">
+          <div className="pw-trust">Cancel anytime · Secure payment · No hidden fees</div>
+          <button
+            className="pw-cta-btn"
+            onClick={handleCta}
+            type="button"
+          >
+            {priceInfo.ctaText}
+          </button>
+          {/* Restore — under the CTA, muted. Ticket: must not compete
+              with the CTA for attention. */}
           {!showRestore ? (
             <button
               className="pw-restore-link"
@@ -346,18 +362,6 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
               </button>
             </div>
           )}
-        </div>
-
-        {/* Sticky CTA */}
-        <div className="pw-cta">
-          <div className="pw-trust">Cancel anytime · Secure payment · No hidden fees</div>
-          <button
-            className="pw-cta-btn"
-            onClick={handleCta}
-            type="button"
-          >
-            {priceInfo.ctaText}
-          </button>
         </div>
       </div>
     </div>

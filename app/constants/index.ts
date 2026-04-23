@@ -9,6 +9,7 @@ export const PADDLE_PRICE_ANNUAL  = 'pri_01kpea99a37j2ecg9vxq8xr9zt';
 
 // ─── Paywall display pricing (single source of truth) ────────────
 // Keep in sync with Paddle; price IDs above are the billing source of truth.
+// Annual "savings" = monthly*12 − annualTotal = $9*12 − $90 = $18.
 export const PAYWALL_PRICES = {
   monthly: {
     label: 'Monthly',
@@ -22,8 +23,8 @@ export const PAYWALL_PRICES = {
     displayPrice: '$7.50',
     displayUnit: '/mo',
     subtitle: 'Billed $90/year · Unlimited PDFs',
-    badge: 'BEST VALUE — Save 17%',
-    ctaText: 'Start Annual — $90/year',
+    badge: 'SAVE 17%',
+    ctaText: 'Start Annual — $90/year · Save $18',
   },
 } as const;
 
