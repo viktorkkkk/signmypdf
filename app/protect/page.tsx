@@ -33,11 +33,68 @@ const STEPS = [
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
+// Heroicons-style eye / eye-slash icons.
+// Color inherits via currentColor so the parent button controls tone.
+function EyeIcon({ closed }: { closed?: boolean }) {
+  if (closed) {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 11 7 11 7a13.16 13.16 0 0 1-1.67 2.68" />
+        <path d="M6.61 6.61A13.526 13.526 0 0 0 1 12s4 7 11 7a9.74 9.74 0 0 0 5.39-1.61" />
+        <line x1="2" y1="2" x2="22" y2="22" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
 export default function ProtectPage() {
   const [step, setStep] = useState<Step>('upload');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [protectedPdfUrl, setProtectedPdfUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
+
+  // Render first-page thumbnail whenever a PDF is loaded
+  useEffect(() => {
+    if (!pdfFile) { setThumbnail(null); return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const buf = await pdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+        if (cancelled) return;
+        const page = await pdf.getPage(1);
+        const baseVp = page.getViewport({ scale: 1 });
+        const targetW = 420;
+        const scale = Math.min(targetW / baseVp.width, 2);
+        const vp = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await page.render({ canvas: canvas as any, viewport: vp }).promise;
+        if (!cancelled) setThumbnail(canvas.toDataURL('image/jpeg', 0.85));
+      } catch (e) {
+        console.error('Thumbnail error', e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [pdfFile]);
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -376,8 +433,8 @@ export default function ProtectPage() {
 
         {/* ── CONFIGURE ── */}
         {step === 'configure' && (
-          <div style={{ maxWidth: 480, margin: '0 auto' }}>
-            <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, maxWidth: 880, margin: '0 auto 20px' }}>
               <h2 className="step-title">Set protection</h2>
               {!hasSubscription && (
                 <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}` }}>
@@ -394,248 +451,237 @@ export default function ProtectPage() {
               )}
             </div>
 
-            {/* File bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '10px 14px', marginBottom: 16 }}>
-              <span style={{ fontSize: 20 }}>✓</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#166534', lineHeight: 1.2 }}>File ready to protect</div>
-                <div style={{ fontSize: 12, color: '#166534', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.8 }}>{pdfFile?.name}</div>
-              </div>
-              <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: 'white', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>🔄 Change</button>
-            </div>
+            <div className="protect-layout">
 
-            {/* Block 1: Set password */}
-            <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-title">1. Set password to open</div>
-
-              {/* Password input */}
-              <label style={{ fontSize: 13, color: '#475569', fontWeight: 500, marginBottom: 6, display: 'block' }}>Password</label>
-              <div style={{ position: 'relative', marginBottom: 10 }}>
-                <input
-                  type={showPw ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter a strong password"
-                  autoComplete="new-password"
-                  style={{
-                    width: '100%',
-                    padding: '12px 44px 12px 14px',
-                    height: 48,
-                    borderRadius: 10,
-                    border: '1.5px solid #e2e8f0',
-                    fontSize: 15,
-                    outline: 'none',
-                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                  }}
-                  onFocus={e => (e.target.style.borderColor = '#2563eb')}
-                  onBlur={e => (e.target.style.borderColor = '#e2e8f0')}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPw(s => !s)}
-                  aria-label={showPw ? 'Hide password' : 'Show password'}
-                  style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: '#64748b',
-                    fontSize: 18,
-                    cursor: 'pointer',
-                    padding: 6,
-                  }}
-                >
-                  {showPw ? '🙈' : '👁️'}
-                </button>
-              </div>
-
-              {/* Strength meter */}
-              <div style={{ marginBottom: 14 }}>
-                <div style={{
-                  width: '100%',
-                  height: 6,
-                  background: '#f1f5f9',
-                  borderRadius: 3,
-                  overflow: 'hidden',
-                }}>
-                  <div style={{
-                    width: password ? `${((pwScore.score + 1) / 5) * 100}%` : '0%',
-                    height: '100%',
-                    background: pwScore.color,
-                    borderRadius: 3,
-                    transition: 'all 0.3s ease',
-                  }} />
+              {/* ── Left column: file preview ── */}
+              <div className="protect-preview-col">
+                <div className="protect-preview-thumb">
+                  {thumbnail ? (
+                    <img src={thumbnail} alt={`Preview of ${pdfFile?.name || 'PDF'}`} />
+                  ) : (
+                    <span className="spinner" />
+                  )}
                 </div>
-                {password && (
+                <div className="protect-preview-meta">
+                  <div className="fname">{pdfFile?.name}</div>
+                  <div className="fsize">{pdfFile ? formatFileSize(pdfFile.size) : ''}</div>
+                  <button onClick={reset}>🔄 Change file</button>
+                </div>
+              </div>
+
+              {/* ── Right column: configuration ── */}
+              <div>
+                {/* Block 1: Set password */}
+                <div className="card" style={{ marginBottom: 16 }}>
+                  <div className="card-title">1. Set password to open</div>
+
+                  {/* Password input */}
+                  <label style={{ fontSize: 13, color: '#475569', fontWeight: 500, marginBottom: 6, display: 'block' }}>Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showPw ? 'text' : 'password'}
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      placeholder="Enter a strong password"
+                      autoComplete="new-password"
+                      style={{
+                        width: '100%',
+                        padding: '12px 44px 12px 14px',
+                        height: 48,
+                        borderRadius: 10,
+                        border: '1.5px solid #e2e8f0',
+                        fontSize: 15,
+                        outline: 'none',
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                      }}
+                      onFocus={e => (e.target.style.borderColor = '#2563eb')}
+                      onBlur={e => (e.target.style.borderColor = '#e2e8f0')}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPw(s => !s)}
+                      aria-label={showPw ? 'Hide password' : 'Show password'}
+                      className="pw-eye-btn"
+                    >
+                      <EyeIcon closed={showPw} />
+                    </button>
+                  </div>
+
+                  {/* Strength meter — shown only while typing */}
+                  {password && (
+                    <div style={{ marginTop: 6 }}>
+                      <div style={{
+                        width: '100%',
+                        height: 4,
+                        background: '#f1f5f9',
+                        borderRadius: 2,
+                        overflow: 'hidden',
+                      }}>
+                        <div style={{
+                          width: `${((pwScore.score + 1) / 5) * 100}%`,
+                          height: '100%',
+                          background: pwScore.color,
+                          borderRadius: 2,
+                          transition: 'all 0.3s ease',
+                        }} />
+                      </div>
+                      <div style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: pwScore.color,
+                        marginTop: 4,
+                      }}>
+                        {pwScore.label}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Confirm input — 12px gap from password block */}
+                  <label style={{ fontSize: 13, color: '#475569', fontWeight: 500, margin: '12px 0 6px', display: 'block' }}>Confirm password</label>
+                  <div style={{ position: 'relative', marginBottom: confirmPassword && !passwordsMatch ? 4 : 12 }}>
+                    <input
+                      type={showConfirmPw ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      placeholder="Re-enter password"
+                      autoComplete="new-password"
+                      style={{
+                        width: '100%',
+                        padding: '12px 44px 12px 14px',
+                        height: 48,
+                        borderRadius: 10,
+                        border: `1.5px solid ${confirmPassword && !passwordsMatch ? '#fca5a5' : '#e2e8f0'}`,
+                        fontSize: 15,
+                        outline: 'none',
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                      }}
+                      onFocus={e => {
+                        if (!(confirmPassword && !passwordsMatch)) e.target.style.borderColor = '#2563eb';
+                      }}
+                      onBlur={e => {
+                        e.target.style.borderColor = confirmPassword && !passwordsMatch ? '#fca5a5' : '#e2e8f0';
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPw(s => !s)}
+                      aria-label={showConfirmPw ? 'Hide password' : 'Show password'}
+                      className="pw-eye-btn"
+                    >
+                      <EyeIcon closed={showConfirmPw} />
+                    </button>
+                  </div>
+                  {confirmPassword && !passwordsMatch && (
+                    <p style={{ fontSize: 12, color: '#dc2626', margin: '0 0 12px' }}>
+                      Passwords do not match
+                    </p>
+                  )}
+
+                  {/* Generate button */}
+                  <button
+                    type="button"
+                    onClick={handleGenerate}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      height: 48,
+                      borderRadius: 10,
+                      border: '1.5px solid #bfdbfe',
+                      background: '#eff6ff',
+                      color: '#2563eb',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      marginBottom: 10,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    ✨ Generate strong password
+                  </button>
+                  {copied && (
+                    <p style={{ fontSize: 12, color: '#16a34a', fontWeight: 600, margin: '0 0 10px', textAlign: 'center' }}>
+                      ✔ Password copied to clipboard
+                    </p>
+                  )}
+
+                  {/* Warning */}
                   <div style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: pwScore.color,
+                    background: '#fef3c7',
+                    border: '1.5px solid #fde68a',
+                    borderRadius: 10,
+                    padding: '10px 12px',
                     marginTop: 4,
                   }}>
-                    {pwScore.label}
+                    <p style={{ fontSize: 13, color: '#78350f', fontWeight: 700, margin: 0, lineHeight: 1.5 }}>
+                      We cannot recover your password if lost. Save it somewhere safe before downloading.
+                    </p>
                   </div>
-                )}
-              </div>
+                </div>
 
-              {/* Confirm input */}
-              <label style={{ fontSize: 13, color: '#475569', fontWeight: 500, marginBottom: 6, display: 'block' }}>Confirm password</label>
-              <div style={{ position: 'relative', marginBottom: 12 }}>
-                <input
-                  type={showConfirmPw ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
-                  placeholder="Re-enter password"
-                  autoComplete="new-password"
-                  style={{
-                    width: '100%',
-                    padding: '12px 44px 12px 14px',
-                    height: 48,
-                    borderRadius: 10,
-                    border: `1.5px solid ${confirmPassword && !passwordsMatch ? '#fca5a5' : '#e2e8f0'}`,
-                    fontSize: 15,
-                    outline: 'none',
-                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                  }}
-                  onFocus={e => {
-                    if (!(confirmPassword && !passwordsMatch)) e.target.style.borderColor = '#2563eb';
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = confirmPassword && !passwordsMatch ? '#fca5a5' : '#e2e8f0';
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPw(s => !s)}
-                  aria-label={showConfirmPw ? 'Hide password' : 'Show password'}
-                  style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: '#64748b',
-                    fontSize: 18,
-                    cursor: 'pointer',
-                    padding: 6,
-                  }}
-                >
-                  {showConfirmPw ? '🙈' : '👁️'}
-                </button>
-              </div>
-              {confirmPassword && !passwordsMatch && (
-                <p style={{ fontSize: 12, color: '#dc2626', marginTop: -8, marginBottom: 12 }}>
-                  Passwords do not match
-                </p>
-              )}
+                {/* Block 2: Restrict permissions */}
+                <div className="card" style={{ marginBottom: 16 }}>
+                  <div className="card-title">2. Restrict permissions</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {([
+                      ['preventEditing', preventEditing, setPreventEditing, 'Prevent editing'],
+                      ['preventCopying', preventCopying, setPreventCopying, 'Prevent copying'],
+                      ['preventPrinting', preventPrinting, setPreventPrinting, 'Prevent printing'],
+                    ] as [string, boolean, (v: boolean) => void, string][]).map(([key, val, setVal, label]) => (
+                      <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '6px 0' }}>
+                        <input
+                          type="checkbox"
+                          checked={val}
+                          onChange={e => setVal(e.target.checked)}
+                          style={{ width: 18, height: 18, accentColor: '#2563eb', cursor: 'pointer' }}
+                        />
+                        <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 500 }}>{label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, marginBottom: 0, lineHeight: 1.5 }}>
+                    Recipients can open the file but cannot modify, copy or print it.
+                  </p>
+                </div>
 
-              {/* Generate button */}
-              <button
-                type="button"
-                onClick={handleGenerate}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  height: 48,
-                  borderRadius: 10,
-                  border: '1.5px solid #bfdbfe',
-                  background: '#eff6ff',
-                  color: '#2563eb',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  marginBottom: 10,
+                {/* Badge */}
+                <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 8,
-                }}
-              >
-                ✨ Generate strong password
-              </button>
-              {copied && (
-                <p style={{ fontSize: 12, color: '#16a34a', fontWeight: 600, margin: '0 0 10px', textAlign: 'center' }}>
-                  ✔ Password copied to clipboard
-                </p>
-              )}
+                  gap: 6,
+                  fontSize: 13,
+                  color: '#16a34a',
+                  background: '#f0fdf4',
+                  border: '1px solid #bbf7d0',
+                  borderRadius: 10,
+                  padding: '8px 14px',
+                  marginBottom: 12,
+                  fontWeight: 500,
+                }}>
+                  🔒 Processed locally. No account required.
+                </div>
 
-              {/* Warning */}
-              <div style={{
-                background: '#fef3c7',
-                border: '1.5px solid #fde68a',
-                borderRadius: 10,
-                padding: '10px 12px',
-                marginTop: 4,
-              }}>
-                <p style={{ fontSize: 13, color: '#78350f', fontWeight: 700, margin: 0, lineHeight: 1.5 }}>
-                  We cannot recover your password if lost. Save it somewhere safe before downloading.
-                </p>
+                {/* Protect button — solid blue, no gradient */}
+                <button
+                  onClick={handleProtect}
+                  disabled={!canProtect || isProcessing}
+                  className="btn-primary-solid"
+                  style={{
+                    width: '100%',
+                    padding: '16px',
+                    height: 56,
+                    fontSize: 16,
+                    borderRadius: 14,
+                  }}
+                >
+                  {isProcessing ? <><span className="spinner" /> Encrypting…</> : '🔐 Protect PDF'}
+                </button>
               </div>
-            </div>
 
-            {/* Block 2: Restrict permissions */}
-            <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-title">2. Restrict permissions</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {([
-                  ['preventEditing', preventEditing, setPreventEditing, 'Prevent editing'],
-                  ['preventCopying', preventCopying, setPreventCopying, 'Prevent copying'],
-                  ['preventPrinting', preventPrinting, setPreventPrinting, 'Prevent printing'],
-                ] as [string, boolean, (v: boolean) => void, string][]).map(([key, val, setVal, label]) => (
-                  <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '6px 0' }}>
-                    <input
-                      type="checkbox"
-                      checked={val}
-                      onChange={e => setVal(e.target.checked)}
-                      style={{ width: 18, height: 18, accentColor: '#2563eb', cursor: 'pointer' }}
-                    />
-                    <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 500 }}>{label}</span>
-                  </label>
-                ))}
-              </div>
-              <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, marginBottom: 0, lineHeight: 1.5 }}>
-                Recipients can open the file but cannot modify, copy or print it.
-              </p>
             </div>
-
-            {/* Badge */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              fontSize: 13,
-              color: '#16a34a',
-              background: '#f0fdf4',
-              border: '1px solid #bbf7d0',
-              borderRadius: 10,
-              padding: '8px 14px',
-              marginBottom: 12,
-              fontWeight: 500,
-            }}>
-              🔒 Processed locally. No account required.
-            </div>
-
-            {/* Protect button */}
-            <button
-              onClick={handleProtect}
-              disabled={!canProtect || isProcessing}
-              className="btn-primary"
-              style={{
-                width: '100%',
-                padding: '16px',
-                height: 56,
-                fontSize: 16,
-                borderRadius: 14,
-                opacity: canProtect && !isProcessing ? 1 : 0.5,
-                cursor: canProtect && !isProcessing ? 'pointer' : 'not-allowed',
-              }}
-            >
-              {isProcessing ? <><span className="spinner" /> Encrypting…</> : '🔐 Protect PDF'}
-            </button>
           </div>
         )}
 
@@ -728,6 +774,15 @@ export default function ProtectPage() {
               <p className="faq-answer">Processed locally in your browser. Never uploaded to our servers.</p>
             </details>
           </div>
+          <p style={{
+            textAlign: 'center',
+            fontSize: 13,
+            color: '#94a3b8',
+            marginTop: 20,
+            marginBottom: 0,
+          }}>
+            Want to remove a password from a PDF? Unlock PDF — coming soon.
+          </p>
         </div>
       )}
 
