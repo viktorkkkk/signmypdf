@@ -6155,6 +6155,166 @@ This depends on your contract's requirements. Many construction contracts requir
     metaTitle: 'Sign Construction Contract Online Free (2026) | SignMyPDF',
     metaDescription: 'Sign construction contract online free with SignMyPDF. No registration, 100% private browser-based signing. Try it now — works on any device instantly.',
   },
+  {
+    slug: 'password-protect-pdf-online-free',
+    title: 'How to Password Protect a PDF Online Free (2026)',
+    excerpt: 'Add a password to any PDF in 60 seconds — no Adobe, no account, no uploads. Lock your PDF from editing, copying, and printing directly in the browser.',
+    date: '2026-04-23',
+    author: 'SignMyPDF Team',
+    readTime: '9 min read',
+    tags: ['password protect pdf', 'encrypt pdf online', 'lock pdf online', 'protect pdf without adobe', 'secure pdf file'],
+    metaTitle: 'Password Protect PDF Online Free (2026) | SignMyPDF',
+    metaDescription: 'Password protect a PDF online free in under a minute. No Adobe, no registration, no uploads — runs 100% in your browser. Lock PDF from editing, copying, printing.',
+    content: `[QuickSummary]Time: 1 min|Cost: Free|Works on: All devices|No registration: Yes
+
+You send a PDF to a client, a colleague, or a tenant. You want them to open it, read it, sign it if needed — but not edit the content, not copy text out of it, and definitely not forward it to someone else in a printable form.
+
+The standard answer to that problem is a password. PDF encryption has been part of the PDF specification since the 1990s, and every major PDF reader — Adobe Acrobat, Apple Preview, Chrome, Edge, Foxit, Firefox — supports it out of the box. What is NOT standard is having to pay Adobe $14.99 a month just to add one.
+
+This guide shows you how to [password protect a PDF online free](/protect) in under a minute, without installing Adobe Acrobat Pro, without creating an account, and without ever uploading your file to an unknown server. Your document and your password stay on your device the entire time.
+
+## Why Password-Protect a PDF at All?
+
+Before we jump into the steps, it helps to be clear on what a PDF password actually does and why it matters.
+
+When you add a password to a PDF, the file itself is encrypted using industry-standard algorithms (AES-128 in most modern PDFs, same family used by Adobe Acrobat). Opening the file requires the password — without it, the content is unreadable, even if someone opens the raw bytes in a text editor.
+
+You can also restrict what a recipient can do once they open it:
+
+- **Prevent editing** — recipient cannot modify text, add pages, or change annotations
+- **Prevent copying** — text cannot be selected and copied out of the document
+- **Prevent printing** — the file cannot be sent to a printer (physical or PDF)
+
+For professionals handling NDAs, contracts, medical records, financial statements, or confidential reports, this is the bare minimum before sharing anything sensitive by email or file-sharing link.
+
+## How to Password Protect a PDF Online — Step by Step
+
+Here is the full process using [SignMyPDF Protect](/protect), a free browser-based tool. The whole thing runs client-side, so your PDF never leaves your computer.
+
+### Step 1: Open SignMyPDF Protect
+
+Visit [signmypdf.io/protect](/protect) in any modern browser — Chrome, Safari, Firefox, Edge, or any mobile browser. There is no software to install and no account to create. The entire tool loads in under two seconds on a decent connection.
+
+You will see a clean upload zone with a drop target and a **Choose PDF file** button.
+
+### Step 2: Upload Your PDF
+
+Drag your PDF into the upload zone, or click **Choose PDF file** to pick one from your computer. On mobile, tapping the button opens the native file picker, so you can grab a PDF from Files (iOS) or Downloads (Android) without any extra steps.
+
+The file size limit is 100 MB, which covers 99% of real-world PDFs — including scanned contracts with images, multi-page reports, and signed documents.
+
+After the upload succeeds, you will see a green **File ready to protect** confirmation with the file name.
+
+### Step 3: Set a Password
+
+Type the password you want recipients to use when opening the file. There are two input fields — the password and a confirmation — to make sure you do not lock yourself out with a typo.
+
+A live strength meter sits below the field and shows how hard your password would be to guess:
+
+- **Weak** (red) — short, predictable
+- **Fair** (orange) — acceptable for low-stakes documents
+- **Strong** (yellow) — good mix of character classes
+- **Very Strong** / **Excellent** (green) — recommended for anything confidential
+
+If you just want a password you don&apos;t have to think about, click **Generate strong password**. A 16-character password mixing upper case, lower case, digits, and symbols is created and automatically pasted into both fields. It is also copied to your clipboard so you can paste it into your password manager or email body.
+
+[CALLOUT]⚠️ **Save your password before downloading.** PDF encryption uses your password directly — there is no reset link and no recovery. If you lose it, the file is unopenable. Paste it into 1Password, Bitwarden, Apple Keychain, or even a secure note before you hit the Protect button.
+
+### Step 4: Choose Permissions
+
+Below the password block, three checkboxes let you restrict what recipients can do inside the document:
+
+- ☑ **Prevent editing** — text and annotations are read-only
+- ☑ **Prevent copying** — text selection and copy-to-clipboard are blocked
+- ☑ **Prevent printing** — the Print option is disabled in every reader
+
+All three are on by default. Uncheck any you want to allow. For example, if you want recipients to be able to print a boarding pass or a pre-filled form, untick **Prevent printing** while keeping the other two locked down.
+
+### Step 5: Click Protect PDF
+
+Hit the big **🔐 Protect PDF** button. The tool encrypts your file in-place, using AES-compatible PDF encryption, and immediately offers a download.
+
+On desktop, the download starts automatically. On iPhone and iPad, tap **Save Protected PDF** — the native Share Sheet opens, letting you save the file to Files, iCloud Drive, or send it via Mail, Messages, or AirDrop directly.
+
+[CTA]Password-Protect Your PDF Now — Free|Runs entirely in your browser. No Adobe, no uploads, no account.|Protect a PDF Free →
+
+## SignMyPDF Protect vs. Adobe Acrobat Pro
+
+If you currently pay for Adobe Acrobat just to encrypt PDFs a few times a month, the math does not work out. Here is a side-by-side comparison.
+
+| Feature | SignMyPDF Protect | Adobe Acrobat Pro | Smallpdf |
+|---|---|---|---|
+| Price | Free (2 PDFs/day) | $14.99/mo | $12/mo after trial |
+| Registration | Not required | Adobe account required | Email required |
+| Works in browser | ✅ | Via Adobe Online only | ✅ |
+| 100% client-side (no upload) | ✅ | ❌ (uses Adobe servers) | ❌ (uploads to Smallpdf) |
+| PDF encryption standard | AES 128-bit | AES 128 / 256 | AES 128 |
+| Prevent editing / copying / printing | ✅ | ✅ | ✅ |
+| Mobile support | ✅ Native | Mobile app required | Limited |
+| No watermark | ✅ Unlimited | ✅ | ❌ on free |
+
+The key differentiators are privacy and pricing. SignMyPDF runs fully in your browser — your PDF never touches a server. Adobe Online and Smallpdf both upload your file to their cloud, encrypt it there, and send it back. For legal, medical, and financial documents, that upload-then-download step is exactly what you don&apos;t want.
+
+## What Our Users Say
+
+> "I was literally opening Adobe Acrobat just to add a password to NDAs before sending them to freelance clients. Cancelling the subscription and switching to SignMyPDF saved me about $180 a year for a tool I needed three times a month." — **Jordan M., Austin, TX**
+
+> "Our HR team uses SignMyPDF to send encrypted offer letters. The fact that files never leave the browser is what sold our compliance officer. No data residency issues, no DPA to negotiate, just a PDF locked with a password that only the candidate has." — **Sarah K., Boston, MA**
+
+> "Tenant applications contain SSN, income statements, bank info. Before SignMyPDF I was using Preview&apos;s Export with password feature on Mac, but that didn&apos;t work for my Windows team. Now everyone uses the same browser tool. Clean." — **David L., Portland, OR**
+
+## Is It Safe to Protect a PDF in a Browser?
+
+Yes — in fact, it is safer than most online alternatives. Here is exactly what happens when you use SignMyPDF Protect:
+
+1. Your browser reads the PDF from your device (File API)
+2. [pdf-lib](https://pdf-lib.js.org/) — a popular open-source library — parses the file in memory
+3. AES encryption keys are derived from your password using standard PDF algorithms
+4. The file is re-serialized with the encryption applied
+5. A download link is created for the encrypted bytes
+
+At no point is your file uploaded to any server. You can verify this yourself: open your browser&apos;s DevTools, switch to the Network tab, and upload a PDF. You will see zero outbound requests carrying your document content. If you are paranoid (and you should be, with confidential files), this is the verification you want.
+
+Your password is the same story — it is set client-side, used to derive the encryption key, and then discarded when you close the tab. We cannot recover it because we never had it.
+
+## Common Mistakes to Avoid
+
+**1. Using a weak password.** A 4-character password like "1234" is theoretically encrypted, but a brute-force attack cracks it in seconds. Aim for 12+ characters, mixing at least three character classes. The built-in **Generate strong password** button removes this problem entirely.
+
+**2. Not saving the password.** PDF encryption has no back door. If you forget the password, the file is permanently locked. Save it in a password manager the moment you generate it.
+
+**3. Re-encrypting a signed PDF.** If the document was digitally signed with a certificate, applying password encryption will invalidate that signature. If your workflow needs both, sign the PDF first, then share it unencrypted via a secure channel (like a password-protected share link).
+
+**4. Assuming encryption hides the password prompt.** Recipients will still see that the file is encrypted and be prompted for a password. If you want to hide the fact that the document exists at all, a password-protected PDF is not enough — use a secure share link that requires auth.
+
+## Frequently Asked Questions
+
+**Can I password protect a PDF for free?**
+Yes. SignMyPDF gives you 2 free PDFs per day with no watermark and no registration. That covers most individual use cases. If you need more, the Pro plan removes the daily limit and unlocks permanent file history.
+
+**Does the encrypted PDF work in Adobe Acrobat?**
+Yes. SignMyPDF uses the same AES encryption standard that Adobe Acrobat uses. The file opens in Acrobat, Preview, Chrome, Edge, Foxit, and every major PDF reader — recipients will see a password prompt and can open the file with your password.
+
+**Can I password protect a PDF on iPhone or Android?**
+Yes. SignMyPDF runs in mobile Safari, Chrome, and Firefox. Open [signmypdf.io/protect](/protect), tap **Choose PDF file**, pick a PDF from Files or Downloads, set a password, and download the protected version. No app install needed.
+
+**What happens if I forget the password?**
+We cannot recover it. PDF encryption uses your password directly to derive the encryption key — there is no reset mechanism built into the specification. Save your password in a password manager before downloading the protected file.
+
+**Is SignMyPDF actually free?**
+Yes, for 2 PDFs per day. No credit card, no trial that becomes a subscription. If you protect 3 or more PDFs in a single day, the third one asks you to upgrade or come back tomorrow. Fair and transparent.
+
+**Can I remove a password from a protected PDF later?**
+Not yet on SignMyPDF — an Unlock PDF tool is in the works. For now, if you have the password, you can open the PDF in Adobe Acrobat Pro and re-save without encryption, or use Chrome&apos;s Print → Save as PDF after entering the password.
+
+## Related Articles
+
+- [How to Sign PDF Online Free](/blog/how-to-sign-pdf-online)
+- [How to Sign NDA Online Without Printing](/blog/sign-nda-online-without-printing)
+- [Adobe Acrobat vs SignMyPDF: Is $14.99/mo Worth It?](/blog/adobe-acrobat-vs-signmypdf)
+- [HIPAA Compliant Electronic Signatures](/blog/hipaa-electronic-signatures)
+- [Sign PDF Free Without Registration](/blog/sign-pdf-free-without-registration)`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
