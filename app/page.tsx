@@ -9,13 +9,12 @@ import Logo from './components/Logo';
 import NavHeader from './components/NavHeader';
 import SiteFooter from './components/SiteFooter';
 import FileHistory, { saveToHistory } from './components/FileHistory';
+import PaywallModal from './components/PaywallModal';
 import { signPdfInBrowser } from './utils/signPdf';
 import {
   SUBSCRIPTION_KEY,
   DAILY_LIMIT,
   PADDLE_CLIENT_TOKEN,
-  PADDLE_PRICE_MONTHLY,
-  PADDLE_PRICE_ANNUAL,
 } from './constants';
 import {
   getTodayCount,
@@ -60,9 +59,6 @@ export default function Home() {
   ];
   const [showPricing, setShowPricing] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
-  const [showRestore, setShowRestore] = useState(false);
-  const [restoreEmail, setRestoreEmail] = useState('');
-  const [restoreStatus, setRestoreStatus] = useState<'idle' | 'loading' | 'success' | 'notfound' | 'error'>('idle');
   const [todayCount, setTodayCount] = useState(0);
   const [selectedSigId, setSelectedSigId] = useState<string | null>(null);
   const [showWatermarkToast, setShowWatermarkToast] = useState(false);
@@ -231,34 +227,6 @@ export default function Home() {
         ...params,
       });
     } catch {}
-  };
-
-  const handleRestorePro = async () => {
-    if (!restoreEmail.trim()) return;
-    setRestoreStatus('loading');
-    try {
-      const res = await fetch(`/api/check-subscription?email=${encodeURIComponent(restoreEmail.trim())}`);
-      const data = await res.json();
-      if (data.active) {
-        activateSubscription();
-        setHasSubscription(true);
-        setRestoreStatus('success');
-        // Save email + auto-get dashboard token
-        localStorage.setItem('signmypdf_user_email', restoreEmail.trim());
-        fetch('/api/auth/auto-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: restoreEmail.trim() }),
-        }).then(r => r.json()).then(d => {
-          if (d.token) localStorage.setItem('signmypdf_dashboard_token', d.token);
-        }).catch(() => {});
-        setTimeout(() => setShowPricing(false), 1500);
-      } else {
-        setRestoreStatus('notfound');
-      }
-    } catch {
-      setRestoreStatus('error');
-    }
   };
 
   const handleSign = async () => {
@@ -743,162 +711,14 @@ export default function Home() {
         </div>
       )}
 
-      {/* Pricing modal */}
-      {showPricing && (
-        <div className="modal-overlay" onClick={() => setShowPricing(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
-            <div className="pricing-header">
-              <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
-              <h3 className="pricing-title">Unlock Unlimited Signing</h3>
-              <p className="pricing-sub">
-                {todayCount >= DAILY_LIMIT
-                  ? `Free plan: watermark added after ${DAILY_LIMIT} PDFs/day. Upgrade to remove it.`
-                  : 'Unlimited signing, no watermark, saved signatures and download history'
-                }
-              </p>
-            </div>
-            
-            <div className="pricing-grid">
-
-              {/* Free */}
-              <div className="plan-card">
-                <div className="plan-name">Free</div>
-                <div className="plan-price">$0<span>/mo</span></div>
-                <div className="plan-desc">2 PDFs/day without watermark</div>
-                <ul className="plan-perks">
-                  <li>✓ 2 PDF signings/day (no watermark)</li>
-                  <li>✓ Draw or type signature</li>
-                  <li>✓ No registration needed</li>
-                  <li>✓ File history (24 hours)</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ Save signatures & drafts</li>
-                </ul>
-                <button
-                  className="plan-btn"
-                  onClick={() => setShowPricing(false)}
-                >
-                  Current plan
-                </button>
-              </div>
-
-              {/* Monthly */}
-              <div className="plan-card">
-                <div className="plan-name">Monthly</div>
-                <div className="plan-price">$9<span>/mo</span></div>
-                <div className="plan-desc">Billed monthly</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited PDF signing</li>
-                  <li>✓ Save & reuse signatures</li>
-                  <li>✓ No watermark ever</li>
-                  <li>✓ Save form drafts</li>
-                  <li>✓ Permanent file history (1 year)</li>
-                  <li>✓ Sign + Fill in one flow</li>
-                </ul>
-                <button
-                  className="plan-btn"
-                  onClick={() => {
-                    window.Paddle?.Checkout.open({
-                      items: [{ priceId: PADDLE_PRICE_MONTHLY, quantity: 1 }],
-                    });
-                  }}
-                >
-                  Get Monthly
-                </button>
-              </div>
-
-              {/* Annual - FEATURED */}
-              <div className="plan-card plan-featured" style={{ transform: 'scale(1.04)', zIndex: 1 }}>
-                <div className="plan-badge">Best Value — Save 17%</div>
-                <div className="plan-name">Annual</div>
-                <div className="plan-price">$7.50<span>/mo</span></div>
-                <div className="plan-desc">Billed $90/year</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited PDF signing</li>
-                  <li>✓ Save & reuse signatures</li>
-                  <li>✓ No watermark ever</li>
-                  <li>✓ Save form drafts</li>
-                  <li>✓ Permanent file history (1 year)</li>
-                  <li>✓ Sign + Fill in one flow</li>
-                </ul>
-                <button
-                  className="plan-btn plan-btn-featured"
-                  onClick={() => {
-                    window.Paddle?.Checkout.open({
-                      items: [{ priceId: PADDLE_PRICE_ANNUAL, quantity: 1 }],
-                    });
-                  }}
-                >
-                  Get Annual Plan
-                </button>
-              </div>
-
-            </div>
-
-            <p className="pricing-fine">Cancel anytime · Secure payment · No hidden fees</p>
-
-            {/* Restore Pro */}
-            {!showRestore ? (
-              <div style={{
-                marginTop: 16, padding: '14px 20px',
-                background: '#f8fafc', borderRadius: 12,
-                border: '1px solid #e2e8f0',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12
-              }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>Already have Pro?</div>
-                  <div style={{ fontSize: 12, color: '#94a3b8' }}>Restore access on this device</div>
-                </div>
-                <button
-                  onClick={() => { setShowRestore(true); setRestoreStatus('idle'); }}
-                  style={{
-                    background: '#fff', border: '1px solid #e2e8f0',
-                    color: '#2563eb', cursor: 'pointer', fontSize: 13,
-                    fontWeight: 700, padding: '8px 16px', borderRadius: 8,
-                    whiteSpace: 'nowrap', flexShrink: 0
-                  }}
-                >
-                  Restore Pro →
-                </button>
-              </div>
-            ) : (
-              <div style={{ marginTop: 16, padding: '16px', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#1e293b', marginBottom: 10 }}>Enter your email to restore Pro access</p>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={restoreEmail}
-                    onChange={e => setRestoreEmail(e.target.value)}
-                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 14, outline: 'none' }}
-                    onKeyDown={async e => { if (e.key === 'Enter') await handleRestorePro(); }}
-                  />
-                  <button
-                    onClick={handleRestorePro}
-                    disabled={restoreStatus === 'loading'}
-                    style={{ padding: '8px 16px', background: '#2563eb', color: 'white', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    {restoreStatus === 'loading' ? '...' : 'Check'}
-                  </button>
-                </div>
-                {restoreStatus === 'success' && (
-                  <p style={{ marginTop: 8, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>
-                    ✅ Pro restored!{' '}
-                    <a href="/dashboard" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 700 }}>Go to dashboard →</a>
-                  </p>
-                )}
-                {restoreStatus === 'notfound' && (
-                  <p style={{ marginTop: 8, fontSize: 13, color: '#dc2626' }}>No active subscription found for this email.</p>
-                )}
-                {restoreStatus === 'error' && (
-                  <p style={{ marginTop: 8, fontSize: 13, color: '#dc2626' }}>Something went wrong. Try again.</p>
-                )}
-                <button onClick={() => setShowRestore(false)} style={{ marginTop: 8, background: 'none', border: 'none', fontSize: 12, color: '#94a3b8', cursor: 'pointer', padding: 0 }}>Cancel</button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Unified Paywall — radio-select + sticky CTA */}
+      <PaywallModal
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        tool="sign"
+        todayCount={todayCount}
+        onProActivated={() => setHasSubscription(true)}
+      />
 
       {/* Pro activation overlay */}
       {activatingPro && (

@@ -8,10 +8,11 @@ import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
 import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
+import PaywallModal from '../components/PaywallModal';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
 import { isProActive, activateSubscription } from '../utils/subscription';
-import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN, PADDLE_PRICE_MONTHLY, PADDLE_PRICE_ANNUAL } from '../constants';
+import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN } from '../constants';
 
 type Step = 'upload' | 'fill' | 'preview' | 'done';
 
@@ -840,66 +841,14 @@ export default function FillPage() {
 
       </div>
 
-      {/* Pricing modal */}
-      {showPricing && (
-        <div className="modal-overlay" onClick={() => setShowPricing(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowPricing(false)}>✕</button>
-            <div className="pricing-header">
-              <div style={{ fontSize: 28, marginBottom: 6 }}>🚀</div>
-              <h3 className="pricing-title">Unlock Unlimited PDF Tools</h3>
-              <p className="pricing-sub">
-                {todayCount >= DAILY_LIMIT
-                  ? `Free plan: watermark added after ${DAILY_LIMIT} PDFs/day. Upgrade to remove it.`
-                  : 'Unlimited PDFs per day, no watermark, and more'}
-              </p>
-            </div>
-            <div className="pricing-grid">
-              <div className="plan-card">
-                <div className="plan-name">Free</div>
-                <div className="plan-price">$0<span>/mo</span></div>
-                <div className="plan-desc">2 PDFs/day without watermark</div>
-                <ul className="plan-perks">
-                  <li>✓ 2 PDFs/day (no watermark)</li>
-                  <li>✓ Sign & fill PDFs</li>
-                  <li>✓ No registration needed</li>
-                  <li>✓ File history (24 hours)</li>
-                  <li style={{ color: '#cbd5e1' }}>✗ Watermark after 2 PDFs/day</li>
-                </ul>
-                <button className="plan-btn" onClick={() => setShowPricing(false)}>Current plan</button>
-              </div>
-              <div className="plan-card">
-                <div className="plan-name">Monthly</div>
-                <div className="plan-price">$9<span>/mo</span></div>
-                <div className="plan-desc">Billed monthly</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited PDFs per day</li>
-                  <li>✓ No watermark ever</li>
-                  <li>✓ Save form drafts</li>
-                  <li>✓ Permanent file history (1 year)</li>
-                  <li>✓ Sign + Fill in one flow</li>
-                </ul>
-                <button className="plan-btn" onClick={() => window.Paddle?.Checkout.open({ items: [{ priceId: PADDLE_PRICE_MONTHLY, quantity: 1 }] })}>Get Monthly</button>
-              </div>
-              <div className="plan-card plan-featured" style={{ transform: 'scale(1.04)', zIndex: 1 }}>
-                <div className="plan-badge">Best Value — Save 17%</div>
-                <div className="plan-name">Annual</div>
-                <div className="plan-price">$7.50<span>/mo</span></div>
-                <div className="plan-desc">Billed $90/year</div>
-                <ul className="plan-perks">
-                  <li>✓ Unlimited PDFs per day</li>
-                  <li>✓ No watermark ever</li>
-                  <li>✓ Save form drafts</li>
-                  <li>✓ Permanent file history (1 year)</li>
-                  <li>✓ Sign + Fill in one flow</li>
-                </ul>
-                <button className="plan-btn plan-btn-featured" onClick={() => window.Paddle?.Checkout.open({ items: [{ priceId: PADDLE_PRICE_ANNUAL, quantity: 1 }] })}>Get Annual Plan</button>
-              </div>
-            </div>
-            <p className="pricing-fine">Cancel anytime · Secure payment · No hidden fees</p>
-          </div>
-        </div>
-      )}
+      {/* Unified Paywall — radio-select + sticky CTA */}
+      <PaywallModal
+        open={showPricing}
+        onClose={() => setShowPricing(false)}
+        tool="fill"
+        todayCount={todayCount}
+        onProActivated={() => setHasSubscription(true)}
+      />
 
       {/* Watermark Toast */}
       {showWatermarkToast && (
