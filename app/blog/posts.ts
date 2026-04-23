@@ -6163,7 +6163,7 @@ This depends on your contract's requirements. Many construction contracts requir
     author: 'SignMyPDF Team',
     readTime: '9 min read',
     tags: ['password protect pdf', 'encrypt pdf online', 'lock pdf online', 'protect pdf without adobe', 'secure pdf file'],
-    metaTitle: 'Password Protect PDF Online Free (2026) | SignMyPDF',
+    metaTitle: 'Password Protect PDF Online Free (2026)',
     metaDescription: 'Password protect a PDF online free in under a minute. No Adobe, no registration, no uploads — runs 100% in your browser. Lock PDF from editing, copying, printing.',
     content: `[QuickSummary]Time: 1 min|Cost: Free|Works on: All devices|No registration: Yes
 
