@@ -98,7 +98,7 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Google Search Console verified (`T8qgvPjWrXpKbKE-O6pwBD3xir2SKHBGo1vxdikCEyo`)
 - [x] sitemap.xml at `/sitemap.xml` (dynamic, auto-updates on deploy)
 - [x] Blog CTAs match article topic: Sign articles → `/` CTA, Fill articles → `/fill` CTA
-- [x] FILL_SLUGS set in BlogPostContent.tsx — isFillArticle(slug) detects fill articles
+- [x] Tri-state tool routing in BlogPostContent.tsx — `getArticleTool(slug)` returns `'sign' | 'fill' | 'protect'` based on FILL_SLUGS + PROTECT_SLUGS sets + filename heuristics. Drives CTA href, button text, hero subtitle, sticky CTA, and BlogPdfUploader target route.
 - [x] getPublishedPosts() filters by date ≤ build date — future-dated articles invisible until deploy
 - [x] Daily trigger (02:00 UTC) auto-publishes 2 articles (1 SIGN + 1 FILL), deploys, submits to Bing + Google
 - [x] All 45 URLs submitted to Google Indexing API + Bing IndexNow (Apr 22 2026)
@@ -184,24 +184,35 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ## Blog Publication Plan (60 articles)
 
-**Rule**: Strictly 2 articles per day — exactly 1 SIGN + 1 FILL. Never more than 2 per day. Never 2 articles of the same type on the same day.
-**Before publishing**: always check existing dates in posts.ts to confirm the target date has 0 articles. Only then publish.
+**Rule**: Strictly 2 articles per day — exactly 1 SIGN + 1 FILL. Never more than 2 per day. Never 2 articles of the same type on the same day. Launch-day exception: the day a new tool ships may carry up to 3 (2 queue + 1 launch article).
+**Before publishing**: always check existing dates in posts.ts to confirm the target date has <2 articles. If today is full, walk forward day-by-day until you find a slot. NEVER batch overflow onto one day.
 
-### ⚠️ Balance Rules — NEVER violate these
+### ⚠️ HARD RULES — any Claude session writing or editing blog articles MUST follow these
 
-1. **Never rewrite or retype existing published articles** to change their tool type (Sign → Fill or vice versa). Google has already indexed them — changing content on indexed pages is an SEO risk with no benefit.
+1. **NEVER modify or edit an already-published article.** Dates, content, titles, CTAs, metaTitle, internal links of articles already committed to `app/blog/posts.ts` are frozen. Google indexes them — every edit is an SEO regression risk. Only APPEND new entries. If content is wrong on an existing article, leave it and schedule a new, better article instead.
 
-2. **Balance is maintained only through new publications.** The early Sign-heavy articles (written before the Fill tool existed) are intentional history. The 1 SIGN + 1 FILL daily rule corrects the ratio over time naturally.
+2. **CTAs and internal links MUST match the article's tool category.** The `getArticleTool(slug)` function in `app/blog/[slug]/BlogPostContent.tsx` determines routing. When writing a new article, author all in-body CTAs, `[CTA]` blocks, and button text so they match:
+   - **SIGN** article → links go to `/`, button copy is "Sign PDF Now — Free"
+   - **FILL** article → links go to `/fill`, button copy is "Fill PDF Form Now — Free"
+   - **PROTECT** article → links go to `/protect`, button copy is "Protect PDF Now — Free"
+   If a new slug doesn't auto-classify correctly, add it to `FILL_SLUGS` or `PROTECT_SLUGS` in BlogPostContent.tsx (those sets override the filename heuristic).
 
-3. **Current baseline** (do not "fix" by editing old articles):
-   - Legacy Sign-only articles: ~10 (pre-Fill era, indexed by Google, untouchable)
-   - Queue articles: strictly 1:1 Sign/Fill pairs
+3. **PUBLISH_DATE selection algorithm**: start from today, loop forward day by day, pick the first date where `grep -c "date: '$DATE'" app/blog/posts.ts` is `<2`. Do NOT stop at `today+1` — if tomorrow is also full, keep going. This prevents "4 articles on Apr 23" overflow situations from recurring.
 
-4. **For every new PDF tool added to the site** (e.g. Compress PDF, Merge PDF, PDF→Word): follow the same rule — publish articles for each tool at an equal rate (1 per tool per publication day). Never bulk-publish articles for one tool to "catch up".
+4. **metaTitle must NOT include ` | SignMyPDF`** — the root layout template in `app/layout.tsx` appends it automatically. Writing it twice creates `Title | SignMyPDF | SignMyPDF` duplication.
 
-5. **Signs that something is wrong**: if you see an imbalance > 5 articles between any two tools, the fix is to schedule more articles for the underrepresented tool going forward — NOT to rewrite existing ones.
+5. **Never rewrite existing articles to change their tool type** (Sign → Fill, etc.). Fix imbalance by adding new articles going forward, not by editing history.
+
+6. **For every new PDF tool added to the site** (e.g. Compress PDF, Merge PDF, PDF→Word): follow the same rule — publish articles for each tool at an equal rate going forward. Never bulk-publish articles for one tool to "catch up".
+
+7. **Signs of trouble**: if any calendar day holds ≥3 articles outside of a known launch day, OR any article's CTA points to the wrong tool, fix the automation first (the trigger prompt in `RemoteTrigger` + `BlogPostContent.tsx` routing), THEN redistribute or add corrective articles going forward.
+
 **Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
 **After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
+
+### Daily trigger (RemoteTrigger ID `trig_01Mw8wt1nCK3jpDA7ymfp4g2`)
+
+Runs `0 2 * * *` UTC daily. Encoded with all 7 hard rules above. The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync.
 
 ### Progress
 
@@ -217,11 +228,22 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 | 8 | fill-rental-application-pdf-free | small-business-document-signing | ✅ done |
 | 9 | eidas-regulation-eu-signatures | sign-medical-release-form-online | ✅ done |
 | 10 | pdf-form-fields-not-working-fix | hellosign-alternatives-free | ✅ done |
-| 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ✅ done |
-| 12 | esign-act-explained | fill-job-application-pdf-online | ✅ done |
-| 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ⚠️ SIGN done (dated Apr 24), FILL pending |
+| 11 | sign-insurance-documents-online | hr-teams-collect-signatures | ✅ done (Apr 22) |
+| 12 | esign-act-explained | fill-job-application-pdf-online | ✅ done (split: SIGN→Apr 26, FILL→Apr 24) |
+| 13 | sign-pdf-no-editing-allowed | smallpdf-vs-signmypdf | ✅ done (split: SIGN→Apr 24, FILL→Apr 26) |
+| 14 | sign-construction-contract-online | remote-teams-sign-documents | ⚠️ SIGN done (dated Apr 25), FILL pending |
 
-**⚠️ Next trigger run** (Apr 24 02:00 UTC): publish `smallpdf-vs-signmypdf` (FILL, pair 13) + `sign-construction-contract-online` (SIGN, pair 14). After that, pair 14 will have SIGN done + FILL (`remote-teams-sign-documents`) pending — same 1-article offset pattern continues until pairs re-align.
+### Launch articles (separate from the SIGN+FILL queue)
+
+| Date | Tool | Slug |
+|------|------|------|
+| Apr 23 | protect | password-protect-pdf-online-free |
+
+### Date redistribution (Apr 23)
+
+Overflow fix: Apr 22 originally carried 4 articles, Apr 23 carried 5. On the /protect launch day we capped Apr 23 at 3 (2 queue + launch article) and pushed 4 articles forward 3-4 days to Apr 25 and Apr 26. URLs unchanged → Google/Bing indexing preserved.
+
+**⚠️ Next trigger run** (Apr 24 02:00 UTC): the new trigger logic walks forward day-by-day looking for `<2 articles`. Expected PUBLISH_DATE = Apr 27 (Apr 24-26 are full). Will publish `remote-teams-sign-documents` (FILL from pair 14) + `digital-signatures-admissible-court` (SIGN from pair 15).
 
 ### Blog index date filter + revalidate
 

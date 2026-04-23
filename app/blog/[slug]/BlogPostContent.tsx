@@ -7,6 +7,11 @@ import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
 
+// ─── Tool category per article ──────────────────────────────────
+// Each article is routed to the tool that best matches its topic. This
+// determines the CTA button destination, hero copy, sticky CTA, etc.
+export type ArticleTool = 'sign' | 'fill' | 'protect';
+
 // Slugs for articles about filling PDFs (not signing)
 const FILL_SLUGS = new Set([
   'fill-pdf-form-online-free',
@@ -34,13 +39,68 @@ const FILL_SLUGS = new Set([
   'adobe-fill-sign-vs-signmypdf',
 ]);
 
-function isFillArticle(slug: string): boolean {
-  return FILL_SLUGS.has(slug) || slug.startsWith('fill-') || slug.includes('-fill-');
+// Slugs for articles about password protection / encryption
+const PROTECT_SLUGS = new Set([
+  'password-protect-pdf-online-free',
+]);
+
+export function getArticleTool(slug: string): ArticleTool {
+  if (PROTECT_SLUGS.has(slug) || slug.includes('password-protect') || slug.includes('protect-pdf') || slug.includes('encrypt-pdf') || slug.includes('lock-pdf')) {
+    return 'protect';
+  }
+  if (FILL_SLUGS.has(slug) || slug.startsWith('fill-') || slug.includes('-fill-')) {
+    return 'fill';
+  }
+  return 'sign';
 }
 
+// Tool metadata used by CTAs
+const TOOL_META: Record<ArticleTool, {
+  href: string;
+  ctaLong: string;
+  ctaShort: string;
+  finalTitle: string;
+  finalSub: string;
+  heroSub: string;
+  defaultCtaTitle: string;
+  defaultCtaBtn: string;
+}> = {
+  sign: {
+    href: '/',
+    ctaLong: 'Sign PDF Now — Free',
+    ctaShort: 'Sign PDF Now – Free',
+    finalTitle: 'Ready to sign your PDF?',
+    finalSub: 'Join thousands of users who trust SignMyPDF for fast, free document signing.',
+    heroSub: 'Sign your PDF in seconds — no registration, no downloads',
+    defaultCtaTitle: 'Ready to Sign Your PDF?',
+    defaultCtaBtn: 'Sign PDF Free Now',
+  },
+  fill: {
+    href: '/fill',
+    ctaLong: 'Fill PDF Now — Free',
+    ctaShort: 'Fill PDF Now – Free',
+    finalTitle: 'Ready to fill your PDF?',
+    finalSub: 'Join thousands of users who trust SignMyPDF for fast, free PDF form filling.',
+    heroSub: 'Fill your PDF in seconds — no registration, no downloads',
+    defaultCtaTitle: 'Ready to Fill Your PDF?',
+    defaultCtaBtn: 'Fill PDF Free Now',
+  },
+  protect: {
+    href: '/protect',
+    ctaLong: 'Protect PDF Now — Free',
+    ctaShort: 'Protect PDF Now – Free',
+    finalTitle: 'Ready to protect your PDF?',
+    finalSub: 'Add a password to any PDF in under a minute — free, private, no registration required.',
+    heroSub: 'Password-protect your PDF in seconds — no registration, no uploads',
+    defaultCtaTitle: 'Ready to Protect Your PDF?',
+    defaultCtaBtn: 'Protect PDF Free Now',
+  },
+};
+
 // Sticky CTA Component
-function StickyCTA({ isFill }: { isFill: boolean }) {
+function StickyCTA({ tool }: { tool: ArticleTool }) {
   const [isVisible, setIsVisible] = useState(false);
+  const meta = TOOL_META[tool];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,7 +130,7 @@ function StickyCTA({ isFill }: { isFill: boolean }) {
       }}
     >
       <Link
-        href={isFill ? '/fill' : '/'}
+        href={meta.href}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -91,7 +151,7 @@ function StickyCTA({ isFill }: { isFill: boolean }) {
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        {isFill ? 'Fill PDF Now — Free' : 'Sign PDF Now — Free'}
+        {meta.ctaLong}
       </Link>
     </div>
   );
@@ -188,7 +248,8 @@ function renderInline(text: string): React.ReactNode[] {
 }
 
 // Parse content
-function formatContent(content: string, isFill = false) {
+function formatContent(content: string, tool: ArticleTool = 'sign') {
+  const meta = TOOL_META[tool];
   return content
     .split('\n\n')
     .map((block, i) => {
@@ -233,10 +294,10 @@ function formatContent(content: string, isFill = false) {
       // CTA Block
       if (trimmed.startsWith('[CTA]')) {
         const parts = trimmed.slice(5).split('|');
-        const ctaTitle = parts[0]?.trim() || (isFill ? 'Ready to Fill Your PDF?' : 'Ready to Sign Your PDF?');
+        const ctaTitle = parts[0]?.trim() || meta.defaultCtaTitle;
         const ctaSub = parts[1]?.trim() || '';
-        const ctaBtn = parts[2]?.trim() || (isFill ? 'Fill PDF Free Now' : 'Sign PDF Free Now');
-        const ctaHref = isFill ? '/fill' : '/';
+        const ctaBtn = parts[2]?.trim() || meta.defaultCtaBtn;
+        const ctaHref = meta.href;
         return (
           <div key={i} style={{ margin: '48px 0', padding: '40px 32px', background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, textAlign: 'center', boxShadow: '0 20px 60px rgba(37,99,235,0.3)' }}>
             <h2 style={{ fontSize: 26, fontWeight: 800, color: 'white', marginBottom: 12, letterSpacing: -0.3 }}>{ctaTitle}</h2>
@@ -499,24 +560,23 @@ function FAQSection() {
 }
 
 // Final CTA Block
-function FinalCTA({ isFill }: { isFill: boolean }) {
+function FinalCTA({ tool }: { tool: ArticleTool }) {
+  const meta = TOOL_META[tool];
   return (
     <div style={{ marginTop: 48, padding: 40, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, textAlign: 'center', boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)' }}>
       <h2 style={{ fontSize: 28, fontWeight: 800, color: 'white', marginBottom: 12, letterSpacing: -0.5 }}>
-        {isFill ? 'Ready to fill your PDF?' : 'Ready to sign your PDF?'}
+        {meta.finalTitle}
       </h2>
       <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.9)', marginBottom: 28 }}>
-        {isFill
-          ? 'Join thousands of users who trust SignMyPDF for fast, free PDF form filling.'
-          : 'Join thousands of users who trust SignMyPDF for fast, free document signing.'}
+        {meta.finalSub}
       </p>
-      <Link href={isFill ? '/fill' : '/'} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '18px 36px', background: 'white', color: '#2563eb', fontWeight: 800, fontSize: 16, borderRadius: 16, textDecoration: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
+      <Link href={meta.href} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '18px 36px', background: 'white', color: '#2563eb', fontWeight: 800, fontSize: 16, borderRadius: 16, textDecoration: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        {isFill ? 'Fill PDF Now – Free' : 'Sign PDF Now – Free'}
+        {meta.ctaShort}
       </Link>
     </div>
   );
@@ -553,7 +613,8 @@ interface BlogPostContentProps {
 }
 
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {
-  const fill = isFillArticle(post.slug);
+  const tool = getArticleTool(post.slug);
+  const meta = TOOL_META[tool];
 
   return (
     <>
@@ -602,11 +663,9 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
           {/* HERO: PDF Uploader */}
           <div style={{ marginBottom: 48, padding: 40, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)' }}>
-            <BlogPdfUploader isFill={fill} />
+            <BlogPdfUploader tool={tool} />
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', marginTop: 20, textAlign: 'center' }}>
-              {fill
-                ? 'Fill your PDF in seconds — no registration, no downloads'
-                : 'Sign your PDF in seconds — no registration, no downloads'}
+              {meta.heroSub}
             </p>
           </div>
 
@@ -615,7 +674,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
           {/* Content */}
           <div style={{ fontSize: 16 }}>
-            {formatContent(post.content, fill)}
+            {formatContent(post.content, tool)}
           </div>
 
           {/* SEO Variations */}
@@ -625,7 +684,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
           <FAQSection />
 
           {/* Final CTA */}
-          <FinalCTA isFill={fill} />
+          <FinalCTA tool={tool} />
 
           {/* Related Articles */}
           <RelatedArticles currentSlug={post.slug} allPosts={allPosts} />
@@ -633,7 +692,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
       </article>
 
       {/* Sticky Mobile CTA */}
-      <StickyCTA isFill={fill} />
+      <StickyCTA tool={tool} />
 
       <SiteFooter />
     </>

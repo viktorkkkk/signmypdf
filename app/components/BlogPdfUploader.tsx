@@ -3,13 +3,28 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Keep in sync with ArticleTool in app/blog/[slug]/BlogPostContent.tsx
+type Tool = 'sign' | 'fill' | 'protect';
+
 interface BlogPdfUploaderProps {
+  /** Which tool the article is about — determines upload target route. */
+  tool?: Tool;
+  /** @deprecated Use `tool="fill"` instead. Kept for any stale callers. */
   isFill?: boolean;
 }
 
-export default function BlogPdfUploader({ isFill = false }: BlogPdfUploaderProps) {
+const ROUTE: Record<Tool, string> = {
+  sign: '/',
+  fill: '/fill',
+  protect: '/protect',
+};
+
+export default function BlogPdfUploader({ tool, isFill }: BlogPdfUploaderProps) {
   const router = useRouter();
   const [isDragging, setIsDragging] = useState(false);
+
+  const resolvedTool: Tool = tool ?? (isFill ? 'fill' : 'sign');
+  const targetRoute = ROUTE[resolvedTool];
 
   const handleFile = useCallback((file: File) => {
     if (file.type !== 'application/pdf') {
@@ -23,10 +38,10 @@ export default function BlogPdfUploader({ isFill = false }: BlogPdfUploaderProps
       const base64 = reader.result as string;
       localStorage.setItem('blog_pending_pdf', base64);
       localStorage.setItem('blog_pending_pdf_name', file.name);
-      router.push(isFill ? '/fill' : '/');
+      router.push(targetRoute);
     };
     reader.readAsDataURL(file);
-  }, [router, isFill]);
+  }, [router, targetRoute]);
 
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
