@@ -203,19 +203,28 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 // Quick Summary component shown at top of every article
-function QuickSummary() {
-  const items = [
-    { icon: '⏱', label: 'Time', value: 'Under 60 seconds' },
-    { icon: '💰', label: 'Cost', value: 'Free (2 PDFs/day)' },
-    { icon: '📱', label: 'Works on', value: 'All devices' },
-    { icon: '✍️', label: 'Registration', value: 'Not required' },
-  ];
+// Pick an emoji icon based on the QuickSummary label text.
+function iconForLabel(label: string): string {
+  const l = label.toLowerCase();
+  if (l.includes('time') || l.includes('duration')) return '⏱';
+  if (l.includes('cost') || l.includes('price')) return '💰';
+  if (l.includes('work') || l.includes('device') || l.includes('platform')) return '📱';
+  if (l.includes('registr') || l.includes('account') || l.includes('sign up')) return '✍️';
+  if (l.includes('secur') || l.includes('priva')) return '🔒';
+  if (l.includes('file') || l.includes('size') || l.includes('limit')) return '📄';
+  return '✓';
+}
+
+interface QuickSummaryItem { icon: string; label: string; value: string }
+
+// Shared card — used both by the hardcoded default and the parser output.
+function QuickSummaryCard({ items }: { items: QuickSummaryItem[] }) {
   return (
     <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: '20px 24px', marginBottom: 40 }}>
       <div style={{ fontWeight: 700, fontSize: 14, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Quick Summary</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
-        {items.map(item => (
-          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {items.map((item, idx) => (
+          <div key={`${item.label}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 22 }}>{item.icon}</span>
             <div>
               <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.label}</div>
@@ -226,6 +235,33 @@ function QuickSummary() {
       </div>
     </div>
   );
+}
+
+// Parse a [QuickSummary] line payload (pipe-separated `Label: Value` pairs).
+// Returns an empty array if the payload is malformed.
+function parseQuickSummary(payload: string): QuickSummaryItem[] {
+  return payload
+    .split('|')
+    .map(part => {
+      const colonIdx = part.indexOf(':');
+      if (colonIdx === -1) return null;
+      const label = part.slice(0, colonIdx).trim();
+      const value = part.slice(colonIdx + 1).trim();
+      if (!label || !value) return null;
+      return { label, value, icon: iconForLabel(label) };
+    })
+    .filter((x): x is QuickSummaryItem => x !== null);
+}
+
+// Fallback block shown when article content doesn't include its own [QuickSummary].
+function DefaultQuickSummary() {
+  const items: QuickSummaryItem[] = [
+    { icon: '⏱', label: 'Time', value: 'Under 60 seconds' },
+    { icon: '💰', label: 'Cost', value: 'Free (2 PDFs/day)' },
+    { icon: '📱', label: 'Works on', value: 'All devices' },
+    { icon: '✍️', label: 'Registration', value: 'Not required' },
+  ];
+  return <QuickSummaryCard items={items} />;
 }
 
 // Render inline bold/links within a string
@@ -254,6 +290,14 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
     .split('\n\n')
     .map((block, i) => {
       const trimmed = block.trim();
+
+      // QuickSummary block [QuickSummary]Label: Value|Label: Value|...
+      if (trimmed.startsWith('[QuickSummary]')) {
+        const payload = trimmed.slice('[QuickSummary]'.length).trim();
+        const items = parseQuickSummary(payload);
+        if (items.length === 0) return null; // malformed → drop, don't leak raw text
+        return <div key={i}><QuickSummaryCard items={items} /></div>;
+      }
 
       // Callout block [CALLOUT]text
       if (trimmed.startsWith('[CALLOUT]')) {
@@ -615,6 +659,10 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {
   const tool = getArticleTool(post.slug);
   const meta = TOOL_META[tool];
+  // If the article content has its own [QuickSummary] marker, let the
+  // inline parser render it where the author placed it. Otherwise,
+  // fall back to the generic default above the body.
+  const hasInlineQuickSummary = /\[QuickSummary\]/.test(post.content);
 
   return (
     <>
@@ -669,8 +717,8 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             </p>
           </div>
 
-          {/* Quick Summary */}
-          <QuickSummary />
+          {/* Quick Summary — only if article doesn't render its own [QuickSummary] */}
+          {!hasInlineQuickSummary && <DefaultQuickSummary />}
 
           {/* Content */}
           <div style={{ fontSize: 16 }}>
