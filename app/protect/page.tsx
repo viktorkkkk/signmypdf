@@ -102,9 +102,11 @@ export default function ProtectPage() {
   const [showConfirmPw, setShowConfirmPw] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const [preventEditing, setPreventEditing] = useState(true);
-  const [preventCopying, setPreventCopying] = useState(true);
-  const [preventPrinting, setPreventPrinting] = useState(true);
+  // Permissions start unchecked — this is a Pro-only feature. Pro users
+  // opt in by ticking boxes manually; free users see a paywall on click.
+  const [preventEditing, setPreventEditing] = useState(false);
+  const [preventCopying, setPreventCopying] = useState(false);
+  const [preventPrinting, setPreventPrinting] = useState(false);
 
   const [hasSubscription, setHasSubscription] = useState(false);
   const [todayCount, setTodayCount] = useState(0);
@@ -621,28 +623,47 @@ export default function ProtectPage() {
                   </div>
                 </div>
 
-                {/* Block 2: Restrict permissions */}
+                {/* Block 2: Restrict permissions — PRO feature.
+                    Free users see checkboxes but clicking opens the pricing modal.
+                    Pro users can tick boxes normally. */}
                 <div className="card" style={{ marginBottom: 16 }}>
-                  <div className="card-title">2. Restrict permissions</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <div className="card-title" style={{ marginBottom: 0 }}>2. Restrict permissions</div>
+                    {!hasSubscription && (
+                      <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '2px 6px', fontWeight: 700, letterSpacing: 0.3 }}>PRO</span>
+                    )}
+                  </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {([
                       ['preventEditing', preventEditing, setPreventEditing, 'Prevent editing'],
                       ['preventCopying', preventCopying, setPreventCopying, 'Prevent copying'],
                       ['preventPrinting', preventPrinting, setPreventPrinting, 'Prevent printing'],
                     ] as [string, boolean, (v: boolean) => void, string][]).map(([key, val, setVal, label]) => (
-                      <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '6px 0' }}>
+                      <label
+                        key={key}
+                        onClick={(e) => {
+                          if (!hasSubscription) {
+                            e.preventDefault();
+                            setShowPricing(true);
+                          }
+                        }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '6px 0' }}
+                      >
                         <input
                           type="checkbox"
-                          checked={val}
-                          onChange={e => setVal(e.target.checked)}
+                          checked={hasSubscription ? val : false}
+                          onChange={e => { if (hasSubscription) setVal(e.target.checked); }}
+                          readOnly={!hasSubscription}
                           style={{ width: 18, height: 18, accentColor: '#2563eb', cursor: 'pointer' }}
                         />
-                        <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 500 }}>{label}</span>
+                        <span style={{ fontSize: 14, color: hasSubscription ? '#1e293b' : '#64748b', fontWeight: 500 }}>{label}</span>
                       </label>
                     ))}
                   </div>
                   <p style={{ fontSize: 12, color: '#64748b', marginTop: 12, marginBottom: 0, lineHeight: 1.5 }}>
-                    Recipients can open the file but cannot modify, copy or print it.
+                    {hasSubscription
+                      ? 'Recipients can open the file but cannot modify, copy or print it.'
+                      : 'Upgrade to Pro to restrict editing, copying and printing.'}
                   </p>
                 </div>
 
