@@ -363,19 +363,14 @@ export default function ProtectPage() {
               </p>
             )}
 
-            <div className="features">
-              {[
-                { icon: '🔐', title: 'Strong encryption', desc: 'Industry-standard PDF encryption' },
-                { icon: '🛡️', title: 'Local processing', desc: 'File stays in your browser' },
-                { icon: '🚀', title: 'No registration', desc: 'First 2 PDFs free daily' },
-              ].map(f => (
-                <div className="feat" key={f.title}>
-                  <div className="feat-icon">{f.icon}</div>
-                  <div className="feat-title">{f.title}</div>
-                  <div className="feat-desc">{f.desc}</div>
-                </div>
-              ))}
-            </div>
+            {/* Compact trust row */}
+            <p className="trust-row">
+              <span>🔒 Processed locally</span>
+              <span className="trust-dot">·</span>
+              <span>✓ No registration</span>
+              <span className="trust-dot">·</span>
+              <span>⚡ 30 seconds</span>
+            </p>
           </div>
         )}
 
@@ -715,66 +710,24 @@ export default function ProtectPage() {
         </div>
       )}
 
-      {/* SEO content blocks — only on upload step */}
+      {/* Compact FAQ — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 16, paddingBottom: 48 }}>
-          <article style={{ maxWidth: 760, margin: '0 auto', color: '#334155', fontSize: 15, lineHeight: 1.75 }}>
-
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginTop: 36, marginBottom: 12 }}>How to Password Protect a PDF Online</h2>
-            <p>
-              To password protect a PDF online, drag your file into the upload zone above, set a strong password, pick which permissions to restrict, and click <strong>Protect PDF</strong>. SignMyPDF uses industry-standard PDF encryption so any PDF reader — Adobe Acrobat, Preview, Chrome, Edge, Foxit — will prompt for your password before opening the file. You can lock a PDF from editing, copying, or printing in the same step. There is no software to install: the whole process runs in your browser, so your file and password never leave your device. If you want to encrypt a PDF online without uploading it to an unknown server, this is the safest free method available. Lock a PDF online in under a minute — no Adobe, no account, no credit card.
-            </p>
-
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginTop: 36, marginBottom: 12 }}>Protect PDF Without Adobe — Free Method</h2>
-            <p>
-              You do not need Adobe Acrobat Pro (or a $180/year subscription) to password protect a PDF. SignMyPDF is a free Adobe alternative that lets you secure a PDF file without any software installation. Upload your PDF, type a password, and the tool encrypts it using the same AES-compatible standard that Adobe Acrobat uses. The protected file opens in every PDF reader on Windows, macOS, iOS, Android, and Linux. Unlike Adobe, there is no trial that silently turns into a monthly subscription — the first two PDFs per day are completely free forever. For occasional use this covers almost every real-world scenario. If you sign contracts, share NDAs, or send financial documents, password protecting a PDF free with a browser-based tool is the fastest way to add a layer of protection.
-            </p>
-
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginTop: 36, marginBottom: 12 }}>Is It Safe to Protect PDF in a Browser?</h2>
-            <p>
-              Yes — in fact, it is safer than most online tools. SignMyPDF runs entirely in your browser: the PDF is read from your device, encrypted locally using JavaScript, and never uploaded to our servers. You can verify this yourself by opening your browser&apos;s developer tools and watching the network tab while you protect a file. Zero outbound traffic for your document content. Your password is set client-side too, so we cannot see it, recover it, or hand it over to anyone. This is the privacy guarantee you want when working with legal, medical, or financial PDFs.
-            </p>
-
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginTop: 36, marginBottom: 12 }}>How to Lock PDF from Editing, Copying and Printing</h2>
-            <p>
-              When you password protect a PDF with SignMyPDF, you can also <strong>prevent editing</strong>, <strong>disable copying</strong>, and <strong>lock it from printing</strong> in the same step. All three restrictions are enabled by default and enforced by the PDF encryption standard — recipients can open the document with your password but cannot modify the content, select and copy text, or send it to a printer. This is useful for draft contracts, confidential reports, or any document you want to share for review without risking unauthorized reuse. Uncheck any of the three boxes if you want to allow a specific action; leave all three checked for maximum protection.
-            </p>
-
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginTop: 48, marginBottom: 16 }}>Frequently Asked Questions</h2>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', marginTop: 20, marginBottom: 8 }}>Can I password protect a PDF for free?</h3>
-            <p style={{ marginTop: 0 }}>
-              Yes. First 2 PDFs per day are completely free, no registration required.
-            </p>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', marginTop: 20, marginBottom: 8 }}>Can I lock a PDF without Adobe?</h3>
-            <p style={{ marginTop: 0 }}>
-              Yes. SignMyPDF works entirely in your browser — no Adobe, no software, no account needed.
-            </p>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', marginTop: 20, marginBottom: 8 }}>What happens if I forget the password?</h3>
-            <p style={{ marginTop: 0 }}>
-              We cannot recover your password. It is set locally in your browser and never stored on our servers. Save it somewhere safe before downloading your protected file.
-            </p>
-
-            {/* Coming-soon block */}
-            <div style={{
-              marginTop: 48,
-              padding: '20px 24px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              borderRadius: 14,
-              textAlign: 'center',
-            }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', margin: '0 0 6px' }}>
-                Need to remove a password from a PDF?
-              </h3>
-              <p style={{ fontSize: 14, color: '#64748b', margin: 0 }}>
-                Unlock PDF — <span style={{ fontWeight: 600 }}>Coming Soon</span>
-              </p>
-            </div>
-
-          </article>
+        <div className="container" style={{ paddingBottom: 40 }}>
+          <div className="compact-faq">
+            <h2>FAQ</h2>
+            <details>
+              <summary>Is it free?</summary>
+              <p className="faq-answer">Yes. First 2 PDFs per day, no account needed.</p>
+            </details>
+            <details>
+              <summary>What if I forget the password?</summary>
+              <p className="faq-answer">We cannot recover it. Save it before downloading.</p>
+            </details>
+            <details>
+              <summary>Is my file secure?</summary>
+              <p className="faq-answer">Processed locally in your browser. Never uploaded to our servers.</p>
+            </details>
+          </div>
         </div>
       )}
 

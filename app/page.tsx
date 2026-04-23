@@ -480,19 +480,14 @@ export default function Home() {
                 />
               </label>
             </div>
-            <div className="features">
-              {[
-                { icon: '⚡', title: 'Instant signing', desc: 'Done in under 30 seconds' },
-                { icon: '🔒', title: 'Private & secure', desc: 'File stays in your browser' },
-                { icon: '✅', title: 'Legally binding', desc: 'Accepted worldwide' },
-              ].map(f => (
-                <div className="feat" key={f.title}>
-                  <div className="feat-icon">{f.icon}</div>
-                  <div className="feat-title">{f.title}</div>
-                  <div className="feat-desc">{f.desc}</div>
-                </div>
-              ))}
-            </div>
+            {/* Compact trust row */}
+            <p className="trust-row">
+              <span>🔒 Processed locally</span>
+              <span className="trust-dot">·</span>
+              <span>✓ No registration</span>
+              <span className="trust-dot">·</span>
+              <span>⚡ 30 seconds</span>
+            </p>
 
           </div>
         )}
@@ -721,6 +716,27 @@ export default function Home() {
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
               </a>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Compact FAQ — only on upload step */}
+      {step === 'upload' && (
+        <div className="container" style={{ paddingTop: 0, paddingBottom: 40 }}>
+          <div className="compact-faq">
+            <h2>FAQ</h2>
+            <details>
+              <summary>Is it free?</summary>
+              <p className="faq-answer">Yes. First 2 PDFs per day, no account needed.</p>
+            </details>
+            <details>
+              <summary>Is electronic signature legally binding?</summary>
+              <p className="faq-answer">Yes. Valid under ESIGN Act, eIDAS and laws in 100+ countries.</p>
+            </details>
+            <details>
+              <summary>Does my file get uploaded?</summary>
+              <p className="faq-answer">Processed locally in your browser. Not stored on our servers.</p>
+            </details>
           </div>
         </div>
       )}

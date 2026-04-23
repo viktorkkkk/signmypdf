@@ -587,19 +587,14 @@ export default function FillPage() {
               </div>
             )}
 
-            <div className="features">
-              {[
-                { icon: '👆', title: 'Click to type', desc: 'Add text anywhere on the PDF' },
-                { icon: '🔒', title: 'Private & secure', desc: 'File stays in your browser' },
-                { icon: '⚡', title: 'Instant download', desc: 'Done in under a minute' },
-              ].map(f => (
-                <div className="feat" key={f.title}>
-                  <div className="feat-icon">{f.icon}</div>
-                  <div className="feat-title">{f.title}</div>
-                  <div className="feat-desc">{f.desc}</div>
-                </div>
-              ))}
-            </div>
+            {/* Compact trust row */}
+            <p className="trust-row">
+              <span>🔒 Processed locally</span>
+              <span className="trust-dot">·</span>
+              <span>✓ No registration</span>
+              <span className="trust-dot">·</span>
+              <span>⚡ 30 seconds</span>
+            </p>
 
             {/* File History */}
             <FileHistory
@@ -638,6 +633,23 @@ export default function FillPage() {
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
                 </a>
               </div>
+            </div>
+
+            {/* Compact FAQ */}
+            <div className="compact-faq" style={{ marginTop: 40 }}>
+              <h2>FAQ</h2>
+              <details>
+                <summary>Is it free?</summary>
+                <p className="faq-answer">Yes. First 2 PDFs per day, no account needed.</p>
+              </details>
+              <details>
+                <summary>What if my PDF won&apos;t let me type?</summary>
+                <p className="faq-answer">SignMyPDF works on any PDF regardless of format — scanned, locked or image-based.</p>
+              </details>
+              <details>
+                <summary>Does my file get uploaded?</summary>
+                <p className="faq-answer">Processed locally in your browser. Not stored on our servers.</p>
+              </details>
             </div>
           </div>
         )}
