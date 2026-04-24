@@ -56,7 +56,7 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
             {toolsOpen && (
               <div className="nav-dropdown" onMouseEnter={openMenu} onMouseLeave={closeMenu}>
                 <a
-                  href="/"
+                  href="/sign"
                   className={`nav-dropdown-item${activeTool === 'sign' ? ' nav-dropdown-item--active' : ''}`}
                 >
                   <span>✍️</span>

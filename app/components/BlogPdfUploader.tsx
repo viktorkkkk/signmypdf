@@ -14,7 +14,7 @@ interface BlogPdfUploaderProps {
 }
 
 const ROUTE: Record<Tool, string> = {
-  sign: '/',
+  sign: '/sign',
   fill: '/fill',
   protect: '/protect',
 };

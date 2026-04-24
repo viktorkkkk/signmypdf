@@ -357,7 +357,7 @@ export default function FillPage() {
     setStep('done');
   };
 
-  // "Add Signature →" — save filled PDF to sessionStorage, redirect to /
+  // "Add Signature →" — save filled PDF to sessionStorage, redirect to /sign
   const handleGoToSign = async () => {
     if (!pendingPdfUrl || !pdfFile) return;
     setShowReadyModal(false);
@@ -368,12 +368,12 @@ export default function FillPage() {
       reader.onloadend = () => {
         sessionStorage.setItem('signmypdf_pending_fill_pdf', reader.result as string);
         sessionStorage.setItem('signmypdf_pending_fill_name', `filled-${pdfFile.name}`);
-        window.location.href = '/';
+        window.location.href = '/sign';
       };
       reader.readAsDataURL(blob);
     } catch {
       // Fallback: just redirect
-      window.location.href = '/';
+      window.location.href = '/sign';
     }
   };
 

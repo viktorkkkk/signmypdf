@@ -119,7 +119,7 @@ const TOOL_META: Record<ArticleTool, {
   defaultCtaBtn: string;
 }> = {
   sign: {
-    href: '/',
+    href: '/sign',
     ctaLong: 'Sign PDF Now — Free',
     ctaShort: 'Sign PDF Now – Free',
     finalTitle: 'Ready to sign your PDF?',

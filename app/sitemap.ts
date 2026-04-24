@@ -13,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/sign`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.95,
+    },
+    {
       url: `${baseUrl}/fill`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
