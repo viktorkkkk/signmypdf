@@ -60,6 +60,8 @@ const BLOG_SLUGS = [
   'esign-act-explained',
   'fill-job-application-pdf-online',
   'sign-pdf-no-editing-allowed',
+  'remote-teams-sign-documents',
+  'digital-signatures-admissible-court',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
