@@ -219,12 +219,12 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ## Blog Publication Plan (60 articles)
 
-**Rule**: Strictly 2 articles per day — exactly 1 SIGN + 1 FILL. Never more than 2 per day. Never 2 articles of the same type on the same day. Launch-day exception: the day a new tool ships may carry up to 3 (2 queue + 1 launch article).
+**Rule**: Strictly 2 articles per day, **rotating pairs across all tools**. With 3 tools (Sign/Fill/Protect) the cycle is 3 days and each tool gets 2 publications per cycle = equal rate. Launch-day exception: the day a new tool ships may carry up to 3 (2 queue + 1 launch article).
 **Before publishing**: always check existing dates in posts.ts to confirm the target date has <2 articles. If today is full, walk forward day-by-day until you find a slot. NEVER batch overflow onto one day.
 
 ### ⚠️ HARD RULES — any Claude session writing or editing blog articles MUST follow these
 
-1. **NEVER modify or edit an already-published article.** Dates, content, titles, CTAs, metaTitle, internal links of articles already committed to `app/blog/posts.ts` are frozen. Google indexes them — every edit is an SEO regression risk. Only APPEND new entries. If content is wrong on an existing article, leave it and schedule a new, better article instead.
+1. **NEVER modify or edit an already-published article.** Dates, content, titles, CTAs, metaTitle, internal links of articles already committed to `app/blog/posts.ts` are frozen once their `date` has passed (they are publicly live and Google-indexed). Only APPEND new entries. If content is wrong on a published article, leave it and schedule a new, better article instead. Future-dated articles (scheduled but not yet live) MAY be re-dated to accommodate rotation, provided the slug/URL never changes — Google indexes URLs, not `date` metadata.
 
 2. **CTAs and internal links MUST match the article's tool category.** The `getArticleTool(slug)` function in `app/blog/[slug]/BlogPostContent.tsx` determines routing. When writing a new article, author all in-body CTAs, `[CTA]` blocks, and button text so they match:
    - **SIGN** article → links go to `/`, button copy is "Sign PDF Now — Free"
@@ -238,16 +238,22 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 5. **Never rewrite existing articles to change their tool type** (Sign → Fill, etc.). Fix imbalance by adding new articles going forward, not by editing history.
 
-6. **For every new PDF tool added to the site** (e.g. Compress PDF, Merge PDF, PDF→Word): follow the same rule — publish articles for each tool at an equal rate going forward. Never bulk-publish articles for one tool to "catch up".
+6. **Rotation pair for the day is derived from cycle day**. With 3 tools the cycle length is 3 days; anchor is Apr 24 2026 (cycle_day 0). Formula: `cycle_day = ((publishDate − anchor) / 86400) mod 3`.
+   - `cycle_day == 0` → publish **Sign + Fill**
+   - `cycle_day == 1` → publish **Sign + Protect**
+   - `cycle_day == 2` → publish **Fill + Protect**
+   When a 4th tool is added, extend the cycle (4 tools → 3-day cycle with unique pairs, 5 tools → 5-day cycle, etc.) so every tool still gets equal publication frequency. Base tempo stays at 2 articles per day until a tool-count >5 warrants bumping to 3/day.
 
-7. **Signs of trouble**: if any calendar day holds ≥3 articles outside of a known launch day, OR any article's CTA points to the wrong tool, fix the automation first (the trigger prompt in `RemoteTrigger` + `BlogPostContent.tsx` routing), THEN redistribute or add corrective articles going forward.
+7. **Signs of trouble**: if any calendar day holds ≥3 articles outside of a known launch day, OR any article's CTA points to the wrong tool, OR one tool is silently missing from rotation for >1 cycle, fix the automation first (the trigger prompt in `RemoteTrigger` + `BlogPostContent.tsx` routing), THEN redistribute or add corrective articles going forward.
+
+8. **Article format diversity — no AI-spam patterns**. Out of every 10 articles per tool, at most 3 may be "How to…" format. Required minimum per 10: 2 pain/scenario, 2 comparisons, 1 explainer. Remainder fills from troubleshooting, use cases, or listicles. Applies to **all tools**. This keeps the blog readable by humans, defensible against Google Helpful Content Update, and signals topical authority across the intent spectrum (transactional + informational + navigational).
 
 **Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
 **After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
 
 ### Daily trigger (RemoteTrigger ID `trig_01Mw8wt1nCK3jpDA7ymfp4g2`)
 
-Runs `0 2 * * *` UTC daily. Encoded with all 7 hard rules above. The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync.
+Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026). The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync.
 
 ### Progress
 
@@ -278,7 +284,76 @@ Runs `0 2 * * *` UTC daily. Encoded with all 7 hard rules above. The trigger pro
 
 Overflow fix: Apr 22 originally carried 4 articles, Apr 23 carried 5. On the /protect launch day we capped Apr 23 at 3 (2 queue + launch article) and pushed 4 articles forward 3-4 days to Apr 25 and Apr 26. URLs unchanged → Google/Bing indexing preserved.
 
-**⚠️ Next trigger run** (Apr 24 02:00 UTC): the new trigger logic walks forward day-by-day looking for `<2 articles`. Expected PUBLISH_DATE = Apr 27 (Apr 24-26 are full). Will publish `remote-teams-sign-documents` (FILL from pair 14) + `digital-signatures-admissible-court` (SIGN from pair 15).
+### 3-tool rotation (activated Apr 25 2026)
+
+Anchor = Apr 24 2026 (cycle_day 0). Rotation restores equal publication rate for Protect, which was stuck at a single launch article on Apr 23.
+
+| Date | Cycle day | Pair |
+|------|-----------|------|
+| Apr 24 | 0 | Sign + Fill (already published pre-rotation) |
+| Apr 25 | 1 | **Sign + Protect** (first Protect in rotation) |
+| Apr 26 | 2 | Fill + Protect |
+| Apr 27 | 0 | Sign + Fill |
+| Apr 28 | 1 | Sign + Protect |
+| Apr 29 | 2 | Fill + Protect |
+| Apr 30 | 0 | Sign + Fill |
+| … | … | … |
+
+**Apr 25-26 rebalance.** To make room for the first two Protect articles in the new rotation, the two future-dated articles that previously occupied those slots were re-dated forward:
+- `hellosign-alternatives-free` (FILL): Apr 25 → Apr 27
+- `esign-act-explained` (SIGN): Apr 26 → Apr 27
+
+Both are future-dated (scheduled, not yet live), so the move is SEO-safe — URLs unchanged, `date` metadata updated, Google indexes URLs only.
+
+### Protect article backlog (30+ topics, format-diverse)
+
+Use these in order when the rotation calls for a PROTECT article. Format diversity (Rule 8) enforced: max 3 "How to…" out of every 10.
+
+**How-to (max 6 total):**
+1. `password-protect-pdf-without-adobe` — How to Password Protect a PDF Without Adobe Acrobat
+2. `password-protect-pdf-on-mac` — How to Password Protect a PDF on Mac
+3. `password-protect-pdf-on-windows-11` — How to Password Protect a PDF on Windows 11
+4. `password-protect-pdf-on-iphone` — How to Password Protect a PDF on iPhone
+5. `remove-password-from-pdf-you-own` — How to Remove a Password from a PDF You Own
+6. `password-protect-pdf-free-online-no-software` — How to Password Protect a PDF for Free (Online, No Software)
+
+**Pain / scenario:**
+7. `sent-confidential-contract-unprotected` — I Sent a Confidential Contract Unprotected — Here's What I Do Now
+8. `why-lawyer-asks-password-protect-pdf` — Why Your Lawyer Keeps Asking You to Password Protect PDFs
+9. `accountant-wont-accept-unprotected-tax-documents` — The Real Reason Your Accountant Won't Accept Unprotected Tax Documents
+10. `what-happens-if-protected-pdf-leaks` — What Happens If a Password-Protected PDF Gets Leaked?
+11. `is-password-protected-pdf-actually-secure` — Is Your Password-Protected PDF Actually Secure? The Honest Answer
+12. `biggest-mistake-protecting-pdfs` — The Mistake Most People Make When Protecting PDFs (And How to Avoid It)
+13. `just-email-it-isnt-enough-for-sensitive-documents` — Why "Just Email It" Isn't Enough for Sensitive Documents
+14. `hr-pdf-resume-protection` — What HR Departments Wish You Knew About Sending Resumes as PDFs
+
+**Comparisons:**
+15. `adobe-vs-free-pdf-protection` — Adobe Acrobat vs Free PDF Protection: Do You Really Need to Pay?
+16. `password-pdf-vs-encrypted-email` — Password Protecting PDFs vs Encrypted Email: Which Actually Protects You?
+17. `zip-password-vs-pdf-password` — ZIP Password vs PDF Password: Which Is Harder to Crack?
+18. `smallpdf-vs-ilovepdf-vs-signmypdf-protection` — SmallPDF vs iLovePDF vs SignMyPDF for PDF Protection
+19. `dropbox-password-links-vs-protected-pdfs` — Dropbox Password Links vs Protected PDFs: What's the Difference?
+
+**Explainer / educational:**
+20. `pdf-encryption-explained-plain-english` — PDF Encryption Explained in Plain English
+21. `aes-128-vs-aes-256-pdf` — AES-128 vs AES-256: Which Does Your PDF Actually Use?
+22. `owner-password-vs-user-password` — Owner Password vs User Password: What Nobody Tells You
+23. `can-protected-pdf-be-hacked` — Can a Password-Protected PDF Be Hacked? What the Research Says
+
+**Troubleshooting:**
+24. `forgot-my-pdf-password-options` — "Forgot My PDF Password" — What Are Your Real Options?
+25. `protected-pdf-wont-open-some-devices` — Why Your Password-Protected PDF Won't Open on Some Devices
+26. `protected-pdf-keeps-asking-password` — Protected PDF Keeps Asking for Password — Here's Why
+
+**Use cases / niche:**
+27. `freelancers-protect-client-contracts` — How Freelancers Should Protect Client Contracts in PDF Format
+28. `real-estate-agents-protect-property-documents` — Real Estate Agents: Protecting Property Documents Before Emailing
+29. `medical-practices-hipaa-pdf-sharing` — Medical Practices: HIPAA Considerations for PDF Sharing
+30. `financial-advisors-protect-client-statements` — Financial Advisors: Protecting Client Statements in PDF
+
+**Listicles:**
+31. `7-document-types-always-password-protect` — 7 Types of Documents You Should Always Password Protect
+32. `password-strength-checklist-pdfs-2026` — Password Strength Checklist for PDFs: What's Actually Safe in 2026
 
 ### Blog index date filter + revalidate
 

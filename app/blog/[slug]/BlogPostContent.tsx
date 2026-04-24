@@ -39,13 +39,66 @@ const FILL_SLUGS = new Set([
   'adobe-fill-sign-vs-signmypdf',
 ]);
 
-// Slugs for articles about password protection / encryption
+// Slugs for articles about password protection / encryption.
+// Kept explicit so the classifier never misclassifies a comparison or
+// scenario article where the heuristic below wouldn't catch it.
 const PROTECT_SLUGS = new Set([
+  // Launch
   'password-protect-pdf-online-free',
+  // How-to (max 6 per rotation per Rule 8)
+  'password-protect-pdf-without-adobe',
+  'password-protect-pdf-on-mac',
+  'password-protect-pdf-on-windows-11',
+  'password-protect-pdf-on-iphone',
+  'remove-password-from-pdf-you-own',
+  'password-protect-pdf-free-online-no-software',
+  // Pain / scenario
+  'sent-confidential-contract-unprotected',
+  'why-lawyer-asks-password-protect-pdf',
+  'accountant-wont-accept-unprotected-tax-documents',
+  'what-happens-if-protected-pdf-leaks',
+  'is-password-protected-pdf-actually-secure',
+  'biggest-mistake-protecting-pdfs',
+  'just-email-it-isnt-enough-for-sensitive-documents',
+  'hr-pdf-resume-protection',
+  // Comparisons
+  'adobe-vs-free-pdf-protection',
+  'password-pdf-vs-encrypted-email',
+  'zip-password-vs-pdf-password',
+  'smallpdf-vs-ilovepdf-vs-signmypdf-protection',
+  'dropbox-password-links-vs-protected-pdfs',
+  // Explainer
+  'pdf-encryption-explained-plain-english',
+  'aes-128-vs-aes-256-pdf',
+  'owner-password-vs-user-password',
+  'can-protected-pdf-be-hacked',
+  // Troubleshooting
+  'forgot-my-pdf-password-options',
+  'protected-pdf-wont-open-some-devices',
+  'protected-pdf-keeps-asking-password',
+  // Use cases
+  'freelancers-protect-client-contracts',
+  'real-estate-agents-protect-property-documents',
+  'medical-practices-hipaa-pdf-sharing',
+  'financial-advisors-protect-client-statements',
+  // Listicles
+  '7-document-types-always-password-protect',
+  'password-strength-checklist-pdfs-2026',
 ]);
 
 export function getArticleTool(slug: string): ArticleTool {
-  if (PROTECT_SLUGS.has(slug) || slug.includes('password-protect') || slug.includes('protect-pdf') || slug.includes('encrypt-pdf') || slug.includes('lock-pdf')) {
+  // Broader heuristic covers future protect-related slugs without a set update.
+  if (
+    PROTECT_SLUGS.has(slug) ||
+    slug.includes('password-protect') ||
+    slug.includes('protect-pdf') ||
+    slug.includes('protected-pdf') ||
+    slug.includes('pdf-password') ||
+    slug.includes('pdf-encryption') ||
+    slug.includes('pdf-protection') ||
+    slug.includes('encrypt-pdf') ||
+    slug.includes('lock-pdf')
+  ) {
     return 'protect';
   }
   if (FILL_SLUGS.has(slug) || slug.startsWith('fill-') || slug.includes('-fill-')) {
