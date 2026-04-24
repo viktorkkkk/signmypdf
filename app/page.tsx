@@ -190,53 +190,20 @@ export default function HomePage() {
 
       <NavHeader />
 
-      {/* ─── HERO ─── */}
+      {/* ─── HERO: title + tool cards ─── */}
       <section className="hub-hero">
         <div className="container hub-hero-inner">
           <h1 className="hub-h1">Sign, Fill &amp; Protect PDFs Online — Free, No Registration</h1>
           <p className="hub-sub">
-            Finish your PDF in seconds — works in any browser, on desktop or mobile. No installs, no sign-ups.
+            Pick a tool and finish your PDF in seconds. Works in any browser — no installs, no sign-ups.
           </p>
 
-          {/* Dropzone */}
-          <div
-            {...getRootProps()}
-            className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
-            role="button"
-            tabIndex={0}
-            aria-label="Drop your PDF here or click to choose"
-          >
-            <input {...getInputProps()} />
-            <div className="hub-dropzone-icon" aria-hidden="true">📄</div>
-            <div className="hub-dropzone-title">
-              {isDragActive ? 'Drop your PDF here' : 'Drop your PDF here'}
-            </div>
-            <div className="hub-dropzone-sub">or</div>
-            <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
-            <div className="hub-dropzone-hint">No registration · Works on any device · Instant download</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── TRUST STRIP ─── */}
-      <section className="hub-trust">
-        <div className="container hub-trust-inner">
-          <span>🔒 Processed locally</span>
-          <span>·</span>
-          <span>✓ No registration</span>
-          <span>·</span>
-          <span>💳 No credit card</span>
-          <span>·</span>
-          <span>⚡ Works in 30 seconds</span>
-        </div>
-      </section>
-
-      {/* ─── TOOL CARDS ─── */}
-      <section className="hub-tools">
-        <div className="container">
-          <h2 className="hub-section-title">Choose your tool</h2>
           <div className="hub-tool-grid">
-            <button type="button" className="hub-tool-card" onClick={() => goToTool('sign')}>
+            <button
+              type="button"
+              className="hub-tool-card hub-tool-card--primary"
+              onClick={() => goToTool('sign')}
+            >
               <div className="hub-tool-icon" aria-hidden="true">✍️</div>
               <div className="hub-tool-name">Sign PDF</div>
               <p className="hub-tool-desc">Add your signature and download instantly.</p>
@@ -257,6 +224,44 @@ export default function HomePage() {
               <span className="hub-tool-arrow">Open tool →</span>
             </button>
           </div>
+
+          {/* Quick-sign dropzone — the fast path for the most common task.
+              Clearly labelled as a Sign shortcut so users don't mistake it
+              for a generic upload that routes to the wrong tool. */}
+          <div className="hub-quicksign">
+            <div className="hub-quicksign-label">
+              <span className="hub-quicksign-icon" aria-hidden="true">⚡</span>
+              Or drop a PDF below to sign it right now
+            </div>
+            <div
+              {...getRootProps()}
+              className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
+              role="button"
+              tabIndex={0}
+              aria-label="Drop your PDF here to sign it"
+            >
+              <input {...getInputProps()} />
+              <div className="hub-dropzone-title">
+                {isDragActive ? 'Drop your PDF here' : 'Drop your PDF here'}
+              </div>
+              <div className="hub-dropzone-sub">or</div>
+              <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
+              <div className="hub-dropzone-hint">Goes straight to the Sign tool · Instant · No registration</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TRUST STRIP ─── */}
+      <section className="hub-trust">
+        <div className="container hub-trust-inner">
+          <span>🔒 Processed locally</span>
+          <span>·</span>
+          <span>✓ No registration</span>
+          <span>·</span>
+          <span>💳 No credit card</span>
+          <span>·</span>
+          <span>⚡ Works in 30 seconds</span>
         </div>
       </section>
 

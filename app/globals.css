@@ -1685,66 +1685,99 @@ body > div > footer { margin-top: auto; }
    ═════════════════════════════════════════════════════════════════ */
 
 .hub-hero {
-  padding: 48px 0 36px;
-  background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 85%);
+  padding: 56px 0 44px;
+  background: linear-gradient(180deg, #f5f8ff 0%, #ffffff 100%);
 }
 .hub-hero-inner { text-align: center; }
 .hub-h1 {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.12;
   color: #0f172a;
   margin: 0 0 14px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 .hub-sub {
   font-size: 17px;
   color: #475569;
   max-width: 620px;
-  margin: 0 auto 32px;
+  margin: 0 auto 36px;
   line-height: 1.5;
 }
 
-.hub-dropzone {
+/* Tool cards inside hero — primary choice surface. */
+.hub-hero .hub-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 940px;
+  margin: 0 auto 36px;
+}
+
+/* Highlight Sign as the most common task. Subtle blue-tinted card,
+   not a loud badge — keeps all three tools discoverable. */
+.hub-tool-card--primary {
+  border-color: #bfdbfe !important;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 70%) !important;
+}
+.hub-tool-card--primary .hub-tool-arrow { color: #1d4ed8; }
+
+/* Quick-sign dropzone — compact, clearly a shortcut for Sign, not a
+   generic upload. Visually secondary to the tool cards above. */
+.hub-quicksign {
   max-width: 620px;
   margin: 0 auto;
+}
+.hub-quicksign-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+  letter-spacing: 0.2px;
+}
+.hub-quicksign-icon { font-size: 14px; color: #f59e0b; }
+
+.hub-dropzone {
   background: #ffffff;
-  border: 2.5px dashed #cbd5e1;
-  border-radius: 20px;
-  padding: 36px 20px 28px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 24px 20px 22px;
   transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
   cursor: pointer;
   outline: none;
+  text-align: center;
 }
 .hub-dropzone:hover,
 .hub-dropzone:focus-visible {
   border-color: #2563eb;
   background: #f5f8ff;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.10);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
 }
 .hub-dropzone-active {
   border-color: #2563eb;
   background: #eff6ff;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.18);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.14);
 }
-.hub-dropzone-icon { font-size: 42px; line-height: 1; margin-bottom: 10px; }
-.hub-dropzone-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-.hub-dropzone-sub { font-size: 13px; color: #94a3b8; margin-bottom: 14px; }
+.hub-dropzone-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+.hub-dropzone-sub { font-size: 12px; color: #94a3b8; margin-bottom: 12px; }
 .hub-dropzone-btn {
   background: linear-gradient(135deg, #2563eb, #4f46e5);
   color: #ffffff;
   border: none;
   font-weight: 700;
-  font-size: 15px;
-  padding: 14px 32px;
-  border-radius: 12px;
+  font-size: 14px;
+  padding: 11px 26px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.30);
+  box-shadow: 0 5px 16px rgba(37, 99, 235, 0.28);
   transition: transform 0.12s, box-shadow 0.12s;
   pointer-events: none; /* clicks bubble to the dropzone */
 }
-.hub-dropzone:hover .hub-dropzone-btn { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40); }
-.hub-dropzone-hint { font-size: 12px; color: #94a3b8; margin-top: 14px; }
+.hub-dropzone:hover .hub-dropzone-btn { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37, 99, 235, 0.38); }
+.hub-dropzone-hint { font-size: 11.5px; color: #94a3b8; margin-top: 10px; }
 
 .hub-trust {
   background: #f8fafc;
@@ -1773,14 +1806,8 @@ body > div > footer { margin-top: auto; }
   letter-spacing: -0.01em;
 }
 
-.hub-tools { padding: 56px 0; }
-.hub-tool-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  max-width: 960px;
-  margin: 0 auto;
-}
+/* Base card styles — shared between hero tool cards and any future
+   standalone tool grids. */
 .hub-tool-card {
   background: #ffffff;
   border: 1.5px solid #e2e8f0;
@@ -1977,13 +2004,21 @@ body > div > footer { margin-top: auto; }
 
 /* ── Hub mobile ── */
 @media (max-width: 720px) {
-  .hub-hero { padding: 32px 0 24px; }
-  .hub-h1 { font-size: 27px; line-height: 1.22; }
+  .hub-hero { padding: 32px 0 28px; }
+  .hub-h1 { font-size: 26px; line-height: 1.22; }
   .hub-sub { font-size: 15px; margin-bottom: 24px; }
-  .hub-dropzone { padding: 28px 16px 22px; margin: 0 4px; border-radius: 18px; }
-  .hub-dropzone-icon { font-size: 36px; }
-  .hub-dropzone-title { font-size: 16px; }
-  .hub-dropzone-btn { padding: 13px 24px; font-size: 14px; }
+
+  .hub-hero .hub-tool-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .hub-quicksign { margin: 0 4px; }
+  .hub-quicksign-label { font-size: 12px; }
+  .hub-dropzone { padding: 20px 16px 18px; border-radius: 14px; }
+  .hub-dropzone-title { font-size: 14px; }
+  .hub-dropzone-btn { padding: 11px 22px; font-size: 13.5px; }
   .hub-dropzone-hint { font-size: 11px; }
 
   .hub-trust-inner { font-size: 12px; gap: 8px; }
@@ -1991,15 +2026,14 @@ body > div > footer { margin-top: auto; }
 
   .hub-section-title { font-size: 22px; margin-bottom: 24px; }
 
-  .hub-tools, .hub-why, .hub-how, .hub-social, .hub-seo { padding: 40px 0; }
-  .hub-tool-grid,
+  .hub-why, .hub-how, .hub-social, .hub-seo { padding: 40px 0; }
   .hub-why-grid,
   .hub-how-grid,
   .hub-social-reviews {
     grid-template-columns: 1fr;
     gap: 14px;
   }
-  .hub-tool-card { padding: 22px 18px; }
+  .hub-tool-card { padding: 20px 18px; }
   .hub-tool-icon { font-size: 28px; }
   .hub-tool-name { font-size: 16px; }
 
