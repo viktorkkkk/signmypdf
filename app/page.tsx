@@ -3,6 +3,22 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useRouter } from 'next/navigation';
+import {
+  PenLine,
+  FileText,
+  Lock,
+  ShieldCheck,
+  CheckCircle,
+  CreditCard,
+  Zap,
+  FileUp,
+  Shield,
+  Eye,
+  Smartphone,
+  CircleSlash,
+  Plus,
+  Minus,
+} from 'lucide-react';
 import NavHeader from './components/NavHeader';
 import SiteFooter from './components/SiteFooter';
 import PaywallModal from './components/PaywallModal';
@@ -13,14 +29,19 @@ import { PADDLE_CLIENT_TOKEN } from './constants';
 /**
  * Hub homepage.
  *
- * Architecture:
- * - / is a marketing hub covering all three tools (Sign / Fill / Protect).
- * - The main dropzone routes to /sign by default (sign is the most common
- *   entry point). Tool cards below route to the other tools.
- * - File hand-off uses the pendingUpload IndexedDB utility so a blob
- *   survives navigation without URL-encoding or sessionStorage size limits.
- * - PaywallModal is wired here too so the premium banner CTA works without
- *   bouncing the user to a tool page first.
+ * Visual language:
+ * - Single brand blue (#2563eb) for accents, primary CTAs, and icons
+ *   inside tool cards. Everything else is on a neutral slate palette.
+ * - All pictograms are lucide-react SVGs — no emoji, so rendering is
+ *   consistent across OS and at any zoom level.
+ *
+ * IA:
+ * - H1 → subtitle → three equal tool cards → dominant Sign dropzone
+ *   → trust strip. Tool choice is always the first decision surface.
+ *
+ * File hand-off (hub dropzone → /sign):
+ * - pendingUpload IndexedDB utility. 100MB quota, 5-minute TTL,
+ *   read-and-consume so a refresh on /sign doesn't re-trigger.
  */
 
 type Tool = 'sign' | 'fill' | 'protect';
@@ -106,7 +127,6 @@ export default function HomePage() {
               localStorage.setItem('signmypdf_subscribed', 'true');
               setHasSubscription(true);
               setShowPricing(false);
-              // Let the dashboard handle auto-login; just redirect.
               setTimeout(() => { window.location.href = '/dashboard'; }, 400);
             }
           },
@@ -116,7 +136,6 @@ export default function HomePage() {
     }
   }, []);
 
-  // Dropzone: store file in IndexedDB, then route to /sign which picks it up.
   const onDrop = useCallback(async (files: File[]) => {
     const file = files[0];
     if (!file) return;
@@ -137,8 +156,6 @@ export default function HomePage() {
     router.push(TOOL_ROUTE[tool]);
   };
 
-  // JSON-LD: SoftwareApplication covering all tools + FAQPage for the
-  // block below. Two separate scripts so each has its own @type/root.
   const softwareJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -190,109 +207,109 @@ export default function HomePage() {
 
       <NavHeader />
 
-      {/* ─── HERO: title + tool cards ─── */}
+      {/* ─── HERO: title + tools + dropzone ─── */}
       <section className="hub-hero">
-        <div className="container hub-hero-inner">
-          <h1 className="hub-h1">Sign, Fill &amp; Protect PDFs Online — Free, No Registration</h1>
+        <div className="hub-container hub-hero-inner">
+          <h1 className="hub-h1">
+            Sign, Fill &amp; Protect PDFs Online — Free, No Registration
+          </h1>
           <p className="hub-sub">
             Pick a tool and finish your PDF in seconds. Works in any browser — no installs, no sign-ups.
           </p>
 
           <div className="hub-tool-grid">
-            <button
-              type="button"
-              className="hub-tool-card hub-tool-card--primary"
-              onClick={() => goToTool('sign')}
-            >
-              <div className="hub-tool-icon" aria-hidden="true">✍️</div>
-              <div className="hub-tool-name">Sign PDF</div>
+            <button type="button" className="hub-tool-card" onClick={() => goToTool('sign')}>
+              <div className="hub-tool-icon-wrap">
+                <PenLine size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Sign PDF</h3>
               <p className="hub-tool-desc">Add your signature and download instantly.</p>
-              <span className="hub-tool-arrow">Open tool →</span>
+              <span className="hub-tool-btn">Open tool →</span>
             </button>
 
             <button type="button" className="hub-tool-card" onClick={() => goToTool('fill')}>
-              <div className="hub-tool-icon" aria-hidden="true">📝</div>
-              <div className="hub-tool-name">Fill PDF</div>
+              <div className="hub-tool-icon-wrap">
+                <FileText size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Fill PDF</h3>
               <p className="hub-tool-desc">Type into forms and complete documents fast.</p>
-              <span className="hub-tool-arrow">Open tool →</span>
+              <span className="hub-tool-btn">Open tool →</span>
             </button>
 
             <button type="button" className="hub-tool-card" onClick={() => goToTool('protect')}>
-              <div className="hub-tool-icon" aria-hidden="true">🔒</div>
-              <div className="hub-tool-name">Protect PDF</div>
+              <div className="hub-tool-icon-wrap">
+                <Lock size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Protect PDF</h3>
               <p className="hub-tool-desc">Add a password and lock your file.</p>
-              <span className="hub-tool-arrow">Open tool →</span>
+              <span className="hub-tool-btn">Open tool →</span>
             </button>
           </div>
 
-          {/* Quick-sign dropzone — the fast path for the most common task.
-              Clearly labelled as a Sign shortcut so users don't mistake it
-              for a generic upload that routes to the wrong tool. */}
-          <div className="hub-quicksign">
-            <div className="hub-quicksign-label">
-              <span className="hub-quicksign-icon" aria-hidden="true">⚡</span>
-              Or drop a PDF below to sign it right now
+          {/* Dominant Sign dropzone. Clearly labelled as a Sign shortcut
+              so clicks land on the right flow. */}
+          <div
+            {...getRootProps()}
+            className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Drop your PDF here to sign it"
+          >
+            <input {...getInputProps()} />
+            <div className="hub-dropzone-icon" aria-hidden="true">
+              <FileUp size={56} strokeWidth={1.6} />
             </div>
-            <div
-              {...getRootProps()}
-              className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
-              role="button"
-              tabIndex={0}
-              aria-label="Drop your PDF here to sign it"
-            >
-              <input {...getInputProps()} />
-              <div className="hub-dropzone-title">
-                {isDragActive ? 'Drop your PDF here' : 'Drop your PDF here'}
-              </div>
-              <div className="hub-dropzone-sub">or</div>
-              <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
-              <div className="hub-dropzone-hint">Goes straight to the Sign tool · Instant · No registration</div>
+            <div className="hub-dropzone-title">
+              {isDragActive ? 'Release to upload' : 'Drop your PDF here to sign'}
             </div>
+            <div className="hub-dropzone-sub">or</div>
+            <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
+            <div className="hub-dropzone-hint">Goes straight to the Sign tool · Instant · No registration</div>
           </div>
         </div>
       </section>
 
       {/* ─── TRUST STRIP ─── */}
       <section className="hub-trust">
-        <div className="container hub-trust-inner">
-          <span>🔒 Processed locally</span>
-          <span>·</span>
-          <span>✓ No registration</span>
-          <span>·</span>
-          <span>💳 No credit card</span>
-          <span>·</span>
-          <span>⚡ Works in 30 seconds</span>
+        <div className="hub-container hub-trust-inner">
+          <span className="hub-trust-item"><Lock size={16} strokeWidth={2} /> Processed locally</span>
+          <span className="hub-trust-dot" aria-hidden="true">·</span>
+          <span className="hub-trust-item"><CheckCircle size={16} strokeWidth={2} /> No registration</span>
+          <span className="hub-trust-dot" aria-hidden="true">·</span>
+          <span className="hub-trust-item"><CreditCard size={16} strokeWidth={2} /> No credit card</span>
+          <span className="hub-trust-dot" aria-hidden="true">·</span>
+          <span className="hub-trust-item"><Zap size={16} strokeWidth={2} /> Works in 30 seconds</span>
         </div>
       </section>
 
       {/* ─── WHY SIGNMYPDF ─── */}
       <section className="hub-why">
-        <div className="container">
+        <div className="hub-container">
           <h2 className="hub-section-title">Why SignMyPDF</h2>
           <div className="hub-why-grid">
             <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true">🚫</span>
+              <span className="hub-why-icon" aria-hidden="true"><CircleSlash size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>No &ldquo;paywall at the last step&rdquo;</strong>
                 <span>Finish your file first, decide later.</span>
               </div>
             </div>
             <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true">🧼</span>
+              <span className="hub-why-icon" aria-hidden="true"><Eye size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>No watermarks on important files</strong>
                 <span>Premium removes the small badge for good.</span>
               </div>
             </div>
             <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true">🔐</span>
+              <span className="hub-why-icon" aria-hidden="true"><Shield size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>Your files are not stored</strong>
                 <span>Processing is local. Nothing uploaded, nothing kept.</span>
               </div>
             </div>
             <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true">📱</span>
+              <span className="hub-why-icon" aria-hidden="true"><Smartphone size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>Works on phone and desktop</strong>
                 <span>Same flow everywhere. No app install.</span>
@@ -304,7 +321,7 @@ export default function HomePage() {
 
       {/* ─── HOW IT WORKS ─── */}
       <section className="hub-how">
-        <div className="container">
+        <div className="hub-container">
           <h2 className="hub-section-title">How it works</h2>
           <div className="hub-how-grid">
             <div className="hub-how-step">
@@ -328,11 +345,11 @@ export default function HomePage() {
 
       {/* ─── SOCIAL PROOF ─── */}
       <section className="hub-social">
-        <div className="container">
+        <div className="hub-container">
           <h2 className="hub-section-title">Trusted by thousands</h2>
           <div className="hub-social-numbers">
             <div>
-              <span className="hub-social-num">⭐ 4.8 / 5</span>
+              <span className="hub-social-num">4.8 / 5</span>
               <span className="hub-social-label">Average rating</span>
             </div>
             <div>
@@ -364,14 +381,14 @@ export default function HomePage() {
       {/* ─── PREMIUM BANNER ─── */}
       {!hasSubscription && (
         <section className="hub-premium">
-          <div className="container hub-premium-inner">
+          <div className="hub-container hub-premium-inner">
             <div className="hub-premium-text">
               <h2>Remove limits &amp; finish your work without interruptions</h2>
               <ul className="hub-premium-bullets">
-                <li>Unlimited PDFs — no daily limits</li>
-                <li>No watermarks — clean documents</li>
-                <li>Access your files anytime</li>
-                <li>Continue where you left off</li>
+                <li><CheckCircle size={16} strokeWidth={2.4} /> Unlimited PDFs — no daily limits</li>
+                <li><CheckCircle size={16} strokeWidth={2.4} /> No watermarks — clean documents</li>
+                <li><CheckCircle size={16} strokeWidth={2.4} /> Access your files anytime</li>
+                <li><CheckCircle size={16} strokeWidth={2.4} /> Continue where you left off</li>
               </ul>
             </div>
             <div className="hub-premium-cta">
@@ -389,7 +406,7 @@ export default function HomePage() {
 
       {/* ─── SEO BLOCK ─── */}
       <section className="hub-seo">
-        <div className="container">
+        <div className="hub-container">
           <h2 className="hub-section-title">What you can do with PDF tools online</h2>
           <div className="hub-seo-prose">
             <p>
@@ -410,23 +427,28 @@ export default function HomePage() {
 
       {/* ─── FAQ ─── */}
       <section className="hub-faq">
-        <div className="container">
+        <div className="hub-container">
           <h2 className="hub-section-title">Frequently asked questions</h2>
           <div className="hub-faq-list">
-            {FAQ.map((item, i) => (
-              <div key={i} className={`hub-faq-item${openFaq === i ? ' hub-faq-open' : ''}`}>
-                <button
-                  type="button"
-                  className="hub-faq-q"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  aria-expanded={openFaq === i}
-                >
-                  <span>{item.q}</span>
-                  <span className="hub-faq-caret" aria-hidden="true">{openFaq === i ? '−' : '+'}</span>
-                </button>
-                {openFaq === i && <p className="hub-faq-a">{item.a}</p>}
-              </div>
-            ))}
+            {FAQ.map((item, i) => {
+              const open = openFaq === i;
+              return (
+                <div key={i} className={`hub-faq-item${open ? ' hub-faq-open' : ''}`}>
+                  <button
+                    type="button"
+                    className="hub-faq-q"
+                    onClick={() => setOpenFaq(open ? null : i)}
+                    aria-expanded={open}
+                  >
+                    <span>{item.q}</span>
+                    <span className="hub-faq-caret" aria-hidden="true">
+                      {open ? <Minus size={18} strokeWidth={2.2} /> : <Plus size={18} strokeWidth={2.2} />}
+                    </span>
+                  </button>
+                  {open && <p className="hub-faq-a">{item.a}</p>}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -439,6 +461,9 @@ export default function HomePage() {
         tool="sign"
         onProActivated={() => setHasSubscription(true)}
       />
+
+      {/* Silence unused-import warning — kept available for future polish. */}
+      {false && <ShieldCheck />}
     </>
   );
 }

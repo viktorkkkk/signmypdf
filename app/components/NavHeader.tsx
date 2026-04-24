@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { Lock, PenLine, FileText, Sparkles } from 'lucide-react';
 import Logo from './Logo';
 
 interface NavHeaderProps {
@@ -59,21 +60,21 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
                   href="/sign"
                   className={`nav-dropdown-item${activeTool === 'sign' ? ' nav-dropdown-item--active' : ''}`}
                 >
-                  <span>✍️</span>
+                  <PenLine size={16} strokeWidth={2} />
                   <span>Sign PDF</span>
                 </a>
                 <a
                   href="/fill"
                   className={`nav-dropdown-item${activeTool === 'fill' ? ' nav-dropdown-item--active' : ''}`}
                 >
-                  <span>📝</span>
+                  <FileText size={16} strokeWidth={2} />
                   <span>Fill PDF Form</span>
                 </a>
                 <a
                   href="/protect"
                   className={`nav-dropdown-item${activeTool === 'protect' ? ' nav-dropdown-item--active' : ''}`}
                 >
-                  <span>🔒</span>
+                  <Lock size={16} strokeWidth={2} />
                   <span>Protect PDF</span>
                 </a>
               </div>
@@ -97,10 +98,10 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
               display: 'flex', alignItems: 'center', gap: 6,
               border: '1px solid #bfdbfe'
             }}>
-              <span style={{ fontSize: 12 }}>✦</span> My Account
+              <Sparkles size={14} strokeWidth={2.4} /> My Account
             </a>
           ) : (
-            <span className="header-tag">🔒 No registration required</span>
+            <span className="header-tag"><Lock size={13} strokeWidth={2.2} /> No registration required</span>
           )}
         </nav>
       </div>
