@@ -300,10 +300,10 @@ Anchor = Apr 24 2026 (cycle_day 0). Rotation restores equal publication rate for
 | … | … | … |
 
 **Apr 25-26 rebalance.** To make room for the first two Protect articles in the new rotation, the two future-dated articles that previously occupied those slots were re-dated forward:
-- `hellosign-alternatives-free` (FILL): Apr 25 → Apr 27
-- `esign-act-explained` (SIGN): Apr 26 → Apr 27
+- `hellosign-alternatives-free` (FILL): Apr 25 → Apr 30
+- `esign-act-explained` (SIGN): Apr 26 → Apr 30
 
-Both are future-dated (scheduled, not yet live), so the move is SEO-safe — URLs unchanged, `date` metadata updated, Google indexes URLs only.
+Both are future-dated (scheduled, not yet live), so the move is SEO-safe — URLs unchanged, `date` metadata updated, Google indexes URLs only. Apr 30 is the next `cycle_day == 0` after Apr 27 (where the Apr 24 trigger run already placed `remote-teams-sign-documents` + `digital-signatures-admissible-court`).
 
 ### Protect article backlog (30+ topics, format-diverse)
 
