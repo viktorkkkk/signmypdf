@@ -42,7 +42,9 @@ if (cliSlugs.length > 0) {
 } else {
   // No args — submit everything
   const allSlugs = getAllSlugsFromPosts();
-  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)];
+  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)  BASE_URL + '/blog/pandadoc-free-alternative',
+  BASE_URL + '/blog/sign-divorce-papers-online',
+];
 }
 
 // --- JWT helpers (no dependencies) ---
