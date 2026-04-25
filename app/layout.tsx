@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: 'SignMyPDF — Free PDF Signature Tool | No Registration',
     template: '%s | SignMyPDF',
   },
-  description: 'Sign PDF documents online for free. No registration required. Draw or type your signature and download instantly. Fast, secure, and legally binding electronic signatures.',
+  description: 'Sign PDF documents online for free. No registration. Draw or type your signature, download instantly. Legally binding electronic signatures.',
   keywords: ['sign pdf online', 'pdf signature', 'electronic signature', 'sign pdf free', 'pdf signer', 'digital signature', 'esign pdf', 'online signature tool'],
   authors: [{ name: 'SignMyPDF' }],
   creator: 'SignMyPDF',

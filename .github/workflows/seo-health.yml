@@ -1,0 +1,85 @@
+name: SEO Health Check
+
+on:
+  schedule:
+    # 03:00 UTC daily — 1h after the blog publisher RemoteTrigger so it
+    # checks the latest deploy. Manual trigger via "Run workflow" too.
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run SEO health check
+        id: check
+        continue-on-error: true
+        run: node scripts/seo-health-check.mjs
+
+      - name: Commit log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/seo-health/ || true
+          if git diff --staged --quiet; then
+            echo "No new log to commit."
+          else
+            git commit -m "SEO health log $(date -u +%F)"
+            git push
+          fi
+
+      - name: Ensure seo-health label exists
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create seo-health \
+            --color "ff6b35" \
+            --description "Automated SEO health check found regressions" \
+            2>/dev/null || true
+
+      - name: Create issue on failure
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%F)
+          LOG="logs/seo-health/$DATE.json"
+          if [ ! -f "$LOG" ]; then
+            echo "No log file at $LOG — script crashed before writing. Reporting raw failure."
+            gh issue create \
+              --title "SEO health check crashed: $DATE" \
+              --label "seo-health" \
+              --body "The SEO health check script crashed before producing a log file. See workflow logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+            exit 0
+          fi
+          BODY=$(jq -r '
+            "Automated SEO health check failed on " + .date + " UTC.\n\n" +
+            "## Summary\n\n" +
+            "- URLs checked: \(.urlCount)\n" +
+            "- Healthy: \(.okCount)\n" +
+            "- Issues found: \(.issueCount)\n\n" +
+            "## Issues\n\n" +
+            (.issues | map("- " + .) | join("\n")) +
+            "\n\n## Source\n\n" +
+            "- Full log committed at `" + "logs/seo-health/" + .date + ".json" + "`\n" +
+            "- Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n"
+          ' "$LOG")
+          gh issue create \
+            --title "SEO health check failed: $DATE" \
+            --label "seo-health" \
+            --body "$BODY"
+
+      - name: Fail workflow if check failed
+        if: steps.check.outcome == 'failure'
+        run: exit 1

@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Password Protect PDF Online Free (2026)',
+  // Tool surface — must differ from the educational article at
+  // /blog/password-protect-pdf-online-free (whose metaTitle is frozen
+  // per CLAUDE.md rule #1). Article frames the topic ("how to..."),
+  // this page frames the action ("here's the encryption tool").
+  title: 'Password Protect PDF Online — Free Encryption Tool',
   description: 'Add a password to any PDF instantly. Free, secure, no registration required. Lock PDF from editing, copying and printing.',
   keywords: [
     'password protect pdf',
@@ -17,7 +21,7 @@ export const metadata: Metadata = {
     canonical: '/protect',
   },
   openGraph: {
-    title: 'Password Protect PDF Online Free',
+    title: 'Password Protect PDF Online — Free Encryption Tool',
     description: 'Add a password to any PDF instantly. Free, secure, no registration required.',
     url: '/protect',
     siteName: 'SignMyPDF',
@@ -26,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Password Protect PDF Online Free',
+    title: 'Password Protect PDF Online — Free Encryption Tool',
     description: 'Add a password to any PDF instantly. Free, secure, no registration required.',
   },
 };
