@@ -28,10 +28,20 @@ export const metadata: Metadata = {
   // Base for all metadata-derived URLs (canonical, og.url, twitter card, sitemap).
   // Canonical = www; apex 307-redirects to www.
   metadataBase: new URL('https://www.signmypdf.io'),
+  // Root metadata represents the homepage `/`. Every other public route
+  // ships its own `app/<route>/layout.tsx` (or in-file metadata block for
+  // server components) that overrides `alternates` and `openGraph` —
+  // Next.js replaces these blocks wholesale rather than deep-merging, so
+  // child routes do NOT inherit this canonical or og:url. See the SEO
+  // Indexing Status section in CLAUDE.md for the per-page source-of-truth
+  // list and the rule for adding new routes.
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'SignMyPDF — Sign PDF Online Free',
     description: 'Sign PDF documents in seconds. No registration, no software. Draw or type your signature.',
-    url: 'https://www.signmypdf.io',
+    url: '/',
     siteName: 'SignMyPDF',
     type: 'website',
     locale: 'en_US',
@@ -41,12 +51,6 @@ export const metadata: Metadata = {
     title: 'SignMyPDF — Free PDF Signature Tool',
     description: 'Sign PDF documents online for free. No registration required.',
   },
-  // Per-page canonical inherits from the request URL (no global override).
-  // Previously this was set to 'https://signmypdf.io' at the root, which
-  // told Google that EVERY page on the site was actually the homepage —
-  // and Google de-duplicated all blog articles + tool pages out of the
-  // index. Removing the global canonical lets each page be its own
-  // canonical, which is the correct default for a multi-page site.
   verification: {
     google: 'T8qgvPjWrXpKbKE-O6pwBD3xir2SKHBGo1vxdikCEyo',
   },
