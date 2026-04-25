@@ -257,6 +257,77 @@ Use these as the "before" benchmark when evaluating whether new SEO/marketing wo
 
 ---
 
+## SEO Infrastructure
+
+**Status: live as of 2026-04-25, exit 0 against prod.** A daily regression detector guarantees the per-page metadata invariants from `## SEO Indexing Status` stay green. If you're about to change anything in this section's surface area, read it first — don't rediscover it.
+
+### What runs
+
+- **Script: `scripts/seo-health-check.mjs`** (no dependencies, plain Node 20+ stdlib + global `fetch`). Walks `https://www.signmypdf.io/sitemap.xml`, fetches every URL, asserts five invariants:
+  - HTTP 200 OK
+  - `<title>` exists and is unique across the sitemap
+  - `<link rel="canonical">` exists and equals self URL (trailing-slash insensitive)
+  - `<meta property="og:url">` exists and equals self URL
+  - `<meta name="description">` exists and is 50-160 chars
+- **Workflow: `.github/workflows/seo-health.yml`** runs the script on `cron: '0 3 * * *'` (03:00 UTC daily — one hour after the blog publisher RemoteTrigger at 02:00 UTC so it sees the freshest deploy). Also exposes `workflow_dispatch` for manual runs.
+- **Outputs**:
+  - Full JSON report committed to `logs/seo-health/YYYY-MM-DD.json` on every run.
+  - On regression: GitHub Issue with label `seo-health` (label color `#ff6b35`, lazily created on first failure). Title: `SEO health check failed: YYYY-MM-DD` (or `… crashed: YYYY-MM-DD` if the script aborted before writing a log). GitHub auto-emails repo watchers, so no SMTP setup is needed.
+  - Exit codes: `0` = clean, `1` = regression, `2` = script-level crash (e.g. sitemap unreachable).
+
+### What NOT to touch
+
+- **Do not delete or move `scripts/seo-health-check.mjs` or `.github/workflows/seo-health.yml`** without first replacing them with an equivalent guarded by the same invariants. They are the only safety net catching the canonical/og:url class of regression that previously cost ~3 weeks of organic traffic.
+- **Do not weaken the invariants** (e.g. relax canonical-mismatch, drop the title-uniqueness check, expand the 50-160 description range) to silence a failing run. Fix the source of the regression instead. 50-160 is Google's visible SERP slot — wider just hides the problem.
+- **Do not add entries to `ALLOWLIST` except for genuinely-frozen content** (article published per Blog Publication Plan rule #1, intentional redirect, etc.). The allowlist is for things that *cannot* be fixed at the source. If a fixable bug is added, the health check loses its meaning.
+- **Do not separate this section from `## SEO Indexing Status`, and do not move it above it.** The two are paired: Indexing Status documents what was broken and fixed; this section documents what prevents re-breakage. They only make sense read together, in that order. If you reorganise CLAUDE.md, keep them adjacent.
+
+### Current `ALLOWLIST` (5 entries, all kind `description-length`)
+
+Blog articles whose `metaDescription` in `app/blog/posts.ts` is 162-172 chars and is frozen because the `date` has already passed:
+
+- `/blog/password-protect-pdf-online-free` (date 2026-04-23)
+- `/blog/pdf-form-fields-not-working-fix` (date 2026-04-23)
+- `/blog/signmypdf-vs-docusign-freelancers` (date 2026-04-13)
+- `/blog/fill-pdf-form-online-free` (date 2026-04-05)
+- `/blog/sent-confidential-contract-unprotected` (date 2026-04-25)
+
+When writing new articles, keep `metaDescription` at 50-160 chars **before the `date` passes** — once an article is publicly indexed, the only way to "fix" length is to allowlist it, which adds permanent technical debt to the health check.
+
+### Workflow for adding a new public page
+
+To prevent the canonical/og:url regression from coming back, every new public route ships its own metadata block in the same commit as the route file:
+
+1. **`'use client'` page** → add a sibling `app/<route>/layout.tsx`. Pattern lives in `app/sign/layout.tsx`, `app/fill/layout.tsx`, `app/protect/layout.tsx`. The layout MUST set:
+   - `alternates: { canonical: '/<route>' }` (relative path; `metadataBase` resolves to www)
+   - `openGraph: { url: '/<route>', title, description, siteName, type, locale }`
+   - `twitter: { card, title, description }`
+   - **Unique** `title` — collisions with another page or with a blog article are the #1 trigger of `title-duplicate` failures. The root layout template appends ` | SignMyPDF` automatically; do not include it in the per-page title.
+   - `description` 50-160 chars
+2. **Server-rendered page** → put the same fields in an in-file `export const metadata: Metadata = { … }`. See `app/blog/page.tsx`, `app/privacy/page.tsx`, `app/terms/page.tsx`.
+3. **Private/auth surface** (must not be indexed) → set `robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } }`. See `app/dashboard/layout.tsx`, `app/login/layout.tsx`. These pages are also excluded from `app/sitemap.ts` so the health check never sees them.
+4. **Add the route to `app/sitemap.ts`** if and only if it should be indexed. The health check derives its URL list from the live sitemap — anything not in `app/sitemap.ts` is invisible to it.
+
+### Freeze rule reminder
+
+Articles in `app/blog/posts.ts` whose `date` has passed are frozen per `## Blog Publication Plan` Hard Rule #1. If a published article's `metaDescription` is over 160 chars, the path is to **allowlist it** (with an inline reason in `ALLOWLIST`), NOT to edit the post. Future-dated articles are NOT frozen and must be brought into compliance before their date hits.
+
+### When the health check fires
+
+A new Issue tagged `seo-health` lands via GitHub-watch email:
+
+1. Open the linked workflow run, scroll to the "Run SEO health check" step output. Each issue line is self-describing: `URL: kind — context`.
+2. Open `logs/seo-health/YYYY-MM-DD.json` (committed to repo) for full per-URL detail.
+3. Common causes by `kind`:
+   - **`title-duplicate`** — two pages share `<title>`. Usually a tool surface and a blog article. Rename the **non-frozen** side.
+   - **`canonical-mismatch` / `og-url-mismatch`** — a new page lacks per-page metadata and is inheriting from `app/layout.tsx`. Ship its `layout.tsx` as in step 1 of "adding a new public page".
+   - **`description-length`** — `metaDescription` outside 50-160. Trim/expand if not frozen; allowlist only if frozen.
+   - **`http-non-200`** — page returns 4xx/5xx. Check the latest Vercel deploy.
+   - **`fetch-error`** — DNS / TLS / network. Check Vercel domain status.
+4. Push the fix; the next 03:00 UTC run closes the regression. To verify earlier, hit "Run workflow" manually in the Actions tab — it triggers the same job on demand.
+
+---
+
 ## Next Priorities
 
 ### 1. Sticky CTA float polish — ✅ done Apr 23
