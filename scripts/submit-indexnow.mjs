@@ -68,6 +68,7 @@ const BLOG_SLUGS = [
   'remote-teams-sign-documents',
   'digital-signatures-admissible-court',
   'sent-confidential-contract-unprotected',
+  'password-protect-pdf-without-adobe',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
