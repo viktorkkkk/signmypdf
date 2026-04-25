@@ -174,6 +174,89 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## SEO Indexing Status
+
+**Last updated: 2026-04-25.** If you change anything indexing-related, update this section so the next session has accurate ground truth.
+
+### Google Search Console
+
+- **Verified property: apex `signmypdf.io` only.** `www.signmypdf.io` is NOT verified — Google treats it as a separate property.
+- **Service account**: `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com` is **Owner of the apex property**. Credentials embedded in the daily RemoteTrigger prompt (file `signmypdf-seo-97022bc5390f.json`, gitignored).
+- **Direct consequence for `scripts/index-pages.mjs`**: `BASE_URL` MUST stay on apex (`https://signmypdf.io`). Switching it to `www.` causes the Indexing API to return `403 Failed to verify URL ownership` for every submission. Submission flow is intentional: apex URL → Vercel 307 → www → Google indexes under www-canonical (set in `<head>`).
+- **Quota**: 200 URL submissions per day per project. Last full re-submit (Apr 25) used 60 of 200 before stopping; remaining articles are picked up by daily trigger runs.
+
+### Bing Webmaster / IndexNow
+
+- Site added, sitemap (`https://www.signmypdf.io/sitemap.xml`) submitted.
+- `scripts/submit-indexnow.mjs` uses `HOST=www.signmypdf.io` — IndexNow does not require ownership verification, so www is fine.
+- Last status from Bing UI: "Discovered but not crawled" — waiting on first crawl, no action needed.
+
+### Canonical host policy (everywhere except `index-pages.mjs`)
+
+`www.signmypdf.io` is canonical for: `app/sitemap.ts`, `public/robots.txt`, `app/blog/[slug]/page.tsx` JSON-LD, `app/sign/page.tsx` + `app/page.tsx` SoftwareApplication JSON-LD, `app/lib/email.ts`, `app/api/auth/magic-link/route.ts`, `app/privacy/page.tsx`, `submit-indexnow.mjs`, all openGraph URLs. Only `scripts/index-pages.mjs` is a deliberate exception (see GSC note above).
+
+### Per-page metadata (added Apr 25)
+
+Every public page emits its own canonical + og:url + page-specific title/description. Inheritance from `app/layout.tsx` only applies to the homepage `/` (whose layout-level defaults match it). Source of truth:
+
+- `/` → root metadata in `app/layout.tsx` (homepage defaults).
+- `/sign` → `app/sign/layout.tsx` (own canonical, og:url, title, description).
+- `/fill` → `app/fill/layout.tsx` (same pattern).
+- `/protect` → `app/protect/layout.tsx`.
+- `/blog` → metadata block in `app/blog/page.tsx`.
+- `/blog/[slug]` → `generateMetadata` in `app/blog/[slug]/page.tsx`.
+- `/privacy` → metadata block in `app/privacy/page.tsx`.
+- `/terms` → metadata block in `app/terms/page.tsx`.
+- `/dashboard` → `app/dashboard/layout.tsx` with `robots: { index: false }` (Pro-only private surface, must NOT be indexed).
+- `/login` → `app/login/layout.tsx` with `robots: { index: false }` (auth surface).
+
+When adding a new public page, **always pair the route with a `layout.tsx` (for `'use client'` pages) or in-file metadata block (for server components)** that sets `alternates.canonical` + full `openGraph` block including `url`. Otherwise the page silently inherits the root `og:url` and Google sees it as a homepage duplicate.
+
+### What was broken & fixed Apr 25 (commits `e8cc93f` + `e52bf1c` + a third later in the day)
+
+For ~3 weeks Google was silently failing to index new blog articles. Four compounding bugs found and fixed:
+
+1. **Wrong canonical on every page.** `app/layout.tsx` had `alternates.canonical: 'https://signmypdf.io'` at the root — Next.js applies root metadata to every page that doesn't override it, so 50+ blog articles, tool pages, and legal pages all emitted `<link rel="canonical" href="https://signmypdf.io">`. Google de-duplicates by canonical → the entire blog collapsed into the homepage entry. **Fix**: removed the global root canonical, set `metadataBase: new URL('https://www.signmypdf.io')`, `app/blog/[slug]/page.tsx` now sets a slug-relative canonical per article.
+2. **`scripts/index-pages.mjs` had broken syntax.** A previous GitHub Action had pasted slugs into the `URLS = [...]` literal without closing the bracket. Every cron run since crashed before submitting anything. **Fix**: restored array literal, added `/sign` to STATIC_URLS.
+3. **Domain inconsistency apex vs www.** Sitemap, robots, IndexNow, JSON-LD were on apex while Vercel resolves apex with a 307 to www → every Google/Bing fetch followed a redirect. **Fix**: standardised to www across all the files listed in "Canonical host policy" above.
+4. **`/sign`, `/fill`, `/blog`, `/privacy`, `/terms`, `/dashboard`, `/login` all emitted `og:url=https://www.signmypdf.io` and the homepage title.** After bug #1 was fixed Google stopped seeing canonical-collisions, but social platforms (and Google's secondary signals) were still being told these pages WERE the homepage via `og:url`. **Fix (this commit)**: created per-page `layout.tsx` for each `'use client'` route with own canonical + openGraph, added in-file metadata to the server-rendered ones, set noindex on `/dashboard` and `/login`. After deploy every public URL emits its own canonical and og:url.
+
+After step 3 the Indexing API began returning `403` because GSC ownership is on apex (see commit `e52bf1c`). The chosen workaround is the `index-pages.mjs` apex exception above. Do NOT "fix" this by switching the script back to www — it will break.
+
+### Current state
+
+- Apr 25 morning: 60 URLs re-submitted to Google Indexing API under correct per-page canonicals.
+- Apr 25 evening: per-page metadata fix shipped (this commit); URLs re-submitted again so Google picks up the new metadata. Daily RemoteTrigger (`trig_01Mw8wt1nCK3jpDA7ymfp4g2`, 02:00 UTC) continues to submit each new article on publish.
+- Bing: IndexNow ping fires on each new article + bulk submit available via `submit-indexnow.mjs`.
+- Monitoring window: GSC indexing data lags 2-4 days, so first proof of recovery expected Apr 27-29.
+
+### Google Analytics Data API (added Apr 25)
+
+- Property: `signmypdf.io` (measurement ID `G-SP5ZZJ3D17`, GA4 property ID `532300049`).
+- Service account `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com` is now **Viewer** in GA Property Access Management.
+- Cloud APIs enabled in project `signmypdf-seo` (number `702087743733`): `analyticsadmin.googleapis.com` + `analyticsdata.googleapis.com`.
+- Auth flow: same JWT-RS256 pattern as `scripts/index-pages.mjs`, scope `https://www.googleapis.com/auth/analytics.readonly`. To pull a report, run a one-shot script that hits `analyticsdata.googleapis.com/v1beta/properties/532300049:runReport` (see `scripts/index-pages.mjs` for the auth helper functions to copy).
+
+### Real conversion baseline (Apr 9-25 2026, GA Data API)
+
+Use these as the "before" benchmark when evaluating whether new SEO/marketing work moves the needle. Numbers are from GA, not extrapolated.
+
+- 248 sessions, 115 users, 961 pageviews, 49.6% engagement rate (totals across 30 days).
+- **0 sessions** from `Organic Search` channel — Google was sending no traffic before the canonical fix.
+- Channel split: Direct 167 (67%), Organic Social (Facebook) 67 (27%), Unassigned 16, Organic Search 0.
+- Geography is dominated by Thailand (60%, 150 sessions) which is the developer's own test traffic. **Excluding Thailand** the real picture is 98 sessions / 96 users / 18s avg session / 18.4% engagement rate over 30 days.
+- US users (real Facebook organic): 46 sessions, 84.8% bounce rate, **5.2s avg session** — they bounce immediately. Not a high-intent audience.
+- Real conversion events outside Thailand over 30 days: **1 `pdf_signed` (1 user)**, 0 `pdf_filled`, 0 `pdf_protected`, 0 `view_paywall`. The product is technically working (events fire correctly in dev tests) but real users are not yet making it to the "done" state.
+
+### Next steps
+
+- **Add `www.signmypdf.io` as a property in GSC + grant the service account Owner.** Once verified, flip `BASE_URL` in `index-pages.mjs` to www and remove the apex-redirect hack so submissions go directly to the canonical host.
+- **Watch GSC "Pages → Indexed"** count over Apr 27-29 for the recovery curve. If it doesn't move, dig into "Page indexing" reasons in GSC (most likely culprits: alt-page with canonical, soft 404, duplicate without canonical).
+- **Bing**: if "Discovered but not crawled" persists past Apr 28, manually trigger "Request Indexing" for top 5 pages from Webmaster UI.
+- **Conversion**: investigate why US Facebook traffic bounces in 5s. Likely culprits — homepage hero doesn't match social-share expectation, or the "drop a PDF" CTA isn't visible without scroll on mobile. A/B test homepage hero copy.
+
+---
+
 ## Next Priorities
 
 ### 1. Sticky CTA float polish — ✅ done Apr 23
@@ -188,10 +271,11 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - Hunter outreach / self-post decision
 - Pre-launch email to any existing users, Twitter/LinkedIn teaser
 
-### 3. Google Indexing ✅ Done
-- Sitemap submitted, all 45 URLs sent to Google Indexing API
-- Monitor GSC for indexing progress (data lags 2-4 days)
-- Bing: "Discovered but not crawled" — waiting first crawl (3-5 days)
+### 3. Google / Bing Indexing
+See dedicated **SEO Indexing Status** section above for full state. Open follow-ups:
+- Add `www.signmypdf.io` as a separate GSC property + grant service account Owner so the indexing script can submit www directly.
+- Monitor GSC "Pages → Indexed" Apr 27-29 to confirm the canonical fix worked.
+- If Bing stays "Discovered but not crawled" past Apr 28, hit Request Indexing manually.
 
 ### 4. Payment Integration (Paddle)
 - PIXELTIDE LLC is the legal entity for Paddle

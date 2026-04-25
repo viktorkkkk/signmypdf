@@ -1,0 +1,19 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sign in — SignMyPDF',
+  description: 'Sign in to your SignMyPDF Pro account.',
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
+
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
+  return children;
+}

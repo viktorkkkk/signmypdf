@@ -3,6 +3,17 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service — SignMyPDF',
   description: 'Terms of Service for SignMyPDF online PDF signing service.',
+  alternates: {
+    canonical: '/terms',
+  },
+  openGraph: {
+    title: 'Terms of Service — SignMyPDF',
+    description: 'Terms of Service for SignMyPDF online PDF signing service.',
+    url: '/terms',
+    siteName: 'SignMyPDF',
+    type: 'website',
+    locale: 'en_US',
+  },
 };
 
 export default function TermsPage() {

@@ -12,10 +12,21 @@ export const metadata: Metadata = {
   title: 'Blog | PDF Signing Tips, Guides & Best Practices',
   description: 'Learn how to sign PDFs online, electronic signature tips, and document security best practices. Expert guides for digital document workflows.',
   keywords: ['PDF signing blog', 'electronic signature tips', 'PDF guide', 'digital signature', 'document security'],
+  alternates: {
+    canonical: '/blog',
+  },
   openGraph: {
-    title: 'SignMyPDF Blog - PDF Signing Tips & Guides',
+    title: 'SignMyPDF Blog — PDF Signing Tips & Guides',
     description: 'Expert guides on electronic signatures, PDF tools, and document security.',
+    url: '/blog',
+    siteName: 'SignMyPDF',
     type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SignMyPDF Blog — PDF Signing Tips & Guides',
+    description: 'Expert guides on electronic signatures, PDF tools, and document security.',
   },
 };
 

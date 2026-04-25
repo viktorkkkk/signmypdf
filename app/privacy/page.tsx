@@ -3,6 +3,17 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy Policy — SignMyPDF',
   description: 'Privacy Policy for SignMyPDF online PDF signing service.',
+  alternates: {
+    canonical: '/privacy',
+  },
+  openGraph: {
+    title: 'Privacy Policy — SignMyPDF',
+    description: 'Privacy Policy for SignMyPDF online PDF signing service.',
+    url: '/privacy',
+    siteName: 'SignMyPDF',
+    type: 'website',
+    locale: 'en_US',
+  },
 };
 
 export default function PrivacyPage() {
