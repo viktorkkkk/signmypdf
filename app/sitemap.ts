@@ -2,7 +2,10 @@ import { MetadataRoute } from 'next';
 import { getAllPosts } from './blog/posts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://signmypdf.io';
+  // Canonical = www. The apex domain (signmypdf.io) 307-redirects to www;
+  // listing apex URLs in the sitemap forces Google to follow a redirect for
+  // every URL, which delays indexing and dilutes ranking signals.
+  const baseUrl = 'https://www.signmypdf.io';
   
   // Static pages
   const staticPages = [

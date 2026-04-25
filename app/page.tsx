@@ -160,7 +160,7 @@ export default function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'SignMyPDF',
-    url: 'https://signmypdf.io',
+    url: 'https://www.signmypdf.io',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     offers: [

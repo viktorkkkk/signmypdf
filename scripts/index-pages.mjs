@@ -15,10 +15,14 @@ import { readFileSync } from 'fs';
 import { createSign } from 'crypto';
 
 const CREDENTIALS_PATH = './signmypdf-seo-97022bc5390f.json';
-const BASE_URL = 'https://signmypdf.io';
+// Canonical is www. apex (signmypdf.io) 307-redirects to www, so submitting
+// the apex URL forces Google to follow a redirect on every fetch — wasteful
+// and dilutes ranking signals. Use www directly.
+const BASE_URL = 'https://www.signmypdf.io';
 
 const STATIC_URLS = [
   BASE_URL + '/',
+  BASE_URL + '/sign',
   BASE_URL + '/fill',
   BASE_URL + '/protect',
   BASE_URL + '/blog',
@@ -42,9 +46,7 @@ if (cliSlugs.length > 0) {
 } else {
   // No args — submit everything
   const allSlugs = getAllSlugsFromPosts();
-  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)  BASE_URL + '/blog/pandadoc-free-alternative',
-  BASE_URL + '/blog/sign-divorce-papers-online',
-];
+  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)];
 }
 
 // --- JWT helpers (no dependencies) ---

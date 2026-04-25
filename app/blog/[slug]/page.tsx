@@ -22,13 +22,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Article Not Found' };
   }
 
+  const canonicalPath = `/blog/${slug}`;
   return {
     title: post.metaTitle || post.title,
     description: post.metaDescription || post.excerpt,
     keywords: post.tags,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: canonicalPath,
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],
@@ -63,11 +68,11 @@ export default async function BlogPostPage({ params }: Props) {
     publisher: {
       '@type': 'Organization',
       name: 'SignMyPDF',
-      url: 'https://signmypdf.io',
+      url: 'https://www.signmypdf.io',
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://signmypdf.io/blog/${slug}`,
+      '@id': `https://www.signmypdf.io/blog/${slug}`,
     },
   };
 

@@ -48,19 +48,19 @@ export async function sendProActivationEmail(email: string, name?: string, plan?
       </div>
       <!-- CTA -->
       <div style="text-align:center;margin-bottom:32px;">
-        <a href="https://signmypdf.io" style="display:inline-block;padding:14px 36px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:10px;font-size:15px;font-weight:700;letter-spacing:0.1px;">
+        <a href="https://www.signmypdf.io" style="display:inline-block;padding:14px 36px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:10px;font-size:15px;font-weight:700;letter-spacing:0.1px;">
           Start Signing Now →
         </a>
       </div>
       <!-- Manage -->
       <p style="font-size:13px;color:#94a3b8;text-align:center;margin:0;line-height:1.6;">
-        To manage your subscription, visit your <a href="https://signmypdf.io/dashboard" style="color:#2563eb;text-decoration:none;">dashboard</a>.
+        To manage your subscription, visit your <a href="https://www.signmypdf.io/dashboard" style="color:#2563eb;text-decoration:none;">dashboard</a>.
       </p>
     </div>
     <!-- Footer -->
     <div style="padding:20px 40px;border-top:1px solid #f1f5f9;text-align:center;">
       <p style="font-size:12px;color:#cbd5e1;margin:0;">
-        SignMyPDF Team · <a href="https://signmypdf.io" style="color:#cbd5e1;">signmypdf.io</a>
+        SignMyPDF Team · <a href="https://www.signmypdf.io" style="color:#cbd5e1;">signmypdf.io</a>
       </p>
     </div>
   </div>

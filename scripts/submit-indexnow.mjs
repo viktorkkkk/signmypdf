@@ -4,12 +4,17 @@
  * Run: node scripts/submit-indexnow.mjs
  */
 
-const HOST = 'signmypdf.io';
+// Canonical host is www. apex (signmypdf.io) 307-redirects to www, so
+// IndexNow submissions on apex make Bing follow a redirect for every URL.
+// Bing sometimes treats the redirected URL as a separate signal entirely
+// — submit www directly to avoid that.
+const HOST = 'www.signmypdf.io';
 const KEY  = '8e0aa4aa055ef1d076ab294fd8edb9ba';
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
 const STATIC_URLS = [
   `https://${HOST}/`,
+  `https://${HOST}/sign`,
   `https://${HOST}/fill`,
   `https://${HOST}/protect`,
   `https://${HOST}/blog`,

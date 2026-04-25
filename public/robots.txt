@@ -2,7 +2,7 @@ User-Agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://signmypdf.io/sitemap.xml
+Sitemap: https://www.signmypdf.io/sitemap.xml
 
 # Disallow API routes
 Disallow: /api/

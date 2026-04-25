@@ -14,12 +14,12 @@ export const metadata: Metadata = {
     'pdf encryption online',
   ],
   alternates: {
-    canonical: 'https://signmypdf.io/protect',
+    canonical: '/protect',
   },
   openGraph: {
     title: 'Password Protect PDF Online Free',
     description: 'Add a password to any PDF instantly. Free, secure, no registration required.',
-    url: 'https://signmypdf.io/protect',
+    url: '/protect',
     siteName: 'SignMyPDF',
     type: 'website',
     locale: 'en_US',

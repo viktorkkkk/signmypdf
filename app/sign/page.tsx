@@ -375,7 +375,7 @@ export default function Home() {
     '@type': 'WebApplication',
     name: 'SignMyPDF',
     description: 'Free online PDF signature tool. No registration required.',
-    url: 'https://signmypdf.io',
+    url: 'https://www.signmypdf.io/sign',
     applicationCategory: 'ProductivityApplication',
     operatingSystem: 'Any',
     offers: {

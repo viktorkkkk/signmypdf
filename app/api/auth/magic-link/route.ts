@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     const token = await signJWT({ email }, 60 * 60 * 24 * 30); // 30 days
-    const magicUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://signmypdf.io'}/dashboard?token=${token}`;
+    const magicUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.signmypdf.io'}/dashboard?token=${token}`;
 
     await sendMagicLinkEmail(email, magicUrl);
 

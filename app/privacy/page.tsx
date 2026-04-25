@@ -15,7 +15,7 @@ export default function PrivacyPage() {
 
       <p style={{ marginBottom: 16 }}>
         This Privacy Policy describes how <strong>PIXELTIDE LLC</strong> ("Company", "we", "us", or "our"),
-        operating SignMyPDF at <a href="https://signmypdf.io" style={{ color: '#2563eb' }}>signmypdf.io</a>,
+        operating SignMyPDF at <a href="https://www.signmypdf.io" style={{ color: '#2563eb' }}>signmypdf.io</a>,
         collects, uses, and protects information when you use our Service.
       </p>
       <p style={{ marginBottom: 16 }}>
