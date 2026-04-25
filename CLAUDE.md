@@ -255,6 +255,8 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026). The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync.
 
+**⚠️ Single source of truth.** This RemoteTrigger is the ONLY automated blog publisher. There used to be a second `Daily Blog Publisher` GitHub Actions workflow (`.github/workflows/daily-blog.yml`) running at 03:00 UTC under the old "next 2 from `blog-plan.json`" logic — it was unaware of cycle_day rotation and silently doubled publications. Removed Apr 25 2026 after it overflowed Apr 25 to 4 articles by adding a non-rotation Sign + Fill pair on top of the trigger's correct Protect publication. If you ever need a redundant backup publisher, port the cycle_day logic from this trigger into the GitHub Action — do NOT resurrect the old script as-is.
+
 ### Progress
 
 | Day | Article 1 (SIGN) | Article 2 (FILL/other) | Status |
