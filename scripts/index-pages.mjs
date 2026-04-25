@@ -42,9 +42,7 @@ if (cliSlugs.length > 0) {
 } else {
   // No args — submit everything
   const allSlugs = getAllSlugsFromPosts();
-  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)  BASE_URL + '/blog/fill-government-forms-online-free',
-  BASE_URL + '/blog/signature-disappears-pdf-fix',
-];
+  URLS = [...STATIC_URLS, ...allSlugs.map(s => `${BASE_URL}/blog/${s}`)];
 }
 
 // --- JWT helpers (no dependencies) ---
