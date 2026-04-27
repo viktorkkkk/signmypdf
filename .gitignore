@@ -40,8 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Google service account credentials — never commit
+# Google service account credentials — never commit. Canonical location
+# is ~/.config/signmypdf/gsc-credentials.json (outside the repo). The
+# patterns below catch the legacy in-repo paths if they reappear (the
+# daily RemoteTrigger writes a temp file that matches signmypdf-seo-*.json).
 signmypdf-seo-*.json
+scripts/gsc-credentials.json
 
 # Local tokens — never commit
 .claude/tokens.local
+
+# Claude Code worktrees — never commit (per-machine state)
+.claude/worktrees/
