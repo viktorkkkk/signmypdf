@@ -7,7 +7,8 @@
  * Run once: node scripts/setup-github-secrets.mjs
  */
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
+import { homedir } from 'os';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -25,7 +26,13 @@ const tokens = Object.fromEntries(
 );
 
 // ── Load GSC credentials (base64 encode) ─────────────────────────
-const gscRaw = readFileSync(join(ROOT, 'scripts/gsc-credentials.json'), 'utf8');
+// Credentials live OUTSIDE the repo at ~/.config/signmypdf/. The legacy
+// `scripts/gsc-credentials.json` location is supported as a fallback for
+// users who haven't migrated yet.
+const CONFIG_PATH = join(homedir(), '.config/signmypdf/gsc-credentials.json');
+const LEGACY_PATH = join(ROOT, 'scripts/gsc-credentials.json');
+const gscPath = existsSync(CONFIG_PATH) ? CONFIG_PATH : LEGACY_PATH;
+const gscRaw = readFileSync(gscPath, 'utf8');
 const gscBase64 = Buffer.from(gscRaw).toString('base64');
 
 const OWNER = 'viktorkkkk';

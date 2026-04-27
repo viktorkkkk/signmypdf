@@ -11,10 +11,18 @@
  *   node scripts/index-pages.mjs slug1 slug2        — submit only specific blog slugs
  */
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
+import { homedir } from 'os';
+import { join } from 'path';
 import { createSign } from 'crypto';
 
-const CREDENTIALS_PATH = './signmypdf-seo-97022bc5390f.json';
+// GSC credentials live OUTSIDE the repo at ~/.config/signmypdf/ to avoid any
+// risk of accidental commit. The daily RemoteTrigger writes a temporary copy
+// to the repo root at runtime (./signmypdf-seo-97022bc5390f.json) before
+// invoking this script, so we fall back to that path for the trigger flow.
+const CONFIG_PATH = join(homedir(), '.config/signmypdf/gsc-credentials.json');
+const REPO_FALLBACK = './signmypdf-seo-97022bc5390f.json';
+const CREDENTIALS_PATH = existsSync(CONFIG_PATH) ? CONFIG_PATH : REPO_FALLBACK;
 // Submit URLs under www (the canonical host). The GSC service account
 // (signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com) is
 // Owner of the Domain property `sc-domain:signmypdf.io` (added Apr 27)

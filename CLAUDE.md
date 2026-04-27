@@ -284,12 +284,19 @@ Use these as the "before" benchmark when evaluating whether new SEO/marketing wo
   - On regression: GitHub Issue with label `seo-health` (label color `#ff6b35`, lazily created on first failure). Title: `SEO health check failed: YYYY-MM-DD` (or `… crashed: YYYY-MM-DD` if the script aborted before writing a log). GitHub auto-emails repo watchers, so no SMTP setup is needed.
   - Exit codes: `0` = clean, `1` = regression, `2` = script-level crash (e.g. sitemap unreachable).
 
+### Where credentials live
+
+**GSC service-account credentials live at `~/.config/signmypdf/gsc-credentials.json` — NOT in the repo.** Permissions on the file are `0644` user-only. Both local scripts that need it (`scripts/index-pages.mjs`, `scripts/setup-github-secrets.mjs`) check this path first. They fall back to an in-repo path (`./signmypdf-seo-97022bc5390f.json` for `index-pages.mjs`, `./scripts/gsc-credentials.json` for `setup-github-secrets.mjs`) so the daily RemoteTrigger — which writes a temporary copy to the repo at runtime — keeps working untouched. The repo paths are gitignored. Do NOT commit any `*.json` containing the `client_email` `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com`.
+
+In CI the same credentials live in the GitHub repo secret `GSC_CREDENTIALS` (base64-encoded JSON). `scripts/seo-gsc-check.mjs` reads it from the env var of the same name; it never touches a file.
+
 ### What NOT to touch
 
 - **Do not delete or move `scripts/seo-health-check.mjs` or `.github/workflows/seo-health.yml`** without first replacing them with an equivalent guarded by the same invariants. They are the only safety net catching the canonical/og:url class of regression that previously cost ~3 weeks of organic traffic.
 - **Do not weaken the invariants** (e.g. relax canonical-mismatch, drop the title-uniqueness check, expand the 50-160 description range) to silence a failing run. Fix the source of the regression instead. 50-160 is Google's visible SERP slot — wider just hides the problem.
 - **Do not add entries to `ALLOWLIST` except for genuinely-frozen content** (article published per Blog Publication Plan rule #1, intentional redirect, etc.). The allowlist is for things that *cannot* be fixed at the source. If a fixable bug is added, the health check loses its meaning.
 - **Do not separate this section from `## SEO Indexing Status`, and do not move it above it.** The two are paired: Indexing Status documents what was broken and fixed; this section documents what prevents re-breakage. They only make sense read together, in that order. If you reorganise CLAUDE.md, keep them adjacent.
+- **Do not move credentials back into the repo.** If you need them on a new machine, copy `~/.config/signmypdf/gsc-credentials.json` over SSH/scp — never commit. The repo-local fallback path is for the RemoteTrigger only, and the trigger deletes the file after each run.
 
 ### Current `ALLOWLIST` (5 entries, all kind `description-length`)
 
