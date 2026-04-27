@@ -21,25 +21,38 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run SEO health check
-        id: check
+      - name: Run on-page SEO health check (HTML metadata)
+        id: check_html
         continue-on-error: true
         run: node scripts/seo-health-check.mjs
 
-      - name: Commit log
+      - name: Run GSC health check (Google's view)
+        id: check_gsc
+        continue-on-error: true
+        env:
+          GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
+        run: |
+          if [ -z "$GSC_CREDENTIALS" ]; then
+            echo "::warning::GSC_CREDENTIALS secret not set. GSC check skipped — set the secret to enable indexation monitoring."
+            echo "skipped=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          node scripts/seo-gsc-check.mjs
+
+      - name: Commit logs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add logs/seo-health/ || true
+          git add logs/seo-health/ logs/seo-gsc/ || true
           if git diff --staged --quiet; then
-            echo "No new log to commit."
+            echo "No new logs to commit."
           else
             git commit -m "SEO health log $(date -u +%F)"
             git push
           fi
 
       - name: Ensure seo-health label exists
-        if: steps.check.outcome == 'failure'
+        if: steps.check_html.outcome == 'failure' || steps.check_gsc.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -48,23 +61,22 @@ jobs:
             --description "Automated SEO health check found regressions" \
             2>/dev/null || true
 
-      - name: Create issue on failure
-        if: steps.check.outcome == 'failure'
+      - name: Create issue on HTML check failure
+        if: steps.check_html.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DATE=$(date -u +%F)
           LOG="logs/seo-health/$DATE.json"
           if [ ! -f "$LOG" ]; then
-            echo "No log file at $LOG — script crashed before writing. Reporting raw failure."
             gh issue create \
               --title "SEO health check crashed: $DATE" \
               --label "seo-health" \
-              --body "The SEO health check script crashed before producing a log file. See workflow logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+              --body "The on-page SEO health check script crashed before producing a log file. See workflow logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
             exit 0
           fi
           BODY=$(jq -r '
-            "Automated SEO health check failed on " + .date + " UTC.\n\n" +
+            "Automated on-page SEO health check failed on " + .date + " UTC.\n\n" +
             "## Summary\n\n" +
             "- URLs checked: \(.urlCount)\n" +
             "- Healthy: \(.okCount)\n" +
@@ -72,7 +84,7 @@ jobs:
             "## Issues\n\n" +
             (.issues | map("- " + .) | join("\n")) +
             "\n\n## Source\n\n" +
-            "- Full log committed at `" + "logs/seo-health/" + .date + ".json" + "`\n" +
+            "- Full log: `logs/seo-health/" + .date + ".json`\n" +
             "- Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n"
           ' "$LOG")
           gh issue create \
@@ -80,6 +92,42 @@ jobs:
             --label "seo-health" \
             --body "$BODY"
 
-      - name: Fail workflow if check failed
-        if: steps.check.outcome == 'failure'
+      - name: Create issue on GSC check failure
+        if: steps.check_gsc.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%F)
+          LOG="logs/seo-gsc/$DATE.json"
+          if [ ! -f "$LOG" ]; then
+            gh issue create \
+              --title "GSC health check crashed: $DATE" \
+              --label "seo-health" \
+              --body "The GSC health check script crashed before producing a log file. Most likely cause: GSC_CREDENTIALS secret missing or service account permission lost. See workflow logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+            exit 0
+          fi
+          BODY=$(jq -r '
+            "Automated GSC indexation check failed on " + .date + " UTC.\n\n" +
+            "## Summary\n\n" +
+            "- Property: `" + .property + "`\n" +
+            "- Sitemap: `" + .sitemap + "`\n" +
+            "- Issues found: \(.issueCount)\n\n" +
+            "## Issues\n\n" +
+            (.issues | map("- " + .) | join("\n")) +
+            "\n\n## Facts at time of check\n\n" +
+            "- Sitemap downloaded by Google: `\(.facts.sitemapDownloaded // "never")`\n" +
+            "- URLs in sitemap: \(.facts.sitemapWebUrlCount // 0)\n" +
+            "- Impressions (28d): \(.facts.impressions28d // 0)\n" +
+            "- Clicks (28d): \(.facts.clicks28d // 0)\n\n" +
+            "## Source\n\n" +
+            "- Full log: `logs/seo-gsc/" + .date + ".json`\n" +
+            "- Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\n"
+          ' "$LOG")
+          gh issue create \
+            --title "GSC indexation check failed: $DATE" \
+            --label "seo-health" \
+            --body "$BODY"
+
+      - name: Fail workflow if any check failed
+        if: steps.check_html.outcome == 'failure' || steps.check_gsc.outcome == 'failure'
         run: exit 1
