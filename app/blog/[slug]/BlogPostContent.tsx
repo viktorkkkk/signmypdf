@@ -352,9 +352,20 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
         return <div key={i}><QuickSummaryCard items={items} /></div>;
       }
 
-      // Callout block [CALLOUT]text
+      // Drop orphan closing tags (e.g. "[/CALLOUT]" alone in its own block).
+      // These appear when an opening [CALLOUT] is on one block and its
+      // [/CALLOUT] is on a separate block (via blank line). Without this
+      // guard the closing tag would leak through to the page as plain text.
+      if (/^\[\/[A-Z][A-Za-z0-9]*\]$/.test(trimmed)) {
+        return null;
+      }
+
+      // Callout block [CALLOUT]text  (closing [/CALLOUT] tolerated and stripped)
       if (trimmed.startsWith('[CALLOUT]')) {
-        const text = trimmed.slice(9).trim();
+        const text = trimmed
+          .slice('[CALLOUT]'.length)
+          .replace(/\[\/CALLOUT\]\s*$/i, '')
+          .trim();
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 20px', background: '#eff6ff', borderLeft: '4px solid #2563eb', borderRadius: '0 12px 12px 0', marginBottom: 24, marginTop: 8 }}>
             <p style={{ margin: 0, fontSize: 15, color: '#1e40af', lineHeight: 1.7, fontWeight: 500 }}>{text}</p>
