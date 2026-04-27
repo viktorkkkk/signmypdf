@@ -15,15 +15,12 @@ import { readFileSync } from 'fs';
 import { createSign } from 'crypto';
 
 const CREDENTIALS_PATH = './signmypdf-seo-97022bc5390f.json';
-// Submit URLs under the apex host. The GSC service account
+// Submit URLs under www (the canonical host). The GSC service account
 // (signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com) is
-// verified as Owner for `signmypdf.io` only — submitting `www.` URLs
-// returns 403 "Failed to verify the URL ownership". Canonicals in
-// HTML still point to www; Google fetches the apex URL, follows the
-// 307 → www, and indexes the www-canonical version. To switch the
-// indexing host to www directly, add www.signmypdf.io as a separate
-// GSC property AND grant the service account Owner permission there.
-const BASE_URL = 'https://signmypdf.io';
+// Owner of the Domain property `sc-domain:signmypdf.io` (added Apr 27)
+// which covers BOTH apex and www under one verification — Indexing
+// API accepts www URLs directly without a redirect dance.
+const BASE_URL = 'https://www.signmypdf.io';
 
 const STATIC_URLS = [
   BASE_URL + '/',

@@ -180,10 +180,16 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ### Google Search Console
 
-- **Verified property: apex `signmypdf.io` only.** `www.signmypdf.io` is NOT verified — Google treats it as a separate property.
-- **Service account**: `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com` is **Owner of the apex property**. Credentials embedded in the daily RemoteTrigger prompt (file `signmypdf-seo-97022bc5390f.json`, gitignored).
-- **Direct consequence for `scripts/index-pages.mjs`**: `BASE_URL` MUST stay on apex (`https://signmypdf.io`). Switching it to `www.` causes the Indexing API to return `403 Failed to verify URL ownership` for every submission. Submission flow is intentional: apex URL → Vercel 307 → www → Google indexes under www-canonical (set in `<head>`).
-- **Quota**: 200 URL submissions per day per project. Last full re-submit (Apr 25) used 60 of 200 before stopping; remaining articles are picked up by daily trigger runs.
+- **Verified properties (both Owner)**:
+  - **`sc-domain:signmypdf.io`** — Domain property added 2026-04-27. Covers BOTH apex and www under one DNS-TXT verification. This is the canonical property going forward.
+  - `https://signmypdf.io/` — legacy URL-prefix property from before Domain property was added. Kept for historical Search Analytics continuity; no action needed.
+- **Service account**: `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com` is Owner on both. Credentials in `signmypdf-seo-97022bc5390f.json` (gitignored, embedded in the daily RemoteTrigger prompt).
+- **DNS verification**: TXT record `google-site-verification=T8qgvPjWrXpKbKE-O6pwBD3xir2SKHBGo1vxdikCEyo` on `signmypdf.io` apex (Namecheap → Advanced DNS). Do NOT delete — it's how the Domain property stays verified.
+- **Sitemaps submitted**:
+  - `https://www.signmypdf.io/sitemap.xml` → Domain property (canonical)
+  - `https://signmypdf.io/sitemap.xml` → URL-prefix property (legacy, redirects to www)
+- **`scripts/index-pages.mjs` `BASE_URL`**: now `https://www.signmypdf.io` (www, canonical). The previous apex-only constraint was lifted by the Domain property — submissions go directly to the canonical host with no redirect.
+- **Quota**: Indexing API allows 200 URL submissions per day per project. Daily RemoteTrigger uses ~2/day; manual re-submits cost 60 (full sitemap).
 
 ### Bing Webmaster / IndexNow
 
@@ -191,9 +197,9 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - `scripts/submit-indexnow.mjs` uses `HOST=www.signmypdf.io` — IndexNow does not require ownership verification, so www is fine.
 - Last status from Bing UI: "Discovered but not crawled" — waiting on first crawl, no action needed.
 
-### Canonical host policy (everywhere except `index-pages.mjs`)
+### Canonical host policy
 
-`www.signmypdf.io` is canonical for: `app/sitemap.ts`, `public/robots.txt`, `app/blog/[slug]/page.tsx` JSON-LD, `app/sign/page.tsx` + `app/page.tsx` SoftwareApplication JSON-LD, `app/lib/email.ts`, `app/api/auth/magic-link/route.ts`, `app/privacy/page.tsx`, `submit-indexnow.mjs`, all openGraph URLs. Only `scripts/index-pages.mjs` is a deliberate exception (see GSC note above).
+`www.signmypdf.io` is canonical EVERYWHERE: `app/sitemap.ts`, `public/robots.txt`, `app/blog/[slug]/page.tsx` JSON-LD, `app/sign/page.tsx` + `app/page.tsx` SoftwareApplication JSON-LD, `app/lib/email.ts`, `app/api/auth/magic-link/route.ts`, `app/privacy/page.tsx`, `submit-indexnow.mjs`, `scripts/index-pages.mjs`, all openGraph URLs. The previous apex exception in `index-pages.mjs` was removed Apr 27 once the Domain property went live.
 
 ### Per-page metadata (added Apr 25)
 
@@ -250,9 +256,12 @@ Use these as the "before" benchmark when evaluating whether new SEO/marketing wo
 
 ### Next steps
 
-- **Add `www.signmypdf.io` as a property in GSC + grant the service account Owner.** Once verified, flip `BASE_URL` in `index-pages.mjs` to www and remove the apex-redirect hack so submissions go directly to the canonical host.
-- **Watch GSC "Pages → Indexed"** count over Apr 27-29 for the recovery curve. If it doesn't move, dig into "Page indexing" reasons in GSC (most likely culprits: alt-page with canonical, soft 404, duplicate without canonical).
-- **Bing**: if "Discovered but not crawled" persists past Apr 28, manually trigger "Request Indexing" for top 5 pages from Webmaster UI.
+- ✅ ~~Add www.signmypdf.io to GSC~~ — done Apr 27 via Domain property `sc-domain:signmypdf.io` (covers apex + www in one).
+- ✅ ~~Flip `BASE_URL` in `index-pages.mjs` to www~~ — done Apr 27.
+- **Watch GSC "Pages → Indexed"** in the Domain property over Apr 28-May 4 for the recovery curve. If it doesn't move, dig into "Page indexing" reasons in GSC (most likely culprits: alt-page with canonical, soft 404, duplicate without canonical).
+- **Add `https://www.signmypdf.io/` as a Bing Webmaster property** (use "Import from Google Search Console" — fastest). The current Bing property is apex-only, same mismatch we just fixed for GSC.
+- **Bing**: if "Discovered but not crawled" persists past May 1, manually trigger "Request Indexing" for top 5 pages from Webmaster UI.
+- **Enable Search Console API** in Cloud project `signmypdf-seo` (https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview?project=702087743733) so URL Inspection API works programmatically. Currently only the legacy `webmasters/v3` endpoint is reachable, which doesn't expose per-URL indexing state.
 - **Conversion**: investigate why US Facebook traffic bounces in 5s. Likely culprits — homepage hero doesn't match social-share expectation, or the "drop a PDF" CTA isn't visible without scroll on mobile. A/B test homepage hero copy.
 
 ---
