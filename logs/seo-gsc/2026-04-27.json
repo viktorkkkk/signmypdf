@@ -1,6 +1,6 @@
 {
   "date": "2026-04-27",
-  "timestamp": "2026-04-27T05:25:48.020Z",
+  "timestamp": "2026-04-27T10:33:10.127Z",
   "property": "sc-domain:signmypdf.io",
   "sitemap": "https://www.signmypdf.io/sitemap.xml",
   "issueCount": 0,
@@ -10,11 +10,11 @@
     "propertyPermission": "siteOwner",
     "allProperties": [
       {
-        "siteUrl": "sc-domain:signmypdf.io",
+        "siteUrl": "https://signmypdf.io/",
         "permissionLevel": "siteOwner"
       },
       {
-        "siteUrl": "https://signmypdf.io/",
+        "siteUrl": "sc-domain:signmypdf.io",
         "permissionLevel": "siteOwner"
       }
     ],
