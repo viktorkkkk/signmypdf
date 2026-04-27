@@ -138,7 +138,22 @@ async function main() {
       'GSC_CREDENTIALS env var not set. In GitHub Actions, set it from the repo secret of the same name. Locally, export it from signmypdf-seo-97022bc5390f.json contents.',
     );
   }
-  const credentials = JSON.parse(credsRaw);
+  // Accept both raw JSON and base64-encoded JSON. The existing GitHub
+  // repo secret uses base64; running locally with `cat foo.json` gives
+  // raw JSON. Try direct parse first, fall back to base64 decode.
+  let credentials;
+  const trimmed = credsRaw.trim();
+  if (trimmed.startsWith('{')) {
+    credentials = JSON.parse(trimmed);
+  } else {
+    try {
+      credentials = JSON.parse(Buffer.from(trimmed, 'base64').toString('utf8'));
+    } catch {
+      throw new Error(
+        'GSC_CREDENTIALS is neither raw JSON (must start with `{`) nor valid base64-encoded JSON.',
+      );
+    }
+  }
 
   const token = await getToken(credentials);
 
