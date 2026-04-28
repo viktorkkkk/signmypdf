@@ -33,8 +33,27 @@
   --space-card:     24px;              /* card inner padding */
   --space-page:     24px;              /* page horizontal padding (desktop) */
 
-  /* Container */
-  --container-max: 1200px;
+  /* Container + content widths
+     - container is the section's outer wrapper (1200px)
+     - grid is the inner cap for cards/grids (so 3-card rows feel cohesive)
+     - prose is the inner cap for paragraph/Q&A text (60-80 chars/line)
+     The two inner widths are intentional: same outer container, but
+     prose stays readable while grids fill out. */
+  --container-max:  1200px;
+  --content-grid:   1080px;
+  --content-prose:  760px;
+
+  /* Tool-card accents (palette B: Cool spread — Blue/Teal/Violet).
+     Each tool gets its own hue so the 3 cards on the hub are
+     immediately differentiable. The 3 hues are all cool to stay
+     in the brand family — no rainbow, no clash with the Why-card
+     accent triplet (red/emerald/amber). */
+  --tool-sign-fg:    #2563EB;   /* brand blue, kept */
+  --tool-sign-bg:    #EFF6FF;
+  --tool-fill-fg:    #0D9488;   /* teal */
+  --tool-fill-bg:    #F0FDFA;
+  --tool-protect-fg: #7C3AED;   /* violet */
+  --tool-protect-bg: #F5F3FF;
 }
 
 @media (max-width: 768px) {
@@ -1786,71 +1805,94 @@ body > div > footer { margin-top: auto; }
 .hub-hero .hub-tool-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 960px;
-  margin: 0 auto 36px;
+  gap: 24px;
+  max-width: var(--content-grid);
+  margin: 0 auto var(--space-stack);
 }
 
+/* Tool cards share the Why-card token system: same padding, radius,
+   font sizes. Only the icon-wrap colour differs (.tool-accent-* below). */
 .hub-tool-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 24px 22px 20px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: var(--space-card);
   text-align: left;
   cursor: pointer;
   transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   font: inherit;
   color: inherit;
 }
 .hub-tool-card:hover {
   border-color: #cbd5e1;
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
 }
 .hub-tool-card:hover .hub-tool-btn {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: #ffffff;
 }
 .hub-tool-icon-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: #eff6ff;
-  color: #2563eb;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--tool-sign-bg);
+  color: var(--tool-sign-fg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
 }
-.hub-tool-name { font-size: 19px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.01em; }
-.hub-tool-desc { font-size: 14px; color: #64748b; margin: 0; line-height: 1.5; flex: 1; }
+/* Per-tool accent — bg + icon colour. Hover button keeps brand blue
+   so the call-to-action stays uniform regardless of which tool is hovered. */
+.hub-tool-card.tool-accent-sign    .hub-tool-icon-wrap { background: var(--tool-sign-bg);    color: var(--tool-sign-fg); }
+.hub-tool-card.tool-accent-fill    .hub-tool-icon-wrap { background: var(--tool-fill-bg);    color: var(--tool-fill-fg); }
+.hub-tool-card.tool-accent-protect .hub-tool-icon-wrap { background: var(--tool-protect-bg); color: var(--tool-protect-fg); }
+
+.hub-tool-name {
+  font-size: var(--font-h3);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.hub-tool-desc {
+  font-size: var(--font-body);
+  color: var(--color-muted);
+  margin: 0;
+  line-height: 1.6;
+  flex: 1;
+}
 .hub-tool-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   align-self: flex-start;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 700;
-  color: #2563eb;
-  background: #ffffff;
+  color: var(--color-primary);
+  background: var(--color-bg);
   border: 1.5px solid #bfdbfe;
   border-radius: 8px;
   padding: 8px 14px;
-  margin-top: 6px;
+  margin-top: 4px;
   transition: background 0.18s, border-color 0.18s, color 0.18s;
 }
 
-/* Dominant Sign dropzone — the attention-grabbing surface on the page. */
+/* Dominant Sign dropzone — the attention-grabbing surface on the page.
+   Capped at the same content-grid width so its left/right edges line
+   up with the tool grid above. */
 .hub-dropzone {
-  background: #ffffff;
+  background: var(--color-bg);
   border: 2px dashed #cbd5e1;
   border-radius: 18px;
   padding: 56px 24px 44px;
   min-height: 320px;
+  max-width: var(--content-grid);
+  margin: 0 auto;
   transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
   cursor: pointer;
   outline: none;
@@ -1863,34 +1905,39 @@ body > div > footer { margin-top: auto; }
 }
 .hub-dropzone:hover,
 .hub-dropzone:focus-visible {
-  border-color: #2563eb;
+  border-color: var(--color-primary);
   background: #f8fbff;
   box-shadow: 0 8px 28px rgba(37, 99, 235, 0.10);
 }
 .hub-dropzone-active {
-  border-color: #2563eb;
-  background: #eff6ff;
+  border-color: var(--color-primary);
+  background: var(--tool-sign-bg);
   box-shadow: 0 12px 36px rgba(37, 99, 235, 0.18);
 }
 .hub-dropzone-icon {
   width: 80px;
   height: 80px;
   border-radius: 20px;
-  background: #eff6ff;
-  color: #2563eb;
+  background: var(--tool-sign-bg);
+  color: var(--color-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
 }
-.hub-dropzone-title { font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em; }
+.hub-dropzone-title {
+  font-size: var(--font-h3);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
 .hub-dropzone-sub { font-size: 13px; color: #94a3b8; margin: 6px 0 12px; }
 .hub-dropzone-btn {
-  background: #2563eb;
+  background: var(--color-primary);
   color: #ffffff;
   border: none;
   font-weight: 700;
-  font-size: 17px;
+  font-size: var(--font-lead);
   padding: 0 32px;
   height: 52px;
   border-radius: 12px;
@@ -1901,7 +1948,11 @@ body > div > footer { margin-top: auto; }
   display: inline-flex;
   align-items: center;
 }
-.hub-dropzone:hover .hub-dropzone-btn { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40); }
+.hub-dropzone:hover .hub-dropzone-btn {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40);
+}
 .hub-dropzone-hint { font-size: 12px; color: #94a3b8; margin-top: 14px; }
 
 /* Trust strip — folded into the hero block as the last element under
@@ -1939,7 +1990,7 @@ body > div > footer { margin-top: auto; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  max-width: 1080px;
+  max-width: var(--content-grid);
   margin: 0 auto;
 }
 .hub-why-item {
@@ -1997,7 +2048,7 @@ body > div > footer { margin-top: auto; }
 
 .hub-seo { padding: var(--space-section) 0; background: var(--color-bg); }
 .hub-seo-prose {
-  max-width: 720px;
+  max-width: var(--content-prose);
   margin: 0 auto;
   font-size: var(--font-body);
   color: #334155;
@@ -2006,15 +2057,21 @@ body > div > footer { margin-top: auto; }
 .hub-seo-prose p { margin: 0; }
 .hub-seo-prose strong { color: var(--color-text); font-weight: 700; }
 
-.hub-faq { padding: 64px 0 80px; }
-.hub-faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.hub-faq { padding: var(--space-section) 0; background: var(--color-surface); }
+.hub-faq-list {
+  max-width: var(--content-prose);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .hub-faq-item {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--color-bg);
   transition: border-color 0.15s;
 }
-.hub-faq-open { border-color: #2563eb; }
+.hub-faq-open { border-color: var(--color-primary); }
 .hub-faq-q {
   width: 100%;
   padding: 18px 20px;
@@ -2024,15 +2081,21 @@ body > div > footer { margin-top: auto; }
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  font-size: 15px;
+  font-size: var(--font-body);
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text);
   cursor: pointer;
   text-align: left;
 }
 .hub-faq-caret { color: #94a3b8; flex-shrink: 0; display: inline-flex; }
-.hub-faq-open .hub-faq-caret { color: #2563eb; }
-.hub-faq-a { padding: 0 20px 18px; margin: 0; font-size: 14px; color: #475569; line-height: 1.6; }
+.hub-faq-open .hub-faq-caret { color: var(--color-primary); }
+.hub-faq-a {
+  padding: 0 20px 18px;
+  margin: 0;
+  font-size: var(--font-sm);
+  color: #475569;
+  line-height: 1.6;
+}
 
 /* ── Hub mobile ── */
 /* Mobile overrides for hub-* (homepage). Token values from :root already

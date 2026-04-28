@@ -198,7 +198,7 @@ export default function HomePage() {
           </p>
 
           <div className="hub-tool-grid">
-            <button type="button" className="hub-tool-card" onClick={() => goToTool('sign')}>
+            <button type="button" className="hub-tool-card tool-accent-sign" onClick={() => goToTool('sign')}>
               <div className="hub-tool-icon-wrap">
                 <PenLine size={28} strokeWidth={2} />
               </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
               <span className="hub-tool-btn">Open tool →</span>
             </button>
 
-            <button type="button" className="hub-tool-card" onClick={() => goToTool('fill')}>
+            <button type="button" className="hub-tool-card tool-accent-fill" onClick={() => goToTool('fill')}>
               <div className="hub-tool-icon-wrap">
                 <FileText size={28} strokeWidth={2} />
               </div>
@@ -216,7 +216,7 @@ export default function HomePage() {
               <span className="hub-tool-btn">Open tool →</span>
             </button>
 
-            <button type="button" className="hub-tool-card" onClick={() => goToTool('protect')}>
+            <button type="button" className="hub-tool-card tool-accent-protect" onClick={() => goToTool('protect')}>
               <div className="hub-tool-icon-wrap">
                 <Lock size={28} strokeWidth={2} />
               </div>
@@ -270,21 +270,21 @@ export default function HomePage() {
               <span className="hub-why-icon" aria-hidden="true"><Unlock size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>No paywall at the last step</strong>
-                <span>Other tools let you sign, then block download until you pay. We don&rsquo;t. Finish your file, then decide if Premium is worth it.</span>
+                <span>Finish your file, then decide. No surprise paywall at the end.</span>
               </div>
             </div>
             <div className="hub-why-item accent-success">
               <span className="hub-why-icon" aria-hidden="true"><ShieldCheck size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>Your files never leave your browser</strong>
-                <span>Smallpdf, iLovePDF and others upload your PDF to their servers. We process everything locally — your contracts and tax forms stay on your device.</span>
+                <span>Browser-only processing. We literally can&rsquo;t see your files.</span>
               </div>
             </div>
             <div className="hub-why-item accent-warning">
               <span className="hub-why-icon" aria-hidden="true"><Zap size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
                 <strong>No email, no account, no friction</strong>
-                <span>No &ldquo;verify your inbox&rdquo; before you can sign. No newsletter signup. Open the page, drop a PDF, download. That&rsquo;s it.</span>
+                <span>No signup, no email, no &ldquo;verify your inbox&rdquo;. Just sign.</span>
               </div>
             </div>
           </div>
