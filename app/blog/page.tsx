@@ -169,7 +169,7 @@ export default function BlogPage() {
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link
-              href="/"
+              href="/sign"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

@@ -145,7 +145,7 @@ function DashboardContent() {
       <header style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', height: 60, padding: '0 24px', display: 'flex', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 720, width: '100%', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/"><Logo /></Link>
-          <Link href="/" style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textDecoration: 'none', padding: '7px 16px', background: '#eff6ff', borderRadius: 9, border: '1px solid #bfdbfe', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Link href="/sign" style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textDecoration: 'none', padding: '7px 16px', background: '#eff6ff', borderRadius: 9, border: '1px solid #bfdbfe', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <PenLine size={14} /> Sign PDF
           </Link>
         </div>
@@ -195,7 +195,7 @@ function DashboardContent() {
               </div>
             )}
             {!isActive && (
-              <Link href="/" style={{ display: 'inline-block', padding: '10px 20px', background: '#2563eb', color: '#fff', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+              <Link href="/sign" style={{ display: 'inline-block', padding: '10px 20px', background: '#2563eb', color: '#fff', borderRadius: 10, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
                 Resubscribe →
               </Link>
             )}
