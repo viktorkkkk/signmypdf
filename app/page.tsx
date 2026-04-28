@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import {
   PenLine,
   FileText,
+  FileSignature,
   Lock,
   ShieldCheck,
   CheckCircle,
+  XCircle,
   CreditCard,
   Zap,
-  FileUp,
   Unlock,
   Plus,
   Minus,
@@ -191,7 +192,8 @@ export default function HomePage() {
       <section className="hub-hero">
         <div className="hub-container hub-hero-inner">
           <h1 className="hub-h1">
-            Sign, Fill &amp; Protect PDFs — Free, No Registration
+            <span className="hub-h1-line-1">Sign, Fill &amp; Protect PDFs Online</span>
+            <span className="hub-h1-line-2">Free, No Registration</span>
           </h1>
           <p className="hub-sub">
             Pick a tool below — finish in seconds, right in your browser.
@@ -226,7 +228,10 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Dropzone is wired to Sign — drops land on the editor at /sign. */}
+          {/* Dropzone is wired to Sign — drops land on the editor at /sign.
+              The mini-heading, blue dashed border, FileSignature icon and
+              bolded "Sign" in the hint visually anchor it to the Sign tool. */}
+          <h2 className="hub-dropzone-heading">Sign a PDF — drop it below</h2>
           <div
             {...getRootProps()}
             className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
@@ -236,14 +241,14 @@ export default function HomePage() {
           >
             <input {...getInputProps()} />
             <div className="hub-dropzone-icon" aria-hidden="true">
-              <FileUp size={56} strokeWidth={1.6} />
+              <FileSignature size={52} strokeWidth={1.6} />
             </div>
             <div className="hub-dropzone-title">
               {isDragActive ? 'Release to upload' : 'Drop your PDF here or click to browse'}
             </div>
             <div className="hub-dropzone-sub">or</div>
             <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
-            <div className="hub-dropzone-hint">Goes straight to Sign · Instant · No registration</div>
+            <div className="hub-dropzone-hint">Goes straight to <strong>Sign</strong> · Instant · No registration</div>
           </div>
 
           {/* Trust strip — folded into hero, sits directly under the dropzone. */}
@@ -291,15 +296,40 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── BLOCK 3 — Short SEO paragraph (1 paragraph, 120-150w) ─── */}
+      {/* ─── BLOCK 3 — Two-column comparison (replaces old SEO paragraph) ─── */}
       <section className="hub-seo">
         <div className="hub-container">
           <h2 className="hub-section-title">The honest free alternative to Smallpdf and iLovePDF</h2>
-          <div className="hub-seo-prose">
-            <p>
-              Most &ldquo;free&rdquo; PDF tools online aren&rsquo;t actually free. You can <strong>sign a PDF</strong>, fill out a form, or add password protection — but the download button asks for your credit card. SignMyPDF works differently. The first 2 PDFs per day are free with no signup, no email, no watermark. Files are processed in your browser, not uploaded to our servers, so contracts and tax documents never leave your device. If you sign PDFs daily for work, Premium removes the limit for $7.50/mo. If you only sign occasionally — the free plan covers it.
-            </p>
+
+          <div className="hub-compare-grid">
+            <div className="hub-compare-col compare-bad">
+              <div className="hub-compare-col-header">
+                <XCircle size={26} strokeWidth={2} aria-hidden="true" />
+                <span>What other tools do</span>
+              </div>
+              <ul className="hub-compare-list">
+                <li>Block download until you create an account</li>
+                <li>Auto-renew &ldquo;free trials&rdquo; after 7 days</li>
+                <li>Upload your contracts to their servers</li>
+              </ul>
+            </div>
+
+            <div className="hub-compare-col compare-good">
+              <div className="hub-compare-col-header">
+                <CheckCircle size={26} strokeWidth={2} aria-hidden="true" />
+                <span>What SignMyPDF does</span>
+              </div>
+              <ul className="hub-compare-list">
+                <li>Free first 2 PDFs every day, no signup</li>
+                <li>Files processed in your browser, never uploaded</li>
+                <li>Premium ($7.50/mo) only if you sign daily</li>
+              </ul>
+            </div>
           </div>
+
+          <p className="hub-compare-summary">
+            Most &ldquo;free&rdquo; tools monetize your inbox. We monetize the daily power user — at <strong>$7.50/mo</strong>, with no surprise paywalls in between.
+          </p>
         </div>
       </section>
 

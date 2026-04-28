@@ -28,10 +28,13 @@
   --font-sm:    14px;
 
   /* Spacing scale */
-  --space-section: 80px;              /* between blocks */
-  --space-stack:    32px;              /* between elements within a block */
-  --space-card:     24px;              /* card inner padding */
-  --space-page:     24px;              /* page horizontal padding (desktop) */
+  --space-section:       80px;         /* between independent blocks */
+  --space-section-tight: 56px;         /* between contextually-linked blocks
+                                          (e.g. Hero → Why us — same idea,
+                                          tighter rhythm than full --space-section) */
+  --space-stack:         32px;         /* between elements within a block */
+  --space-card:          24px;         /* card inner padding */
+  --space-page:          24px;         /* page horizontal padding (desktop) */
 
   /* Container + content widths
      - container is the section's outer wrapper (1200px)
@@ -63,10 +66,11 @@
     --font-h3:    16px;
     --font-lead:  16px;
 
-    --space-section: 48px;
-    --space-stack:    24px;
-    --space-card:     20px;
-    --space-page:     16px;
+    --space-section:       48px;
+    --space-section-tight: 32px;
+    --space-stack:         24px;
+    --space-card:          20px;
+    --space-page:          16px;
   }
 }
 
@@ -1791,7 +1795,16 @@ body > div > footer { margin-top: auto; }
   color: var(--color-text);
   margin: 0 auto 12px;
   letter-spacing: -0.02em;
-  max-width: 860px;
+  max-width: 920px;
+}
+/* Two-line H1: line 1 dominant, line 2 lighter for visual hierarchy.
+   <span> with display:block keeps each line on its own row on desktop;
+   on mobile the natural wrapping takes over but the lines stay logical. */
+.hub-h1-line-1,
+.hub-h1-line-2 { display: block; }
+.hub-h1-line-2 {
+  color: var(--color-muted);
+  font-weight: 600;
 }
 .hub-sub {
   font-size: var(--font-lead);
@@ -1882,12 +1895,22 @@ body > div > footer { margin-top: auto; }
   transition: background 0.18s, border-color 0.18s, color 0.18s;
 }
 
-/* Dominant Sign dropzone — the attention-grabbing surface on the page.
-   Capped at the same content-grid width so its left/right edges line
-   up with the tool grid above. */
+/* Dominant Sign dropzone — visually tied to the Sign tool card above
+   via the sign-accent border and icon colour, plus the mini-heading
+   that names it explicitly. Capped at content-grid so left/right
+   edges line up with the tool grid. */
+.hub-dropzone-heading {
+  max-width: var(--content-grid);
+  margin: 0 auto 16px;
+  font-size: var(--font-h3);
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
 .hub-dropzone {
   background: var(--color-bg);
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--tool-sign-fg);
   border-radius: 18px;
   padding: 56px 24px 44px;
   min-height: 320px;
@@ -1919,7 +1942,7 @@ body > div > footer { margin-top: auto; }
   height: 80px;
   border-radius: 20px;
   background: var(--tool-sign-bg);
-  color: var(--color-primary);
+  color: var(--tool-sign-fg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1954,6 +1977,10 @@ body > div > footer { margin-top: auto; }
   box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40);
 }
 .hub-dropzone-hint { font-size: 12px; color: #94a3b8; margin-top: 14px; }
+.hub-dropzone-hint strong {
+  color: var(--tool-sign-fg);
+  font-weight: 700;
+}
 
 /* Trust strip — folded into the hero block as the last element under
    the dropzone. No standalone section wrapper, no dark-on-white split. */
@@ -1985,7 +2012,13 @@ body > div > footer { margin-top: auto; }
   letter-spacing: -0.02em;
 }
 
-.hub-why { padding: var(--space-section) 0; background: var(--color-surface); }
+/* Why-block follows the Hero directly — visually linked, same idea.
+   Tighter top padding pulls it closer to the dropzone so the page
+   feels continuous instead of broken into 'unrelated chapters'. */
+.hub-why {
+  padding: var(--space-section-tight) 0 var(--space-section);
+  background: var(--color-surface);
+}
 .hub-why-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2056,6 +2089,77 @@ body > div > footer { margin-top: auto; }
 }
 .hub-seo-prose p { margin: 0; }
 .hub-seo-prose strong { color: var(--color-text); font-weight: 700; }
+
+/* "What other tools do" vs "What SignMyPDF does" two-column comparison.
+   Replaces the old plain SEO paragraph — same SEO keyword density
+   (Smallpdf, iLovePDF, free, browser, signup) but scannable in 5
+   seconds instead of read in 30. Uses --color-danger / --color-success
+   accent on the column headers and lucide XCircle / CheckCircle. */
+.hub-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: var(--content-grid);
+  margin: 0 auto;
+}
+.hub-compare-col {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: var(--space-card);
+}
+.hub-compare-col-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--font-h3);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.hub-compare-col-header svg { flex-shrink: 0; }
+.hub-compare-col.compare-bad   .hub-compare-col-header svg { color: var(--color-danger); }
+.hub-compare-col.compare-good  .hub-compare-col-header svg { color: var(--color-success); }
+.hub-compare-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hub-compare-list li {
+  font-size: var(--font-body);
+  color: var(--color-muted);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.hub-compare-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-border);
+}
+.hub-compare-col.compare-bad  .hub-compare-list li::before { background: var(--color-danger); }
+.hub-compare-col.compare-good .hub-compare-list li::before { background: var(--color-success); }
+.hub-compare-summary {
+  max-width: var(--content-prose);
+  margin: var(--space-stack) auto 0;
+  text-align: center;
+  font-size: var(--font-body);
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+.hub-compare-summary strong { color: var(--color-text); font-weight: 700; }
+@media (max-width: 720px) {
+  .hub-compare-grid { grid-template-columns: 1fr; gap: 12px; }
+}
 
 .hub-faq { padding: var(--space-section) 0; background: var(--color-surface); }
 .hub-faq-list {
