@@ -419,12 +419,38 @@ See dedicated **SEO Indexing Status** section above for full state. Open follow-
 
 8. **Article format diversity — no AI-spam patterns**. Out of every 10 articles per tool, at most 3 may be "How to…" format. Required minimum per 10: 2 pain/scenario, 2 comparisons, 1 explainer. Remainder fills from troubleshooting, use cases, or listicles. Applies to **all tools**. This keeps the blog readable by humans, defensible against Google Helpful Content Update, and signals topical authority across the intent spectrum (transactional + informational + navigational).
 
-**Format**: QuickSummary → Intro → Steps → Callout → Comparison table → User reviews → CTA → FAQ → Related links. 1500+ words each.
+**Format**: SEO-landing page, NOT long-form blog post. Replaced 2026-04-28 — see "Format change history" below.
+
+**Required structure (in this exact order):**
+1. **Scenario hook** — 3-5 lines describing concrete user frustration. NO "in today's digital age", "has transformed how", definitions, or generic background.
+2. **[CTA] block** — immediately after the hook (link auto-routes to tool per Hard Rule 2).
+3. **Step-by-step** — 4-5 numbered steps, each under 10 words.
+4. **"Why most tools are frustrating"** — 3-5 bullets (forced registration, paywall, watermark, daily limits, server uploads).
+5. **"Why SignMyPDF is different"** — 3-5 bullets (no account, no paywall at download, browser-only, works on any device).
+6. **2-3 FAQ blocks** — each answer 1-3 sentences max. Real questions only.
+7. **Final [CTA] block**.
+8. **"Related tools"** — 3 internal links.
+Comparison table is OPTIONAL — include only for comparison-type articles when a side-by-side actually helps the reader.
+
+**Article type** must be ONE of: (a) Use-case, (b) Comparison, (c) Troubleshooting. NOT generic listicles, trend pieces, or vague "everything you need to know" guides.
+
+**Length**: 700-900 words ideal, 600-1200 hard bounds. NEVER exceed 1200.
+
+**Style**: contractions (you'll, won't, it's, don't); mix short (5-word) and long (20-25-word) sentences; max 2-3 paragraphs in a row before a list, CTA, or heading.
+
+**FORBIDDEN patterns**: invented statistics, "(2026 Guide)" / "(Updated 2026)" in titles, `[QuickSummary]` blocks with emoji (⏱️💰📱✍️), `[CALLOUT]` blocks, fake user reviews / blockquote testimonials, "has transformed how", "but it also", "in today's fast-paced world", "In conclusion", "To summarize", "Final thoughts", walls of text without breaks.
+
+**EVIDENCE rule**: no invented stats. If a number is needed, link to a real source (Stanford SIEPR, Gartner, Owl Labs, Buffer State of Remote Work, government data). If no real source — remove the number, write qualitatively.
+
 **After each pair**: deploy + send URLs to Google indexing via GSC API (scripts/gsc-credentials.json).
+
+#### Format change history
+
+- **2026-04-28** — Replaced old format (1500+ words, `[QuickSummary]`/`[CALLOUT]` blocks, comparison table required, 3 blockquote user reviews) with the SEO-landing format above. Reason: old format produced AI-spam patterns (invented stats, fake testimonials, walls of text) that were hurting readability and risked Google Helpful Content penalties. The first article published under the new prompt is `protected-pdf-wont-open-some-devices` (2026-04-28). Backup of the original trigger prompt: `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`. The articles published before this date (date ≤ 2026-04-27) remain in the old format and are FROZEN under Hard Rule 1.
 
 ### Daily trigger (RemoteTrigger ID `trig_01Mw8wt1nCK3jpDA7ymfp4g2`)
 
-Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026). The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync.
+Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026) **plus** the SEO-landing format rules from the "Format" section. The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync. The previous version of the trigger prompt (pre-2026-04-28) is preserved at `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`.
 
 **⚠️ Single source of truth.** This RemoteTrigger is the ONLY automated blog publisher. There used to be a second `Daily Blog Publisher` GitHub Actions workflow (`.github/workflows/daily-blog.yml`) running at 03:00 UTC under the old "next 2 from `blog-plan.json`" logic — it was unaware of cycle_day rotation and silently doubled publications. Removed Apr 25 2026 after it overflowed Apr 25 to 4 articles by adding a non-rotation Sign + Fill pair on top of the trigger's correct Protect publication. If you ever need a redundant backup publisher, port the cycle_day logic from this trigger into the GitHub Action — do NOT resurrect the old script as-is.
 
