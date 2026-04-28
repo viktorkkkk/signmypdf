@@ -1,5 +1,56 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ─── Design tokens (introduced 2026-04-28 in the homepage redesign).
+   Used by .hub-* classes only for now; the rest of the site keeps its
+   existing inline values until refactored on a per-screen basis. The
+   namespacing avoids any conflict with /sign, /fill, /protect styles. */
+:root {
+  /* Palette */
+  --color-primary:  #2563EB;          /* CTA, active states */
+  --color-primary-hover: #1D4ED8;
+  --color-bg:       #FFFFFF;
+  --color-surface:  #F8FAFC;          /* alt section background */
+  --color-text:     #0F172A;
+  --color-muted:    #64748B;
+  --color-border:   #E2E8F0;
+
+  /* Accent colors (for "Why us" card icons + status indicators) */
+  --color-success:  #10B981;          /* privacy, "no upload" */
+  --color-warning:  #F59E0B;          /* premium, attention */
+  --color-danger:   #EF4444;          /* paywall, "what others do wrong" */
+
+  /* Type scale (desktop) */
+  --font-h1:    48px;
+  --font-h2:    32px;
+  --font-h3:    18px;
+  --font-lead:  18px;
+  --font-body:  16px;
+  --font-sm:    14px;
+
+  /* Spacing scale */
+  --space-section: 80px;              /* between blocks */
+  --space-stack:    32px;              /* between elements within a block */
+  --space-card:     24px;              /* card inner padding */
+  --space-page:     24px;              /* page horizontal padding (desktop) */
+
+  /* Container */
+  --container-max: 1200px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-h1:    32px;
+    --font-h2:    24px;
+    --font-h3:    16px;
+    --font-lead:  16px;
+
+    --space-section: 48px;
+    --space-stack:    24px;
+    --space-card:     20px;
+    --space-page:     16px;
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #f0f4ff;
@@ -1704,9 +1755,9 @@ body > div > footer { margin-top: auto; }
    ═════════════════════════════════════════════════════════════════ */
 
 .hub-container {
-  max-width: 1100px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--space-page);
 }
 
 .hub-hero {
@@ -1715,20 +1766,17 @@ body > div > footer { margin-top: auto; }
 }
 .hub-hero-inner { text-align: center; }
 .hub-h1 {
-  font-size: 44px;
+  font-size: var(--font-h1);
   font-weight: 700;
-  line-height: 1.12;
-  color: #0f172a;
-  margin: 0 0 12px;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin: 0 auto 12px;
   letter-spacing: -0.02em;
   max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 12px;
 }
 .hub-sub {
-  font-size: 17px;
-  color: #64748b;
+  font-size: var(--font-lead);
+  color: var(--color-muted);
   max-width: 640px;
   margin: 0 auto 36px;
   line-height: 1.5;
@@ -1856,9 +1904,12 @@ body > div > footer { margin-top: auto; }
 .hub-dropzone:hover .hub-dropzone-btn { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40); }
 .hub-dropzone-hint { font-size: 12px; color: #94a3b8; margin-top: 14px; }
 
+/* Trust strip — folded into the hero block as the last element under
+   the dropzone. No standalone section wrapper, no dark-on-white split. */
 .hub-trust {
-  padding: 20px 0 24px;
-  background: #ffffff;
+  margin-top: 24px;
+  padding: 0;
+  background: transparent;
 }
 .hub-trust-inner {
   display: flex;
@@ -1866,157 +1917,94 @@ body > div > footer { margin-top: auto; }
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  font-size: 13.5px;
-  color: #64748b;
+  font-size: var(--font-sm);
+  color: var(--color-muted);
   font-weight: 500;
 }
 .hub-trust-item { display: inline-flex; align-items: center; gap: 6px; }
-.hub-trust-item svg { color: #94a3b8; }
+.hub-trust-item svg { color: var(--color-success); }
 .hub-trust-dot { color: #cbd5e1; }
 
 .hub-section-title {
   text-align: center;
-  font-size: 28px;
+  font-size: var(--font-h2);
   font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 36px;
+  color: var(--color-text);
+  margin: 0 0 var(--space-stack);
   letter-spacing: -0.02em;
 }
 
-.hub-why { padding: 64px 0; background: #f8fafc; }
+.hub-why { padding: var(--space-section) 0; background: var(--color-surface); }
 .hub-why-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  max-width: 900px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 .hub-why-item {
   display: flex;
-  gap: 14px;
+  flex-direction: column;
+  gap: 12px;
   align-items: flex-start;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 20px 22px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: var(--space-card);
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.hub-why-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
 }
 .hub-why-icon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: #eff6ff;
-  color: #2563eb;
+  color: var(--color-primary);
   border-radius: 10px;
 }
-.hub-why-text { display: flex; flex-direction: column; gap: 4px; }
-.hub-why-text strong { font-size: 15px; color: #0f172a; font-weight: 700; }
-.hub-why-text span { font-size: 13.5px; color: #64748b; line-height: 1.5; }
+/* Accent color overrides for the 3 Why cards. The pattern is:
+     accent-danger  → red    (the pain we're calling out about competitors)
+     accent-success → green  (privacy / no-upload guarantee)
+     accent-warning → amber  (frictionless "no email" advantage) */
+.hub-why-item.accent-danger  .hub-why-icon { color: var(--color-danger);  background: #fef2f2; }
+.hub-why-item.accent-success .hub-why-icon { color: var(--color-success); background: #ecfdf5; }
+.hub-why-item.accent-warning .hub-why-icon { color: var(--color-warning); background: #fffbeb; }
 
-.hub-how { padding: 64px 0; }
-.hub-how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+.hub-why-text { display: flex; flex-direction: column; gap: 6px; }
+.hub-why-text strong {
+  font-size: var(--font-h3);
+  color: var(--color-text);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
-.hub-how-step {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 24px 22px;
-  text-align: center;
+.hub-why-text span {
+  font-size: var(--font-body);
+  color: var(--color-muted);
+  line-height: 1.6;
 }
-.hub-how-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #eff6ff;
-  color: #2563eb;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-.hub-how-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-.hub-how-text { font-size: 13.5px; color: #64748b; line-height: 1.5; }
 
-.hub-social { padding: 64px 0; background: #f8fafc; }
-.hub-social-numbers {
-  display: flex;
-  justify-content: center;
-  gap: 48px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-.hub-social-numbers > div { text-align: center; display: flex; flex-direction: column; gap: 2px; }
-.hub-social-num { font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em; }
-.hub-social-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+/* hub-how, hub-social, hub-social-reviews, hub-review, hub-premium*
+   removed 2026-04-28 in the homepage redesign — the corresponding
+   sections were dropped (How-it-works, fake reviews/numbers, premium
+   pitch). Class names retired and not referenced anywhere else. */
 
-.hub-social-reviews {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.hub-review {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 20px;
-  margin: 0;
-}
-.hub-review p { margin: 0 0 10px; font-size: 14px; color: #1e293b; line-height: 1.55; font-style: normal; }
-.hub-review cite { font-size: 12px; color: #94a3b8; font-style: normal; font-weight: 600; }
-
-.hub-premium { padding: 56px 0; }
-.hub-premium-inner {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  color: #ffffff;
-  border-radius: 22px;
-  padding: 40px 44px;
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 32px;
-  align-items: center;
-  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.25);
-}
-.hub-premium-text h2 { font-size: 26px; font-weight: 700; margin: 0 0 18px; line-height: 1.22; letter-spacing: -0.01em; }
-.hub-premium-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.hub-premium-bullets li { font-size: 14.5px; color: #cbd5e1; display: flex; align-items: center; gap: 10px; }
-.hub-premium-bullets li svg { color: #34d399; flex-shrink: 0; }
-.hub-premium-cta { display: flex; justify-content: center; }
-.hub-premium-btn {
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 16px 28px;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.40);
-  transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
-  white-space: nowrap;
-}
-.hub-premium-btn:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(37, 99, 235, 0.55); }
-
-.hub-seo { padding: 64px 0; background: #f8fafc; }
+.hub-seo { padding: var(--space-section) 0; background: var(--color-bg); }
 .hub-seo-prose {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
-  font-size: 15px;
+  font-size: var(--font-body);
   color: #334155;
-  line-height: 1.72;
+  line-height: 1.7;
 }
-.hub-seo-prose p { margin: 0 0 18px; }
-.hub-seo-prose strong { color: #0f172a; font-weight: 700; }
+.hub-seo-prose p { margin: 0; }
+.hub-seo-prose strong { color: var(--color-text); font-weight: 700; }
 
 .hub-faq { padding: 64px 0 80px; }
 .hub-faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
@@ -2047,12 +2035,15 @@ body > div > footer { margin-top: auto; }
 .hub-faq-a { padding: 0 20px 18px; margin: 0; font-size: 14px; color: #475569; line-height: 1.6; }
 
 /* ── Hub mobile ── */
+/* Mobile overrides for hub-* (homepage). Token values from :root already
+   shift on mobile via the @media in :root above; the rules here cover
+   layout-specific mobile tweaks (single-column grids, dropzone size, etc).
+   Removed selectors: hub-how-*, hub-social-*, hub-review*, hub-premium-*
+   (sections themselves removed from page.tsx). */
 @media (max-width: 720px) {
-  .hub-container { padding: 0 18px; }
-
   .hub-hero { padding: 32px 0 24px; }
-  .hub-h1 { font-size: 30px; line-height: 1.18; letter-spacing: -0.015em; }
-  .hub-sub { font-size: 15px; margin-bottom: 24px; }
+  .hub-h1 { line-height: 1.18; letter-spacing: -0.015em; }
+  .hub-sub { margin-bottom: 24px; }
 
   .hub-hero .hub-tool-grid {
     grid-template-columns: 1fr;
@@ -2070,15 +2061,9 @@ body > div > footer { margin-top: auto; }
   .hub-dropzone-btn { padding: 0 24px; height: 48px; font-size: 15px; }
   .hub-dropzone-hint { font-size: 11.5px; }
 
-  .hub-trust { padding: 16px 0 18px; }
   .hub-trust-inner { font-size: 12px; gap: 8px; row-gap: 6px; }
 
-  .hub-section-title { font-size: 22px; margin-bottom: 26px; }
-
-  .hub-why, .hub-how, .hub-social, .hub-seo { padding: 44px 0; }
-  .hub-why-grid,
-  .hub-how-grid,
-  .hub-social-reviews {
+  .hub-why-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
@@ -2086,22 +2071,6 @@ body > div > footer { margin-top: auto; }
   .hub-tool-icon-wrap { width: 42px; height: 42px; border-radius: 10px; }
   .hub-tool-name { font-size: 17px; }
 
-  .hub-social-numbers { gap: 28px; margin-bottom: 26px; }
-  .hub-social-num { font-size: 22px; }
-
-  .hub-premium { padding: 36px 0; }
-  .hub-premium-inner {
-    grid-template-columns: 1fr;
-    padding: 28px 22px;
-    border-radius: 18px;
-    text-align: left;
-    gap: 20px;
-  }
-  .hub-premium-text h2 { font-size: 20px; }
-  .hub-premium-btn { width: 100%; font-size: 15px; padding: 15px 20px; }
-
-  .hub-seo-prose { font-size: 14.5px; line-height: 1.65; }
-  .hub-faq { padding: 44px 0 56px; }
   .hub-faq-q { padding: 16px 16px; font-size: 14.5px; }
   .hub-faq-a { padding: 0 16px 16px; font-size: 13.5px; }
 }

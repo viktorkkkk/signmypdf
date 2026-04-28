@@ -12,10 +12,7 @@ import {
   CreditCard,
   Zap,
   FileUp,
-  Shield,
-  Eye,
-  Smartphone,
-  CircleSlash,
+  Unlock,
   Plus,
   Minus,
 } from 'lucide-react';
@@ -64,35 +61,23 @@ const TOOL_ROUTE: Record<Tool, string> = {
 const FAQ: Array<{ q: string; a: string }> = [
   {
     q: 'Is SignMyPDF really free?',
-    a: 'Yes. You can sign, fill, and protect up to 2 PDFs per day for free, with no registration and no credit card. A Premium plan is available for unlimited use, but nothing is paywalled before you finish your document.',
+    a: 'Yes — 2 PDFs per day per tool, no signup, no credit card. Premium ($7.50/mo billed annually) removes the limit if you sign or fill PDFs daily for work.',
   },
   {
-    q: 'Do I need to create an account?',
-    a: 'No. The free plan works without any signup — just open the site and drop your PDF. An account is only needed if you upgrade to Premium and want to restore access on a new device.',
+    q: 'Do my files get uploaded to your servers?',
+    a: 'No. Everything happens in your browser via JavaScript and WebAssembly. Your PDF never leaves your device — we literally cannot see what you sign or fill.',
   },
   {
-    q: 'Are my files stored on your servers?',
-    a: 'No. Every tool runs 100% in your browser via WebAssembly and JavaScript. Your PDF never leaves your device. We literally cannot see what you upload.',
+    q: 'Can I use it on iPhone or Android?',
+    a: 'Yes. Works in any modern mobile browser — Safari on iOS, Chrome on Android. No app to install, no Play Store or App Store roundtrip.',
   },
   {
-    q: 'How do I sign a PDF online?',
-    a: 'Drop your PDF on the homepage, draw or type your signature, pick the pages, drag the signature into place, and download. The whole flow takes under a minute.',
+    q: 'Are signed PDFs legally binding?',
+    a: 'Yes — under the ESIGN Act (US) and eIDAS (EU). Drawn or typed signatures on PDFs meet legal requirements as long as both parties agree to electronic signing.',
   },
   {
-    q: 'Can I use it on mobile and desktop?',
-    a: 'Both. The site is responsive and the tools work in any modern browser on iOS, Android, Windows, macOS, or Linux — no app install.',
-  },
-  {
-    q: 'How many PDFs can I process for free?',
-    a: 'Two PDFs per tool per day. Beyond that, free files are signed with a small "SignMyPDF.io" watermark at the bottom of each page. Premium removes the watermark and the limit.',
-  },
-  {
-    q: 'Is it safe to upload sensitive documents?',
-    a: 'Yes — because nothing is actually uploaded. All processing happens locally in your browser. Your contracts, tax documents, and legal files never touch a server.',
-  },
-  {
-    q: 'Does it work without installing anything?',
-    a: 'Correct. No software, no plugin, no browser extension. Open the site, do your work, close the tab.',
+    q: 'What happens after my 2 free PDFs?',
+    a: 'Wait until tomorrow — the limit resets daily — or upgrade to Premium for unlimited use. Files you have already downloaded stay yours forever.',
   },
 ];
 
@@ -177,11 +162,6 @@ export default function HomePage() {
       'No registration required',
       'Mobile and desktop support',
     ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '1240',
-    },
   };
 
   const faqJsonLd = {
@@ -207,14 +187,14 @@ export default function HomePage() {
 
       <NavHeader />
 
-      {/* ─── HERO: title + tools + dropzone ─── */}
+      {/* ─── BLOCK 1 — Hero: H1 + sub + tool cards + dropzone + trust strip ─── */}
       <section className="hub-hero">
         <div className="hub-container hub-hero-inner">
           <h1 className="hub-h1">
-            Sign, Fill &amp; Protect PDFs Online — Free, No Registration
+            Sign, Fill &amp; Protect PDFs — Free, No Registration
           </h1>
           <p className="hub-sub">
-            Pick a tool and finish your PDF in seconds. Works in any browser — no installs, no sign-ups.
+            Pick a tool below — finish in seconds, right in your browser.
           </p>
 
           <div className="hub-tool-grid">
@@ -246,8 +226,7 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Dominant Sign dropzone. Clearly labelled as a Sign shortcut
-              so clicks land on the right flow. */}
+          {/* Dropzone is wired to Sign — drops land on the editor at /sign. */}
           <div
             {...getRootProps()}
             className={`hub-dropzone${isDragActive ? ' hub-dropzone-active' : ''}`}
@@ -260,166 +239,65 @@ export default function HomePage() {
               <FileUp size={56} strokeWidth={1.6} />
             </div>
             <div className="hub-dropzone-title">
-              {isDragActive ? 'Release to upload' : 'Drop your PDF here to sign'}
+              {isDragActive ? 'Release to upload' : 'Drop your PDF here or click to browse'}
             </div>
             <div className="hub-dropzone-sub">or</div>
             <button type="button" className="hub-dropzone-btn">Choose PDF file</button>
-            <div className="hub-dropzone-hint">Goes straight to the Sign tool · Instant · No registration</div>
+            <div className="hub-dropzone-hint">Goes straight to Sign · Instant · No registration</div>
+          </div>
+
+          {/* Trust strip — folded into hero, sits directly under the dropzone. */}
+          <div className="hub-trust">
+            <div className="hub-trust-inner">
+              <span className="hub-trust-item"><Lock size={16} strokeWidth={2} /> Processed locally</span>
+              <span className="hub-trust-dot" aria-hidden="true">·</span>
+              <span className="hub-trust-item"><CheckCircle size={16} strokeWidth={2} /> No registration</span>
+              <span className="hub-trust-dot" aria-hidden="true">·</span>
+              <span className="hub-trust-item"><CreditCard size={16} strokeWidth={2} /> No credit card</span>
+              <span className="hub-trust-dot" aria-hidden="true">·</span>
+              <span className="hub-trust-item"><Zap size={16} strokeWidth={2} /> Works in 30 seconds</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── TRUST STRIP ─── */}
-      <section className="hub-trust">
-        <div className="hub-container hub-trust-inner">
-          <span className="hub-trust-item"><Lock size={16} strokeWidth={2} /> Processed locally</span>
-          <span className="hub-trust-dot" aria-hidden="true">·</span>
-          <span className="hub-trust-item"><CheckCircle size={16} strokeWidth={2} /> No registration</span>
-          <span className="hub-trust-dot" aria-hidden="true">·</span>
-          <span className="hub-trust-item"><CreditCard size={16} strokeWidth={2} /> No credit card</span>
-          <span className="hub-trust-dot" aria-hidden="true">·</span>
-          <span className="hub-trust-item"><Zap size={16} strokeWidth={2} /> Works in 30 seconds</span>
-        </div>
-      </section>
-
-      {/* ─── WHY SIGNMYPDF ─── */}
+      {/* ─── BLOCK 2 — Why SignMyPDF: 3 accent cards (UTP through pain) ─── */}
       <section className="hub-why">
         <div className="hub-container">
-          <h2 className="hub-section-title">Why SignMyPDF</h2>
+          <h2 className="hub-section-title">What makes SignMyPDF different</h2>
           <div className="hub-why-grid">
-            <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true"><CircleSlash size={22} strokeWidth={2} /></span>
+            <div className="hub-why-item accent-danger">
+              <span className="hub-why-icon" aria-hidden="true"><Unlock size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
-                <strong>No &ldquo;paywall at the last step&rdquo;</strong>
-                <span>Finish your file first, decide later.</span>
+                <strong>No paywall at the last step</strong>
+                <span>Other tools let you sign, then block download until you pay. We don&rsquo;t. Finish your file, then decide if Premium is worth it.</span>
               </div>
             </div>
-            <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true"><Eye size={22} strokeWidth={2} /></span>
+            <div className="hub-why-item accent-success">
+              <span className="hub-why-icon" aria-hidden="true"><ShieldCheck size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
-                <strong>No watermarks on important files</strong>
-                <span>Premium removes the small badge for good.</span>
+                <strong>Your files never leave your browser</strong>
+                <span>Smallpdf, iLovePDF and others upload your PDF to their servers. We process everything locally — your contracts and tax forms stay on your device.</span>
               </div>
             </div>
-            <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true"><Shield size={22} strokeWidth={2} /></span>
+            <div className="hub-why-item accent-warning">
+              <span className="hub-why-icon" aria-hidden="true"><Zap size={22} strokeWidth={2} /></span>
               <div className="hub-why-text">
-                <strong>Your files are not stored</strong>
-                <span>Processing is local. Nothing uploaded, nothing kept.</span>
-              </div>
-            </div>
-            <div className="hub-why-item">
-              <span className="hub-why-icon" aria-hidden="true"><Smartphone size={22} strokeWidth={2} /></span>
-              <div className="hub-why-text">
-                <strong>Works on phone and desktop</strong>
-                <span>Same flow everywhere. No app install.</span>
+                <strong>No email, no account, no friction</strong>
+                <span>No &ldquo;verify your inbox&rdquo; before you can sign. No newsletter signup. Open the page, drop a PDF, download. That&rsquo;s it.</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─── */}
-      <section className="hub-how">
-        <div className="hub-container">
-          <h2 className="hub-section-title">How it works</h2>
-          <div className="hub-how-grid">
-            <div className="hub-how-step">
-              <div className="hub-how-num">1</div>
-              <div className="hub-how-title">Upload your PDF</div>
-              <div className="hub-how-text">Drag and drop or pick a file — nothing leaves your device.</div>
-            </div>
-            <div className="hub-how-step">
-              <div className="hub-how-num">2</div>
-              <div className="hub-how-title">Sign, fill or protect it</div>
-              <div className="hub-how-text">Use the tool you need — all three live on this site.</div>
-            </div>
-            <div className="hub-how-step">
-              <div className="hub-how-num">3</div>
-              <div className="hub-how-title">Download instantly</div>
-              <div className="hub-how-text">Your finished PDF saves straight to your device.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SOCIAL PROOF ─── */}
-      <section className="hub-social">
-        <div className="hub-container">
-          <h2 className="hub-section-title">Trusted by thousands</h2>
-          <div className="hub-social-numbers">
-            <div>
-              <span className="hub-social-num">4.8 / 5</span>
-              <span className="hub-social-label">Average rating</span>
-            </div>
-            <div>
-              <span className="hub-social-num">1,200+</span>
-              <span className="hub-social-label">PDFs processed this week</span>
-            </div>
-            <div>
-              <span className="hub-social-num">30s</span>
-              <span className="hub-social-label">Median time to finish</span>
-            </div>
-          </div>
-          <div className="hub-social-reviews">
-            <blockquote className="hub-review">
-              <p>&ldquo;Finally a PDF tool that doesn&rsquo;t force me to sign up to download my own document.&rdquo;</p>
-              <cite>— Marcus R., freelancer</cite>
-            </blockquote>
-            <blockquote className="hub-review">
-              <p>&ldquo;Fast and simple. I signed a lease on my phone in under a minute.&rdquo;</p>
-              <cite>— Elena T., renter</cite>
-            </blockquote>
-            <blockquote className="hub-review">
-              <p>&ldquo;Love that I can fill and then sign without switching tools or uploading twice.&rdquo;</p>
-              <cite>— David K., contractor</cite>
-            </blockquote>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── PREMIUM BANNER ─── */}
-      {!hasSubscription && (
-        <section className="hub-premium">
-          <div className="hub-container hub-premium-inner">
-            <div className="hub-premium-text">
-              <h2>Remove limits &amp; finish your work without interruptions</h2>
-              <ul className="hub-premium-bullets">
-                <li><CheckCircle size={16} strokeWidth={2.4} /> Unlimited PDFs — no daily limits</li>
-                <li><CheckCircle size={16} strokeWidth={2.4} /> No watermarks — clean documents</li>
-                <li><CheckCircle size={16} strokeWidth={2.4} /> Access your files anytime</li>
-                <li><CheckCircle size={16} strokeWidth={2.4} /> Continue where you left off</li>
-              </ul>
-            </div>
-            <div className="hub-premium-cta">
-              <button
-                type="button"
-                className="hub-premium-btn"
-                onClick={() => { track('hub_premium_click'); setShowPricing(true); }}
-              >
-                Go Premium — from $7.50/mo
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── SEO BLOCK ─── */}
+      {/* ─── BLOCK 3 — Short SEO paragraph (1 paragraph, 120-150w) ─── */}
       <section className="hub-seo">
         <div className="hub-container">
-          <h2 className="hub-section-title">What you can do with PDF tools online</h2>
+          <h2 className="hub-section-title">The honest free alternative to Smallpdf and iLovePDF</h2>
           <div className="hub-seo-prose">
             <p>
-              A modern PDF workflow rarely fits a single verb. You might need to <strong>sign a PDF online</strong> for a contract, then <strong>fill a PDF form</strong> for a tax document, then <strong>protect a PDF</strong> with a password before emailing it to a client. SignMyPDF brings all three into one browser-based workspace so you can finish a document end-to-end without jumping between apps.
-            </p>
-            <p>
-              Most &ldquo;free&rdquo; PDF editors you find through Google aren&rsquo;t actually free — they let you upload, make your edits, and then gate the download behind a $15/month subscription. Others demand credit-card details for a &ldquo;free trial&rdquo; that auto-renews in seven days. SignMyPDF takes a different approach: the free plan works on day one without any account, covers two PDFs per tool per day, and adds a small watermark only if you need more volume than that. The workflow never traps you after you&rsquo;ve already invested time editing.
-            </p>
-            <p>
-              Installing desktop software for a one-off signature is overkill. A 500 MB Adobe install, a Mac preview quirk, or a scanner that won&rsquo;t cooperate can burn half an hour on what should be a two-minute task. Browser-based tools solve that: the entire editor runs on your machine via JavaScript and WebAssembly, so there&rsquo;s nothing to download and no server sees your document. The PDF literally never leaves your laptop.
-            </p>
-            <p>
-              Typical use cases: <strong>work</strong> — signing employment offers, NDAs, contractor agreements, or approvals; <strong>legal and real estate</strong> — lease agreements, purchase contracts, disclosures; <strong>forms</strong> — tax forms (W-9, 1099), visa applications, insurance claims, rental applications; <strong>personal</strong> — medical release forms, school paperwork, event registrations. Each of these has one thing in common: the user wants to finish in the browser and move on with their day. That&rsquo;s exactly the shape of flow these three tools were built to support.
+              Most &ldquo;free&rdquo; PDF tools online aren&rsquo;t actually free. You can <strong>sign a PDF</strong>, fill out a form, or add password protection — but the download button asks for your credit card. SignMyPDF works differently. The first 2 PDFs per day are free with no signup, no email, no watermark. Files are processed in your browser, not uploaded to our servers, so contracts and tax documents never leave your device. If you sign PDFs daily for work, Premium removes the limit for $7.50/mo. If you only sign occasionally — the free plan covers it.
             </p>
           </div>
         </div>
