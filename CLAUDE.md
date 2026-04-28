@@ -174,6 +174,127 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## Homepage Status (last redesign 2026-04-29)
+
+**Live:** https://www.signmypdf.io/  
+**Source:** `app/page.tsx` (~470 lines), `app/globals.css` (`hub-*` namespace).
+
+**Structure — 5 blocks (DO NOT add or remove):**
+1. **Hero** — H1 (two lines, no em-dash) + sub + 3 tool cards + dropzone + trust strip (folded into hero)
+2. **Why us** — 3 accent cards (red Unlock / emerald ShieldCheck / amber Zap)
+3. **SEO comparison** — two-column "What other tools do" / "What SignMyPDF does" + 1-line summary
+4. **FAQ** — 5 Q&As + JSON-LD `FAQPage`
+5. **Footer** — `<SiteFooter />` (shared component)
+
+**Removed sections (DO NOT bring back):**
+- **"How it works"** (3 numbered steps) — dropzone is self-explanatory
+- **"Trusted by thousands"** with fake reviews (Marcus R. / Elena T. / David K.) — AI-spam, dishonest
+- **Premium banner** ("Remove limits & finish your work") — premature pitch before user has hit any limit
+- **Long 4-paragraph SEO prose** — replaced by the 2-column compare grid
+- **`aggregateRating`** in JSON-LD (fabricated 4.8 / 1240) — pulled to match the no-fake-data principle
+
+**Design system — CSS variables in `:root` of `app/globals.css`:**
+- Palette: `--color-primary`, `--color-success`, `--color-warning`, `--color-danger`, `--color-text`, `--color-muted`, `--color-border`, `--color-bg`, `--color-surface`
+- Type scale: `--font-h1` (48/32px), `--font-h2`, `--font-h3`, `--font-lead`, `--font-body`, `--font-sm`
+- Spacing: `--space-section` (80/48), `--space-section-tight` (56/32 — contextually-linked blocks like Hero→Why), `--space-stack`, `--space-card`, `--space-page`
+- Container: `--container-max` 1200px, `--content-grid` 1080px (card grids), `--content-prose` 760px (text)
+- Tool accents: `--tool-sign-fg/bg`, `--tool-fill-fg/bg`, `--tool-protect-fg/bg`
+- Mobile `@media (max-width: 768px)` overrides tokens at `:root` scope so child rules pick up new values automatically
+
+**Tool palette (cool family, no rainbow, no clash with Why-card triplet):**
+- **Sign:** Blue `#2563EB` (brand primary)
+- **Fill:** Teal `#0D9488`
+- **Protect:** Violet `#7C3AED`
+
+Applied via `.tool-accent-sign | .tool-accent-fill | .tool-accent-protect` modifier classes on `.hub-tool-card`.
+
+**Why-card accent colors (`.accent-danger | .accent-success | .accent-warning`):**
+- **Red** (Unlock) — "No paywall at the last step"
+- **Emerald** (ShieldCheck) — "Your files never leave your browser"
+- **Amber** (Zap) — "No email, no account, no friction"
+
+**Dropzone Sign-affinity (visual binding to the Sign tool):**
+- Mini-heading "Sign a PDF — drop it below" above the dropzone (h2, `--font-h3`)
+- Border: dashed `--tool-sign-fg` (Sign blue) — same blue as the Sign card icon-wrap
+- Icon: `FileSignature` (lucide), in `--tool-sign-fg`
+- Hint copy: "Goes straight to **Sign** · Instant · No registration" — `<strong>Sign</strong>` styled in `--tool-sign-fg`
+- Drops always route to `/sign` (`router.push('/sign')` in `onDrop`) — never to the `/` hub itself
+
+---
+
+## Blog Status (2026-04-29)
+
+**Daily trigger:** `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (cron `0 2 * * *` UTC). **v3 prompt is live.**
+
+**Backups (rollback targets if v3 misbehaves):**
+- v1 (pre-SEO-landing, original 1500w long-form prompt): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`
+- v2 (SEO-landing, pre-v3 refinements): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28-v2.md`
+
+**Article format (v3 SEO-landing):**
+- Length: **700-900w ideal**, 600-1200w hard bounds
+- Title cap: **55 characters** (Google SERP truncates longer)
+- Main keyword: 2-3× in first 100 words (no stuffing)
+- 2-3 in-body internal links + 3 in "Related tools" at end
+- 1-2 `[IMAGE: ...]` placeholders (render layer skips gracefully — image substitution is TODO)
+- USP positioning: "Free, no registration, no paywall at download" at least once per article
+- Article types: (a) **use-case**, (b) **comparison**, (c) **troubleshooting**. Explainers must be reframed; listicles forbidden.
+- Schema markup: render-layer concern (NEVER in `content` field) — auto-emission in `BlogPostContent.tsx` is TODO
+
+**Audience mix (sliding 7-day window):**
+- **Segment 1** (casual one-time users): **60%** of articles, 60-70% of expected traffic — broad consumer intent
+- **Segment 2** (freelancers / remote workers): **30%**, 20-25% of traffic — recurring client work
+- **Segment 3** (SMB / regulated professionals): **10%**, 5-10% of traffic — daily team workflows
+
+**Articles published in new SEO-landing format (4 so far, all S1):**
+- `protected-pdf-wont-open-some-devices` (2026-04-28, troubleshooting)
+- `pdf-signing-no-email-required` (2026-04-28, comparison)
+- `hellosign-alternatives-free` (2026-04-30, comparison, future-dated)
+- `esign-act-explained` (2026-04-30, explainer reframed as use-case, future-dated)
+
+The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and are FROZEN under Hard Rule 1.
+
+**Render-layer emoji replacement:** `app/blog/[slug]/BlogPostContent.tsx` intercepts emoji embedded in frozen `content` strings (🔒, ✅, ❌, ⚠️, 📋, 📝, 🌍, 🔧, 🛡️, 🔐, 🏥, 📁, 💼) and emits a `lucide-react` SVG in its place. **The source `app/blog/posts.ts` is never modified** — this preserves Hard Rule 1 unconditionally. Mapping lives in `EMOJI_TO_ICON` table + `EMOJI_REGEX` + helper `renderEmojiInText()`. Dingbat-class symbols (`✓ ✕ ✔ ✗`) are intentionally excluded.
+
+**Content plan (next 7 days):** see `## Blog Publication Plan` further down — Apr 29 through May 5 mapped to cycle_day rotation with specific slugs per tool.
+
+---
+
+## What NOT to touch
+
+- **Published blog articles** (`app/blog/posts.ts`, date ≤ today UTC). Hard Rule 1 — freeze. Edit triggers a Google re-evaluation risk and can cost weeks of organic traffic. The render-layer emoji-→-SVG swap exists *specifically* to avoid editing posts.ts source.
+- **`scripts/seo-health-check.mjs` + `.github/workflows/seo-health.yml`**. Daily 03:00 UTC sentinel against canonical / og:url / title-uniqueness / description-length regression. Do not weaken invariants to silence a failing run; fix the source instead.
+- **GSC credentials**. Live at `~/.config/signmypdf/gsc-credentials.json` (and the in-repo fallback `signmypdf-seo-97022bc5390f.json` which is gitignored). Never commit creds; never move them back into the repo.
+- **Tool palette tokens** (`--tool-sign-*`, `--tool-fill-*`, `--tool-protect-*`). Picked deliberately to avoid clashing with the Why-card accent triplet (red/emerald/amber). Don't reshuffle without re-balancing both groups together.
+- **`hub-*` CSS namespace.** Homepage-only. No other route uses these classes; do not introduce them on `/sign`, `/fill`, `/protect`, `/blog`, `/login`, `/dashboard`. Conversely, the tool screens use their own classes (`dz-*`, `card`, `step-*`, etc.) — do not migrate them to `hub-*` either.
+- **`TOOL_META.sign.href` in `BlogPostContent.tsx`** is already `/sign`. All blog SIGN-tool CTAs flow through this single source of truth. Do not hardcode `/` (the hub) anywhere in blog routing.
+- **Trigger prompt SIGN-CTA target.** Hard Rule 2 of the v3 trigger prompt says `/sign`, not `/`. The trigger prompt and `TOOL_META.sign.href` must match — if you change one, change both.
+- **Daily-trigger override** for `freelancers-protect-client-contracts` is still in the v3 prompt as the next forced PROTECT publication. Once it ships, remove the override paragraph from the trigger and let the normal interleave logic resume.
+
+---
+
+## Pending decisions
+
+- **Premium pricing** — $9/mo monthly, $7.50/mo annual ($90/yr). Kept as-is. A/B test deferred 1-2 months until enough conversion volume to read a result.
+- **Trial-with-credit-card / hybrid Free+Trial flow** — explicitly rejected. Straight free-then-subscription only. The reasoning ("we don't want auto-renew traps") is part of the v3 prompt's USP.
+- **New tools (PDF→Word, PDF→JPG, Merge PDFs, Compress PDF)** — queued as the next major build-out, but gated on GSC traffic data showing the Sign/Fill/Protect base is establishing. Don't start before GSC confirms organic traffic to existing tools is ramping.
+- **AdSense** — defer until organic traffic is non-trivial (target: 2-4 weeks after the Apr 25 canonical fix takes hold). Premature ads kill UX before there's traffic worth monetizing.
+- **`[IMAGE: ...]` placeholders in blog content** — the parser-skip path is in `BlogPostContent.tsx` already (placeholders silently disappear today). Actual image generation / substitution not implemented. TODO when there's content-team bandwidth.
+- **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
+
+---
+
+## Next session checklist
+
+1. **Verify the Apr 29 02:06 UTC trigger run** under the v3 prompt. Expected: `cycle_day == 2` for Apr 29 → Fill + Protect pair. PROTECT override forces `freelancers-protect-client-contracts`. FILL slot picks first unused from queue (`property-managers-tenant-signatures`). Confirm both shipped, sat under 1200 words, used `/fill` and `/protect` CTAs respectively, and embedded the new compliance signals (≤55-char title, keyword 2-3× in first 100w, in-body internal links, `[IMAGE:]` placeholders, USP positioning).
+2. **Open Google Search Console.** Use the Domain property `sc-domain:signmypdf.io`. Watch the "Pages → Indexed" curve from Apr 28 onwards. The 3 Apr 28 SEO-landing articles + the 2 Apr 30 future-dated ones should start showing impressions in 7-14 days. If GSC still reports `Indexed: 0` past May 5, dig into "Page indexing" reasons (likely: alt-page with canonical, soft 404, duplicate without canonical).
+3. **Read GSC per-article traffic data** once 14 days of data exist. Decide on a per-article basis:
+   - **Top performers** (clicks + impressions) in the OLD long format → cautiously optimize. Edit intro / FAQ at most. Never full-rewrite an indexed article in place.
+   - **Zero-traffic articles** in the OLD long format → safe to rewrite into the new SEO-landing format. Use the future-date or new-slug escape hatch — never in-place.
+   - **Mid performers** → leave alone unless a competitor moves on the keyword.
+4. **Decide convert-tools vs. content optimization.** If GSC traffic is ramping, double down on content (more articles per day, optimize top performers). If GSC is flat past 4 weeks, ship Compress PDF / Merge PDFs / PDF→Word as new revenue surfaces.
+
+---
+
 ## SEO Indexing Status
 
 **Last updated: 2026-04-25.** If you change anything indexing-related, update this section so the next session has accurate ground truth.
