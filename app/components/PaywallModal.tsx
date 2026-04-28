@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { CheckCircle } from 'lucide-react';
 import {
   DAILY_LIMIT,
   PADDLE_PRICE_MONTHLY,
@@ -342,8 +343,8 @@ export default function PaywallModal({ open, onClose, tool, todayCount = 0, onPr
                 </button>
               </div>
               {restoreStatus === 'success' && (
-                <p className="pw-restore-msg pw-restore-ok">
-                  ✅ Pro restored!{' '}
+                <p className="pw-restore-msg pw-restore-ok" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <CheckCircle size={14} color="#16a34a" /> Pro restored!{' '}
                   <a href="/dashboard">Go to dashboard →</a>
                 </p>
               )}

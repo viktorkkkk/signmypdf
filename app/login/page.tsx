@@ -2,6 +2,7 @@
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { PenLine, Mail } from 'lucide-react';
 import Logo from '../components/Logo';
 
 function LoginContent() {
@@ -33,7 +34,7 @@ function LoginContent() {
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg,#2563eb,#4f46e5)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, margin: '0 auto 16px' }}>✍️</div>
+            <div style={{ width: 56, height: 56, background: 'linear-gradient(135deg,#2563eb,#4f46e5)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#fff' }}><PenLine size={26} strokeWidth={2.2} /></div>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0f172a', margin: '0 0 8px' }}>Sign in to your account</h1>
             <p style={{ fontSize: 15, color: '#64748b', margin: 0 }}>
               {redirected ? "You need to sign in to access your dashboard." : "Enter your email to receive a secure login link."}
@@ -42,7 +43,7 @@ function LoginContent() {
           <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', padding: 28, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
             {status === 'sent' ? (
               <div style={{ textAlign: 'center', padding: '8px 0' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>📬</div>
+                <div style={{ marginBottom: 12, display: 'inline-flex', justifyContent: 'center' }}><Mail size={40} color="#2563eb" strokeWidth={1.6} /></div>
                 <p style={{ fontWeight: 700, color: '#0f172a', margin: '0 0 8px', fontSize: 16 }}>Check your inbox</p>
                 <p style={{ fontSize: 14, color: '#64748b', margin: 0, lineHeight: 1.6 }}>
                   We sent a login link to <strong>{email}</strong>.<br />Valid for 30 days.

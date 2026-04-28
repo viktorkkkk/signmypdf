@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import { MapPin } from 'lucide-react';
 
 export interface PlacementState {
   zone: number;
@@ -172,7 +173,7 @@ export default function PlacementPicker({
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 16 }}>📍</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center' }}><MapPin size={16} color="#2563eb" /></span>
           <span style={{ fontSize: 13, color: '#334155', fontWeight: 500 }}>
             {hasSig && selectedZone >= 0
               ? <><strong style={{ color: '#2563eb' }}>{ZONE_LABELS[selectedZone]}</strong> · page {selectedPage}</>

@@ -2,6 +2,27 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import {
+  FileText,
+  FileSignature,
+  FormInput,
+  Lock,
+  Zap,
+  CheckCircle,
+  AlertTriangle,
+  Star,
+  Pencil,
+  PenLine,
+  Download,
+  RefreshCw,
+  Save,
+  Eye,
+  X,
+  FolderOpen,
+  MousePointerClick,
+  Plus,
+  Loader2,
+} from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import PDFTextEditor, { TextField } from '../components/PDFTextEditor';
@@ -58,8 +79,8 @@ function FilledPDFPreview({ url }: { url: string }) {
     <div style={{ marginTop: 16, background: '#f8fafc', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>
-          📄 Preview
+        <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <FileText size={16} color="#2563eb" /> Preview
         </div>
         {!loading && pages.length > 0 && (
           <div style={{ fontSize: 12, color: '#94a3b8' }}>
@@ -70,7 +91,9 @@ function FilledPDFPreview({ url }: { url: string }) {
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px 0', color: '#94a3b8', fontSize: 14 }}>
-          <div style={{ marginBottom: 8 }}>⏳</div>
+          <div style={{ marginBottom: 8, display: 'inline-flex', justifyContent: 'center' }}>
+            <Loader2 size={22} className="spin" style={{ animation: 'spin 1s linear infinite' }} />
+          </div>
           Rendering preview…
         </div>
       ) : (
@@ -559,7 +582,7 @@ export default function FillPage() {
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
-              <div className="dz-icon">📋</div>
+              <div className="dz-icon" style={{ display: 'inline-flex' }}><FormInput size={48} color="#2563eb" strokeWidth={1.6} /></div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
               <label className="btn-primary" style={{ cursor: 'pointer' }}>
@@ -580,21 +603,21 @@ export default function FillPage() {
             {/* Draft loaded banner */}
             {showDraftBanner && loadedDraftName && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, padding: '12px 16px', marginBottom: 20 }}>
-                <span style={{ fontSize: 18 }}>📂</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center' }}><FolderOpen size={18} color="#2563eb" /></span>
                 <div style={{ flex: 1, fontSize: 13, fontWeight: 600, color: '#1d4ed8' }}>
                   Draft "{loadedDraftName}" loaded — upload a PDF to apply it
                 </div>
-                <button onClick={() => setShowDraftBanner(false)} style={{ fontSize: 18, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}>×</button>
+                <button onClick={() => setShowDraftBanner(false)} aria-label="Dismiss" style={{ color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px', display: 'inline-flex', alignItems: 'center' }}><X size={16} /></button>
               </div>
             )}
 
             {/* Compact trust row */}
             <p className="trust-row">
-              <span>🔒 Processed locally</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Lock size={14} color="#64748b" /> Processed locally</span>
               <span className="trust-dot">·</span>
               <span>✓ No registration</span>
               <span className="trust-dot">·</span>
-              <span>⚡ 30 seconds</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Zap size={14} color="#64748b" /> 30 seconds</span>
             </p>
 
             {/* More PDF Tools */}
@@ -607,13 +630,13 @@ export default function FillPage() {
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                 >
-                  <div style={{ fontSize: 28, marginBottom: 8 }}>✍️</div>
+                  <div style={{ marginBottom: 8, color: '#2563eb' }}><PenLine size={28} strokeWidth={1.8} /></div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Sign PDF</div>
                   <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Draw or type your signature</div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
                 </a>
                 <div style={{ background: 'white', borderRadius: 16, padding: '20px', border: '2px solid #2563eb', boxShadow: '0 4px 16px rgba(37,99,235,0.1)' }}>
-                  <div style={{ fontSize: 28, marginBottom: 8 }}>📝</div>
+                  <div style={{ marginBottom: 8, color: '#2563eb' }}><FileSignature size={28} strokeWidth={1.8} /></div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Fill PDF Form</div>
                   <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Click to type in any field</div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>Current tool</span>
@@ -622,7 +645,7 @@ export default function FillPage() {
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                 >
-                  <div style={{ fontSize: 28, marginBottom: 8 }}>🔒</div>
+                  <div style={{ marginBottom: 8, color: '#2563eb' }}><Lock size={28} strokeWidth={1.8} /></div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Protect PDF</div>
                   <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Add password &amp; permissions</div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
@@ -660,23 +683,27 @@ export default function FillPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                   <div className="doc-badge" style={{ width: 22, height: 22, fontSize: 7, flexShrink: 0 }}>PDF</div>
                   <span style={{ fontSize: 12, color: '#334155', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{pdfFile?.name}</span>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
-                    🔄 Change
+                  <label style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <RefreshCw size={12} /> Change
                     <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleFileChange} />
                   </label>
                 </div>
                 {!hasSubscription && (
-                  <div style={{ fontSize: 11, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '5px 10px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, flexShrink: 0, whiteSpace: 'nowrap' }}>
-                    {todayCount >= DAILY_LIMIT ? `⚠️ Watermark` : `📄 ${todayCount}/${DAILY_LIMIT} free`}
+                  <div style={{ fontSize: 11, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '5px 10px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    {todayCount >= DAILY_LIMIT ? (
+                      <><AlertTriangle size={12} /> Watermark</>
+                    ) : (
+                      <><FileText size={12} /> {todayCount}/{DAILY_LIMIT} free</>
+                    )}
                   </div>
                 )}
                 {hasSubscription && (
-                  <div style={{ fontSize: 11, color: '#16a34a', background: '#f0fdf4', padding: '5px 10px', borderRadius: 8, border: '1px solid #bbf7d0', flexShrink: 0 }}>⭐ Pro</div>
+                  <div style={{ fontSize: 11, color: '#16a34a', background: '#f0fdf4', padding: '5px 10px', borderRadius: 8, border: '1px solid #bbf7d0', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4 }}><Star size={12} color="#F59E0B" fill="#F59E0B" /> Pro</div>
                 )}
               </div>
               {/* Hint */}
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#1d4ed8' }}>
-                👆 <strong>Click anywhere on the document</strong> to add a text field · drag <strong>⠿</strong> to move
+              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#1d4ed8', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <MousePointerClick size={16} style={{ flexShrink: 0 }} /> <span><strong>Click anywhere on the document</strong> to add a text field · drag <strong>⠿</strong> to move</span>
               </div>
               <div className="card" style={{ padding: 16 }}>
                 {pdfFile && (
@@ -699,20 +726,24 @@ export default function FillPage() {
                     <div className="doc-badge" style={{ width: 28, height: 28, fontSize: 8, flexShrink: 0 }}>PDF</div>
                     <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
                   </div>
-                  <label style={{ display: 'block', width: '100%', fontSize: 12, fontWeight: 600, color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px', cursor: 'pointer', textAlign: 'center' }}>
-                    🔄 Change file
+                  <label style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', fontSize: 12, fontWeight: 600, color: '#64748b', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px', cursor: 'pointer', textAlign: 'center' }}>
+                    <RefreshCw size={12} /> Change file
                     <input type="file" accept="application/pdf,.pdf" style={{ display: 'none' }} onChange={handleFileChange} />
                   </label>
                 </div>
 
                 {/* Plan badge */}
                 {!hasSubscription && (
-                  <div style={{ fontSize: 12, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '8px 12px', borderRadius: 10, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, textAlign: 'center' }}>
-                    {todayCount >= DAILY_LIMIT ? `⚠️ Watermark after PDF #${DAILY_LIMIT + 1}` : `📄 ${todayCount}/${DAILY_LIMIT} free today`}
+                  <div style={{ fontSize: 12, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '8px 12px', borderRadius: 10, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%' }}>
+                    {todayCount >= DAILY_LIMIT ? (
+                      <><AlertTriangle size={14} /> Watermark after PDF #{DAILY_LIMIT + 1}</>
+                    ) : (
+                      <><FileText size={14} /> {todayCount}/{DAILY_LIMIT} free today</>
+                    )}
                   </div>
                 )}
                 {hasSubscription && (
-                  <div style={{ fontSize: 12, color: '#16a34a', background: '#f0fdf4', padding: '8px 12px', borderRadius: 10, border: '1px solid #bbf7d0', textAlign: 'center' }}>⭐ Premium active</div>
+                  <div style={{ fontSize: 12, color: '#16a34a', background: '#f0fdf4', padding: '8px 12px', borderRadius: 10, border: '1px solid #bbf7d0', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%' }}><Star size={14} color="#F59E0B" fill="#F59E0B" /> Premium active</div>
                 )}
               </div>
 
@@ -736,8 +767,10 @@ export default function FillPage() {
                   onClick={() => hasSubscription ? handleSaveDraft() : setShowPricing(true)}
                   disabled={hasSubscription && (!hasContent || isProcessing)}
                 >
-                  {draftSaved ? '✅ Draft saved!' : (
-                    <>💾 Save draft{!hasSubscription && <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>PRO</span>}</>
+                  {draftSaved ? (
+                    <><CheckCircle size={16} color="#16a34a" /> Draft saved!</>
+                  ) : (
+                    <><Save size={16} /> Save draft{!hasSubscription && <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>PRO</span>}</>
                   )}
                 </button>
               </div>
@@ -745,19 +778,19 @@ export default function FillPage() {
               {/* Action buttons — at bottom of sidebar */}
               <button
                 className="btn-ghost"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={handlePreview}
                 disabled={isProcessing || !hasContent}
               >
-                {isProcessing ? <><span className="spinner" /></> : '👁 Preview'}
+                {isProcessing ? <><span className="spinner" /></> : <><Eye size={16} /> Preview</>}
               </button>
               <button
                 className="btn-primary"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={handleDownload}
                 disabled={isProcessing || !hasContent}
               >
-                {isProcessing ? <><span className="spinner" /> Processing…</> : '⬇️ Save PDF'}
+                {isProcessing ? <><span className="spinner" /> Processing…</> : <><Download size={16} /> Save PDF</>}
               </button>
               {!hasContent && (
                 <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', margin: 0 }}>
@@ -783,23 +816,23 @@ export default function FillPage() {
               </div>
               <button
                 className="btn-ghost"
-                style={{ width: '100%', padding: '11px', fontSize: 14, borderRadius: 12 }}
+                style={{ width: '100%', padding: '11px', fontSize: 14, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={() => setStep('fill')}
               >
-                ✏️ Back to edit
+                <Pencil size={14} /> Back to edit
               </button>
               <button
                 className="btn-primary"
-                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12 }}
+                style={{ width: '100%', padding: '13px', fontSize: 15, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={handleSaveFromPreview}
               >
-                ⬇️ Save PDF
+                <Download size={16} /> Save PDF
               </button>
               <button
-                style={{ width: '100%', padding: '10px', fontSize: 13, borderRadius: 12, border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                style={{ width: '100%', padding: '10px', fontSize: 13, borderRadius: 12, border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
                 onClick={reset}
               >
-                📄 Start over
+                <FileText size={14} /> Start over
               </button>
             </div>
           </div>
@@ -809,18 +842,18 @@ export default function FillPage() {
         {step === 'done' && (
           <>
           <div className="done-wrap">
-            <div className="done-icon">✅</div>
+            <div className="done-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><CheckCircle size={56} color="#16a34a" strokeWidth={2.2} /></div>
             <h2 className="done-title">PDF saved!</h2>
             <p className="done-sub">Your filled document has been saved to your device.</p>
 
             <div className="done-btns">
-              <button className="btn-primary" style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
+              <button className="btn-primary" style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={() => doSave(filledPdfUrl!)}>
-                ⬇️ Save again
+                <Download size={18} /> Save again
               </button>
 
-              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
-                📄 Fill another document
+              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
+                <FileText size={16} /> Fill another document
               </button>
             </div>
 
@@ -863,7 +896,7 @@ export default function FillPage() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <span style={{ fontSize: 18, lineHeight: 1.3, flexShrink: 0 }}>✅</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, marginTop: 1 }}><CheckCircle size={18} color="#22c55e" /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35, marginBottom: 3 }}>
                 PDF filled — contains SignMyPDF watermark
@@ -878,8 +911,9 @@ export default function FillPage() {
             </div>
             <button
               onClick={() => setShowWatermarkToast(false)}
-              style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', fontSize: 16, padding: '2px 4px', flexShrink: 0 }}
-            >✕</button>
+              aria-label="Close"
+              style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '2px 4px', flexShrink: 0, display: 'inline-flex', alignItems: 'center' }}
+            ><X size={16} /></button>
           </div>
           <div style={{ marginTop: 10, height: 3, background: '#333', borderRadius: 2, overflow: 'hidden' }}>
             <div style={{ height: '100%', background: '#2563eb', borderRadius: 2, animation: 'toastProgress 8s linear forwards' }} />
@@ -893,7 +927,10 @@ export default function FillPage() {
           onClick={() => setShowReadyModal(false)}>
           <div style={{ background: '#fff', borderRadius: 24, padding: '36px 32px', maxWidth: 420, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.18)', textAlign: 'center' }}
             onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize: 44, marginBottom: 12 }}>📄✅</div>
+            <div style={{ marginBottom: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, color: '#22c55e' }}>
+              <FileText size={40} color="#2563eb" strokeWidth={1.6} />
+              <CheckCircle size={32} color="#22c55e" />
+            </div>
             <h3 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: '0 0 8px', letterSpacing: -0.3 }}>
               Your PDF is ready!
             </h3>
@@ -903,15 +940,15 @@ export default function FillPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button
                 onClick={handleGoToSign}
-                style={{ padding: '14px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 14, fontSize: 16, fontWeight: 700, cursor: 'pointer', letterSpacing: -0.2 }}
+                style={{ padding: '14px 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 14, fontSize: 16, fontWeight: 700, cursor: 'pointer', letterSpacing: -0.2, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
-                ✍️ Add Signature →
+                <PenLine size={18} /> Add Signature →
               </button>
               <button
                 onClick={handleDownloadAsIs}
-                style={{ padding: '13px 24px', background: '#f8fafc', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 14, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+                style={{ padding: '13px 24px', background: '#f8fafc', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 14, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
-                ⬇️ Download as is
+                <Download size={16} /> Download as is
               </button>
             </div>
           </div>

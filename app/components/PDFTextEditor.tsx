@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { Pencil, MousePointerClick } from 'lucide-react';
 
 export interface TextField {
   id: string;
@@ -618,7 +619,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                         }}
                       >
                         {field.text || (
-                          <span style={{ color: 'rgba(22,163,74,0.7)', fontStyle: 'italic', fontSize: 13, fontWeight: 500 }}>✏️ tap to type</span>
+                          <span style={{ color: 'rgba(22,163,74,0.7)', fontStyle: 'italic', fontSize: 13, fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 4 }}><Pencil size={12} /> tap to type</span>
                         )}
                       </div>
 
@@ -660,7 +661,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
                 padding: '16px 24px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 border: '1px solid #e2e8f0',
               }}>
-                <div style={{ fontSize: 28, marginBottom: 6 }}>👆</div>
+                <div style={{ marginBottom: 6, display: 'flex', justifyContent: 'center' }}><MousePointerClick size={28} color="#2563eb" /></div>
                 <div style={{ fontSize: 14, color: '#334155', fontWeight: 600 }}>Tap anywhere to add text</div>
                 <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
                   Drag <strong>⠿</strong> to reposition · press <strong style={{ color: '#16a34a' }}>✓</strong> to confirm

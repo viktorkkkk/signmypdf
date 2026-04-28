@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { FileText, PenLine } from 'lucide-react';
 
 interface Props {
   file: File;
@@ -129,7 +130,7 @@ export default function PDFPreview({ file, signatureDataUrl, onPositionChange }:
 
         {error && (
           <div style={{ padding: 24, textAlign: 'center', color: '#64748b', fontSize: 14 }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>📄</div>
+            <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}><FileText size={32} color="#94a3b8" /></div>
             Preview unavailable — your PDF will be signed correctly on download.
           </div>
         )}
@@ -163,7 +164,7 @@ export default function PDFPreview({ file, signatureDataUrl, onPositionChange }:
             background: 'rgba(37,99,235,0.85)', color: 'white', padding: '6px 16px',
             borderRadius: 20, fontSize: 12, fontWeight: 500, whiteSpace: 'nowrap', pointerEvents: 'none',
           }}>
-            ✍️ Draw your signature — it will appear here
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><PenLine size={12} /> Draw your signature — it will appear here</span>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { PenLine } from 'lucide-react';
 
 interface Props {
   onSave: (dataUrl: string, width: number, height: number) => void;
@@ -297,7 +298,7 @@ export default function SignatureCanvas({ onSave }: Props) {
         <div className="sig-baseline-label">Sign here</div>
         {isEmpty && (
           <div className="sig-placeholder">
-            <div className="sig-placeholder-icon">✍️</div>
+            <div className="sig-placeholder-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><PenLine size={28} color="#94a3b8" strokeWidth={1.6} /></div>
             <div className="sig-placeholder-text">Draw your signature</div>
           </div>
         )}

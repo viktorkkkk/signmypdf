@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { FileText, PenLine, CheckSquare } from 'lucide-react';
 
 export interface SignaturePlacement {
   page: number;
@@ -209,8 +210,8 @@ export default function PDFViewer({
       {/* Page selector with thumbnails */}
       {pages > 1 && (
         <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 13, color: '#64748b', fontWeight: 600, marginBottom: 10 }}>
-            📄 Select pages to sign:
+          <div style={{ fontSize: 13, color: '#64748b', fontWeight: 600, marginBottom: 10, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <FileText size={14} /> Select pages to sign:
           </div>
           <div style={{ 
             display: 'flex', 
@@ -294,8 +295,8 @@ export default function PDFViewer({
               );
             })}
           </div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>
-            ☑️ Check the pages you want to sign · Click thumbnail to preview
+          <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <CheckSquare size={11} /> Check the pages you want to sign · Click thumbnail to preview
           </div>
         </div>
       )}
@@ -415,7 +416,7 @@ export default function PDFViewer({
               background: 'rgba(37,99,235,0.85)', color: 'white', padding: '6px 16px',
               borderRadius: 20, fontSize: 12, fontWeight: 500, whiteSpace: 'nowrap', pointerEvents: 'none',
             }}>
-              ✍️ Draw your signature above — it will appear here
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><PenLine size={12} /> Draw your signature above — it will appear here</span>
             </div>
           )}
 
@@ -437,7 +438,7 @@ export default function PDFViewer({
                 boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 24, marginBottom: 8 }}>☑️</div>
+                <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}><CheckSquare size={24} color="#2563eb" /></div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>
                   Check page {curPage} to sign it
                 </div>

@@ -2,6 +2,21 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
+import {
+  FileText,
+  Lock,
+  Zap,
+  CheckCircle,
+  AlertTriangle,
+  Star,
+  Pencil,
+  Keyboard,
+  PenLine,
+  Download,
+  FileSignature,
+  RefreshCw,
+  X,
+} from 'lucide-react';
 import SignatureCanvas from '../components/SignatureCanvas';
 import PDFViewer, { SignaturePlacement } from '../components/PDFViewer';
 import SavedSignatures, { saveSig, SavedSig } from '../components/SavedSignatures';
@@ -441,7 +456,7 @@ export default function Home() {
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
-              <div className="dz-icon">📄</div>
+              <div className="dz-icon" style={{ display: 'inline-flex' }}><FileText size={48} color="#2563eb" strokeWidth={1.6} /></div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
               {/* Native label+input for reliable mobile file picking */}
@@ -461,11 +476,11 @@ export default function Home() {
             </div>
             {/* Compact trust row */}
             <p className="trust-row">
-              <span>🔒 Processed locally</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Lock size={14} color="#64748b" /> Processed locally</span>
               <span className="trust-dot">·</span>
               <span>✓ No registration</span>
               <span className="trust-dot">·</span>
-              <span>⚡ 30 seconds</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Zap size={14} color="#64748b" /> 30 seconds</span>
             </p>
 
           </div>
@@ -478,25 +493,26 @@ export default function Home() {
             {showFillBanner && (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '12px 16px', marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 20 }}>✅</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}><CheckCircle size={20} color="#16a34a" /></span>
                   <span style={{ fontSize: 14, fontWeight: 600, color: '#166534' }}>Your filled PDF is ready to sign</span>
                 </div>
-                <button onClick={() => setShowFillBanner(false)} style={{ background: 'none', border: 'none', fontSize: 16, color: '#86efac', cursor: 'pointer', padding: '2px 6px' }}>✕</button>
+                <button onClick={() => setShowFillBanner(false)} aria-label="Close banner" style={{ background: 'none', border: 'none', color: '#86efac', cursor: 'pointer', padding: '2px 6px', display: 'inline-flex', alignItems: 'center' }}><X size={16} /></button>
               </div>
             )}
             <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h2 className="step-title">Sign your document</h2>
               {!hasSubscription && (
-                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}` }}>
-                  {todayCount >= DAILY_LIMIT
-                    ? `⚠️ Watermark added from PDF #${DAILY_LIMIT + 1}`
-                    : `📄 ${todayCount}/${DAILY_LIMIT} free (no watermark) today`
-                  }
+                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  {todayCount >= DAILY_LIMIT ? (
+                    <><AlertTriangle size={14} color="#d97706" /> Watermark added from PDF #{DAILY_LIMIT + 1}</>
+                  ) : (
+                    <><FileText size={14} color="#64748b" /> {todayCount}/{DAILY_LIMIT} free (no watermark) today</>
+                  )}
                 </div>
               )}
               {hasSubscription && (
-                <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0' }}>
-                  ⭐ Premium active
+                <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Star size={14} color="#F59E0B" fill="#F59E0B" /> Premium active
                 </div>
               )}
             </div>
@@ -504,15 +520,15 @@ export default function Home() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '10px 14px', marginBottom: 16 }}>
               <div className="doc-badge" style={{ width: 32, height: 32, fontSize: 9, flexShrink: 0 }}>PDF</div>
               <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
-              <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>🔄 Change file</button>
+              <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}><RefreshCw size={12} /> Change file</button>
             </div>
 
             {/* 1. SIGNATURE AREA (top) */}
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-title">1. Create your signature</div>
               <div className="tabs">
-                <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')}>✏️ Draw</button>
-                <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')}>⌨️ Type</button>
+                <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Pencil size={14} /> Draw</button>
+                <button className={`tab${signMode === 'type' ? ' active' : ''}`} onClick={() => setSignMode('type')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Keyboard size={14} /> Type</button>
               </div>
 
               {signMode === 'draw' && <SignatureCanvas onSave={(url, w, h) => { setSignatureData(url); sigSize.current = { w, h }; }} />}
@@ -610,9 +626,14 @@ export default function Home() {
                 onClick={handleSign}
                 disabled={isProcessing || !canSign}
               >
-                {isProcessing
-                  ? <><span className="spinner" /> Signing…</>
-                  : `✍️  Sign ${selectedPages.length > 0 ? selectedPages.length + ' page' + (selectedPages.length > 1 ? 's' : '') : ''} & Download`}
+                {isProcessing ? (
+                  <><span className="spinner" /> Signing…</>
+                ) : (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <PenLine size={18} />
+                    Sign {selectedPages.length > 0 ? `${selectedPages.length} page${selectedPages.length > 1 ? 's' : ''}` : ''} & Download
+                  </span>
+                )}
               </button>
               {!canSign && selectedPages.length === 0 && (
                 <p className="sticky-sign-hint">Select at least one page above</p>
@@ -627,25 +648,25 @@ export default function Home() {
         {/* ── DONE ── */}
         {step === 'done' && (
           <div className="done-wrap">
-            <div className="done-icon">✅</div>
+            <div className="done-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><CheckCircle size={56} color="#16a34a" strokeWidth={2.2} /></div>
             <h2 className="done-title">Document signed!</h2>
             <p className="done-sub">Your PDF is ready. Save it to your device.</p>
 
             <div className="done-btns">
               <button
                 className="btn-primary"
-                style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
+                style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                 onClick={async () => {
                   await downloadOrShare(signedPdfUrl!, `signed-${pdfFile?.name || 'document.pdf'}`);
                   trackEvent('pdf_downloaded', { plan: hasSubscription ? 'pro' : 'free', watermark: willHaveWatermark, method: 'button' });
                   if (willHaveWatermark) setTimeout(() => showToast(), 400);
                 }}
               >
-                ⬇️  Save Signed PDF
+                <Download size={18} /> Save Signed PDF
               </button>
 
-              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
-                📄 Sign another document
+              <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
+                <FileText size={16} /> Sign another document
               </button>
             </div>
           </div>
@@ -673,7 +694,7 @@ export default function Home() {
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, maxWidth: 680, margin: '0 auto' }}>
               <div style={{ background: 'white', borderRadius: 16, padding: '20px', border: '2px solid #2563eb', boxShadow: '0 4px 16px rgba(37,99,235,0.1)' }}>
-                <div style={{ fontSize: 26, marginBottom: 8 }}>✍️</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><PenLine size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Sign PDF</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Draw or type your signature</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>Current tool</span>
@@ -682,7 +703,7 @@ export default function Home() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
               >
-                <div style={{ fontSize: 26, marginBottom: 8 }}>📝</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><FileSignature size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Fill PDF Form</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Click to type in any field</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
@@ -691,7 +712,7 @@ export default function Home() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
               >
-                <div style={{ fontSize: 26, marginBottom: 8 }}>🔒</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><Lock size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Protect PDF</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Add password &amp; permissions</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
@@ -770,7 +791,7 @@ export default function Home() {
         >
           {/* Top row: icon + text + close */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <span style={{ fontSize: 18, lineHeight: 1.3, flexShrink: 0 }}>✅</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, marginTop: 1 }}><CheckCircle size={18} color="#22c55e" /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35, marginBottom: 3 }}>
                 PDF signed — contains SignMyPDF watermark

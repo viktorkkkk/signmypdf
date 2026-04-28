@@ -2,6 +2,20 @@
 
 import { useState, useCallback, useRef, useEffect, type ChangeEvent } from 'react';
 import { useDropzone } from 'react-dropzone';
+import {
+  Lock,
+  Zap,
+  AlertTriangle,
+  Star,
+  RefreshCw,
+  Plus,
+  Sparkles,
+  Download,
+  PenLine,
+  FileSignature,
+  Check,
+  KeyRound,
+} from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
@@ -406,7 +420,7 @@ export default function ProtectPage() {
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
-              <div className="dz-icon">🔒</div>
+              <div className="dz-icon" style={{ display: 'inline-flex' }}><Lock size={48} color="#2563eb" strokeWidth={1.6} /></div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
               <label className="btn-primary" style={{ cursor: 'pointer' }}>
@@ -434,11 +448,11 @@ export default function ProtectPage() {
 
             {/* Compact trust row */}
             <p className="trust-row">
-              <span>🔒 Processed locally</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Lock size={14} color="#64748b" /> Processed locally</span>
               <span className="trust-dot">·</span>
               <span>✓ No registration</span>
               <span className="trust-dot">·</span>
-              <span>⚡ 30 seconds</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Zap size={14} color="#64748b" /> 30 seconds</span>
             </p>
           </div>
         )}
@@ -449,16 +463,17 @@ export default function ProtectPage() {
             <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, maxWidth: 880, margin: '0 auto 20px' }}>
               <h2 className="step-title">Set protection</h2>
               {!hasSubscription && (
-                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}` }}>
-                  {todayCount >= DAILY_LIMIT
-                    ? `⚠️ Daily limit reached`
-                    : `🔒 ${todayCount}/${DAILY_LIMIT} free today`
-                  }
+                <div style={{ fontSize: 13, color: todayCount >= DAILY_LIMIT ? '#d97706' : '#64748b', background: todayCount >= DAILY_LIMIT ? '#fffbeb' : '#f8fafc', padding: '6px 12px', borderRadius: 8, border: `1px solid ${todayCount >= DAILY_LIMIT ? '#fcd34d' : '#e2e8f0'}`, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  {todayCount >= DAILY_LIMIT ? (
+                    <><AlertTriangle size={14} color="#d97706" /> Daily limit reached</>
+                  ) : (
+                    <><Lock size={14} color="#64748b" /> {todayCount}/{DAILY_LIMIT} free today</>
+                  )}
                 </div>
               )}
               {hasSubscription && (
-                <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0' }}>
-                  ⭐ Premium active
+                <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <Star size={14} color="#F59E0B" fill="#F59E0B" /> Premium active
                 </div>
               )}
             </div>
@@ -478,12 +493,12 @@ export default function ProtectPage() {
                   <div className="fname">{pdfFile?.name}</div>
                   <div className="fsize">{pdfFile ? formatFileSize(pdfFile.size) : ''}</div>
                   <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <button onClick={reset}>🔄 Change file</button>
+                    <button onClick={reset} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><RefreshCw size={12} /> Change file</button>
                     <button
                       onClick={handleAddFileClick}
                       style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
                     >
-                      ➕ Add file
+                      <Plus size={12} /> Add file
                       {!hasSubscription && (
                         <span style={{ fontSize: 10, background: '#e0e7ff', color: '#4f46e5', borderRadius: 4, padding: '1px 5px', fontWeight: 700 }}>PRO</span>
                       )}
@@ -650,11 +665,11 @@ export default function ProtectPage() {
                       gap: 8,
                     }}
                   >
-                    ✨ Generate strong password
+                    <Sparkles size={16} /> Generate strong password
                   </button>
                   {copied && (
-                    <p style={{ fontSize: 12, color: '#16a34a', fontWeight: 600, margin: '0 0 10px', textAlign: 'center' }}>
-                      ✔ Password copied to clipboard
+                    <p style={{ fontSize: 12, color: '#16a34a', fontWeight: 600, margin: '0 0 10px', textAlign: 'center', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%' }}>
+                      <Check size={14} /> Password copied to clipboard
                     </p>
                   )}
 
@@ -731,7 +746,7 @@ export default function ProtectPage() {
                   marginBottom: 12,
                   fontWeight: 500,
                 }}>
-                  🔒 Processed locally. No account required.
+                  <Lock size={14} color="#16a34a" /> Processed locally. No account required.
                 </div>
 
                 {/* Protect button — solid blue, no gradient.
@@ -750,7 +765,11 @@ export default function ProtectPage() {
                       borderRadius: 14,
                     }}
                   >
-                    {isProcessing ? <><span className="spinner" /> Encrypting…</> : '🔐 Protect PDF'}
+                    {isProcessing ? (
+                      <><span className="spinner" /> Encrypting…</>
+                    ) : (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><KeyRound size={18} /> Protect PDF</span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -762,7 +781,7 @@ export default function ProtectPage() {
         {/* ── DONE ── */}
         {step === 'done' && (
           <div className="done-wrap">
-            <div className="done-icon">🔒</div>
+            <div className="done-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Lock size={56} color="#16a34a" strokeWidth={2.2} /></div>
             <h2 className="done-title">
               {protectedBatch.length > 1 ? `${protectedBatch.length} PDFs protected!` : 'PDF protected!'}
             </h2>
@@ -780,31 +799,31 @@ export default function ProtectPage() {
                       <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 14, color: '#334155' }}>{b.name}</span>
                       <button
                         className="btn-ghost"
-                        style={{ padding: '8px 14px', fontSize: 13 }}
+                        style={{ padding: '8px 14px', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 }}
                         onClick={() => downloadOrShare(b.url, `protected-${b.name}`)}
                       >
-                        ⬇️ Save
+                        <Download size={14} /> Save
                       </button>
                     </div>
                   ))}
                 </div>
-                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
-                  🔒 Protect more documents
+                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
+                  <Lock size={16} /> Protect more documents
                 </button>
               </div>
             ) : (
               <div className="done-btns">
                 <button
                   className="btn-primary"
-                  style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14 }}
+                  style={{ width: '100%', maxWidth: 480, padding: '16px', fontSize: 16, borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                   onClick={async () => {
                     await downloadOrShare(protectedPdfUrl!, `protected-${pdfFile?.name || 'document.pdf'}`);
                   }}
                 >
-                  ⬇️  Save Protected PDF
+                  <Download size={18} /> Save Protected PDF
                 </button>
-                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15 }} onClick={reset}>
-                  🔒 Protect another document
+                <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
+                  <Lock size={16} /> Protect another document
                 </button>
               </div>
             )}
@@ -835,7 +854,7 @@ export default function ProtectPage() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
               >
-                <div style={{ fontSize: 26, marginBottom: 8 }}>✍️</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><PenLine size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Sign PDF</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Draw or type your signature</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
@@ -844,13 +863,13 @@ export default function ProtectPage() {
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
               >
-                <div style={{ fontSize: 26, marginBottom: 8 }}>📝</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><FileSignature size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Fill PDF Form</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Click to type in any field</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
               </a>
               <div style={{ background: 'white', borderRadius: 16, padding: '20px', border: '2px solid #2563eb', boxShadow: '0 4px 16px rgba(37,99,235,0.1)' }}>
-                <div style={{ fontSize: 26, marginBottom: 8 }}>🔒</div>
+                <div style={{ marginBottom: 8, color: '#2563eb' }}><Lock size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Protect PDF</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Add password &amp; permissions</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>Current tool</span>
@@ -896,7 +915,7 @@ export default function ProtectPage() {
           <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
             <button className="modal-close" onClick={() => setShowLimitBlock(false)}>✕</button>
             <div style={{ textAlign: 'center', padding: '8px 4px 0' }}>
-              <div style={{ fontSize: 38, marginBottom: 10 }}>🔒</div>
+              <div style={{ marginBottom: 10, display: 'inline-flex', justifyContent: 'center' }}><Lock size={38} color="#2563eb" /></div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: '0 0 10px' }}>You&apos;ve reached your free limit</h3>
               <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.6, margin: '0 0 20px' }}>
                 Upgrade to:

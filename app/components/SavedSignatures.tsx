@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Save, Lock } from 'lucide-react';
 
 const STORAGE_KEY = 'signmypdf_signatures';
 const MAX = 10;
@@ -69,8 +70,8 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
   return (
     <div className="saved-sigs">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-          💾 Saved signatures
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Save size={12} /> Saved signatures
         </span>
         {currentSig && (
           <button
@@ -85,7 +86,11 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
               gap: 4,
             }}
           >
-            {hasSubscription ? '+ Save current' : '🔒 Save current'}
+            {hasSubscription ? (
+              <>+ Save current</>
+            ) : (
+              <><Lock size={11} /> Save current</>
+            )}
           </button>
         )}
       </div>

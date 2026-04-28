@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { PenLine, CheckCircle } from 'lucide-react';
 import Logo from '../components/Logo';
 import { getDrafts, deleteDraft, setPendingDraft, Draft } from '../utils/drafts';
 import { getHistory, HistoryItem } from '../components/FileHistory';
@@ -144,8 +145,8 @@ function DashboardContent() {
       <header style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', height: 60, padding: '0 24px', display: 'flex', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 720, width: '100%', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/"><Logo /></Link>
-          <Link href="/" style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textDecoration: 'none', padding: '7px 16px', background: '#eff6ff', borderRadius: 9, border: '1px solid #bfdbfe' }}>
-            ✍️ Sign PDF
+          <Link href="/" style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textDecoration: 'none', padding: '7px 16px', background: '#eff6ff', borderRadius: 9, border: '1px solid #bfdbfe', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <PenLine size={14} /> Sign PDF
           </Link>
         </div>
       </header>
@@ -334,7 +335,7 @@ function DashboardContent() {
           <div style={{ background: '#fff', borderRadius: 20, padding: 32, maxWidth: 420, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }} onClick={e => e.stopPropagation()}>
             {cancelStatus === 'done' ? (
               <>
-                <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 16 }}>✅</div>
+                <div style={{ textAlign: 'center', marginBottom: 16, display: 'flex', justifyContent: 'center' }}><CheckCircle size={40} color="#16a34a" /></div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 8px', textAlign: 'center' }}>Subscription cancelled</h3>
                 <p style={{ fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 24, lineHeight: 1.6 }}>You keep Pro access until {nextBilling}.</p>
                 <button onClick={() => setShowCancelModal(false)} style={{ width: '100%', padding: 13, background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>Close</button>

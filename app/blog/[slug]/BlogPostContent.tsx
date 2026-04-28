@@ -2,6 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import {
+  Clock,
+  DollarSign,
+  Smartphone,
+  PenLine,
+  Lock,
+  FileText,
+  Check,
+  MapPin,
+  Download,
+  Link2,
+  Upload,
+} from 'lucide-react';
 import { BlogPost } from '../posts';
 import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
@@ -256,19 +269,20 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 // Quick Summary component shown at top of every article
-// Pick an emoji icon based on the QuickSummary label text.
-function iconForLabel(label: string): string {
+// Pick a lucide icon component based on the QuickSummary label text.
+function iconForLabel(label: string): React.ReactElement {
   const l = label.toLowerCase();
-  if (l.includes('time') || l.includes('duration')) return '⏱';
-  if (l.includes('cost') || l.includes('price')) return '💰';
-  if (l.includes('work') || l.includes('device') || l.includes('platform')) return '📱';
-  if (l.includes('registr') || l.includes('account') || l.includes('sign up')) return '✍️';
-  if (l.includes('secur') || l.includes('priva')) return '🔒';
-  if (l.includes('file') || l.includes('size') || l.includes('limit')) return '📄';
-  return '✓';
+  const props = { size: 22, color: '#2563eb', strokeWidth: 2 } as const;
+  if (l.includes('time') || l.includes('duration')) return <Clock {...props} />;
+  if (l.includes('cost') || l.includes('price')) return <DollarSign {...props} />;
+  if (l.includes('work') || l.includes('device') || l.includes('platform')) return <Smartphone {...props} />;
+  if (l.includes('registr') || l.includes('account') || l.includes('sign up')) return <PenLine {...props} />;
+  if (l.includes('secur') || l.includes('priva')) return <Lock {...props} />;
+  if (l.includes('file') || l.includes('size') || l.includes('limit')) return <FileText {...props} />;
+  return <Check {...props} />;
 }
 
-interface QuickSummaryItem { icon: string; label: string; value: string }
+interface QuickSummaryItem { icon: React.ReactElement; label: string; value: string }
 
 // Shared card — used both by the hardcoded default and the parser output.
 function QuickSummaryCard({ items }: { items: QuickSummaryItem[] }) {
@@ -278,7 +292,7 @@ function QuickSummaryCard({ items }: { items: QuickSummaryItem[] }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
         {items.map((item, idx) => (
           <div key={`${item.label}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 22 }}>{item.icon}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>{item.icon}</span>
             <div>
               <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.label}</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{item.value}</div>
@@ -308,11 +322,12 @@ function parseQuickSummary(payload: string): QuickSummaryItem[] {
 
 // Fallback block shown when article content doesn't include its own [QuickSummary].
 function DefaultQuickSummary() {
+  const props = { size: 22, color: '#2563eb', strokeWidth: 2 } as const;
   const items: QuickSummaryItem[] = [
-    { icon: '⏱', label: 'Time', value: 'Under 60 seconds' },
-    { icon: '💰', label: 'Cost', value: 'Free (2 PDFs/day)' },
-    { icon: '📱', label: 'Works on', value: 'All devices' },
-    { icon: '✍️', label: 'Registration', value: 'Not required' },
+    { icon: <Clock {...props} />, label: 'Time', value: 'Under 60 seconds' },
+    { icon: <DollarSign {...props} />, label: 'Cost', value: 'Free (2 PDFs/day)' },
+    { icon: <Smartphone {...props} />, label: 'Works on', value: 'All devices' },
+    { icon: <PenLine {...props} />, label: 'Registration', value: 'Not required' },
   ];
   return <QuickSummaryCard items={items} />;
 }
@@ -382,8 +397,8 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
         if (stepMatch) {
           const stepNum = parseInt(stepMatch[1]);
           const stepTitle = stepMatch[2].trim();
-          const stepEmojis = ['📄', '✍️', '📍', '⬇️', '🔗', '📤'];
-          const emoji = stepEmojis[(stepNum - 1) % stepEmojis.length];
+          const STEP_ICONS = [FileText, PenLine, MapPin, Download, Link2, Upload];
+          const StepIcon = STEP_ICONS[(stepNum - 1) % STEP_ICONS.length];
           return (
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '20px 24px', background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
               <div style={{ flexShrink: 0, width: 40, height: 40, background: '#2563eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 18 }}>
@@ -393,7 +408,9 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
                 <div style={{ fontWeight: 700, fontSize: 17, color: '#0f172a', marginBottom: bodyText ? 8 : 0 }}>{stepTitle}</div>
                 {bodyText && <p style={{ margin: 0, fontSize: 15, color: '#475569', lineHeight: 1.7 }}>{renderInline(bodyText)}</p>}
               </div>
-              <span style={{ fontSize: 26, flexShrink: 0, lineHeight: 1 }}>{emoji}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, color: '#64748b' }}>
+                <StepIcon size={26} strokeWidth={1.8} />
+              </span>
             </div>
           );
         }
