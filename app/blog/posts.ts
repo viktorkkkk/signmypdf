@@ -7406,7 +7406,7 @@ Practically, no. AES-128 is unbroken and would take longer than the age of the u
     readTime: '4 min read',
     tags: ['password protected pdf', 'pdf wont open', 'aes-128 vs aes-256', 'pdf encryption compatibility', 'protected pdf troubleshooting'],
     metaTitle: "Password-Protected PDF Won't Open? Here's Why and How to Fix It",
-    metaDescription: "Your protected PDF works on one device but not another? It's usually old readers vs new encryption. Here's the 30-second fix that works for any reader.",
+    metaDescription: "Your protected PDF works on one device but not another? It's usually old readers vs new encryption. The 30-second fix that works for any reader.",
   },
 ];
 
