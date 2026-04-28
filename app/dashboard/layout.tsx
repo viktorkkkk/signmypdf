@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dashboard — SignMyPDF',
+  title: 'Dashboard',
   description: 'SignMyPDF Pro dashboard.',
   robots: {
     index: false,

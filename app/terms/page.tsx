@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — SignMyPDF',
+  title: 'Terms of Service',
   description: 'Terms of Service for SignMyPDF online PDF signing service.',
   alternates: {
     canonical: '/terms',

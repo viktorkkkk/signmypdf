@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — SignMyPDF',
+  title: 'Privacy Policy',
   description: 'Privacy Policy for SignMyPDF online PDF signing service.',
   alternates: {
     canonical: '/privacy',
