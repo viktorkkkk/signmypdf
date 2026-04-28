@@ -69,6 +69,7 @@ const BLOG_SLUGS = [
   'digital-signatures-admissible-court',
   'sent-confidential-contract-unprotected',
   'password-protect-pdf-without-adobe',
+  'protected-pdf-wont-open-some-devices',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

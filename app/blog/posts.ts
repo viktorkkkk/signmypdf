@@ -7462,6 +7462,92 @@ Password protection controls who can open the document. Separately, permissions 
     metaTitle: 'How to Password Protect a PDF Without Adobe Acrobat (2026)',
     metaDescription: 'Password protect a PDF without Adobe Acrobat. Free, instant, 100% private — your file never leaves your browser. AES-256 encryption in under 2 minutes.',
   },
+  {
+    slug: 'protected-pdf-wont-open-some-devices',
+    title: "Why Your Password-Protected PDF Won't Open on Some Devices",
+    excerpt: "Protected PDF opens on your laptop but not on the recipient's phone? The fix is usually picking a more compatible encryption — here's how.",
+    content: `You password-protected a PDF, sent it to a client, and they email back: "It won't open on my phone." You try it on your laptop — works fine. Same file, same password.
+
+So what's broken? Usually nothing. The password is right. The file isn't corrupt.
+
+The problem is that older PDF readers can't decrypt the encryption you used.
+
+[CTA]Re-protect your PDF with broader compatibility|Free, browser-only, no account. Works in any reader.|Protect PDF Now — Free
+
+## The fix in 30 seconds
+
+If the recipient is using an older PDF reader, re-protect the file with a more universal cipher:
+
+1. Open your original (unprotected) PDF
+2. Go to signmypdf.io/protect
+3. Set an ASCII-only password (no emoji, no smart quotes)
+4. Pick AES-128 if the option is offered
+5. Send the new file
+
+Most "won't open" reports disappear once the file uses encryption that older readers actually understand.
+
+## Why this happens
+
+There are usually three real reasons a protected PDF fails on some devices.
+
+**Older readers can't read newer encryption.** Adobe Acrobat XI (2012) introduced AES-256 to the PDF spec. Older mobile apps — default file-viewer apps on cheap Android phones, Kindle Fire tablets, ancient Acrobat Reader on Windows 7 — only handle AES-128 or RC4. They prompt for a password and reject the right one because they can't decrypt the cipher in the first place.
+
+**Smart quotes and Unicode mess up the password.** If your password has em-dashes, curly quotes, accented letters (é, ñ, ü), emoji, or pasted Unicode, two devices can encode them differently. iOS often substitutes "smart" quotes when you type. The encrypter saw curly quotes, the recipient typed straight quotes — different bytes, password rejected.
+
+**The file was edited after encryption.** Adding a comment, rotating a page, or running it through "optimize" or "save as" in some apps can corrupt the encryption layer. The file looks fine but won't decrypt anywhere except in the original software.
+
+## Why most "fix it" tools make this worse
+
+- They strip the encryption silently and call it "fixed"
+- They re-encrypt with proprietary methods only their app reads
+- They require an account before letting you try
+- They upload your file to a server — defeating the point of protection
+- They watermark the "protected" output
+
+## Why SignMyPDF works differently
+
+- Encryption happens in your browser; the file never leaves your device
+- Standard PDF encryption that opens in Adobe, Preview, Foxit, Drive
+- AES-128 option for maximum reader compatibility
+- No account, no upload, no logs
+- Free for any number of files
+
+## How to avoid this next time
+
+Three habits prevent most compatibility issues:
+
+- **ASCII-only passwords.** Letters and numbers, nothing else.
+- **AES-128 over AES-256** when the audience is mixed devices.
+- **Protect last, not first.** Don't edit the file after encrypting.
+
+If the recipient still can't open it, ask which app they're using. The default viewer on Android phones (often "PDF Viewer" or the file-manager preview) is the #1 culprit. Tell them to open the file in Adobe Acrobat Reader (free) or Google Drive's preview — both handle modern encryption fine.
+
+## FAQ
+
+**Why does my PDF open on iPhone but not on an Android tablet?**
+iOS ships a built-in PDF engine that supports AES-256. Many Android default viewers don't. Tell the recipient to open the file in Adobe Reader or Google Drive, or re-encrypt with AES-128.
+
+**Can I tell which encryption a PDF uses?**
+On Mac, open in Preview, hit Cmd+I, look at "Encryption". On Windows, Adobe Reader shows it under File → Properties → Security. If it says "AES-256" or "256-bit" and your recipient is on an older device, that's your problem.
+
+**Is AES-128 less secure than AES-256?**
+Practically, no. AES-128 is unbroken and would take longer than the age of the universe to brute-force. AES-256 is mathematically stronger but only matters at the level of nation-state attacks. For documents you care about, AES-128 is more than enough — and far more compatible.
+
+[CTA]Protect your PDF the universal way|Browser-only encryption that opens in any reader. No account.|Protect PDF Now — Free
+
+## Related tools
+
+- [Sign your PDF without a printer](/) — add e-signatures in seconds
+- [Fill PDF forms online](/fill) — type into any PDF, free
+- [Password protect a PDF without Adobe](/blog/password-protect-pdf-without-adobe) — full how-to
+`,
+    date: '2026-04-28',
+    author: 'SignMyPDF Team',
+    readTime: '4 min read',
+    tags: ['password protected pdf', 'pdf wont open', 'aes-128 vs aes-256', 'pdf encryption compatibility', 'protected pdf troubleshooting'],
+    metaTitle: "Password-Protected PDF Won't Open? Here's Why and How to Fix It",
+    metaDescription: "Your protected PDF works on one device but not another? It's usually old readers vs new encryption. Here's the 30-second fix that works for any reader.",
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
