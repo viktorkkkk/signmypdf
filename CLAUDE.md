@@ -328,6 +328,21 @@ To prevent the canonical/og:url regression from coming back, every new public ro
 
 Articles in `app/blog/posts.ts` whose `date` has passed are frozen per `## Blog Publication Plan` Hard Rule #1. If a published article's `metaDescription` is over 160 chars, the path is to **allowlist it** (with an inline reason in `ALLOWLIST`), NOT to edit the post. Future-dated articles are NOT frozen and must be brought into compliance before their date hits.
 
+### Render-layer emoji replacement (added 2026-04-28)
+
+`app/blog/[slug]/BlogPostContent.tsx` intercepts pictographic emoji embedded in `content` strings (🔒 in `[CALLOUT]` blocks, ✅ / ❌ / ⚠️ in comparison-table cells, 📋 / 📝 / 🌍 / 🔧 / 🛡️ / 🔐 / 🏥 / 📁 / 💼 elsewhere) and renders each one as a `lucide-react` SVG icon. **The source `app/blog/posts.ts` is never modified for this** — that is what makes the swap safe under Hard Rule 1.
+
+The mapping lives in:
+- `EMOJI_TO_ICON` table (codepoint → `{ Icon, color, size, fill }`)
+- `EMOJI_REGEX` (alternation over the supported codepoints, optional `\uFE0F` variant selector)
+- Helper `renderEmojiInText(text)` that walks a string and emits `<Icon>` JSX in place of each match.
+
+`renderInline()`, the `[CALLOUT]` parser, the table-cell renderer (which already calls `renderInline()`), and the paragraph fallback (via a leaf-walker) all pass plain-text segments through that helper, so the swap propagates everywhere a `content` string ends up on screen.
+
+Dingbat-class symbols (`✓` U+2713, `✗` U+2717, `✔` U+2714, `✕` U+2715) are intentionally **excluded** from the regex. They render as text-mode glyphs identically across OS and are used inline as quick-status text (`"✓ Yes"`, `"❌ Adobe required"` — the latter still gets the `❌` swapped because U+274C IS pictographic; the comparison-table convention always uses pictographic ✅/❌, never the Dingbat ✔/✗).
+
+If new pictographic emoji ever appears in blog content (which should not happen — the daily trigger forbids `[QuickSummary]` / `[CALLOUT]` blocks in the new SEO-landing format, and old articles are frozen): **add the codepoint to `EMOJI_TO_ICON` and `EMOJI_REGEX` in `BlogPostContent.tsx`. Do NOT edit `posts.ts` to remove the emoji**, even if the offending article is future-dated. The render layer is the single source of truth for icon rendering across all 50+ blog articles, and keeping `posts.ts` source-stable preserves the freeze rule unconditionally.
+
 ### When the health check fires
 
 A new Issue tagged `seo-health` lands via GitHub-watch email:
@@ -341,6 +356,51 @@ A new Issue tagged `seo-health` lands via GitHub-watch email:
    - **`http-non-200`** — page returns 4xx/5xx. Check the latest Vercel deploy.
    - **`fetch-error`** — DNS / TLS / network. Check Vercel domain status.
 4. Push the fix; the next 03:00 UTC run closes the regression. To verify earlier, hit "Run workflow" manually in the Actions tab — it triggers the same job on demand.
+
+---
+
+## UI Icon Standards (added 2026-04-28)
+
+All UI iconography on signmypdf.io is **`lucide-react` SVG**. Pictographic emoji is forbidden as a UI element because it renders inconsistently across OS and browser (Apple Color Emoji ≠ Segoe UI Emoji ≠ Noto Color Emoji ≠ Twemoji), looks amateur, and shifts baseline on every platform.
+
+### Default sizes and colors
+
+- **Inline in body text or button labels**: 16-18px, `color = currentColor`, baseline-aligned (`vertical-align: -3px` or wrap in `display: inline-flex; align-items: center; gap: 6-8px`).
+- **Hero / feature card icons**: 26-32px, brand blue `#2563EB`, `strokeWidth: 1.6-1.8`.
+- **Badges / counters / chips**: 14-16px, slate `#64748B`.
+- **Premium badge (`Star`)**: 14-16px, amber `#F59E0B`, **filled** (`fill="#F59E0B"` AND `color="#F59E0B"`).
+- **Status indicators**: success → green `#16A34A` (`CheckCircle`); error → red `#DC2626` (`XCircle`); warning → amber `#F59E0B` (`AlertTriangle`).
+
+### Where this applies
+
+- All public pages (`/`, `/sign`, `/fill`, `/protect`, `/login`, `/dashboard`, `/blog/*`).
+- All UI components (`PDFViewer`, `PDFTextEditor`, `PDFPreview`, `SignatureCanvas`, `SavedSignatures`, `PaywallModal`, `PlacementPicker`, `BlogPostContent`).
+- Every new component ships without emoji from day one.
+
+### Two carved-out exceptions
+
+1. **Email templates** (`app/lib/email.ts`) — keep emoji. SVG renders unreliably in Outlook (several Outlook versions strip inline SVG entirely), and emoji is the industry standard in transactional email; it renders correctly in every major mail client. Do not migrate `app/lib/email.ts` to lucide.
+2. **Frozen blog content** (`app/blog/posts.ts`, articles dated ≤ 2026-04-27) — emoji stays in the source string under Hard Rule 1. The render layer (`BlogPostContent.tsx`, see "### Render-layer emoji replacement" in `## SEO Infrastructure`) intercepts each codepoint and emits a lucide SVG, so the user-facing HTML matches the rest of the site without touching `posts.ts`.
+
+### Dingbat / text-symbol allowlist
+
+ASCII Dingbats render as text-mode glyphs cross-OS and are explicitly allowed inline:
+
+| Symbol | Codepoint | Where used | Why kept |
+|---|---|---|---|
+| ✓ | U+2713 | Inline checks (`"✓ No registration"`) | Mono-rendering across OS |
+| ✕ | U+2715 | Close buttons (toast / banner) | Indistinguishable from `<X>` lucide at 14-16px, lighter DOM |
+| ✔ | U+2714 | "✔ Password copied" toast text | Same reasoning |
+| ✗ | U+2717 | Inline negatives in tables | Same reasoning |
+| · | U+00B7 | Bullet separators in trust strips | Universal middot |
+| ⠿ | U+283F | Drag handle for fill-form fields | Braille pattern, text-mode |
+
+When a concept needs an icon and `lucide-react` does not have it, prefer a Dingbat from the table above over reaching for emoji.
+
+### Adding a new icon
+
+- Pick from `lucide-react` first. Existing imports across the codebase: `PenLine`, `FileText`, `Lock`, `Zap`, `CheckCircle`, `XCircle`, `AlertTriangle`, `Star`, `Pencil`, `Keyboard`, `Download`, `FileSignature`, `FormInput`, `Sparkles`, `RefreshCw`, `Plus`, `Mail`, `Save`, `Eye`, `X`, `FolderOpen`, `MousePointerClick`, `Loader2`, `Clock`, `DollarSign`, `Smartphone`, `Check`, `MapPin`, `Link2`, `Upload`, `ClipboardList`, `CheckSquare`, `Folder`, `Briefcase`, `Globe`, `Hospital`, `Wrench`, `Shield`, `KeyRound`. Reuse before introducing a new one.
+- For frozen blog content with a yet-uncovered emoji codepoint: extend `EMOJI_TO_ICON` + `EMOJI_REGEX` in `BlogPostContent.tsx` (see "### Render-layer emoji replacement").
 
 ---
 
@@ -576,6 +636,28 @@ To surface future-dated articles automatically when UTC midnight rolls over, `ex
 | 28 | add-multiple-signatures-one-pdf | adobe-fill-sign-vs-signmypdf | ⬜ |
 | 29 | sign-non-compete-agreement-online | photographers-digital-signatures | ⬜ |
 | 30 | electronic-signature-security | fill-medical-history-form-pdf | ⬜ |
+
+### Format Migration Strategy (added 2026-04-28)
+
+The blog now spans two formats by design, and will continue to do so until data justifies a move:
+
+- **3 articles in the new SEO-landing format** (700-900w, scenario hook → tool [CTA] → steps → "why frustrating" → "why us" → FAQ → final [CTA] → related). Currently:
+  - `protected-pdf-wont-open-some-devices` (2026-04-28)
+  - `hellosign-alternatives-free` (2026-04-30, future-dated)
+  - `esign-act-explained` (2026-04-30, future-dated)
+- **51 articles in the old long format** (1500w, `[QuickSummary]` / `[CALLOUT]`, comparison table, blockquote testimonials). All dated ≤ 2026-04-27 — **frozen under Hard Rule 1**.
+
+**Do not mass-rewrite old articles into the new format.** Google interprets large-scale content updates across a domain as a "site-wide change" and can re-evaluate every page on the site — that is exactly the failure mode that hurt signmypdf.io for ~3 weeks during the canonical bug in April. The migration plan from 2026-04-28 onwards is therefore data-driven and slow:
+
+1. **Wait 2-3 weeks** after 2026-04-28 to gather Google Search Console data on the new SEO-landing format vs the old long format. Compare CTR, average position, impressions, and engaged sessions per format cohort.
+2. **Decide by data, not aesthetic preference**:
+   - **Top performers** in old format → cautiously optimize (improve, do not full-rewrite — leaders should be touched delicately, ideally by editing intro/FAQ rather than swapping the whole article).
+   - **Zero-traffic articles** in old format → safe to rewrite into the new format. There is no organic SEO value to lose.
+   - **Mid performers** → leave alone unless something specific (low CTR with good rank, a competitor dethroning us) justifies the work.
+3. **Selective, paced rewrites only** — no more than 1-2 articles per week, never as a single bulk commit. Each rewrite follows Hard Rule 1's "future-date or new slug" escape hatch: if the old article is currently indexed, push the date forward (or change the slug) and treat the rewrite as a re-publication, never an in-place edit.
+4. **Until that data is in**: every NEW article is in the new SEO-landing format (the daily trigger enforces this). Every OLD article is read-only.
+
+Signs that the strategy is working: the 3 new-format articles outperform comparable old-format articles in CTR / engagement / conversion within 4-6 weeks. Signs to abort and re-evaluate: new-format articles underperform across the board (in which case the prompt or format itself needs revisiting before any old-article rewrites).
 
 ---
 
