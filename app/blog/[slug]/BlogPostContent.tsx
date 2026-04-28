@@ -14,6 +14,20 @@ import {
   Download,
   Link2,
   Upload,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  ClipboardList,
+  CheckSquare,
+  Folder,
+  Briefcase,
+  Globe,
+  Hospital,
+  Wrench,
+  Shield,
+  KeyRound,
+  FileSignature,
+  type LucideIcon,
 } from 'lucide-react';
 import { BlogPost } from '../posts';
 import NavHeader from '../../components/NavHeader';
@@ -332,22 +346,94 @@ function DefaultQuickSummary() {
   return <QuickSummaryCard items={items} />;
 }
 
-// Render inline bold/links within a string
+// ─── Render-layer emoji → lucide SVG replacement ────────────────────────────
+// Frozen blog content (date <= 2026-04-27) was authored under the old prompt
+// which embedded pictographic emoji (🔒 in [CALLOUT]s, ✅/❌ in comparison
+// tables, etc.). Per Hard Rule 1 we cannot edit posts.ts source for those
+// articles. Instead we intercept the emoji at render time and emit lucide
+// SVG components — same UX as the rest of the site.
+//
+// Dingbat-class symbols (✓ U+2713, ✗ U+2717) are skipped on purpose: they
+// render as text-mode glyphs identically across OS, and stripping them out
+// would break flow inside table cells like "✓ Yes".
+type EmojiMeta = { Icon: LucideIcon; color?: string; size?: number; fill?: string };
+const EMOJI_TO_ICON: Record<string, EmojiMeta> = {
+  '\u{2705}':         { Icon: CheckCircle,    color: '#16a34a', size: 20 }, // ✅ green
+  '\u{274C}':         { Icon: XCircle,        color: '#dc2626', size: 20 }, // ❌ red
+  '\u{1F512}':        { Icon: Lock,           size: 17 },                   // 🔒
+  '\u{26A0}\u{FE0F}': { Icon: AlertTriangle,  color: '#f59e0b', size: 17 }, // ⚠️
+  '\u{1F4CB}':        { Icon: ClipboardList,  size: 17 },                   // 📋
+  '\u{2611}':         { Icon: CheckSquare,    color: '#16a34a', size: 17 }, // ☑
+  '\u{2611}\u{FE0F}': { Icon: CheckSquare,    color: '#16a34a', size: 17 }, // ☑️
+  '\u{1F4C1}':        { Icon: Folder,         size: 17 },                   // 📁
+  '\u{1F4BC}':        { Icon: Briefcase,      size: 17 },                   // 💼
+  '\u{1F30D}':        { Icon: Globe,          size: 17 },                   // 🌍
+  '\u{1F3E5}':        { Icon: Hospital,       size: 17 },                   // 🏥
+  '\u{1F527}':        { Icon: Wrench,         size: 17 },                   // 🔧
+  '\u{1F6E1}\u{FE0F}': { Icon: Shield,        size: 17 },                   // 🛡️
+  '\u{1F510}':        { Icon: KeyRound,       size: 17 },                   // 🔐
+  '\u{1F4DD}':        { Icon: FileSignature,  size: 17 },                   // 📝
+};
+const EMOJI_REGEX = /\u{2705}|\u{274C}|\u{1F512}|\u{26A0}\u{FE0F}?|\u{1F4CB}|\u{2611}\u{FE0F}?|\u{1F4C1}|\u{1F4BC}|\u{1F30D}|\u{1F3E5}|\u{1F527}|\u{1F6E1}\u{FE0F}?|\u{1F510}|\u{1F4DD}/gu;
+
+function renderEmojiInText(text: string, keyPrefix = 'e'): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let k = 0;
+  EMOJI_REGEX.lastIndex = 0;
+  while ((m = EMOJI_REGEX.exec(text)) !== null) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    const raw = m[0];
+    const meta = EMOJI_TO_ICON[raw] ?? EMOJI_TO_ICON[raw + '\uFE0F'] ?? EMOJI_TO_ICON[raw.replace(/\uFE0F$/, '')];
+    if (meta) {
+      const { Icon, color, size = 17, fill } = meta;
+      out.push(
+        <Icon
+          key={`${keyPrefix}-${k++}`}
+          size={size}
+          color={color}
+          {...(fill ? { fill } : {})}
+          aria-hidden="true"
+          style={{ display: 'inline-block', verticalAlign: '-3px', flexShrink: 0 }}
+        />
+      );
+    } else {
+      out.push(raw);
+    }
+    last = m.index + raw.length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
+// Render inline bold/links within a string. Plain-text segments additionally
+// pass through renderEmojiInText so frozen articles' emoji become SVG icons.
 function renderInline(text: string): React.ReactNode[] {
   const parts: React.ReactNode[] = [];
   const regex = /(\*\*[^*]+\*\*|\[([^\]]+)\]\(([^)]+)\))/g;
   let last = 0, match;
   let key = 0;
   while ((match = regex.exec(text)) !== null) {
-    if (match.index > last) parts.push(text.slice(last, match.index));
+    if (match.index > last) {
+      parts.push(...renderEmojiInText(text.slice(last, match.index), `t${key}`));
+    }
     if (match[0].startsWith('**')) {
-      parts.push(<strong key={key++} style={{ color: '#0f172a' }}>{match[0].slice(2, -2)}</strong>);
+      parts.push(
+        <strong key={`b${key++}`} style={{ color: '#0f172a' }}>
+          {renderEmojiInText(match[0].slice(2, -2), `b${key}`)}
+        </strong>
+      );
     } else {
-      parts.push(<a key={key++} href={match[3]} style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>{match[2]}</a>);
+      parts.push(
+        <a key={`a${key++}`} href={match[3]} style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
+          {renderEmojiInText(match[2], `a${key}`)}
+        </a>
+      );
     }
     last = match.index + match[0].length;
   }
-  if (last < text.length) parts.push(text.slice(last));
+  if (last < text.length) parts.push(...renderEmojiInText(text.slice(last), `tend`));
   return parts;
 }
 
@@ -383,7 +469,7 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
           .trim();
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 20px', background: '#eff6ff', borderLeft: '4px solid #2563eb', borderRadius: '0 12px 12px 0', marginBottom: 24, marginTop: 8 }}>
-            <p style={{ margin: 0, fontSize: 15, color: '#1e40af', lineHeight: 1.7, fontWeight: 500 }}>{text}</p>
+            <p style={{ margin: 0, fontSize: 15, color: '#1e40af', lineHeight: 1.7, fontWeight: 500 }}>{renderInline(text)}</p>
           </div>
         );
       }
@@ -574,18 +660,18 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
         // Parse any remaining markdown links in the text
         const parseLinksInText = (content: string | React.ReactNode[]): React.ReactNode => {
           if (Array.isArray(content)) {
-            return content.map((part, idx) => 
+            return content.map((part, idx) =>
               typeof part === 'string' ? parseLinksInText(part) : part
             );
           }
           if (typeof content !== 'string') return content;
-          
+
           const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
           const parts: React.ReactNode[] = [];
           let linkLastIndex = 0;
           let linkMatch;
           let linkKey = 0;
-          
+
           while ((linkMatch = linkRegex.exec(content)) !== null) {
             if (linkMatch.index > linkLastIndex) {
               parts.push(content.slice(linkLastIndex, linkMatch.index));
@@ -602,10 +688,25 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
           }
           return parts.length > 0 ? parts : content;
         };
-        
+
+        // Walk the resolved nodes and run any leaf strings through the
+        // emoji → SVG replacement so frozen-content emoji in plain
+        // paragraphs (e.g. "🔐 Protect PDF" inside running prose) become
+        // lucide icons.
+        const replaceLeafEmoji = (node: React.ReactNode): React.ReactNode => {
+          if (Array.isArray(node)) {
+            return node.flatMap((n, idx) => {
+              const r = replaceLeafEmoji(n);
+              return Array.isArray(r) ? r : [r];
+            });
+          }
+          if (typeof node === 'string') return renderEmojiInText(node, `pp`);
+          return node;
+        };
+
         return (
           <p key={i} style={{ marginBottom: 16, color: '#475569', lineHeight: 1.8, fontSize: 16 }}>
-            {boldParts.length > 0 ? parseLinksInText(boldParts) : parseLinksInText(trimmed)}
+            {replaceLeafEmoji(boldParts.length > 0 ? parseLinksInText(boldParts) : parseLinksInText(trimmed))}
           </p>
         );
       }
