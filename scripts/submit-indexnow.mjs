@@ -70,6 +70,7 @@ const BLOG_SLUGS = [
   'sent-confidential-contract-unprotected',
   'password-protect-pdf-without-adobe',
   'protected-pdf-wont-open-some-devices',
+  'pdf-signing-no-email-required',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
