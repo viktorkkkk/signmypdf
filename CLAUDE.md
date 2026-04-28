@@ -506,11 +506,39 @@ Comparison table is OPTIONAL — include only for comparison-type articles when 
 
 #### Format change history
 
-- **2026-04-28** — Replaced old format (1500+ words, `[QuickSummary]`/`[CALLOUT]` blocks, comparison table required, 3 blockquote user reviews) with the SEO-landing format above. Reason: old format produced AI-spam patterns (invented stats, fake testimonials, walls of text) that were hurting readability and risked Google Helpful Content penalties. The first article published under the new prompt is `protected-pdf-wont-open-some-devices` (2026-04-28). Backup of the original trigger prompt: `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`. The articles published before this date (date ≤ 2026-04-27) remain in the old format and are FROZEN under Hard Rule 1.
+- **2026-04-28 (morning)** — Replaced old format (1500+ words, `[QuickSummary]`/`[CALLOUT]` blocks, comparison table required, 3 blockquote user reviews) with the SEO-landing format above. Reason: old format produced AI-spam patterns (invented stats, fake testimonials, walls of text) that were hurting readability and risked Google Helpful Content penalties. The first article published under the new prompt is `protected-pdf-wont-open-some-devices` (2026-04-28). Backup of the original trigger prompt: `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`. The articles published before this date (date ≤ 2026-04-27) remain in the old format and are FROZEN under Hard Rule 1.
+- **2026-04-28 (evening, v3)** — Refined the SEO-landing prompt with: 55-character title cap (Google SERP truncates longer); main-keyword 2-3× in first 100 words; 2-3 in-body internal links separate from "Related tools"; 1-2 `[IMAGE: ...]` placeholders per article; schema-markup rule (render-layer concern, NOT in `content`); hardened POSITIONING (USP) section forbidding hard-sell; competitor-pricing verification rule (web-check before citing dollar figures); article types narrowed to (a) use-case, (b) comparison, (c) troubleshooting (explainer/listicle no longer separate types — explainers must be reframed). Backup: `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28-v2.md`. First article under v3: `pdf-signing-no-email-required` (2026-04-28, S1 comparison).
+
+### Audience-driven topic selection (added 2026-04-28)
+
+Articles must serve at least one of three audience segments. Each new article should be classifiable by its dominant segment, and the topic mix per week should approximate the target distribution.
+
+**Segment 1 — Casual one-time users (target 60% of articles, 60-70% of expected traffic)**
+- One-time PDF tasks (sign a lease, fill a form, protect tax docs).
+- No technical knowledge assumed.
+- Topic style: "How to sign a PDF without registering", "Fill out a PDF form on phone", "Sign PDF without email".
+- Conversion: AdSense (when implemented).
+- Examples already in queue: `why-pdf-not-downloading-after-sign`, `sign-school-permission-slip-online`, `pdf-signing-no-email-required`, `fix-typo-on-signed-pdf`, `fill-pdf-on-iphone-no-app`.
+
+**Segment 2 — Freelancers / remote workers (target 30%, 20-25% of traffic)**
+- Recurring PDF tasks for clients.
+- Some technical knowledge.
+- Topic style: "Sending signed contracts to clients", "PDF tools for freelance designers", "Free DocuSign alternative for solo consultants".
+- Conversion: occasional Premium subscriptions.
+- Examples already in queue: `freelancers-protect-client-contracts`, `consultants-proposals-digital-signature`, `photographers-digital-signatures`, `signmypdf-vs-docusign-freelancers`.
+
+**Segment 3 — Small business / SMB (target 10%, 5-10% of traffic)**
+- Daily PDF workflow needs across a team.
+- Higher technical knowledge.
+- Topic style: "Bulk signing for HR onboarding", "Protected PDF workflows for legal teams", "Accountant-grade PDF security".
+- Conversion: main Premium subscriber base.
+- Examples already in queue: `accountants-tax-documents-signature`, `law-firms-free-pdf-tools`, `medical-practices-hipaa-pdf-sharing`, `financial-advisors-protect-client-statements`, `hipaa-electronic-signatures`.
+
+**Topic-mix targeting (weekly, sliding 7-day window)**: 60% Segment 1, 30% Segment 2, 10% Segment 3. If the trailing week skews more than ±10% off these ratios, add Segment-1-heavy slugs to the next selection cycle to rebalance. The daily trigger does NOT enforce this automatically; it picks first-unused-from-queue. The queues themselves were rebalanced 2026-04-28 to add Segment-1 slugs (5 broad-intent topics added to SIGN/FILL queues) so the natural picking order trends toward the target ratio. Periodic re-checks are needed as new slugs get added.
 
 ### Daily trigger (RemoteTrigger ID `trig_01Mw8wt1nCK3jpDA7ymfp4g2`)
 
-Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026) **plus** the SEO-landing format rules from the "Format" section. The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync. The previous version of the trigger prompt (pre-2026-04-28) is preserved at `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`.
+Runs `0 2 * * *` UTC daily. Encoded with all 8 hard rules above **plus** the 3-tool rotation schedule (anchor = Apr 24 2026) **plus** the SEO-landing format rules from the "Format" section **plus** the v3 SEO refinements (title cap, keyword density, in-body links, image placeholders, schema TODO, USP positioning, competitor-pricing verification). The trigger prompt lives in the RemoteTrigger config, NOT in-repo — if you change the rules here, also update the trigger via `RemoteTrigger action=update`. Keep both in sync. Previous prompt versions are preserved at `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md` (pre-SEO-landing) and `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28-v2.md` (SEO-landing pre-v3).
 
 **⚠️ Single source of truth.** This RemoteTrigger is the ONLY automated blog publisher. There used to be a second `Daily Blog Publisher` GitHub Actions workflow (`.github/workflows/daily-blog.yml`) running at 03:00 UTC under the old "next 2 from `blog-plan.json`" logic — it was unaware of cycle_day rotation and silently doubled publications. Removed Apr 25 2026 after it overflowed Apr 25 to 4 articles by adding a non-rotation Sign + Fill pair on top of the trigger's correct Protect publication. If you ever need a redundant backup publisher, port the cycle_day logic from this trigger into the GitHub Action — do NOT resurrect the old script as-is.
 
