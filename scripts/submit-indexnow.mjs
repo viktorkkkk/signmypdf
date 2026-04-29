@@ -71,6 +71,8 @@ const BLOG_SLUGS = [
   'password-protect-pdf-without-adobe',
   'protected-pdf-wont-open-some-devices',
   'pdf-signing-no-email-required',
+  'electronic-signature-business-contracts',
+  'freelancers-protect-client-contracts',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

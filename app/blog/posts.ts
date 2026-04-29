@@ -7502,6 +7502,145 @@ Trust shifts when there's no upload. SignMyPDF processes the PDF in your browser
     metaTitle: 'Sign PDF Without Email — Free Tool Comparison',
     metaDescription: 'Most "free" PDF signers ask for your email at step 3. Here is how to sign PDF without email — 6 tools compared, no wall.',
   },
+  {
+    slug: 'electronic-signature-business-contracts',
+    title: 'Sign Business Contracts Online — Free',
+    excerpt: 'Need to sign a business contract today? Skip DocuSign\'s credit card wall. Sign electronically in your browser — free, no account, no software.',
+    content: `A client emails you a contract. You need to sign it and return it today. You try the "free" DocuSign link — it asks for a credit card before you can download anything. Adobe Acrobat online sounds like the safer bet, but the Sign tool is locked behind a paid plan. You just need to sign a business contract, not buy an annual subscription.
+
+Electronic signature for business contracts doesn't have to mean enterprise software. If your contract doesn't require a third-party audit trail, you can sign it in your browser — free, no registration, no paywall at download.
+
+[CTA]Sign your business contract now|Browser-only, no account, no credit card. Download in seconds.|Sign PDF Now — Free
+
+## How to sign a business contract online
+
+1. Open [SignMyPDF](/sign) in any browser — no install, no account
+2. Drop your contract PDF onto the page
+3. Draw, type, or upload your signature
+4. Drag it into position on the signature line
+5. Click "Sign & Download" — ready to email back
+
+The whole flow takes under a minute. No inbox verification, no "almost done — just confirm your email" wall.
+
+[IMAGE: SignMyPDF drag-and-drop signature placement on a multi-page business contract PDF]
+
+## Why most tools block you right before the download
+
+You'd think signing a business contract would be the easy part. The tools make it surprisingly hard:
+
+- **DocuSign** — free trial requires a credit card; after 30 days or 3 envelopes, you hit the paywall.
+- **Adobe Acrobat online** — signing from a browser is restricted to the paid Acrobat plan (as of April 2026, around $12.99/mo for Standard).
+- **HelloSign (Dropbox Sign)** — 3 free signatures per month total; one busy week and you're already over the cap.
+- **Smallpdf** — 2 documents per day across all tools combined, plus account required above the daily cap.
+- **The common pattern**: every tool lets you upload your contract and start signing, then blocks the download at the last step. They catch you when you've already invested time.
+
+## Why SignMyPDF works without any of that
+
+- **Free, no registration, no paywall at download.** The first 2 PDFs per day sign and download cleanly — no account needed.
+- **Your contract stays on your device.** The PDF is processed in your browser using pdf-lib — it's never uploaded to a server, so there's nothing to log or leak.
+- **Works on every device.** Same flow on Windows, Mac, iPhone, Android, Chromebook. No app, no plugin required.
+- **Legally valid.** An electronic signature on a PDF satisfies the ESIGN Act (US) and eIDAS (EU). See [what the law actually requires](/blog/electronic-signature-laws-by-state) — it's simpler than most people assume.
+- **If you sign contracts daily,** the Pro plan is $7.50/mo billed annually — unlimited signing, no lock-in, cancel anytime.
+
+For sending contracts to clients for their signature (not signing them yourself), send-and-collect tools like DocuSign still apply. See the [DocuSign vs SignMyPDF freelancer comparison](/blog/signmypdf-vs-docusign-freelancers) if you need both.
+
+## FAQ
+
+**Is an electronically signed business contract legally binding?**
+Yes, under the US ESIGN Act. Electronic signatures carry the same legal weight as handwritten signatures for most commercial contracts — the signature must be intentional, attributable to the signer, and linked to the document. A PDF with a drawn or typed signature satisfies all three conditions for standard business use.
+
+**Can I sign an NDA or service agreement the same way?**
+Yes — NDAs, service agreements, and independent contractor agreements all work. The exceptions are documents specifically excluded by ESIGN: wills, adoption papers, and certain real-estate deeds. For NDAs specifically, see [how to sign an NDA online without printing](/blog/sign-nda-online-without-printing).
+
+**What if the other party needs a DocuSign-managed signature?**
+If the client sent you a DocuSign link, you need to sign inside their DocuSign envelope — you can't substitute a separate signed PDF into their workflow. SignMyPDF is for the case where you receive a PDF file and need to sign and return it yourself.
+
+[CTA]Sign the contract — done in under a minute|Free, in your browser, no account needed. Download and email it back.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign an NDA online — free, no printing](/blog/sign-nda-online-without-printing) — same workflow for NDAs
+- [Fill in a PDF contract field online](/fill) — add typed text before signing
+- [Free DocuSign alternative for freelancers](/blog/signmypdf-vs-docusign-freelancers) — when you need to send-and-collect
+`,
+    date: '2026-04-29',
+    author: 'SignMyPDF Team',
+    readTime: '4 min read',
+    tags: ['electronic signature business contracts', 'sign business contract online', 'free electronic signature', 'sign contracts without docusign', 'business pdf signing', 'digital signature free'],
+    metaTitle: 'Sign Business Contracts Online — Free',
+    metaDescription: 'Need to sign a business contract today? Skip DocuSign credit card walls. Sign electronically in your browser — free, no account, no software.',
+  },
+  {
+    slug: 'freelancers-protect-client-contracts',
+    title: 'Freelancers: Protect Client Contracts in PDF',
+    excerpt: 'Freelancers who email unprotected contracts risk exposing rates and terms to the wrong eyes. Here\'s how to password-protect client PDFs before sending — free, no account.',
+    content: `You finished a project proposal. The PDF has your rate card, contract terms, and client-specific scope. You attach it to an email and hit Send. Somewhere between your inbox and theirs, that file is readable by anyone with access to the thread — forwarded cc's, a shared email account, a breach.
+
+Most freelancers don't protect client contracts before sending. They discover the risk matters the moment it's too late. Here's how to protect client contracts as PDF files before they leave your device — free, no registration, no software to install.
+
+[CTA]Password-protect your contract now|Browser-only, AES-256 encrypted. No account, no upload to servers.|Protect PDF Now — Free
+
+## How to protect a client contract in PDF
+
+1. Open [SignMyPDF Protect](/protect) in any browser
+2. Upload your contract PDF
+3. Set a strong password — use the built-in generator if you want one
+4. Configure permissions: disable printing or copying if needed
+5. Download the protected PDF, then send the password in a separate text or second email
+
+That last step matters. Send the PDF in one email and the password in another channel. A compromised email thread doesn't expose both if they're separated.
+
+[IMAGE: SignMyPDF protect-PDF interface showing password field, strength meter, and permission toggles on a contract]
+
+## Why most freelancers skip this step
+
+The tools that handle PDF protection properly usually require either a subscription or an account:
+
+- **Adobe Acrobat** — full password protection is only in paid tiers; the free online version doesn't support adding passwords.
+- **Microsoft 365 online** — "Restrict Editing" exists before PDF export, but password-protecting the exported PDF requires a paid plan.
+- **Preview on Mac** — the built-in export path works, but the encryption settings are buried three menus deep and can't be fine-tuned.
+- **iLovePDF / Smallpdf** — free tiers work but cap you at a few documents per day and require account creation above the limit.
+
+Most freelancers skip protection entirely because the friction isn't worth it for a one-off. The problem is that client contracts are precisely the documents worth protecting — they contain your rates, your terms, and sometimes client-specific pricing you don't want circulating.
+
+If you've ever sent a contract without thinking twice, see [what can happen when a confidential contract goes out unprotected](/blog/sent-confidential-contract-unprotected).
+
+## Why SignMyPDF makes PDF protection practical
+
+- **Free, no registration, no paywall at download.** Password-protect up to 2 PDFs per day without an account. Files processed in browser, never uploaded to servers.
+- **AES-256 encryption.** The same standard banks use. A strong password on AES-256 is computationally uncrackable with current hardware.
+- **Permission controls.** Block printing, copying, or annotation independently — useful when you want the client to review but not redistribute your terms.
+- **Works everywhere.** No install required on Windows, Mac, iOS, or Android. One URL, any browser, any device.
+- **No watermark on protected PDFs.** The protection layer is clean — your contract looks professional, not marked up.
+
+For the full step-by-step on Mac and Windows, see [how to protect a PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe).
+
+## FAQ
+
+**Should I password-protect every contract I send?**
+Any contract containing your rates, scope, or personal terms is worth protecting when emailed as a file attachment. If you're sending through a managed platform (DocuSign, HelloSign), they handle encryption. For plain email attachments, you're responsible for protecting the file yourself.
+
+**What password should I use for a client contract?**
+Long, random, and unique — not recycled from anything else. The password generator in SignMyPDF creates one automatically. Never put the password in the same email as the PDF. Send it by text, a separate email thread, or a messaging app.
+
+**Won't a password confuse my client?**
+Not if you set expectations. A single line in the email — "I've password-protected this contract for security; password coming by text" — frames it as professional rather than inconvenient. Most clients appreciate the care. The added friction of one extra step is worth it compared to an unprotected file sitting in an old email thread.
+
+[CTA]Protect the next contract before it goes out|Free, in browser, no account. AES-256 encryption.|Protect PDF Now — Free
+
+## Related tools
+
+- [Sign your contract in the same session](/sign) — add an e-signature before or after protecting
+- [Fill a PDF form online — free](/fill) — add typed fields before signing or protecting
+- [How to protect a PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe) — full how-to
+`,
+    date: '2026-04-29',
+    author: 'SignMyPDF Team',
+    readTime: '4 min read',
+    tags: ['freelancers protect client contracts', 'password protect pdf freelance', 'protect pdf before sending', 'client contract security', 'pdf protection free', 'freelance pdf tools'],
+    metaTitle: 'Freelancers: Protect Client Contracts in PDF',
+    metaDescription: 'Freelancers — protect client contracts before emailing. Browser-only, AES-256, no account. Password-protect any PDF in 30 seconds, free.',
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
