@@ -296,13 +296,19 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ## Next session checklist
 
-1. **Verify the Apr 30 02:00 UTC trigger run under v3.1.** Expected: `cycle_day == 0` for Apr 30 → Sign + Fill pair. Apr 30 already holds `hellosign-alternatives-free` (FILL, future-dated) + `esign-act-explained` (SIGN, future-dated), so the trigger should detect both tools already present and write nothing for Apr 30. It should then forward-walk to **May 1** (cycle_day 1, Sign+Protect): SIGN slot already taken by `electronic-signature-business-contracts` (re-dated 2026-04-29), so the trigger writes a single PROTECT article from queue (next in interleave: `sent-confidential-contract-unprotected`). Confirm: anchor calc returns the correct cycle_day; the trigger writes only the missing tool slot; deploy step 10 actually creates a Vercel deployment (recovery for the runtime-timeout issue logged 2026-04-29).
-2. **Open Google Search Console.** Use the Domain property `sc-domain:signmypdf.io`. Watch the "Pages → Indexed" curve from Apr 28 onwards. The 3 Apr 28 SEO-landing articles + the 2 Apr 30 future-dated ones should start showing impressions in 7-14 days. If GSC still reports `Indexed: 0` past May 5, dig into "Page indexing" reasons (likely: alt-page with canonical, soft 404, duplicate without canonical).
-3. **Read GSC per-article traffic data** once 14 days of data exist. Decide on a per-article basis:
+1. **Morning Apr 30 — sanity-check the v3.1 trigger run.** Apr 30 (`cycle_day == 0`, Sign+Fill) already holds 2 future-dated articles (`hellosign-alternatives-free` + `esign-act-explained`), so the trigger should forward-walk to **May 1** (`cycle_day == 1`, Sign+Protect). SIGN slot is taken by `electronic-signature-business-contracts` (re-dated 2026-04-29), so the trigger should write **exactly 1 PROTECT article** from the interleave queue (next: `sent-confidential-contract-unprotected`).
+   - **If 2 articles land on May 1** → anchor is broken again. Verify with `date -u -d '2026-04-24 00:00 UTC' +%s` (must equal `1776988800`).
+   - **If 0 articles, or articles in posts.ts but not on prod** → deploy step 10 fell off again (same runtime-timeout failure mode as Apr 29). Recovery is manual `vercel deploy --prod`; pair this finding with item 2 below.
+2. **Decide & implement deploy-timeout fix.** Split the daily trigger into two stages so deploy is no longer gated by the same runtime budget as article-writing:
+   - **Stage A** (in the trigger): write articles → `npm run build` (build check only) → `git commit` → `git push`. Done. No `vercel deploy` here.
+   - **Stage B** (GitHub Actions, triggered `on: push` to `main` filtered to `app/blog/posts.ts` changes): run `vercel deploy --prod`, then submit IndexNow + Google Indexing API for any new slugs added in that push. No coupling to the trigger's runtime.
+   - Rationale: v3 articles are longer / more compliant than the old long-form (700-900w with keyword density, in-body links, image placeholders, USP positioning) and Stage A alone may already be near the trigger runtime ceiling. Bundling deploy on top will keep silently falling off as content quality goes up. The Apr 29 failure mode (commit+push succeeded, deploy never attempted in Vercel API) is the canonical signature of this class of bug.
+3. **Open Google Search Console.** Use the Domain property `sc-domain:signmypdf.io`. Watch the "Pages → Indexed" curve from Apr 28 onwards. The 3 Apr 28 SEO-landing articles + the 2 Apr 30 future-dated ones should start showing impressions in 7-14 days. If GSC still reports `Indexed: 0` past May 5, dig into "Page indexing" reasons (likely: alt-page with canonical, soft 404, duplicate without canonical).
+4. **Read GSC per-article traffic data** once 14 days of data exist. Decide on a per-article basis:
    - **Top performers** (clicks + impressions) in the OLD long format → cautiously optimize. Edit intro / FAQ at most. Never full-rewrite an indexed article in place.
    - **Zero-traffic articles** in the OLD long format → safe to rewrite into the new SEO-landing format. Use the future-date or new-slug escape hatch — never in-place.
    - **Mid performers** → leave alone unless a competitor moves on the keyword.
-4. **Decide convert-tools vs. content optimization.** If GSC traffic is ramping, double down on content (more articles per day, optimize top performers). If GSC is flat past 4 weeks, ship Compress PDF / Merge PDFs / PDF→Word as new revenue surfaces.
+5. **Decide convert-tools vs. content optimization.** If GSC traffic is ramping, double down on content (more articles per day, optimize top performers). If GSC is flat past 4 weeks, ship Compress PDF / Merge PDFs / PDF→Word as new revenue surfaces.
 
 ---
 
