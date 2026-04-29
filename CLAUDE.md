@@ -162,6 +162,12 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## Recently Shipped (Apr 29 2026)
+
+- **Trigger anchor bug fixed** — `EPOCH_ANCHOR` in the daily-blog trigger prompt was `1745452800` (= 2025-04-24), not the documented 2026-04-24. The off-by-365-days shifted every cycle_day by `+2 mod 3`. Apr 29 was the first day where the wrong cycle_day produced the wrong pair: trigger published `Sign + Protect` instead of `Fill + Protect`. Patched to `1776988800` and verified with `date -u -d '2026-04-24 00:00 UTC' +%s`. Also removed the now-shipped `freelancers-protect-client-contracts` PROTECT priority override. Live trigger is v3.1.
+- **Apr 29 rotation re-balanced** — moved `electronic-signature-business-contracts` (SIGN, accidentally published on Apr 29) forward to May 1 (next `cycle_day == 1` slot). Wrote and added `property-managers-tenant-signatures` (FILL) to fill the Apr 29 slot. Final Apr 29 pair: `freelancers-protect-client-contracts` + `property-managers-tenant-signatures` = correct Fill+Protect for `cycle_day == 2`. URLs unchanged → SEO-safe.
+- **Vercel auto-deploy by trigger known to fail** — investigated why no deployment was created in Vercel API after the Apr 29 02:21 UTC trigger commit. Most likely the trigger run hit its runtime limit before reaching Step 10 (`vercel deploy --prod`); the commit + push (Step 9) succeeded but the deploy step never executed. Recovery is currently a manual `vercel deploy --prod` after each trigger commit. See `## What NOT to touch` for the anchor verification command.
+
 ## Recently Shipped (Apr 23 2026)
 
 - **`/protect` tool live** — password + permissions PDF protection, fully client-side, deployed to production.
@@ -224,11 +230,13 @@ Applied via `.tool-accent-sign | .tool-accent-fill | .tool-accent-protect` modif
 
 ## Blog Status (2026-04-29)
 
-**Daily trigger:** `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (cron `0 2 * * *` UTC). **v3 prompt is live.**
+**Daily trigger:** `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (cron `0 2 * * *` UTC). **v3.1 prompt is live** (anchor bug-fix patch landed 2026-04-29).
 
-**Backups (rollback targets if v3 misbehaves):**
-- v1 (pre-SEO-landing, original 1500w long-form prompt): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`
+**Backups (rollback targets, newest first):**
+- v3.1 (anchor fix, override removed): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-29-v3.1.md`
+- v3 (SEO-landing + 55-char title cap, but with broken anchor): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28-v2.md`
 - v2 (SEO-landing, pre-v3 refinements): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28-v2.md`
+- v1 (pre-SEO-landing, original 1500w long-form prompt): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-28.md`
 
 **Article format (v3 SEO-landing):**
 - Length: **700-900w ideal**, 600-1200w hard bounds
@@ -245,11 +253,14 @@ Applied via `.tool-accent-sign | .tool-accent-fill | .tool-accent-protect` modif
 - **Segment 2** (freelancers / remote workers): **30%**, 20-25% of traffic — recurring client work
 - **Segment 3** (SMB / regulated professionals): **10%**, 5-10% of traffic — daily team workflows
 
-**Articles published in new SEO-landing format (4 so far, all S1):**
-- `protected-pdf-wont-open-some-devices` (2026-04-28, troubleshooting)
-- `pdf-signing-no-email-required` (2026-04-28, comparison)
-- `hellosign-alternatives-free` (2026-04-30, comparison, future-dated)
-- `esign-act-explained` (2026-04-30, explainer reframed as use-case, future-dated)
+**Articles published in new SEO-landing format (7 so far):**
+- `protected-pdf-wont-open-some-devices` (2026-04-28, S1 troubleshooting)
+- `pdf-signing-no-email-required` (2026-04-28, S1 comparison)
+- `freelancers-protect-client-contracts` (2026-04-29, S2 use-case — published by Apr 29 trigger)
+- `property-managers-tenant-signatures` (2026-04-29, S3 use-case — added manually 2026-04-29 to fix anchor-bug rotation gap)
+- `electronic-signature-business-contracts` (2026-05-01, S2 use-case — re-dated from Apr 29 to May 1 to fix anchor-bug rotation; future-dated)
+- `hellosign-alternatives-free` (2026-04-30, S1 comparison, future-dated)
+- `esign-act-explained` (2026-04-30, S1 explainer reframed as use-case, future-dated)
 
 The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and are FROZEN under Hard Rule 1.
 
@@ -268,7 +279,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **`hub-*` CSS namespace.** Homepage-only. No other route uses these classes; do not introduce them on `/sign`, `/fill`, `/protect`, `/blog`, `/login`, `/dashboard`. Conversely, the tool screens use their own classes (`dz-*`, `card`, `step-*`, etc.) — do not migrate them to `hub-*` either.
 - **`TOOL_META.sign.href` in `BlogPostContent.tsx`** is already `/sign`. All blog SIGN-tool CTAs flow through this single source of truth. Do not hardcode `/` (the hub) anywhere in blog routing.
 - **Trigger prompt SIGN-CTA target.** Hard Rule 2 of the v3 trigger prompt says `/sign`, not `/`. The trigger prompt and `TOOL_META.sign.href` must match — if you change one, change both.
-- **Daily-trigger override** for `freelancers-protect-client-contracts` is still in the v3 prompt as the next forced PROTECT publication. Once it ships, remove the override paragraph from the trigger and let the normal interleave logic resume.
+- **Trigger cycle_day anchor.** `EPOCH_ANCHOR=1776988800` in the trigger prompt corresponds to **2026-04-24 00:00 UTC**. Formula: `cycle_day = ((DATE_EPOCH − EPOCH_ANCHOR) / 86400) mod 3`. Pair mapping: `0 → Sign+Fill`, `1 → Sign+Protect`, `2 → Fill+Protect`. **To verify the anchor is correct, run:** `date -u -d '2026-04-24 00:00 UTC' +%s` — it should output `1776988800`. The anchor was wrong (`1745452800` = 2025-04-24, off by 365 days = +2 cycle_day shift) up to 2026-04-29; bug found after the Apr 29 trigger run published Sign+Protect instead of Fill+Protect. Never trust just the comment — re-verify the integer with the date command if you suspect a recurrence of the same class of bug.
 
 ---
 
@@ -285,7 +296,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ## Next session checklist
 
-1. **Verify the Apr 29 02:06 UTC trigger run** under the v3 prompt. Expected: `cycle_day == 2` for Apr 29 → Fill + Protect pair. PROTECT override forces `freelancers-protect-client-contracts`. FILL slot picks first unused from queue (`property-managers-tenant-signatures`). Confirm both shipped, sat under 1200 words, used `/fill` and `/protect` CTAs respectively, and embedded the new compliance signals (≤55-char title, keyword 2-3× in first 100w, in-body internal links, `[IMAGE:]` placeholders, USP positioning).
+1. **Verify the Apr 30 02:00 UTC trigger run under v3.1.** Expected: `cycle_day == 0` for Apr 30 → Sign + Fill pair. Apr 30 already holds `hellosign-alternatives-free` (FILL, future-dated) + `esign-act-explained` (SIGN, future-dated), so the trigger should detect both tools already present and write nothing for Apr 30. It should then forward-walk to **May 1** (cycle_day 1, Sign+Protect): SIGN slot already taken by `electronic-signature-business-contracts` (re-dated 2026-04-29), so the trigger writes a single PROTECT article from queue (next in interleave: `sent-confidential-contract-unprotected`). Confirm: anchor calc returns the correct cycle_day; the trigger writes only the missing tool slot; deploy step 10 actually creates a Vercel deployment (recovery for the runtime-timeout issue logged 2026-04-29).
 2. **Open Google Search Console.** Use the Domain property `sc-domain:signmypdf.io`. Watch the "Pages → Indexed" curve from Apr 28 onwards. The 3 Apr 28 SEO-landing articles + the 2 Apr 30 future-dated ones should start showing impressions in 7-14 days. If GSC still reports `Indexed: 0` past May 5, dig into "Page indexing" reasons (likely: alt-page with canonical, soft 404, duplicate without canonical).
 3. **Read GSC per-article traffic data** once 14 days of data exist. Decide on a per-article basis:
    - **Top performers** (clicks + impressions) in the OLD long format → cautiously optimize. Edit intro / FAQ at most. Never full-rewrite an indexed article in place.

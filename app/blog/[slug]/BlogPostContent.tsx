@@ -64,6 +64,8 @@ const FILL_SLUGS = new Set([
   'zoho-sign-vs-signmypdf',
   'signnow-free-alternative',
   'adobe-fill-sign-vs-signmypdf',
+  // Persona / use-case slugs whose name doesn't match the fill-* heuristic
+  'property-managers-tenant-signatures',
 ]);
 
 // Slugs for articles about password protection / encryption.
