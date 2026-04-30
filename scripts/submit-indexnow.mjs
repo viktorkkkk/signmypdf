@@ -74,6 +74,7 @@ const BLOG_SLUGS = [
   'electronic-signature-business-contracts',
   'freelancers-protect-client-contracts',
   'property-managers-tenant-signatures',
+  'adobe-vs-free-pdf-protection',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
