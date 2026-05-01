@@ -506,7 +506,7 @@ export default function MergePage() {
         </div>
       )}
 
-      <div className="container" style={{ paddingTop: 48, paddingBottom: step === 'upload' ? 0 : 64 }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: step === 'upload' ? 0 : step === 'done' ? 16 : 64 }}>
 
         {/* ── UPLOAD ── */}
         {step === 'upload' && (

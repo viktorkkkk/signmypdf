@@ -217,7 +217,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
   };
 
   return (
-    <div style={{ marginTop: 32, marginBottom: 24 }}>
+    <div className="file-history-wrap">
 
       {/* Quota offer banner */}
       {showQuotaOffer && !quotaDismissed && (

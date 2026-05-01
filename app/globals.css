@@ -921,6 +921,7 @@ body > div > footer { margin-top: auto; }
 .done-title { font-size: 34px; font-weight: 800; color: #0f172a; margin-bottom: 8px; letter-spacing: -0.5px; }
 .done-sub { font-size: 16px; color: #64748b; margin-bottom: 36px; }
 .done-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.file-history-wrap { margin-top: 32px; margin-bottom: 24px; }
 
 .upsell {
   background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
@@ -1199,6 +1200,12 @@ body > div > footer { margin-top: auto; }
 
   /* Buttons */
   .done-wrap { max-width: 100%; padding: 16px 0; }
+  /* Tighten the gap between the done CTAs and the FileHistory below them.
+     Desktop keeps 48px + 32px so the document list reads as a separate
+     section; on mobile that turned into a near-blank screen between the
+     action stack and Recent documents. */
+  .done-btns { margin-bottom: 8px; }
+  .file-history-wrap { margin-top: 12px; }
   .btn-primary, .btn-ghost { width: 100%; text-align: center; justify-content: center; }
 
   /* Pricing */
