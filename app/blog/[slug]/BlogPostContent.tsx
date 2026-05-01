@@ -3,13 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  Clock,
-  DollarSign,
-  Smartphone,
   PenLine,
   Lock,
   FileText,
-  Check,
   MapPin,
   Download,
   Link2,
@@ -141,8 +137,6 @@ const TOOL_META: Record<ArticleTool, {
   href: string;
   ctaLong: string;
   ctaShort: string;
-  finalTitle: string;
-  finalSub: string;
   heroSub: string;
   defaultCtaTitle: string;
   defaultCtaBtn: string;
@@ -151,8 +145,6 @@ const TOOL_META: Record<ArticleTool, {
     href: '/sign',
     ctaLong: 'Sign PDF Now — Free',
     ctaShort: 'Sign PDF Now – Free',
-    finalTitle: 'Ready to sign your PDF?',
-    finalSub: 'Join thousands of users who trust SignMyPDF for fast, free document signing.',
     heroSub: 'Sign your PDF in seconds — no registration, no downloads',
     defaultCtaTitle: 'Ready to Sign Your PDF?',
     defaultCtaBtn: 'Sign PDF Free Now',
@@ -161,8 +153,6 @@ const TOOL_META: Record<ArticleTool, {
     href: '/fill',
     ctaLong: 'Fill PDF Now — Free',
     ctaShort: 'Fill PDF Now – Free',
-    finalTitle: 'Ready to fill your PDF?',
-    finalSub: 'Join thousands of users who trust SignMyPDF for fast, free PDF form filling.',
     heroSub: 'Fill your PDF in seconds — no registration, no downloads',
     defaultCtaTitle: 'Ready to Fill Your PDF?',
     defaultCtaBtn: 'Fill PDF Free Now',
@@ -171,8 +161,6 @@ const TOOL_META: Record<ArticleTool, {
     href: '/protect',
     ctaLong: 'Protect PDF Now — Free',
     ctaShort: 'Protect PDF Now – Free',
-    finalTitle: 'Ready to protect your PDF?',
-    finalSub: 'Add a password to any PDF in under a minute — free, private, no registration required.',
     heroSub: 'Password-protect your PDF in seconds — no registration, no uploads',
     defaultCtaTitle: 'Ready to Protect Your PDF?',
     defaultCtaBtn: 'Protect PDF Free Now',
@@ -237,115 +225,6 @@ function StickyCTA({ tool }: { tool: ArticleTool }) {
       </Link>
     </div>
   );
-}
-
-// FAQ Accordion Component — answer always in DOM for SEO, CSS controls visibility
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div style={{ borderBottom: '1px solid #e2e8f0' }}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        style={{
-          width: '100%',
-          padding: '20px 0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-        }}
-      >
-        <span style={{ fontSize: 16, fontWeight: 600, color: '#0f172a' }}>
-          {question}
-        </span>
-        <svg
-          width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"
-          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }}
-        >
-          <path d="M6 9l6 6 6-6"/>
-        </svg>
-      </button>
-      {/* Always rendered in DOM so Googlebot can index the answer text */}
-      <div style={{
-        overflow: 'hidden',
-        maxHeight: isOpen ? '400px' : '0',
-        transition: 'max-height 0.3s ease',
-        paddingBottom: isOpen ? 20 : 0,
-        fontSize: 15, color: '#475569', lineHeight: 1.7,
-      }}>
-        {answer}
-      </div>
-    </div>
-  );
-}
-
-// Quick Summary component shown at top of every article
-// Pick a lucide icon component based on the QuickSummary label text.
-function iconForLabel(label: string): React.ReactElement {
-  const l = label.toLowerCase();
-  const props = { size: 22, color: '#2563eb', strokeWidth: 2 } as const;
-  if (l.includes('time') || l.includes('duration')) return <Clock {...props} />;
-  if (l.includes('cost') || l.includes('price')) return <DollarSign {...props} />;
-  if (l.includes('work') || l.includes('device') || l.includes('platform')) return <Smartphone {...props} />;
-  if (l.includes('registr') || l.includes('account') || l.includes('sign up')) return <PenLine {...props} />;
-  if (l.includes('secur') || l.includes('priva')) return <Lock {...props} />;
-  if (l.includes('file') || l.includes('size') || l.includes('limit')) return <FileText {...props} />;
-  return <Check {...props} />;
-}
-
-interface QuickSummaryItem { icon: React.ReactElement; label: string; value: string }
-
-// Shared card — used both by the hardcoded default and the parser output.
-function QuickSummaryCard({ items }: { items: QuickSummaryItem[] }) {
-  return (
-    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: '20px 24px', marginBottom: 40 }}>
-      <div style={{ fontWeight: 700, fontSize: 14, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Quick Summary</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
-        {items.map((item, idx) => (
-          <div key={`${item.label}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}>{item.icon}</span>
-            <div>
-              <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.label}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#1e293b' }}>{item.value}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Parse a [QuickSummary] line payload (pipe-separated `Label: Value` pairs).
-// Returns an empty array if the payload is malformed.
-function parseQuickSummary(payload: string): QuickSummaryItem[] {
-  return payload
-    .split('|')
-    .map(part => {
-      const colonIdx = part.indexOf(':');
-      if (colonIdx === -1) return null;
-      const label = part.slice(0, colonIdx).trim();
-      const value = part.slice(colonIdx + 1).trim();
-      if (!label || !value) return null;
-      return { label, value, icon: iconForLabel(label) };
-    })
-    .filter((x): x is QuickSummaryItem => x !== null);
-}
-
-// Fallback block shown when article content doesn't include its own [QuickSummary].
-function DefaultQuickSummary() {
-  const props = { size: 22, color: '#2563eb', strokeWidth: 2 } as const;
-  const items: QuickSummaryItem[] = [
-    { icon: <Clock {...props} />, label: 'Time', value: 'Under 60 seconds' },
-    { icon: <DollarSign {...props} />, label: 'Cost', value: 'Free (2 PDFs/day)' },
-    { icon: <Smartphone {...props} />, label: 'Works on', value: 'All devices' },
-    { icon: <PenLine {...props} />, label: 'Registration', value: 'Not required' },
-  ];
-  return <QuickSummaryCard items={items} />;
 }
 
 // ─── Render-layer emoji → lucide SVG replacement ────────────────────────────
@@ -447,12 +326,12 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
     .map((block, i) => {
       const trimmed = block.trim();
 
-      // QuickSummary block [QuickSummary]Label: Value|Label: Value|...
+      // Skip [QuickSummary] blocks entirely — the templated 4-field plate
+      // (Time / Cost / Works on / Registration) is removed across the blog.
+      // posts.ts is not edited (Hard Rule 1); we just drop the marker at
+      // render time so the 51 frozen articles also lose the block visually.
       if (trimmed.startsWith('[QuickSummary]')) {
-        const payload = trimmed.slice('[QuickSummary]'.length).trim();
-        const items = parseQuickSummary(payload);
-        if (items.length === 0) return null; // malformed → drop, don't leak raw text
-        return <div key={i}><QuickSummaryCard items={items} /></div>;
+        return null;
       }
 
       // Drop orphan closing tags (e.g. "[/CALLOUT]" alone in its own block).
@@ -717,99 +596,6 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
     });
 }
 
-// SEO Variations Block
-function SEOVariations() {
-  return (
-    <div style={{ marginTop: 48 }}>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 24 }}>
-        More Ways to Sign PDFs
-      </h2>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        <div>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-            <Link href="/blog/sign-pdf-on-iphone-free" style={{ color: '#2563eb', textDecoration: 'none' }}>
-              Sign PDF on iPhone
-            </Link>
-          </h3>
-          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
-            Sign PDF documents directly on your iPhone without installing apps. Works in Safari and Chrome.{' '}
-            <Link href="/blog/sign-pdf-on-iphone-free" style={{ color: '#2563eb' }}>Learn more →</Link>
-          </p>
-        </div>
-        
-        <div>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-            <Link href="/blog/sign-pdf-without-adobe" style={{ color: '#2563eb', textDecoration: 'none' }}>
-              Sign PDF Without Adobe
-            </Link>
-          </h3>
-          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
-            Skip the expensive Adobe Acrobat subscription. Our free online tool provides the same capabilities.{' '}
-            <Link href="/blog/sign-pdf-without-adobe" style={{ color: '#2563eb' }}>Learn more →</Link>
-          </p>
-        </div>
-        
-        <div>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b', marginBottom: 8 }}>
-            <Link href="/blog/sign-pdf-free-without-registration" style={{ color: '#2563eb', textDecoration: 'none' }}>
-              Sign PDF Without Registration
-            </Link>
-          </h3>
-          <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
-            No email required. No account creation. Just upload your PDF and sign instantly.{' '}
-            <Link href="/blog/sign-pdf-free-without-registration" style={{ color: '#2563eb' }}>Learn more →</Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// FAQ Section
-function FAQSection() {
-  const faqs = [
-    { question: 'Is it free?', answer: 'Yes! You can sign up to 2 PDF documents per day completely free. No credit card required, no hidden fees. Need more? Premium plans start at $9/month for unlimited signing.' },
-    { question: 'Is it legal to sign PDF online?', answer: 'Absolutely. Electronic signatures are legally binding in the US (ESIGN Act, UETA), EU (eIDAS), UK, Canada, Australia, and 100+ countries worldwide. Our signed documents meet all legal requirements.' },
-    { question: 'Do I need to install anything?', answer: 'No installation required. Our PDF signer works entirely in your web browser — Chrome, Safari, Firefox, Edge. Simply open the website, upload your PDF, and start signing instantly.' },
-    { question: 'Is my document secure?', answer: 'Yes, your documents are 100% secure. All PDF processing happens locally in your browser. Your files are never uploaded to our servers, and we collect zero personal data.' },
-  ];
-
-  return (
-    <div style={{ marginTop: 48 }}>
-      <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 24 }}>
-        FAQ
-      </h2>
-      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e2e8f0', padding: '0 24px' }}>
-        {faqs.map((faq, index) => <FAQItem key={index} question={faq.question} answer={faq.answer} />)}
-      </div>
-    </div>
-  );
-}
-
-// Final CTA Block
-function FinalCTA({ tool }: { tool: ArticleTool }) {
-  const meta = TOOL_META[tool];
-  return (
-    <div style={{ marginTop: 48, padding: 40, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, textAlign: 'center', boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)' }}>
-      <h2 style={{ fontSize: 28, fontWeight: 800, color: 'white', marginBottom: 12, letterSpacing: -0.5 }}>
-        {meta.finalTitle}
-      </h2>
-      <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.9)', marginBottom: 28 }}>
-        {meta.finalSub}
-      </p>
-      <Link href={meta.href} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '18px 36px', background: 'white', color: '#2563eb', fontWeight: 800, fontSize: 16, borderRadius: 16, textDecoration: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        {meta.ctaShort}
-      </Link>
-    </div>
-  );
-}
-
 // Related Articles
 function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPosts: BlogPost[] }) {
   const relatedPosts = allPosts.filter(p => p.slug !== currentSlug).slice(0, 6);
@@ -843,10 +629,6 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {
   const tool = getArticleTool(post.slug);
   const meta = TOOL_META[tool];
-  // If the article content has its own [QuickSummary] marker, let the
-  // inline parser render it where the author placed it. Otherwise,
-  // fall back to the generic default above the body.
-  const hasInlineQuickSummary = /\[QuickSummary\]/.test(post.content);
 
   return (
     <>
@@ -880,18 +662,9 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
           </div>
 
           {/* H1 Title - SEO Optimized */}
-          <h1 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 24, lineHeight: 1.2, letterSpacing: -0.5 }}>
+          <h1 style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', marginBottom: 40, lineHeight: 1.2, letterSpacing: -0.5 }}>
             {post.title}
           </h1>
-
-          {/* Tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
-            {post.tags.map(tag => (
-              <span key={tag} style={{ padding: '6px 12px', background: '#f8fafc', color: '#64748b', borderRadius: 20, fontSize: 13 }}>
-                #{tag}
-              </span>
-            ))}
-          </div>
 
           {/* HERO: PDF Uploader */}
           <div style={{ marginBottom: 48, padding: 40, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 24, boxShadow: '0 20px 60px rgba(37, 99, 235, 0.3)' }}>
@@ -901,22 +674,10 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
             </p>
           </div>
 
-          {/* Quick Summary — only if article doesn't render its own [QuickSummary] */}
-          {!hasInlineQuickSummary && <DefaultQuickSummary />}
-
           {/* Content */}
           <div style={{ fontSize: 16 }}>
             {formatContent(post.content, tool)}
           </div>
-
-          {/* SEO Variations */}
-          <SEOVariations />
-
-          {/* FAQ Accordion */}
-          <FAQSection />
-
-          {/* Final CTA */}
-          <FinalCTA tool={tool} />
 
           {/* Related Articles */}
           <RelatedArticles currentSlug={post.slug} allPosts={allPosts} />
