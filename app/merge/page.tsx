@@ -32,7 +32,6 @@ import {
 } from '../constants';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { storePendingFile } from '../utils/pendingUpload';
-import { blobToDataUrl } from '../utils/watermark';
 import { mergePdf, MergePdfError } from '../utils/mergePdf';
 import { useRouter } from 'next/navigation';
 
@@ -362,9 +361,11 @@ export default function MergePage() {
       setMergedFileName(filename);
 
       // Save to history (Pro keeps 1 year, free keeps 24h — same as other tools).
+      // Blob → IndexedDB so re-download survives a page reload, and the file
+      // doesn't trip the localStorage quota that used to flag fresh files
+      // as "storage full" on first save.
       try {
-        const dataUrl = await blobToDataUrl(blob);
-        saveToHistory(filename, blob.size, dataUrl, 'merge', false);
+        await saveToHistory(filename, blob.size, blob, 'merge', false);
         window.dispatchEvent(new Event('signmypdf:saved'));
       } catch {
         // history save is best-effort

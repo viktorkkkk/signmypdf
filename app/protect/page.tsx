@@ -270,7 +270,6 @@ export default function ProtectPage() {
     setProtectedBatch([]);
     try {
       const batch: Array<{ name: string; url: string; blob: Blob }> = [];
-      const { blobToDataUrl } = await import('../utils/watermark');
 
       for (let i = 0; i < queue.length; i++) {
         const f = queue[i];
@@ -296,8 +295,7 @@ export default function ProtectPage() {
           if (i < queue.length - 1) await new Promise(r => setTimeout(r, 250));
         }
 
-        const dataUrl = await blobToDataUrl(blob);
-        saveToHistory(f.name, blob.size, dataUrl, 'protect', false);
+        await saveToHistory(f.name, blob.size, blob, 'protect', false);
       }
 
       // Keep the first for the single-file done screen, and the full batch for the multi-file list.

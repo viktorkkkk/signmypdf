@@ -14,9 +14,9 @@
  * almost always a bug or an abandoned flow, not a legitimate retry.
  */
 
-const DB_NAME = 'signmypdf';
-const DB_VERSION = 1;
-const STORE = 'pendingUpload';
+import { DB_STORES, txStore } from './db';
+
+const STORE = DB_STORES.pending;
 const KEY = 'current';
 const TTL_MS = 5 * 60 * 1000;
 
@@ -27,29 +27,8 @@ interface Pending {
   createdAt: number;
 }
 
-function openDB(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function tx<T>(mode: IDBTransactionMode, fn: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
-  const db = await openDB();
-  return new Promise<T>((resolve, reject) => {
-    const t = db.transaction(STORE, mode);
-    const store = t.objectStore(STORE);
-    const req = fn(store);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-    t.oncomplete = () => db.close();
-    t.onerror = () => db.close();
-  });
+function tx<T>(mode: IDBTransactionMode, fn: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
+  return txStore<T>(STORE, mode, fn);
 }
 
 /** Store a File for pickup by a tool page. Overwrites any existing entry. */

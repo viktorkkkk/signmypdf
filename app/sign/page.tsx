@@ -306,10 +306,9 @@ export default function Home() {
         if (willHaveWatermark) setTimeout(() => showToast(), 400);
       }
 
-      // Save CLEAN version to history
-      const { blobToDataUrl } = await import('../utils/watermark');
-      const cleanDataUrl = await blobToDataUrl(cleanBlob);
-      saveToHistory(pdfFile!.name, cleanBlob.size, cleanDataUrl, 'sign', willHaveWatermark);
+      // Save CLEAN version to history. Stores the Blob in IndexedDB
+      // so re-download survives page close/reopen up to the 24h TTL.
+      await saveToHistory(pdfFile!.name, cleanBlob.size, cleanBlob, 'sign', willHaveWatermark);
       window.dispatchEvent(new Event('signmypdf:saved'));
 
       // Increment daily count

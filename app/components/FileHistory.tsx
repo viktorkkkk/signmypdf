@@ -1,13 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { addWatermarkToBlob, blobToDataUrl } from '../utils/watermark';
+import { addWatermarkToBlob } from '../utils/watermark';
+import {
+  saveHistoryBlob,
+  getHistoryBlob,
+  deleteHistoryBlob,
+  pruneHistoryBlobs,
+} from '../utils/historyBlobs';
 
 export interface HistoryItem {
   id: string;
   name: string;
   date: string;
   size: number;
-  dataUrl?: string;        // absent if quota exceeded
+  /** True if the blob is in IndexedDB (new path, since 2026-05-01). */
+  hasBlob?: boolean;
+  /** Legacy base64 data URL (pre-2026-05-01 entries). Reads still honored. */
+  dataUrl?: string;
   type: 'fill' | 'sign' | 'protect' | 'merge';
   hadWatermark?: boolean;  // whether watermark was on original download
 }
@@ -17,33 +26,64 @@ const MAX_ITEMS   = 20;
 const FREE_TTL    = 24  * 60 * 60 * 1000;   // 24 hours
 const PRO_TTL     = 365 * 24 * 60 * 60 * 1000; // 1 year
 
-export function saveToHistory(
+/**
+ * Persist a finished PDF to history.
+ *
+ * Stores the Blob in IndexedDB (no quota issues for typical PDFs) and
+ * the metadata-only HistoryItem in localStorage. The old base64-in-
+ * localStorage path was the cause of the "storage full" chip flashing
+ * on freshly-created files: a single 3-4 MB merge inflated to ~5 MB
+ * base64, exhausting the per-origin localStorage quota immediately.
+ *
+ * Returns nothing — failures fire the `signmypdf:quota_exceeded` event
+ * for the UI to surface a banner. The corresponding HistoryItem is
+ * still added (metadata-only) so the user sees the file existed even
+ * if the blob couldn't be stored.
+ */
+export async function saveToHistory(
   name: string,
   size: number,
-  dataUrl: string,
+  blob: Blob,
   type: 'fill' | 'sign' | 'protect' | 'merge' = 'fill',
   hadWatermark = false,
-) {
+): Promise<void> {
   try {
-    const raw  = localStorage.getItem(STORAGE_KEY);
-    const list: HistoryItem[] = raw ? JSON.parse(raw) : [];
+    const id = Math.random().toString(36).slice(2);
+    const cleanedName = name.replace(/^(signed-|filled-|protected-|merged-)+/g, '');
+
+    // Try to put the blob in IndexedDB first. If this fails (private mode,
+    // IDB quota), the item is still recorded but stays locked.
+    const hasBlob = await saveHistoryBlob(id, blob);
+
     const item: HistoryItem = {
-      id: Math.random().toString(36).slice(2),
-      name: name.replace(/^(signed-|filled-|protected-|merged-)+/g, ''),
+      id,
+      name: cleanedName,
       date: new Date().toISOString(),
       size,
-      dataUrl,
+      hasBlob,
       type,
       hadWatermark,
     };
+
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const list: HistoryItem[] = raw ? JSON.parse(raw) : [];
+    const updated = [item, ...list].slice(0, MAX_ITEMS);
+
+    // Anything that fell off the MAX_ITEMS tail can have its blob evicted.
+    const dropped = list.slice(MAX_ITEMS - 1);
+    for (const old of dropped) {
+      if (old.id !== id) deleteHistoryBlob(old.id).catch(() => {});
+    }
+
     try {
-      const updated = [item, ...list].slice(0, MAX_ITEMS);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    } catch (quotaErr) {
-      // Quota exceeded — save metadata only (no dataUrl)
-      const metaItem: HistoryItem = { ...item, dataUrl: undefined };
-      const updated = [metaItem, ...list].slice(0, MAX_ITEMS);
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch {}
+    } catch {
+      // Even metadata-only failed — extremely rare. Tell the UI to show
+      // the quota banner.
+      window.dispatchEvent(new Event('signmypdf:quota_exceeded'));
+    }
+
+    if (!hasBlob) {
       window.dispatchEvent(new Event('signmypdf:quota_exceeded'));
     }
   } catch {}
@@ -62,6 +102,8 @@ export function clearExpiredHistory() {
       item => Date.now() - new Date(item.date).getTime() < PRO_TTL,
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    // Prune any IDB blobs whose metadata is no longer in the list.
+    pruneHistoryBlobs(new Set(list.map(i => i.id))).catch(() => {});
   } catch {}
 }
 
@@ -125,37 +167,51 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
 
   if (list.length === 0 && !showQuotaOffer) return null;
 
+  // Locked = no data we can serve OR (free user AND TTL exceeded). The
+  // "no data" branch is what surfaces the storage-full chip in the UI;
+  // the TTL branch surfaces the Expired chip.
+  const hasData = (item: HistoryItem) => !!item.hasBlob || !!item.dataUrl;
+
   const isLocked = (item: HistoryItem): boolean => {
-    if (!item.dataUrl) return true; // metadata-only
+    if (!hasData(item)) return true;
     if (hasSubscription) return false;
     return Date.now() - new Date(item.date).getTime() >= FREE_TTL;
   };
 
+  const fetchItemBlob = async (item: HistoryItem): Promise<Blob | null> => {
+    if (item.hasBlob) {
+      const b = await getHistoryBlob(item.id);
+      if (b) return b;
+    }
+    if (item.dataUrl) {
+      // Legacy entries (pre-2026-05-01) used base64 data URLs.
+      const res = await fetch(item.dataUrl);
+      return res.blob();
+    }
+    return null;
+  };
+
   const handleDownload = async (item: HistoryItem) => {
-    if (!item.dataUrl) return;
+    if (!hasData(item)) return;
     setDownloading(item.id);
+    let createdUrl: string | null = null;
     try {
-      if (hasSubscription || !item.hadWatermark) {
-        // Pro or originally clean: serve clean PDF
-        const a = document.createElement('a');
-        a.href = item.dataUrl;
-        a.download = item.name;
-        a.click();
-      } else {
-        // Free + had watermark: re-add watermark before download
-        const res  = await fetch(item.dataUrl);
-        const blob = await res.blob();
-        const watermarkedBlob = await addWatermarkToBlob(blob);
-        const url  = URL.createObjectURL(watermarkedBlob);
-        const a    = document.createElement('a');
-        a.href     = url;
-        a.download = item.name;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 5000);
-      }
+      const baseBlob = await fetchItemBlob(item);
+      if (!baseBlob) return;
+      const finalBlob = (hasSubscription || !item.hadWatermark)
+        ? baseBlob
+        : await addWatermarkToBlob(baseBlob);
+      createdUrl = URL.createObjectURL(finalBlob);
+      const a = document.createElement('a');
+      a.href = createdUrl;
+      a.download = item.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (e) {
       console.error('Download error', e);
     } finally {
+      if (createdUrl) setTimeout(() => URL.revokeObjectURL(createdUrl as string), 5000);
       setDownloading(null);
     }
   };
@@ -269,7 +325,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
               const locked       = isLocked(item);
               const isDownloading = downloading === item.id;
               const timeLeft     = !hasSubscription && !locked ? freeTimeLeft(item.date) : null;
-              const noData       = !item.dataUrl;
+              const noData       = !hasData(item);
 
               return (
                 <div

@@ -32,7 +32,7 @@ import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
-import { blobToDataUrl, addWatermarkToBlob } from '../utils/watermark';
+import { addWatermarkToBlob } from '../utils/watermark';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN } from '../constants';
 
@@ -405,12 +405,11 @@ export default function FillPage() {
     const filename = `filled-${pdfFile?.name || 'document.pdf'}`;
     const urlToDownload = downloadUrl || cleanUrl;
     await downloadOrShare(urlToDownload, filename);
-    // Save CLEAN version to history
+    // Save CLEAN version to history (Blob → IndexedDB).
     try {
       const res = await fetch(cleanUrl);
       const blob = await res.blob();
-      const dataUrl = await blobToDataUrl(blob);
-      saveToHistory(filename, blob.size, dataUrl, 'fill', willHaveWatermark);
+      await saveToHistory(filename, blob.size, blob, 'fill', willHaveWatermark);
       window.dispatchEvent(new Event('signmypdf:saved'));
     } catch {}
     if (willHaveWatermark) setTimeout(() => showToast(), 400);
