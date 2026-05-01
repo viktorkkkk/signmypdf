@@ -148,10 +148,17 @@ jobs:
           git add logs/deploy/ || true
           if git diff --staged --quiet; then
             echo "No new log to commit."
-          else
-            # Pull-rebase to avoid races with the seo-health workflow that
-            # also commits log files.
-            git pull --rebase origin main
-            git commit -m "Deploy log $(date -u +%F)"
-            git push
+            exit 0
           fi
+          # Order matters: commit first, THEN pull-rebase (which refuses
+          # to run on a staged-but-uncommitted index), THEN push. The
+          # rebase covers the race against scheduled workflows like
+          # seo-health.yml that also commit to logs/.
+          git commit -m "Deploy log $(date -u +%F)"
+          # Retry the rebase + push briefly in case the seo-health run
+          # commits between our pull and our push.
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break
+            echo "Push attempt $i failed; retrying after a short pause."
+            sleep $((i * 5))
+          done
