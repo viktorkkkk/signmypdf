@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useRouter } from 'next/navigation';
 import {
@@ -15,8 +15,6 @@ import {
   Files,
   CheckCircle,
   AlertTriangle,
-  Image as ImageIcon,
-  FileText,
 } from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
@@ -33,9 +31,12 @@ import { storePendingFile, consumePendingFile } from '../utils/pendingUpload';
 import {
   compressPdf,
   analyzePdf,
+  predictCompression,
   CompressPdfError,
   type CompressionLevel,
   type CompressResult,
+  type AnalyzeResult,
+  type CompressionPrediction,
 } from '../utils/compressPdf';
 
 type Step = 'upload' | 'configure' | 'done';
@@ -46,10 +47,10 @@ const STEPS = [
   { id: 'done',      label: 'Download' },
 ];
 
-const LEVEL_COPY: Record<CompressionLevel, { label: string; desc: string }> = {
-  light:       { label: 'Light',       desc: 'Best quality, modest size reduction' },
-  recommended: { label: 'Recommended', desc: 'Balanced — good for email and uploads' },
-  maximum:     { label: 'Maximum',     desc: 'Smallest size, may reduce image quality' },
+const LEVEL_COPY: Record<CompressionLevel, { label: string; short: string; dots: number }> = {
+  light:       { label: 'Light',       short: 'Best quality',   dots: 3 },
+  recommended: { label: 'Recommended', short: 'Balanced',       dots: 2 },
+  maximum:     { label: 'Maximum',     short: 'Smallest file',  dots: 1 },
 };
 
 function formatFileSize(bytes: number): string {
@@ -78,7 +79,7 @@ export default function CompressPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>('upload');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [analysis, setAnalysis] = useState<{ hasImages: boolean; pageCount: number } | null>(null);
+  const [analysis, setAnalysis] = useState<AnalyzeResult | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [level, setLevel] = useState<CompressionLevel>('recommended');
 
@@ -180,7 +181,7 @@ export default function CompressPage() {
     setAnalysisLoading(true);
     analyzePdf(pdfFile)
       .then(a => { if (!cancelled) setAnalysis(a); })
-      .catch(() => { if (!cancelled) setAnalysis({ hasImages: false, pageCount: 0 }); })
+      .catch(() => { if (!cancelled) setAnalysis({ hasImages: false, pageCount: 0, imageCount: 0, imageAreaRatio: 0 }); })
       .finally(() => { if (!cancelled) setAnalysisLoading(false); });
     return () => { cancelled = true; };
   }, [pdfFile]);
@@ -227,6 +228,33 @@ export default function CompressPage() {
   }, [resultBlob]);
 
   const maxSize = hasSubscription ? COMPRESS_PRO_SIZE_LIMIT : COMPRESS_FREE_SIZE_LIMIT;
+
+  // Predicted output size per level — drives the three level cards on Step 2
+  // and the dynamic helper line above the CTA. Heuristic: see
+  // predictCompression in app/utils/compressPdf.ts. The UI surfaces these
+  // with a tilde so the user understands they're estimates.
+  const prediction: CompressionPrediction | null = useMemo(() => {
+    if (!pdfFile || !analysis) return null;
+    return predictCompression(pdfFile.size, analysis);
+  }, [pdfFile, analysis]);
+
+  const reductionPctFor = (predicted: number): number => {
+    if (!pdfFile || pdfFile.size === 0) return 0;
+    return Math.max(0, Math.round(((pdfFile.size - predicted) / pdfFile.size) * 100));
+  };
+
+  // Click on a level card. On Free, Light and Maximum are locked — the
+  // card itself is the upsell CTA; clicking opens the paywall instead of
+  // selecting. On Pro any card switches the active level.
+  const handleLevelClick = (l: CompressionLevel) => {
+    if (isProcessing) return;
+    if (!hasSubscription && l !== 'recommended') {
+      track('compress_locked_level_clicked', { level: l });
+      setShowPricing(true);
+      return;
+    }
+    setLevel(l);
+  };
 
   const acceptFile = useCallback((file: File) => {
     setErrorBanner(null);
@@ -487,8 +515,8 @@ export default function CompressPage() {
 
         {/* ── CONFIGURE ── */}
         {step === 'configure' && pdfFile && (
-          <div style={{ maxWidth: 640, margin: '0 auto' }}>
-            <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ maxWidth: 880, margin: '0 auto' }}>
+            <div className="step-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
               <h2 className="step-title">Compression options</h2>
               {hasSubscription ? (
                 <div style={{ fontSize: 13, color: '#16a34a', background: '#f0fdf4', padding: '6px 12px', borderRadius: 8, border: '1px solid #bbf7d0', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -501,73 +529,91 @@ export default function CompressPage() {
               )}
             </div>
 
-            {/* File card */}
-            <div className="compress-file-card">
-              <div className="compress-file-icon"><FileText size={28} color="#0891b2" /></div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="compress-file-name" title={pdfFile.name}>{pdfFile.name}</div>
-                <div className="compress-file-meta">
-                  {formatFileSize(pdfFile.size)}
-                  {analysis && analysis.pageCount > 0 && <> · {analysis.pageCount} {analysis.pageCount === 1 ? 'page' : 'pages'}</>}
+            {/* Block A — File hero. Filename + big size lead the screen so
+                the user immediately knows what they're working with. The
+                meta row folds page count and the honest "mostly text /
+                contains images" prediction into a single subordinate line.
+                "Choose another file" is a text link, not a button — it
+                must not compete with the main CTA below. */}
+            <div className="compress-hero">
+              <div className="compress-hero-main">
+                <div className="compress-hero-name" title={pdfFile.name}>{pdfFile.name}</div>
+                <div className="compress-hero-size">{formatFileSize(pdfFile.size)}</div>
+                <div className="compress-hero-meta">
+                  {analysis && analysis.pageCount > 0 && (
+                    <>{analysis.pageCount} {analysis.pageCount === 1 ? 'page' : 'pages'}</>
+                  )}
+                  {analysis && analysis.pageCount > 0 && <span className="compress-hero-meta-dot">·</span>}
+                  {analysisLoading
+                    ? 'Analyzing PDF…'
+                    : analysis?.hasImages
+                      ? 'This PDF contains images — good compression expected'
+                      : 'This PDF is mostly text — compression will be limited'}
                 </div>
               </div>
-              <button onClick={reset} className="compress-change-btn" disabled={isProcessing}>
-                <RefreshCw size={12} /> Choose another
+              <button
+                type="button"
+                onClick={reset}
+                disabled={isProcessing}
+                className="compress-hero-link"
+              >
+                Choose another file
               </button>
             </div>
 
-            {/* Honest prediction line */}
-            <div className="compress-prediction">
-              {analysisLoading ? (
-                <span style={{ color: '#64748b' }}>Analyzing PDF…</span>
-              ) : analysis?.hasImages ? (
-                <><ImageIcon size={14} color="#0891b2" /> This PDF contains images — good compression expected.</>
-              ) : (
-                <><FileText size={14} color="#64748b" /> This PDF is mostly text — compression will be limited (typically under 10%).</>
-              )}
-            </div>
-
-            {/* Level selector */}
-            <div className="card" style={{ marginBottom: 16 }}>
-              <div className="card-title">Compression level</div>
-              {hasSubscription ? (
-                <div className="compress-levels">
-                  {(['light', 'recommended', 'maximum'] as const).map(l => (
-                    <label
-                      key={l}
-                      className={`compress-level${level === l ? ' compress-level-selected' : ''}`}
-                    >
-                      <input
-                        type="radio"
-                        name="compress-level"
-                        value={l}
-                        checked={level === l}
-                        onChange={() => setLevel(l)}
-                        disabled={isProcessing}
-                      />
-                      <span className="compress-level-radio" aria-hidden="true" />
-                      <div>
-                        <div className="compress-level-label">{LEVEL_COPY[l].label}</div>
-                        <div className="compress-level-desc">{LEVEL_COPY[l].desc}</div>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              ) : (
-                <div className="compress-level-static">
-                  <div>
-                    <div className="compress-level-label">Recommended</div>
-                    <div className="compress-level-desc">{LEVEL_COPY.recommended.desc}</div>
-                  </div>
+            {/* Block B — Three level cards in a row. On Free, Light and
+                Maximum are visually dimmed and clicking opens the paywall;
+                Recommended is selected by default and carries a
+                "Most popular" badge. On Pro, all three are selectable. */}
+            <div className="compress-level-grid">
+              {(['light', 'recommended', 'maximum'] as const).map(l => {
+                const meta = LEVEL_COPY[l];
+                const locked = !hasSubscription && l !== 'recommended';
+                const selected = level === l;
+                const predicted = prediction?.[l] ?? null;
+                const reduction = predicted !== null ? reductionPctFor(predicted) : null;
+                return (
                   <button
+                    key={l}
                     type="button"
-                    onClick={() => { setShowPricing(true); track('compress_unlock_levels_clicked'); }}
-                    className="compress-unlock-btn"
+                    onClick={() => handleLevelClick(l)}
+                    disabled={isProcessing}
+                    className={[
+                      'compress-level-card',
+                      selected ? 'compress-level-card-selected' : '',
+                      locked ? 'compress-level-card-locked' : '',
+                    ].filter(Boolean).join(' ')}
+                    aria-pressed={selected}
                   >
-                    Unlock Light & Maximum →
+                    {locked && (
+                      <span className="compress-level-pro-badge">
+                        <Lock size={11} /> Pro
+                      </span>
+                    )}
+                    {!locked && l === 'recommended' && !hasSubscription && (
+                      <span className="compress-level-popular-badge">Most popular</span>
+                    )}
+                    <div className="compress-level-name">{meta.label}</div>
+                    <div className="compress-level-predicted">
+                      {predicted === null
+                        ? <span className="compress-level-predicted-pending">Calculating…</span>
+                        : <>~{formatFileSize(predicted)}</>}
+                    </div>
+                    {reduction !== null && (
+                      <div className="compress-level-reduction">−{reduction}%</div>
+                    )}
+                    <div className="compress-level-short">{meta.short}</div>
+                    <div className="compress-level-dots" aria-hidden="true">
+                      {[0, 1, 2].map(i => (
+                        <span
+                          key={i}
+                          className={`compress-level-dot${i < meta.dots ? ' compress-level-dot-on' : ''}`}
+                        />
+                      ))}
+                    </div>
                   </button>
-                </div>
-              )}
+                );
+              })}
             </div>
 
             {errorBanner && (
@@ -577,19 +623,20 @@ export default function CompressPage() {
               </div>
             )}
 
-            {/* Action row */}
-            <div className="compress-actions">
+            {/* Block C — Single dominant CTA with a dynamic helper line.
+                The helper updates as the user picks a different level so
+                the button isn't acting on hidden state. */}
+            <div className="compress-cta-block">
+              <p className="compress-cta-helper">
+                {isProcessing
+                  ? 'Re-encoding images…'
+                  : prediction
+                    ? <>Compress with <strong>{LEVEL_COPY[level].label}</strong> · ~{formatFileSize(prediction[level])} expected</>
+                    : <>Compress with <strong>{LEVEL_COPY[level].label}</strong></>}
+              </p>
               <button
                 type="button"
-                className="btn-ghost compress-secondary-btn"
-                onClick={reset}
-                disabled={isProcessing}
-              >
-                Choose another file
-              </button>
-              <button
-                type="button"
-                className="btn-primary compress-cta"
+                className="btn-primary compress-cta-btn"
                 onClick={handleCompress}
                 disabled={isProcessing}
               >
@@ -606,7 +653,6 @@ export default function CompressPage() {
                 <div className="merge-progress-bar">
                   <div className="merge-progress-fill" style={{ width: `${Math.max(progress, 4)}%` }} />
                 </div>
-                <p className="merge-progress-text">Re-encoding images…</p>
               </div>
             )}
           </div>

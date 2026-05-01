@@ -2545,176 +2545,221 @@ body > div > footer { margin-top: auto; }
   border-radius: 20px;
 }
 
-/* ── Compress tool ─────────────────────────────────────────────── */
-.compress-file-card {
+/* ── Compress tool — Step 2 layout ─────────────────────────────── */
+
+/* Block A — File hero. Big filename + big size set the visual anchor.
+   "Choose another file" is a quiet text link in the corner. */
+.compress-hero {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
   background: white;
   border: 1.5px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 18px;
 }
-.compress-file-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: var(--tool-compress-bg);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+.compress-hero-main {
+  flex: 1;
+  min-width: 0;
 }
-.compress-file-name {
-  font-size: 14px;
-  font-weight: 600;
+.compress-hero-name {
+  font-size: 17px;
+  font-weight: 700;
   color: #0f172a;
+  letter-spacing: -0.01em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-bottom: 6px;
+}
+.compress-hero-size {
+  font-size: 36px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.compress-hero-meta {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+.compress-hero-meta-dot {
+  margin: 0 8px;
+  color: #cbd5e1;
+}
+.compress-hero-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: #cbd5e1;
+  text-underline-offset: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.compress-hero-link:hover:not(:disabled) {
+  color: var(--tool-compress-fg);
+  text-decoration-color: var(--tool-compress-fg);
+}
+.compress-hero-link:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Block B — Three level cards. Equal width, all visible at once, no
+   radio plumbing — the card itself is the hit target. Locked cards on
+   Free are the upsell CTA, clicking opens the paywall. */
+.compress-level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.compress-level-card {
+  position: relative;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s, background 0.15s;
+}
+.compress-level-card:hover:not(:disabled) {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+.compress-level-card:disabled { cursor: not-allowed; }
+.compress-level-card-selected {
+  border: 2px solid var(--tool-compress-fg);
+  background: var(--tool-compress-bg);
+  padding: 17px 17px 15px;  /* offset the +0.5px border so layout doesn't shift */
+}
+.compress-level-card-locked {
+  opacity: 0.55;
+  background: #f8fafc;
+}
+.compress-level-card-locked .compress-level-predicted,
+.compress-level-card-locked .compress-level-reduction {
+  filter: grayscale(0.8);
+}
+.compress-level-card-locked:hover {
+  opacity: 0.75;
+  border-color: var(--tool-compress-fg);
+}
+.compress-level-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+.compress-level-predicted {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
   margin-bottom: 4px;
 }
-.compress-file-meta {
+.compress-level-predicted-pending {
+  font-size: 14px;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0;
+}
+.compress-level-reduction {
+  font-size: 14px;
+  font-weight: 700;
+  color: #16a34a;
+  margin-bottom: 12px;
+}
+.compress-level-short {
   font-size: 12.5px;
   color: #64748b;
+  margin-bottom: 10px;
 }
-.compress-change-btn {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  white-space: nowrap;
-  transition: background 0.15s, border-color 0.15s;
-}
-.compress-change-btn:hover:not(:disabled) {
-  background: #eef2ff;
-  border-color: var(--tool-compress-fg);
-  color: var(--tool-compress-fg);
-}
-.compress-change-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.compress-prediction {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #475569;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 8px 14px;
-  margin-bottom: 16px;
-}
-
-.compress-levels {
+.compress-level-dots {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
-.compress-level {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-.compress-level input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.compress-level-radio {
-  width: 18px;
-  height: 18px;
+.compress-level-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  flex-shrink: 0;
-  margin-top: 2px;
-  position: relative;
-  transition: border-color 0.15s;
+  background: #e2e8f0;
 }
-.compress-level-selected {
-  border-color: var(--tool-compress-fg);
-  background: var(--tool-compress-bg);
-}
-.compress-level-selected .compress-level-radio {
-  border-color: var(--tool-compress-fg);
-}
-.compress-level-selected .compress-level-radio::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: 50%;
+.compress-level-dot-on {
   background: var(--tool-compress-fg);
 }
-.compress-level-label {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 2px;
-}
-.compress-level-desc {
-  font-size: 12.5px;
-  color: #64748b;
-  line-height: 1.45;
-}
+.compress-level-card-locked .compress-level-dot-on { background: #94a3b8; }
 
-.compress-level-static {
-  display: flex;
+.compress-level-pro-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 4px;
+  background: #1e293b;
+  color: #fef3c7;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
 }
-.compress-unlock-btn {
-  background: white;
-  border: 1.5px solid #bfdbfe;
-  color: #2563eb;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s, border-color 0.15s;
-}
-.compress-unlock-btn:hover {
-  background: #eff6ff;
-  border-color: #2563eb;
+.compress-level-popular-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--tool-compress-fg);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 6px;
 }
 
-.compress-actions {
+/* Block C — single dominant CTA + dynamic helper line. */
+.compress-cta-block {
   display: flex;
-  gap: 12px;
-  align-items: stretch;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
 }
-.compress-secondary-btn {
-  flex: 0 0 auto;
-  padding: 14px 20px;
-  font-size: 14.5px;
+.compress-cta-helper {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
 }
-.compress-cta {
-  flex: 1 1 240px;
+.compress-cta-helper strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+.compress-cta-btn {
+  min-width: 320px;
+  padding: 16px 24px;
+  font-size: 16px;
+  border-radius: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 20px;
-  font-size: 15px;
-  border-radius: 14px;
 }
 
 /* Done step — before / after numbers */
@@ -2821,17 +2866,32 @@ body > div > footer { margin-top: auto; }
 }
 
 @media (max-width: 768px) {
-  .compress-file-card { padding: 12px 14px; gap: 10px; }
-  .compress-file-icon { width: 40px; height: 40px; }
-  .compress-file-name { font-size: 13.5px; }
-  .compress-actions { flex-direction: column; gap: 10px; }
-  .compress-secondary-btn,
-  .compress-cta { width: 100%; flex: 1 1 auto; }
+  .compress-hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 18px 16px;
+    gap: 10px;
+  }
+  .compress-hero-name { font-size: 15px; }
+  .compress-hero-size { font-size: 30px; }
+  .compress-hero-meta { font-size: 12px; }
+  .compress-hero-link { align-self: flex-start; }
+
+  /* Stack the three level cards vertically — keeps each card readable
+     without the price/reduction numbers shrinking past usefulness. */
+  .compress-level-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .compress-level-card { padding: 14px 14px 12px; }
+  .compress-level-card-selected { padding: 13px 13px 11px; }
+  .compress-level-predicted { font-size: 20px; }
+
+  .compress-cta-btn { width: 100%; min-width: 0; }
+
   .compress-result { padding: 16px 18px; }
   .compress-result-percent { font-size: 32px; }
   .compress-preview-thumb { width: 100px; max-height: 140px; }
-  .compress-level-static { flex-direction: column; align-items: flex-start; }
-  .compress-unlock-btn { width: 100%; text-align: center; }
 }
 
 /* ── Mobile Merge ─────────────────────────────────────────────── */

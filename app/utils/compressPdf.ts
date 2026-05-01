@@ -109,6 +109,25 @@ function findImageStreams(pdfDoc: PDFDocument): ImageEntry[] {
   return result;
 }
 
+export interface AnalyzeResult {
+  hasImages: boolean;
+  pageCount: number;
+  /**
+   * Number of distinct image XObjects found in the document.
+   * Used to drive predictCompression's image-vs-text heuristic.
+   */
+  imageCount: number;
+  /**
+   * Rough estimate of how much of the document is raster imagery,
+   * 0..1. Computing the real area requires walking content streams
+   * to honour each image's CTM transform — out of scope for v1.
+   * Heuristic: 0 if no images, 0.3 if some, 0.6 if image count
+   * exceeds page count (a sign of multi-image-per-page layouts
+   * like scanned reports or photo PDFs).
+   */
+  imageAreaRatio: number;
+}
+
 /**
  * Predict whether `compressPdf` can do meaningful work on this file, and
  * return the page count so the configure-step card can read
@@ -118,19 +137,64 @@ function findImageStreams(pdfDoc: PDFDocument): ImageEntry[] {
  * that is almost entirely text/vector, where the ~5-10% we can squeeze
  * out via object streams is the realistic ceiling.
  */
-export async function analyzePdf(file: File): Promise<{ hasImages: boolean; pageCount: number }> {
+export async function analyzePdf(file: File): Promise<AnalyzeResult> {
   try {
     const buf = await file.arrayBuffer();
     const pdfDoc = await PDFDocument.load(buf, { ignoreEncryption: true });
-    const totalImageBytes = findImageStreams(pdfDoc)
-      .reduce((sum, i) => sum + i.bytesSize, 0);
+    const images = findImageStreams(pdfDoc);
+    const totalImageBytes = images.reduce((sum, i) => sum + i.bytesSize, 0);
+    const pageCount = pdfDoc.getPageCount();
+    const imageCount = images.length;
+    const imageAreaRatio =
+      imageCount > pageCount ? 0.6
+      : imageCount > 0      ? 0.3
+                            : 0;
     return {
       hasImages: totalImageBytes > 100 * 1024,
-      pageCount: pdfDoc.getPageCount(),
+      pageCount,
+      imageCount,
+      imageAreaRatio,
     };
   } catch {
-    return { hasImages: false, pageCount: 0 };
+    return { hasImages: false, pageCount: 0, imageCount: 0, imageAreaRatio: 0 };
   }
+}
+
+export interface CompressionPrediction {
+  light: number;
+  recommended: number;
+  maximum: number;
+}
+
+/**
+ * Predict the size of each level's output BEFORE running the compressor,
+ * so the configure step can show "~2.0 MB · −38%" on each level card.
+ * These are rough heuristics, not guarantees — UI must surface them with
+ * a tilde so the user knows the real result on the done screen may
+ * differ. The compressor itself returns the original bytes verbatim if
+ * it would have made the file larger, so the user is never punished
+ * by an over-optimistic prediction.
+ */
+export function predictCompression(
+  originalSize: number,
+  analysis: Pick<AnalyzeResult, 'hasImages' | 'imageAreaRatio'>,
+): CompressionPrediction {
+  let m: { light: number; recommended: number; maximum: number };
+  if (!analysis.hasImages || analysis.imageAreaRatio < 0.1) {
+    // Text-only PDF — only object-stream packing helps, very small win.
+    m = { light: 0.98, recommended: 0.95, maximum: 0.92 };
+  } else if (analysis.imageAreaRatio < 0.5) {
+    // Mixed text/images.
+    m = { light: 0.85, recommended: 0.65, maximum: 0.45 };
+  } else {
+    // Mostly images (scans, photo decks, image-heavy reports).
+    m = { light: 0.75, recommended: 0.50, maximum: 0.30 };
+  }
+  return {
+    light:       Math.round(originalSize * m.light),
+    recommended: Math.round(originalSize * m.recommended),
+    maximum:     Math.round(originalSize * m.maximum),
+  };
 }
 
 interface ReencodedImage {
