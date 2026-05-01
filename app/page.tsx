@@ -16,6 +16,7 @@ import {
   Unlock,
   Plus,
   Minus,
+  Files,
 } from 'lucide-react';
 import NavHeader from './components/NavHeader';
 import SiteFooter from './components/SiteFooter';
@@ -42,7 +43,7 @@ import { PADDLE_CLIENT_TOKEN } from './constants';
  *   read-and-consume so a refresh on /sign doesn't re-trigger.
  */
 
-type Tool = 'sign' | 'fill' | 'protect';
+type Tool = 'sign' | 'fill' | 'protect' | 'merge';
 
 declare global {
   interface Window {
@@ -57,6 +58,7 @@ const TOOL_ROUTE: Record<Tool, string> = {
   sign: '/sign',
   fill: '/fill',
   protect: '/protect',
+  merge: '/merge',
 };
 
 const FAQ: Array<{ q: string; a: string }> = [
@@ -224,6 +226,15 @@ export default function HomePage() {
               </div>
               <h3 className="hub-tool-name">Protect PDF</h3>
               <p className="hub-tool-desc">Add a password and lock your file.</p>
+              <span className="hub-tool-btn">Open tool →</span>
+            </button>
+
+            <button type="button" className="hub-tool-card tool-accent-merge" onClick={() => goToTool('merge')}>
+              <div className="hub-tool-icon-wrap">
+                <Files size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Merge PDF</h3>
+              <p className="hub-tool-desc">Combine multiple PDFs into one file.</p>
               <span className="hub-tool-btn">Open tool →</span>
             </button>
           </div>

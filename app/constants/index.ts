@@ -32,3 +32,12 @@ export const PAYWALL_DEFAULT_TARIFF: 'monthly' | 'annual' = 'annual';
 
 // ─── Draft (Fill tool) ───────────────────────────────────────────
 export const DRAFT_KEY = 'signmypdf_draft_v1';
+
+// ─── Merge tool limits ───────────────────────────────────────────
+// File-count and total-size caps. No daily counter — merge is gated by
+// per-job size, not per-day usage, since most users only merge once in
+// a while. Pro 4× the headroom (5→20 files, 50→200 MB).
+export const MERGE_FREE_FILE_LIMIT = 5;
+export const MERGE_PRO_FILE_LIMIT = 20;
+export const MERGE_FREE_SIZE_LIMIT = 50 * 1024 * 1024;
+export const MERGE_PRO_SIZE_LIMIT = 200 * 1024 * 1024;

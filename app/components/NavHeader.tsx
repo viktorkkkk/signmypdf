@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Lock, PenLine, FileText, Sparkles } from 'lucide-react';
+import { Lock, PenLine, FileText, Sparkles, Files } from 'lucide-react';
 import Logo from './Logo';
 
 interface NavHeaderProps {
-  activeTool?: 'sign' | 'fill' | 'protect';
+  activeTool?: 'sign' | 'fill' | 'protect' | 'merge';
   onShowPricing?: () => void;
 }
 
@@ -76,6 +76,13 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
                 >
                   <Lock size={16} strokeWidth={2} />
                   <span>Protect PDF</span>
+                </a>
+                <a
+                  href="/merge"
+                  className={`nav-dropdown-item${activeTool === 'merge' ? ' nav-dropdown-item--active' : ''}`}
+                >
+                  <Files size={16} strokeWidth={2} />
+                  <span>Merge PDF</span>
                 </a>
               </div>
             )}

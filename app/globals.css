@@ -57,6 +57,8 @@
   --tool-fill-bg:    #F0FDFA;
   --tool-protect-fg: #7C3AED;   /* violet */
   --tool-protect-bg: #F5F3FF;
+  --tool-merge-fg:   #4F46E5;   /* indigo — Organize tier */
+  --tool-merge-bg:   #EEF2FF;
 }
 
 @media (max-width: 768px) {
@@ -1814,13 +1816,23 @@ body > div > footer { margin-top: auto; }
   line-height: 1.5;
 }
 
-/* Tool cards — equal weight, no primary treatment. */
+/* Tool cards — equal weight, no primary treatment.
+   Layout flexes to the number of cards: 4-up on wide, 2-up on tablet,
+   1-up on mobile (the 720px breakpoint below). The auto-fit flavour was
+   considered but rejected — it produces an asymmetric "3+1" layout at
+   intermediate widths, which reads as a glitch. Explicit ladder is cleaner. */
 .hub-hero .hub-tool-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   max-width: var(--content-grid);
   margin: 0 auto var(--space-stack);
+}
+@media (max-width: 960px) {
+  .hub-hero .hub-tool-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 /* Tool cards share the Why-card token system: same padding, radius,
@@ -1864,6 +1876,7 @@ body > div > footer { margin-top: auto; }
 .hub-tool-card.tool-accent-sign    .hub-tool-icon-wrap { background: var(--tool-sign-bg);    color: var(--tool-sign-fg); }
 .hub-tool-card.tool-accent-fill    .hub-tool-icon-wrap { background: var(--tool-fill-bg);    color: var(--tool-fill-fg); }
 .hub-tool-card.tool-accent-protect .hub-tool-icon-wrap { background: var(--tool-protect-bg); color: var(--tool-protect-fg); }
+.hub-tool-card.tool-accent-merge   .hub-tool-icon-wrap { background: var(--tool-merge-bg);   color: var(--tool-merge-fg); }
 
 .hub-tool-name {
   font-size: var(--font-h3);
@@ -2241,3 +2254,303 @@ body > div > footer { margin-top: auto; }
   .hub-faq-q { padding: 16px 16px; font-size: 14.5px; }
   .hub-faq-a { padding: 0 16px 16px; font-size: 13.5px; }
 }
+
+/* ── Merge tool ─────────────────────────────────────────────────── */
+.merge-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 16px;
+}
+.merge-counter strong { color: #0f172a; font-weight: 700; }
+.merge-counter-dot { color: #cbd5e1; }
+
+.merge-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+.merge-banner-warn {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+.merge-banner-error {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  color: #991b1b;
+}
+.merge-banner-close {
+  background: none; border: none; cursor: pointer; padding: 2px;
+  color: inherit; opacity: 0.6; flex-shrink: 0;
+  display: inline-flex; align-items: center;
+}
+.merge-banner-close:hover { opacity: 1; }
+
+.merge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.merge-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  cursor: grab;
+}
+.merge-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+.merge-card:active { cursor: grabbing; }
+.merge-card-dragging {
+  opacity: 0.45;
+  border-color: var(--tool-merge-fg);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.18);
+}
+
+.merge-drag-handle {
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: grab;
+}
+.merge-card:hover .merge-drag-handle { color: var(--tool-merge-fg); }
+
+.merge-arrows {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.merge-arrows button {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 32px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.merge-arrows button:hover:not(:disabled) {
+  background: var(--tool-merge-bg);
+  border-color: var(--tool-merge-fg);
+  color: var(--tool-merge-fg);
+}
+.merge-arrows button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.merge-thumb {
+  width: 64px;
+  height: 86px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+.merge-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.merge-meta {
+  flex: 1;
+  min-width: 0;
+}
+.merge-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+.merge-info {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.merge-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  color: #94a3b8;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.merge-remove:hover:not(:disabled) {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.merge-remove:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.merge-actions {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.merge-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 20px;
+  font-size: 14.5px;
+  flex: 0 0 auto;
+}
+.merge-cta {
+  flex: 1 1 280px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+.merge-progress {
+  margin-top: 24px;
+  text-align: center;
+}
+.merge-progress-bar {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.merge-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--tool-merge-fg), #6366f1);
+  transition: width 0.3s ease;
+}
+.merge-progress-text {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.merge-funnel-link {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.merge-funnel-link:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+/* "More PDF Tools" cards — shared style across tool pages so adding the
+   4th card stays visually consistent. */
+.more-tool-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1.5px solid #e2e8f0;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.more-tool-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+}
+.more-tool-card-current {
+  border: 2px solid #2563eb;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+  cursor: default;
+}
+.more-tool-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.more-tool-sub {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+.more-tool-cta {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+}
+.more-tool-cta-current {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── Mobile Merge ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hide the desktop drag handle on touch — gesture would conflict
+     with browser scrolling. Show ↑↓ arrows instead. */
+  .merge-drag-handle { display: none; }
+  .merge-arrows { display: flex; }
+
+  .merge-card { gap: 10px; padding: 10px 12px; cursor: default; }
+  .merge-card:active { cursor: default; }
+
+  .merge-thumb { width: 52px; height: 70px; }
+  .merge-name { font-size: 13.5px; }
+  .merge-info { font-size: 12px; }
+
+  .merge-actions { flex-direction: column; gap: 10px; }
+  .merge-add-btn,
+  .merge-cta { width: 100%; flex: 1 1 auto; }
+}
+

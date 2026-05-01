@@ -8,7 +8,7 @@ export interface HistoryItem {
   date: string;
   size: number;
   dataUrl?: string;        // absent if quota exceeded
-  type: 'fill' | 'sign' | 'protect';
+  type: 'fill' | 'sign' | 'protect' | 'merge';
   hadWatermark?: boolean;  // whether watermark was on original download
 }
 
@@ -21,7 +21,7 @@ export function saveToHistory(
   name: string,
   size: number,
   dataUrl: string,
-  type: 'fill' | 'sign' | 'protect' = 'fill',
+  type: 'fill' | 'sign' | 'protect' | 'merge' = 'fill',
   hadWatermark = false,
 ) {
   try {
@@ -29,7 +29,7 @@ export function saveToHistory(
     const list: HistoryItem[] = raw ? JSON.parse(raw) : [];
     const item: HistoryItem = {
       id: Math.random().toString(36).slice(2),
-      name: name.replace(/^(signed-|filled-|protected-)+/g, ''),
+      name: name.replace(/^(signed-|filled-|protected-|merged-)+/g, ''),
       date: new Date().toISOString(),
       size,
       dataUrl,
@@ -306,15 +306,20 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
                           background:
                             item.type === 'sign' ? '#eff6ff'
                             : item.type === 'fill' ? '#f0fdf4'
+                            : item.type === 'merge' ? '#eef2ff'
                             : '#fef3c7',
                           color:
                             item.type === 'sign' ? '#2563eb'
                             : item.type === 'fill' ? '#16a34a'
+                            : item.type === 'merge' ? '#4f46e5'
                             : '#b45309',
                           padding: '1px 6px',
                           borderRadius: 4,
                         }}>
-                          {item.type === 'sign' ? 'signed' : item.type === 'fill' ? 'filled' : 'protected'}
+                          {item.type === 'sign' ? 'signed'
+                           : item.type === 'fill' ? 'filled'
+                           : item.type === 'merge' ? 'merged'
+                           : 'protected'}
                         </span>
                         {!locked && !hasSubscription && (
                           <span style={{ color: '#16a34a', fontSize: 11, fontWeight: 500 }}>Available for 24 hours</span>

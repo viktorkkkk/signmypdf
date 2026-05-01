@@ -10,7 +10,7 @@ import {
   PAYWALL_DEFAULT_TARIFF,
 } from '../constants';
 
-type Tool = 'sign' | 'fill' | 'protect';
+type Tool = 'sign' | 'fill' | 'protect' | 'merge';
 type Tariff = 'monthly' | 'annual';
 
 interface PaywallModalProps {
