@@ -7799,6 +7799,150 @@ For one-off documents, the free plan covers everything you need. If you protect 
 - [Fill PDF forms online — free, no software](/fill)
 `,
   },
+  {
+    slug: 'fill-visa-application-form-pdf',
+    title: 'Fill a Visa Application Form as a PDF',
+    excerpt: 'Visa forms locked, read-only, or scanned? Fill a visa application PDF in your browser — no printing, no scanning, no account needed.',
+    date: '2026-05-02',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill visa application form', 'visa application PDF', 'fill PDF form online', 'fill government PDF', 'visa form online', 'pdf form filler', 'fill pdf without printing'],
+    metaTitle: 'Fill a Visa Application Form as a PDF',
+    metaDescription: 'Visa forms locked, read-only, or scanned? Fill a visa application PDF in your browser — no printing, no scanning, no account needed.',
+    content: `
+You've downloaded a visa application PDF and found it locked against typing — the form is read-only, an image scan with no interactive fields, or it simply refuses to accept keyboard input. To fill out a visa application form the old way means printing the PDF, writing every field by hand, and scanning the pages back in. There's a faster way: fill a visa application PDF directly in your browser, in minutes, without printing a single page.
+
+[CTA]Fill Your Visa Application Form — Free|Type directly onto any PDF page — no printing, no scanning. Browser-only, no account required.|Fill PDF Form Now — Free
+
+## Why visa application PDFs are hard to fill
+
+Government agencies update their digital systems slowly. Many visa forms arrive as plain image scans — not interactive PDFs with clickable fields. Others have fields technically present but tagged as read-only, or they rely on a proprietary Adobe format that only specific PDF reader versions support correctly.
+
+If your form fields refuse to accept clicks or keyboard input at all, see [why PDF form fields stop working and how to fix it](/blog/pdf-form-fields-not-working-fix) — it covers locked forms, read-only PDFs, and viewer incompatibilities that cause exactly this problem.
+
+[IMAGE: A scanned visa application PDF open in a browser showing blank non-interactive fields that cannot be typed into]
+
+## How to fill a visa application PDF
+
+1. Open [SignMyPDF Fill](/fill) — no account or installation needed.
+2. Upload your visa application PDF. Both image-only scans and interactive fillable forms work.
+3. Click anywhere on the page and type your details — full name, date of birth, travel dates, passport number.
+4. Drag each text box to align it precisely with the corresponding field on the printed form.
+5. Adjust font size so your text fits neatly. When all fields are complete, download the finished PDF.
+
+The output is a standard PDF that prints cleanly and is accepted by most consulate portals, embassy email submissions, and government upload systems.
+
+## Why most PDF tools frustrate you here
+
+- **Image forms not supported.** Most PDF editors only handle interactive fillable PDFs. If your visa form is a scanned image, they offer nothing useful — you still have to print.
+- **Account required before download.** Many tools let you upload and fill, then demand a sign-up or subscription just before you can save the completed form.
+- **Watermarks on official submissions.** Free tools that stamp your output with their branding can make a government submission look unprofessional — or get it rejected.
+- **Daily upload limits.** Filling forms for a family of four can easily hit a free-tier cap midway through.
+- **Privacy concerns.** Tools that send your document to a remote server process your passport number, full legal name, and travel history on external infrastructure.
+
+For other official government documents, see [how to fill government forms online for free](/blog/fill-government-forms-online-free) — the same approach works for tax forms, benefit applications, and healthcare paperwork.
+
+[IMAGE: SignMyPDF fill interface showing a text box being dragged into position over a blank field on a visa application form]
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** No account needed to complete and save a government form.
+- **Works on scanned image PDFs, not just fillable forms.** Place a text box anywhere on any page, even on forms with no interactive fields.
+- **Files processed in browser, never uploaded to servers.** Passport numbers, dates of birth, and travel history never leave your device — important for immigration documents.
+- **Precise drag-and-drop placement.** Each text field can be positioned exactly over the corresponding line on the printed form.
+- **Works on any device** — Mac, Windows, iPhone, Android, any modern browser.
+
+## FAQ
+
+**Can I fill a scanned visa form that has no clickable fields?**
+Yes. SignMyPDF's text overlay mode places text boxes anywhere on the page. You position each box manually to align with the printed field below it — no interactive fields required.
+
+**Is it safe to fill immigration documents in a browser tool?**
+With SignMyPDF, yes. Your document is processed entirely inside your browser using local JavaScript — nothing is sent to a remote server. Sensitive personal data stays on your device throughout.
+
+**Will the filled PDF be accepted by consulates?**
+SignMyPDF outputs a standard PDF that prints correctly and is compatible with most consulate portals and email submission workflows. If a handwritten signature is also required, use [SignMyPDF Sign](/sign) to add it to the completed form.
+
+[CTA]Fill Your Visa Form — Free, No Printing Needed|Text overlay on any PDF, browser-only, no watermark. Completed in under two minutes.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a job application PDF online — free](/blog/fill-job-application-pdf-online)
+- [Fill government forms online for free](/blog/fill-government-forms-online-free)
+- [Sign a PDF document online — free, no account](/sign)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-on-mac',
+    title: 'Password Protect a PDF on Mac',
+    excerpt: "macOS Preview's PDF password has no permission controls. Protect a PDF on Mac with AES-256, free, no account — restrict printing, copying, annotating.",
+    date: '2026-05-02',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf mac', 'protect pdf on mac', 'mac pdf encryption', 'preview pdf password mac', 'aes-256 pdf mac', 'encrypt pdf mac', 'pdf permission controls'],
+    metaTitle: 'Password Protect a PDF on Mac',
+    metaDescription: "macOS Preview's PDF password has no permission controls. Protect a PDF on Mac with AES-256, free, no account — restrict printing, copying, annotating.",
+    content: `
+You're on a Mac and need to send a confidential PDF — a signed contract, a tax document, or a proposal — with a password so only the recipient can open it. macOS Preview's Export dialog has an Encrypt checkbox, but it offers only a basic open password with no control over what recipients can do with the file: they can still print it, copy text from it, and annotate it freely. To password protect a PDF on Mac with full permission controls and encryption that opens everywhere, you need a different tool — and it doesn't have to cost anything.
+
+[CTA]Protect PDF on Mac — Free|AES-256 encryption with permission controls. No account, no install — works in Safari, Chrome, Firefox.|Protect PDF Now — Free
+
+## What Preview does and doesn't offer
+
+Preview's Encrypt option (File > Export as PDF > Security Options) creates a password-protected PDF using AES-128 encryption. The file will open with a password in most PDF readers. What Preview doesn't support is owner-level permission controls: you can't restrict printing, block text copying, or prevent annotation independently. For contracts where you need to prevent copy-pasting of confidential terms, or sensitive reports you want opened but not redistributed, that gap matters.
+
+Adobe Acrobat Pro adds full permission controls at $19.99/month, Standard at $12.99/month. For occasional use, that's hard to justify. See [how Adobe compares to free PDF protection tools](/blog/adobe-vs-free-pdf-protection) for a detailed breakdown of what you get at each price point.
+
+[IMAGE: macOS Preview Export > PDF Security Options dialog showing the basic Open Password field with no separate permission toggles]
+
+## How to password protect a PDF on Mac
+
+1. Open [SignMyPDF Protect](/protect) in any Mac browser — Safari, Chrome, or Firefox.
+2. Drag in your PDF or click to browse and upload it.
+3. Enter a strong password and confirm it.
+4. Toggle permissions: restrict printing, text copying, and annotating independently.
+5. Click **Protect PDF** and download the AES-256 encrypted file.
+
+The protected file opens with your password in any PDF reader on any platform — Windows, Android, iPhone, Chromebook. The whole process takes under a minute with no account required.
+
+## Why most Mac PDF tools frustrate you
+
+- **Preview lacks permission controls.** You can set an open password, but you can't restrict printing, copying, or annotation as separate permissions.
+- **Adobe Acrobat costs $12.99–$19.99/month** — a full PDF suite for what is often a one-off task.
+- **Most free online tools upload your file to a server.** For confidential contracts and sensitive personal data, that's a real privacy concern.
+- **Smallpdf and iLovePDF** cap free-tier tasks at a few documents per day before prompting a paid upgrade.
+- **Some free tools watermark the protected output** — not ideal when you're sending a client a professional document.
+
+If you protect client PDFs regularly as a freelancer, the [freelancer guide to protecting client PDF contracts](/blog/freelancers-protect-client-contracts) covers a repeatable workflow that stays free.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Protect as many PDFs as you need — no account, no subscription.
+- **Files processed in browser, never uploaded to servers.** Your PDF is encrypted locally on your Mac — nothing is transmitted anywhere.
+- **AES-256 encryption** — a step above Preview's AES-128, and the same standard as Adobe Acrobat Pro. The protected file opens in any PDF reader on any platform.
+- **Full permission controls.** Restrict printing, text copying, and annotation independently, all in one step.
+- **Works in Safari, Chrome, and Firefox** on any macOS version, with no extensions to install.
+
+## FAQ
+
+**Does Preview's basic password work on Windows and Android?**
+Generally yes — Preview's AES-128 password creates a file that opens in most PDF readers. The limitation is permissions: Preview can't restrict printing or copying, so if those controls matter for your document, you need a tool that supports owner-level encryption.
+
+**Is browser-based PDF encryption safe on a Mac?**
+Yes. SignMyPDF encrypts your PDF using the browser's native Web Crypto API — your file is never transmitted to a server. This is more private than Adobe's online tools, which upload documents to Adobe's cloud. If a protected PDF isn't opening correctly on a recipient's device, see [why password-protected PDFs sometimes fail to open on certain devices](/blog/protected-pdf-wont-open-some-devices).
+
+**What encryption strength does SignMyPDF use?**
+AES-256, the same algorithm used by banks and government agencies for sensitive data — and what Adobe Acrobat Pro uses by default. The strength of a protected PDF is set by the algorithm and your password length, not the tool that applied the encryption.
+
+[CTA]Password Protect Your PDF on Mac — Free|AES-256, full permission controls, browser-only. Works in Safari, Chrome, Firefox.|Protect PDF Now — Free
+
+## Related tools
+
+- [How to protect a PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe)
+- [Adobe vs free PDF protection — is it worth paying?](/blog/adobe-vs-free-pdf-protection)
+- [Sign PDF documents online — no account required](/sign)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
