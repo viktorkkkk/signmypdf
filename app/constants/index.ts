@@ -41,3 +41,13 @@ export const MERGE_FREE_FILE_LIMIT = 5;
 export const MERGE_PRO_FILE_LIMIT = 20;
 export const MERGE_FREE_SIZE_LIMIT = 50 * 1024 * 1024;
 export const MERGE_PRO_SIZE_LIMIT = 200 * 1024 * 1024;
+
+// ─── Compress tool limits ────────────────────────────────────────
+// Single-file caps. Free can compress up to 50 MB at the Recommended
+// preset; Pro lifts the cap to 200 MB and unlocks Light/Maximum levels.
+// "Already optimized" copy fires when the compressor can only shave
+// under MIN_REDUCTION_PERCENT off the input — typically text-only PDFs
+// where there's nothing meaningful to re-encode.
+export const COMPRESS_FREE_SIZE_LIMIT = 50 * 1024 * 1024;
+export const COMPRESS_PRO_SIZE_LIMIT = 200 * 1024 * 1024;
+export const COMPRESS_MIN_REDUCTION_PERCENT = 5;

@@ -50,6 +50,7 @@ export default function SiteFooter() {
               <li><Link href="/fill" className="footer-link">Fill PDF Form</Link></li>
               <li><Link href="/protect" className="footer-link">Protect PDF</Link></li>
               <li><Link href="/merge" className="footer-link">Merge PDF</Link></li>
+              <li><Link href="/compress" className="footer-link">Compress PDF</Link></li>
             </ul>
           </div>
 

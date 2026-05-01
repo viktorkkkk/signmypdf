@@ -17,7 +17,7 @@ export interface HistoryItem {
   hasBlob?: boolean;
   /** Legacy base64 data URL (pre-2026-05-01 entries). Reads still honored. */
   dataUrl?: string;
-  type: 'fill' | 'sign' | 'protect' | 'merge';
+  type: 'fill' | 'sign' | 'protect' | 'merge' | 'compress';
   hadWatermark?: boolean;  // whether watermark was on original download
 }
 
@@ -44,12 +44,12 @@ export async function saveToHistory(
   name: string,
   size: number,
   blob: Blob,
-  type: 'fill' | 'sign' | 'protect' | 'merge' = 'fill',
+  type: 'fill' | 'sign' | 'protect' | 'merge' | 'compress' = 'fill',
   hadWatermark = false,
 ): Promise<void> {
   try {
     const id = Math.random().toString(36).slice(2);
-    const cleanedName = name.replace(/^(signed-|filled-|protected-|merged-)+/g, '');
+    const cleanedName = name.replace(/^(signed-|filled-|protected-|merged-|compressed-)+/g, '');
 
     // Try to put the blob in IndexedDB first. If this fails (private mode,
     // IDB quota), the item is still recorded but stays locked.
@@ -363,11 +363,13 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
                             item.type === 'sign' ? '#eff6ff'
                             : item.type === 'fill' ? '#f0fdf4'
                             : item.type === 'merge' ? '#eef2ff'
+                            : item.type === 'compress' ? '#ecfeff'
                             : '#fef3c7',
                           color:
                             item.type === 'sign' ? '#2563eb'
                             : item.type === 'fill' ? '#16a34a'
                             : item.type === 'merge' ? '#4f46e5'
+                            : item.type === 'compress' ? '#0891b2'
                             : '#b45309',
                           padding: '1px 6px',
                           borderRadius: 4,
@@ -375,6 +377,7 @@ export default function FileHistory({ hasSubscription = false, onShowPricing, sh
                           {item.type === 'sign' ? 'signed'
                            : item.type === 'fill' ? 'filled'
                            : item.type === 'merge' ? 'merged'
+                           : item.type === 'compress' ? 'compressed'
                            : 'protected'}
                         </span>
                         {!locked && !hasSubscription && (

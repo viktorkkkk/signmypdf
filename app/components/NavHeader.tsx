@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Lock, PenLine, FileText, Sparkles, Files } from 'lucide-react';
+import { Lock, PenLine, FileText, Sparkles, Files, Minimize2 } from 'lucide-react';
 import Logo from './Logo';
 
 interface NavHeaderProps {
-  activeTool?: 'sign' | 'fill' | 'protect' | 'merge';
+  activeTool?: 'sign' | 'fill' | 'protect' | 'merge' | 'compress';
   onShowPricing?: () => void;
 }
 
@@ -83,6 +83,13 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
                 >
                   <Files size={16} strokeWidth={2} />
                   <span>Merge PDF</span>
+                </a>
+                <a
+                  href="/compress"
+                  className={`nav-dropdown-item${activeTool === 'compress' ? ' nav-dropdown-item--active' : ''}`}
+                >
+                  <Minimize2 size={16} strokeWidth={2} />
+                  <span>Compress PDF</span>
                 </a>
               </div>
             )}

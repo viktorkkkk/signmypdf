@@ -59,6 +59,8 @@
   --tool-protect-bg: #F5F3FF;
   --tool-merge-fg:   #4F46E5;   /* indigo — Organize tier */
   --tool-merge-bg:   #EEF2FF;
+  --tool-compress-fg: #0891B2;  /* cyan — Organize tier sibling of Merge */
+  --tool-compress-bg: #ECFEFF;
 }
 
 @media (max-width: 768px) {
@@ -1824,21 +1826,21 @@ body > div > footer { margin-top: auto; }
 }
 
 /* Tool cards — equal weight, no primary treatment.
-   Layout flexes to the number of cards: 4-up on wide, 2-up on tablet,
-   1-up on mobile (the 720px breakpoint below). The auto-fit flavour was
-   considered but rejected — it produces an asymmetric "3+1" layout at
-   intermediate widths, which reads as a glitch. Explicit ladder is cleaner. */
+   Layout flexes to the number of cards: 5-up on wide, 3-up on tablet
+   (gives a 3+2 row at 5 cards — acceptable, beats the asymmetric 4+1
+   that auto-fit would produce), 1-up on mobile (the 720px breakpoint
+   below). */
 .hub-hero .hub-tool-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
   max-width: var(--content-grid);
   margin: 0 auto var(--space-stack);
 }
-@media (max-width: 960px) {
+@media (max-width: 1060px) {
   .hub-hero .hub-tool-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 }
 
@@ -1884,6 +1886,7 @@ body > div > footer { margin-top: auto; }
 .hub-tool-card.tool-accent-fill    .hub-tool-icon-wrap { background: var(--tool-fill-bg);    color: var(--tool-fill-fg); }
 .hub-tool-card.tool-accent-protect .hub-tool-icon-wrap { background: var(--tool-protect-bg); color: var(--tool-protect-fg); }
 .hub-tool-card.tool-accent-merge   .hub-tool-icon-wrap { background: var(--tool-merge-bg);   color: var(--tool-merge-fg); }
+.hub-tool-card.tool-accent-compress .hub-tool-icon-wrap { background: var(--tool-compress-bg); color: var(--tool-compress-fg); }
 
 .hub-tool-name {
   font-size: var(--font-h3);
@@ -2540,6 +2543,295 @@ body > div > footer { margin-top: auto; }
   background: #eff6ff;
   padding: 2px 8px;
   border-radius: 20px;
+}
+
+/* ── Compress tool ─────────────────────────────────────────────── */
+.compress-file-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.compress-file-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--tool-compress-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.compress-file-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+.compress-file-meta {
+  font-size: 12.5px;
+  color: #64748b;
+}
+.compress-change-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.compress-change-btn:hover:not(:disabled) {
+  background: #eef2ff;
+  border-color: var(--tool-compress-fg);
+  color: var(--tool-compress-fg);
+}
+.compress-change-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.compress-prediction {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+}
+
+.compress-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.compress-level {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.compress-level input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.compress-level-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+  transition: border-color 0.15s;
+}
+.compress-level-selected {
+  border-color: var(--tool-compress-fg);
+  background: var(--tool-compress-bg);
+}
+.compress-level-selected .compress-level-radio {
+  border-color: var(--tool-compress-fg);
+}
+.compress-level-selected .compress-level-radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--tool-compress-fg);
+}
+.compress-level-label {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+.compress-level-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.compress-level-static {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.compress-unlock-btn {
+  background: white;
+  border: 1.5px solid #bfdbfe;
+  color: #2563eb;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.compress-unlock-btn:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.compress-actions {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.compress-secondary-btn {
+  flex: 0 0 auto;
+  padding: 14px 20px;
+  font-size: 14.5px;
+}
+.compress-cta {
+  flex: 1 1 240px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+/* Done step — before / after numbers */
+.compress-result {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 480px;
+  margin: 0 auto 20px;
+}
+.compress-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.compress-result-cell { text-align: center; }
+.compress-result-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.compress-result-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.compress-result-arrow {
+  font-size: 22px;
+  color: #cbd5e1;
+  font-weight: 300;
+}
+.compress-result-percent {
+  font-size: 38px;
+  font-weight: 800;
+  color: #16a34a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 12px 0 6px;
+  text-align: center;
+}
+.compress-result-name {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  word-break: break-all;
+}
+
+.compress-preview {
+  max-width: 560px;
+  margin: 0 auto 24px;
+}
+.compress-preview-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.compress-preview-thumbs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.compress-preview-thumb {
+  width: 130px;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.compress-pro-cta {
+  margin: 28px auto 0;
+  max-width: 480px;
+  background: linear-gradient(135deg, #ecfeff 0%, #eef2ff 100%);
+  border: 1.5px solid #cffafe;
+  border-radius: 16px;
+  padding: 18px 22px;
+  text-align: center;
+}
+.compress-pro-cta-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.compress-pro-cta-body {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 768px) {
+  .compress-file-card { padding: 12px 14px; gap: 10px; }
+  .compress-file-icon { width: 40px; height: 40px; }
+  .compress-file-name { font-size: 13.5px; }
+  .compress-actions { flex-direction: column; gap: 10px; }
+  .compress-secondary-btn,
+  .compress-cta { width: 100%; flex: 1 1 auto; }
+  .compress-result { padding: 16px 18px; }
+  .compress-result-percent { font-size: 32px; }
+  .compress-preview-thumb { width: 100px; max-height: 140px; }
+  .compress-level-static { flex-direction: column; align-items: flex-start; }
+  .compress-unlock-btn { width: 100%; text-align: center; }
 }
 
 /* ── Mobile Merge ─────────────────────────────────────────────── */

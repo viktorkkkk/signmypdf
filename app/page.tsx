@@ -17,6 +17,7 @@ import {
   Plus,
   Minus,
   Files,
+  Minimize2,
 } from 'lucide-react';
 import NavHeader from './components/NavHeader';
 import SiteFooter from './components/SiteFooter';
@@ -43,7 +44,7 @@ import { PADDLE_CLIENT_TOKEN } from './constants';
  *   read-and-consume so a refresh on /sign doesn't re-trigger.
  */
 
-type Tool = 'sign' | 'fill' | 'protect' | 'merge';
+type Tool = 'sign' | 'fill' | 'protect' | 'merge' | 'compress';
 
 declare global {
   interface Window {
@@ -59,6 +60,7 @@ const TOOL_ROUTE: Record<Tool, string> = {
   fill: '/fill',
   protect: '/protect',
   merge: '/merge',
+  compress: '/compress',
 };
 
 const FAQ: Array<{ q: string; a: string }> = [
@@ -235,6 +237,15 @@ export default function HomePage() {
               </div>
               <h3 className="hub-tool-name">Merge PDF</h3>
               <p className="hub-tool-desc">Combine multiple PDFs into one file.</p>
+              <span className="hub-tool-btn">Open tool →</span>
+            </button>
+
+            <button type="button" className="hub-tool-card tool-accent-compress" onClick={() => goToTool('compress')}>
+              <div className="hub-tool-icon-wrap">
+                <Minimize2 size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Compress PDF</h3>
+              <p className="hub-tool-desc">Reduce PDF file size for email and uploads.</p>
               <span className="hub-tool-btn">Open tool →</span>
             </button>
           </div>

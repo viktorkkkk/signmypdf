@@ -23,6 +23,7 @@ import {
   Plus,
   Loader2,
   Files,
+  Minimize2,
 } from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
@@ -625,7 +626,7 @@ export default function FillPage() {
               <h2 style={{ fontSize: 16, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 More PDF Tools
               </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, maxWidth: 880, margin: '0 auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, maxWidth: 1080, margin: '0 auto' }}>
                 <a href="/sign" style={{ background: 'white', borderRadius: 16, padding: '20px', border: '1.5px solid #e2e8f0', textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
@@ -657,6 +658,15 @@ export default function FillPage() {
                   <div style={{ marginBottom: 8, color: '#4f46e5' }}><Files size={28} strokeWidth={1.8} /></div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Merge PDF</div>
                   <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Combine multiple PDFs</div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
+                </a>
+                <a href="/compress" style={{ background: 'white', borderRadius: 16, padding: '20px', border: '1.5px solid #e2e8f0', textDecoration: 'none', display: 'block', transition: 'all 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
+                >
+                  <div style={{ marginBottom: 8, color: '#0891b2' }}><Minimize2 size={28} strokeWidth={1.8} /></div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Compress PDF</div>
+                  <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Reduce PDF file size</div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
                 </a>
               </div>

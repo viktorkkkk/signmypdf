@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect, type DragEvent, type ChangeEv
 import { useDropzone } from 'react-dropzone';
 import {
   Files,
+  Minimize2,
   Lock,
   Zap,
   Star,
@@ -439,6 +440,16 @@ export default function MergePage() {
     router.push('/sign');
   };
 
+  const handleCompressThis = async () => {
+    if (!mergedBlob) return;
+    track('merge_to_compress_clicked');
+    const file = new File([mergedBlob], mergedFileName, { type: 'application/pdf' });
+    try {
+      await storePendingFile(file);
+    } catch { /* fall through */ }
+    router.push('/compress');
+  };
+
   const reset = () => {
     if (mergedUrl) URL.revokeObjectURL(mergedUrl);
     setEntries([]);
@@ -764,10 +775,9 @@ export default function MergePage() {
                 <button
                   type="button"
                   className="merge-funnel-link"
-                  onClick={() => track('merge_to_compress_clicked')}
-                  title="Coming soon"
+                  onClick={handleCompressThis}
                 >
-                  <Files size={14} /> Compress this PDF (coming soon)
+                  <Minimize2 size={14} /> Compress this PDF →
                 </button>
               </div>
 
@@ -797,7 +807,7 @@ export default function MergePage() {
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, maxWidth: 880, margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, maxWidth: 1080, margin: '0 auto' }}>
               <a href="/sign" className="more-tool-card">
                 <div style={{ marginBottom: 8, color: '#2563eb' }}><PenLine size={26} strokeWidth={1.8} /></div>
                 <div className="more-tool-title">Sign PDF</div>
@@ -822,6 +832,12 @@ export default function MergePage() {
                 <div className="more-tool-sub">Combine multiple PDFs</div>
                 <span className="more-tool-cta-current">Current tool</span>
               </div>
+              <a href="/compress" className="more-tool-card">
+                <div style={{ marginBottom: 8, color: '#0891b2' }}><Minimize2 size={26} strokeWidth={1.8} /></div>
+                <div className="more-tool-title">Compress PDF</div>
+                <div className="more-tool-sub">Reduce PDF file size</div>
+                <span className="more-tool-cta">Try it →</span>
+              </a>
             </div>
           </div>
         </div>
