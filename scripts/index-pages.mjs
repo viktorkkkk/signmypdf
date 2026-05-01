@@ -16,13 +16,26 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { createSign } from 'crypto';
 
-// GSC credentials live OUTSIDE the repo at ~/.config/signmypdf/ to avoid any
-// risk of accidental commit. The daily RemoteTrigger writes a temporary copy
-// to the repo root at runtime (./signmypdf-seo-97022bc5390f.json) before
-// invoking this script, so we fall back to that path for the trigger flow.
+// GSC credentials resolution order:
+//   1. Env var GSC_CREDENTIALS (raw JSON or base64-encoded JSON) — used by
+//      GitHub Actions where the same secret name is mapped from repo secrets.
+//   2. ~/.config/signmypdf/gsc-credentials.json — local dev path.
+//   3. ./signmypdf-seo-97022bc5390f.json — repo fallback (gitignored), used
+//      by the daily RemoteTrigger which writes a temp copy at runtime.
 const CONFIG_PATH = join(homedir(), '.config/signmypdf/gsc-credentials.json');
 const REPO_FALLBACK = './signmypdf-seo-97022bc5390f.json';
 const CREDENTIALS_PATH = existsSync(CONFIG_PATH) ? CONFIG_PATH : REPO_FALLBACK;
+
+function loadCredentials() {
+  const env = process.env.GSC_CREDENTIALS;
+  if (env) {
+    const trimmed = env.trim();
+    if (trimmed.startsWith('{')) return JSON.parse(trimmed);
+    // Otherwise assume base64-encoded JSON
+    return JSON.parse(Buffer.from(trimmed, 'base64').toString('utf8'));
+  }
+  return JSON.parse(readFileSync(CREDENTIALS_PATH, 'utf8'));
+}
 // Submit URLs under www (the canonical host). The GSC service account
 // (signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com) is
 // Owner of the Domain property `sc-domain:signmypdf.io` (added Apr 27)
@@ -121,7 +134,7 @@ async function notifyUrl(token, url) {
 // --- Main ---
 
 async function main() {
-  const credentials = JSON.parse(readFileSync(CREDENTIALS_PATH, 'utf8'));
+  const credentials = loadCredentials();
   console.log(`\nService account: ${credentials.client_email}`);
   console.log(`Submitting ${URLS.length} URLs...\n`);
 

@@ -1,0 +1,157 @@
+name: Deploy on Blog Push
+
+# Stage B of the daily blog publishing pipeline.
+# Stage A (the claude.ai RemoteTrigger) writes articles → builds → commits →
+# pushes. Stage B is this workflow: when posts.ts changes on main, it
+# (a) deploys to Vercel production, (b) submits all blog URLs to Bing
+# IndexNow, and (c) submits the newly-added slugs to Google Indexing API.
+#
+# Why split? The trigger's runtime budget repeatedly ran out before the
+# deploy step (Apr 29 / Apr 30 / May 1 — three consecutive days of
+# committed-but-not-deployed articles, see CLAUDE.md "Recently Shipped").
+# Decoupling deploy from authoring eliminates the only recurring class of
+# silent failure in the daily pipeline.
+#
+# Manual trigger via "Run workflow" supported (workflow_dispatch) — useful
+# for re-deploying after a missed push or for testing this workflow itself.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/blog/posts.ts'
+  workflow_dispatch:
+    inputs:
+      submit_all_to_google:
+        description: 'Submit ALL slugs to Google Indexing API (uses more quota; default = only newly-added slugs)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-on-blog-push
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need HEAD~1 for git diff to identify newly-added slugs.
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Identify newly-added slugs
+        id: new_slugs
+        run: |
+          set -euo pipefail
+          # Match `+    slug: 'foo-bar',` lines added in this push. We
+          # deliberately ignore removed slugs — IndexNow handles dead
+          # URLs gracefully and Google Indexing API has a separate
+          # URL_DELETED type if we ever need it.
+          if [ "${{ github.event_name }}" = "push" ]; then
+            DIFF_RANGE="${{ github.event.before }}...${{ github.event.after }}"
+          else
+            DIFF_RANGE="HEAD~1...HEAD"
+          fi
+          echo "Diff range: $DIFF_RANGE"
+          NEW=$(git diff "$DIFF_RANGE" -- app/blog/posts.ts \
+            | grep -E "^\+    slug: '" \
+            | sed -E "s/^\+    slug: '([^']+)'.*/\1/" \
+            | tr '\n' ' ' \
+            | sed 's/ $//' || true)
+          echo "Newly-added slugs: ${NEW:-<none>}"
+          echo "slugs=$NEW" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Vercel production
+        id: vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          echo "Triggering production deploy..."
+          # `vercel deploy --prod` blocks until the deployment is READY.
+          # Returns deployment URL (e.g. https://signmypdf-xxx.vercel.app).
+          DEPLOY_URL=$(npx --yes vercel@latest deploy \
+            --prod \
+            --token "$VERCEL_TOKEN" \
+            --yes \
+            2>&1 | tee /tmp/vercel.log | tail -1)
+          echo "Deploy URL: $DEPLOY_URL"
+          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Submit to IndexNow (Bing)
+        id: indexnow
+        run: |
+          set -euo pipefail
+          node scripts/submit-indexnow.mjs
+
+      - name: Submit to Google Indexing API
+        id: google
+        env:
+          GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GSC_CREDENTIALS:-}" ]; then
+            echo "::warning::GSC_CREDENTIALS not set — Google submit skipped."
+            exit 0
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] \
+             && [ "${{ inputs.submit_all_to_google }}" = "true" ]; then
+            echo "workflow_dispatch with submit_all_to_google=true → submitting ALL slugs"
+            node scripts/index-pages.mjs
+          elif [ -n "${{ steps.new_slugs.outputs.slugs }}" ]; then
+            echo "Submitting newly-added slugs only (saves Indexing API quota)"
+            node scripts/index-pages.mjs ${{ steps.new_slugs.outputs.slugs }}
+          else
+            echo "No newly-added slugs and submit_all not requested — skipping Google submit."
+          fi
+
+      - name: Write deploy log
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p logs/deploy
+          DATE=$(date -u +%F)
+          TS=$(date -u +%FT%TZ)
+          cat > "logs/deploy/$DATE.json" <<EOF
+          {
+            "date": "$DATE",
+            "timestamp": "$TS",
+            "event": "${{ github.event_name }}",
+            "ref": "${{ github.ref }}",
+            "sha": "${{ github.sha }}",
+            "newSlugs": "${{ steps.new_slugs.outputs.slugs }}",
+            "deployUrl": "${{ steps.vercel.outputs.url }}",
+            "deployOutcome": "${{ steps.vercel.outcome }}",
+            "indexnowOutcome": "${{ steps.indexnow.outcome }}",
+            "googleOutcome": "${{ steps.google.outcome }}",
+            "runUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+
+      - name: Commit deploy log
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/deploy/ || true
+          if git diff --staged --quiet; then
+            echo "No new log to commit."
+          else
+            # Pull-rebase to avoid races with the seo-health workflow that
+            # also commits log files.
+            git pull --rebase origin main
+            git commit -m "Deploy log $(date -u +%F)"
+            git push
+          fi
