@@ -51,3 +51,14 @@ export const MERGE_PRO_SIZE_LIMIT = 200 * 1024 * 1024;
 export const COMPRESS_FREE_SIZE_LIMIT = 50 * 1024 * 1024;
 export const COMPRESS_PRO_SIZE_LIMIT = 200 * 1024 * 1024;
 export const COMPRESS_MIN_REDUCTION_PERCENT = 5;
+
+// ─── Split tool limits ───────────────────────────────────────────
+// Free: file ≤ 50 MB, source PDF ≤ 30 pages, ≤ 5 parts in Split-into-parts.
+// Pro: 200 MB, no page-count cap, ≤ 50 parts. The two advanced modes
+// (Split every N pages, Split by bookmarks) are Pro-only; in v1 they
+// render as Pro-locked tabs that open the paywall on click.
+export const SPLIT_FREE_SIZE_LIMIT = 50 * 1024 * 1024;
+export const SPLIT_PRO_SIZE_LIMIT = 200 * 1024 * 1024;
+export const SPLIT_FREE_PAGE_LIMIT = 30;
+export const SPLIT_FREE_PARTS_LIMIT = 5;
+export const SPLIT_PRO_PARTS_LIMIT = 50;

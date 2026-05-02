@@ -51,6 +51,7 @@ export default function SiteFooter() {
               <li><Link href="/protect" className="footer-link">Protect PDF</Link></li>
               <li><Link href="/merge" className="footer-link">Merge PDF</Link></li>
               <li><Link href="/compress" className="footer-link">Compress PDF</Link></li>
+              <li><Link href="/split" className="footer-link">Split PDF</Link></li>
             </ul>
           </div>
 

@@ -13,6 +13,7 @@ import {
   PenLine,
   FileSignature,
   Files,
+  Scissors,
   CheckCircle,
   AlertTriangle,
 } from 'lucide-react';
@@ -391,6 +392,14 @@ export default function CompressPage() {
     router.push('/merge');
   };
 
+  const handSplitThis = async () => {
+    if (!resultBlob) return;
+    track('compress_to_split_clicked');
+    const file = new File([resultBlob], resultFileName, { type: 'application/pdf' });
+    try { await storePendingFile(file); } catch { /* fall through */ }
+    router.push('/split');
+  };
+
   const reset = () => {
     if (resultUrl) URL.revokeObjectURL(resultUrl);
     setPdfFile(null);
@@ -750,6 +759,9 @@ export default function CompressPage() {
                     <button type="button" className="merge-funnel-link" onClick={handMergeThis}>
                       <Files size={14} /> Merge with another PDF →
                     </button>
+                    <button type="button" className="merge-funnel-link" onClick={handSplitThis}>
+                      <Scissors size={14} /> Split this PDF →
+                    </button>
                   </div>
 
                   <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
@@ -829,6 +841,12 @@ export default function CompressPage() {
                 <div className="more-tool-sub">Reduce PDF file size</div>
                 <span className="more-tool-cta-current">Current tool</span>
               </div>
+              <a href="/split" className="more-tool-card">
+                <div style={{ marginBottom: 8, color: '#c026d3' }}><Scissors size={26} strokeWidth={1.8} /></div>
+                <div className="more-tool-title">Split PDF</div>
+                <div className="more-tool-sub">Extract pages or split</div>
+                <span className="more-tool-cta">Try it →</span>
+              </a>
             </div>
           </div>
         </div>

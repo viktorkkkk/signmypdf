@@ -17,6 +17,7 @@ import {
   KeyRound,
   Files,
   Minimize2,
+  Scissors,
 } from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
@@ -890,6 +891,15 @@ export default function ProtectPage() {
                 <div style={{ marginBottom: 8, color: '#0891b2' }}><Minimize2 size={26} strokeWidth={1.8} /></div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Compress PDF</div>
                 <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Reduce PDF file size</div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
+              </a>
+              <a href="/split" style={{ background: 'white', borderRadius: 16, padding: '20px', border: '1.5px solid #e2e8f0', textDecoration: 'none', display: 'block', transition: 'all 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(37,99,235,0.1)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'; }}
+              >
+                <div style={{ marginBottom: 8, color: '#c026d3' }}><Scissors size={26} strokeWidth={1.8} /></div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Split PDF</div>
+                <div style={{ fontSize: 12, color: '#64748b', marginBottom: 10 }}>Extract pages or split</div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#2563eb' }}>Try it →</span>
               </a>
             </div>

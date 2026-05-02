@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Lock, PenLine, FileText, Sparkles, Files, Minimize2 } from 'lucide-react';
+import { Lock, PenLine, FileText, Sparkles, Files, Minimize2, Scissors } from 'lucide-react';
 import Logo from './Logo';
 
 interface NavHeaderProps {
-  activeTool?: 'sign' | 'fill' | 'protect' | 'merge' | 'compress';
+  activeTool?: 'sign' | 'fill' | 'protect' | 'merge' | 'compress' | 'split';
   onShowPricing?: () => void;
 }
 
@@ -90,6 +90,13 @@ export default function NavHeader({ activeTool, onShowPricing }: NavHeaderProps)
                 >
                   <Minimize2 size={16} strokeWidth={2} />
                   <span>Compress PDF</span>
+                </a>
+                <a
+                  href="/split"
+                  className={`nav-dropdown-item${activeTool === 'split' ? ' nav-dropdown-item--active' : ''}`}
+                >
+                  <Scissors size={16} strokeWidth={2} />
+                  <span>Split PDF</span>
                 </a>
               </div>
             )}

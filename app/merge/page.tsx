@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import {
   Files,
   Minimize2,
+  Scissors,
   Lock,
   Zap,
   Star,
@@ -450,6 +451,16 @@ export default function MergePage() {
     router.push('/compress');
   };
 
+  const handleSplitThis = async () => {
+    if (!mergedBlob) return;
+    track('merge_to_split_clicked');
+    const file = new File([mergedBlob], mergedFileName, { type: 'application/pdf' });
+    try {
+      await storePendingFile(file);
+    } catch { /* fall through */ }
+    router.push('/split');
+  };
+
   const reset = () => {
     if (mergedUrl) URL.revokeObjectURL(mergedUrl);
     setEntries([]);
@@ -779,6 +790,13 @@ export default function MergePage() {
                 >
                   <Minimize2 size={14} /> Compress this PDF →
                 </button>
+                <button
+                  type="button"
+                  className="merge-funnel-link"
+                  onClick={handleSplitThis}
+                >
+                  <Scissors size={14} /> Split this PDF →
+                </button>
               </div>
 
               <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
@@ -836,6 +854,12 @@ export default function MergePage() {
                 <div style={{ marginBottom: 8, color: '#0891b2' }}><Minimize2 size={26} strokeWidth={1.8} /></div>
                 <div className="more-tool-title">Compress PDF</div>
                 <div className="more-tool-sub">Reduce PDF file size</div>
+                <span className="more-tool-cta">Try it →</span>
+              </a>
+              <a href="/split" className="more-tool-card">
+                <div style={{ marginBottom: 8, color: '#c026d3' }}><Scissors size={26} strokeWidth={1.8} /></div>
+                <div className="more-tool-title">Split PDF</div>
+                <div className="more-tool-sub">Extract pages or split</div>
                 <span className="more-tool-cta">Try it →</span>
               </a>
             </div>

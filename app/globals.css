@@ -61,6 +61,8 @@
   --tool-merge-bg:   #EEF2FF;
   --tool-compress-fg: #0891B2;  /* cyan — Organize tier sibling of Merge */
   --tool-compress-bg: #ECFEFF;
+  --tool-split-fg:    #C026D3;  /* fuchsia — Organize tier, paired with Merge */
+  --tool-split-bg:    #FDF4FF;
 }
 
 @media (max-width: 768px) {
@@ -1826,20 +1828,19 @@ body > div > footer { margin-top: auto; }
 }
 
 /* Tool cards — equal weight, no primary treatment.
-   Layout flexes to the number of cards: 5-up on wide, 3-up on tablet
-   (gives a 3+2 row at 5 cards — acceptable, beats the asymmetric 4+1
-   that auto-fit would produce), 1-up on mobile (the 720px breakpoint
-   below). */
+   With 6 cards the cleanest layout is 3-up on every breakpoint above
+   mobile: wide → two rows of three, tablet → same. 6-up on wide was
+   tried but each card collapses to ~165px and the size/CTA numbers
+   crowd. 1-up on mobile (the 720px breakpoint below). */
 .hub-hero .hub-tool-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   max-width: var(--content-grid);
   margin: 0 auto var(--space-stack);
 }
 @media (max-width: 1060px) {
   .hub-hero .hub-tool-grid {
-    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
 }
@@ -1887,6 +1888,7 @@ body > div > footer { margin-top: auto; }
 .hub-tool-card.tool-accent-protect .hub-tool-icon-wrap { background: var(--tool-protect-bg); color: var(--tool-protect-fg); }
 .hub-tool-card.tool-accent-merge   .hub-tool-icon-wrap { background: var(--tool-merge-bg);   color: var(--tool-merge-fg); }
 .hub-tool-card.tool-accent-compress .hub-tool-icon-wrap { background: var(--tool-compress-bg); color: var(--tool-compress-fg); }
+.hub-tool-card.tool-accent-split    .hub-tool-icon-wrap { background: var(--tool-split-bg);    color: var(--tool-split-fg); }
 
 .hub-tool-name {
   font-size: var(--font-h3);
@@ -2892,6 +2894,379 @@ body > div > footer { margin-top: auto; }
   .compress-result { padding: 16px 18px; }
   .compress-result-percent { font-size: 32px; }
   .compress-preview-thumb { width: 100px; max-height: 140px; }
+}
+
+/* ── Split tool ─────────────────────────────────────────────── */
+.split-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+.split-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1.5px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.split-tab:hover { color: #0f172a; }
+.split-tab-active {
+  color: var(--tool-split-fg);
+  border-bottom-color: var(--tool-split-fg);
+}
+.split-tab-locked {
+  opacity: 0.6;
+}
+.split-tab-locked:hover { opacity: 0.85; }
+.split-tab-pro {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #1e293b;
+  color: #fef3c7;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.split-panel {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px 20px 20px;
+  margin-bottom: 18px;
+}
+
+.split-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.split-counter {
+  font-size: 13px;
+  color: #475569;
+}
+.split-counter strong { color: #0f172a; font-weight: 700; }
+.split-toolbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.split-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tool-split-fg);
+  cursor: pointer;
+}
+.split-link-btn:hover { text-decoration: underline; }
+.split-link-sep { color: #cbd5e1; }
+
+/* Page grid: cards 130-160px wide, 1.4 ratio for letter pages. */
+.split-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.split-grid-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 24px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+.split-thumb {
+  position: relative;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 8px 22px;
+  cursor: pointer;
+  text-align: center;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.split-thumb:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+.split-thumb-selected {
+  border: 2px solid var(--tool-split-fg);
+  background: var(--tool-split-bg);
+  padding: 7px 7px 21px;
+}
+.split-thumb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 6px;
+}
+.split-thumb-label {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+}
+.split-thumb-selected .split-thumb-label { color: var(--tool-split-fg); }
+.split-thumb-checkbox {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 5px;
+  color: #94a3b8;
+}
+.split-thumb-selected .split-thumb-checkbox {
+  color: var(--tool-split-fg);
+}
+
+.split-grid-locked {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fdf4ff;
+  border: 1.5px dashed var(--tool-split-fg);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #581c87;
+}
+.split-grid-locked p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #6b21a8;
+  line-height: 1.4;
+}
+
+.split-range-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.split-range-label {
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 500;
+}
+.split-range-input {
+  flex: 1 1 220px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.split-range-input:focus { border-color: var(--tool-split-fg); }
+.split-apply-btn {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.split-apply-btn:hover {
+  background: var(--tool-split-bg);
+  border-color: var(--tool-split-fg);
+  color: var(--tool-split-fg);
+}
+.split-range-error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+/* Parts list — one row per range. */
+.split-parts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.split-part {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+.split-part-invalid {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+.split-part-prefix {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  flex-shrink: 0;
+}
+.split-part-pages,
+.split-part-to {
+  font-size: 13px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.split-part-input {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.split-part-input:focus { border-color: var(--tool-split-fg); }
+.split-part-summary {
+  font-size: 12px;
+  color: #64748b;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.split-part-invalid .split-part-summary { color: #b91c1c; font-weight: 600; }
+.split-part-remove {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.split-part-remove:hover:not(:disabled) {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.split-part-remove:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.split-add-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.split-add-part:hover:not(:disabled) {
+  border-color: var(--tool-split-fg);
+  background: var(--tool-split-bg);
+  color: var(--tool-split-fg);
+}
+.split-add-part-locked {
+  opacity: 0.7;
+}
+
+.split-zip-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #475569;
+  cursor: pointer;
+}
+.split-zip-toggle input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--tool-split-fg);
+}
+
+.split-cta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .split-tabs {
+    /* Allow horizontal scroll if all 4 tabs don't fit on a phone width. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .split-tabs::-webkit-scrollbar { display: none; }
+  .split-tab {
+    padding: 9px 11px;
+    font-size: 12.5px;
+    flex-shrink: 0;
+  }
+
+  .split-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  .split-thumb { padding: 6px 6px 20px; }
+  .split-thumb-selected { padding: 5px 5px 19px; }
+
+  .split-toolbar { gap: 8px; }
+  .split-toolbar-actions { font-size: 12px; }
+
+  .split-part { gap: 8px; padding: 10px; }
+  .split-part-summary {
+    margin-left: 0;
+    width: 100%;
+    order: 99;
+  }
+
+  .split-grid-locked { flex-direction: column; align-items: stretch; text-align: center; }
 }
 
 /* ── Mobile Merge ─────────────────────────────────────────────── */
