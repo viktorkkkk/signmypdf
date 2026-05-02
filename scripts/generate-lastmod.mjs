@@ -34,9 +34,38 @@ const ROUTES = {
   '/terms':    ['app/terms/page.tsx'],
 };
 
+// Files that are staged for the about-to-be-made commit. When the script
+// runs from a pre-commit hook, these are the files the next commit will
+// contain — `git log -1 -- <file>` only sees the previous commit, so for
+// staged files we use `now` instead. That way the JSON we generate
+// matches the commit it ships with, not the one before it.
+let stagedSet = null;
+function getStagedFiles() {
+  if (stagedSet !== null) return stagedSet;
+  try {
+    const out = execSync('git diff --cached --name-only', {
+      cwd: repoRoot,
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    stagedSet = new Set(out.trim().split('\n').filter(Boolean));
+  } catch {
+    stagedSet = new Set();
+  }
+  return stagedSet;
+}
+
 function gitMtime(files) {
   const existing = files.filter((f) => existsSync(resolve(repoRoot, f)));
   if (existing.length === 0) return null;
+
+  // If any of the route's source files are staged for commit, the about-to-
+  // -be-made commit IS the new lastmod. Use current time.
+  const staged = getStagedFiles();
+  if (existing.some((f) => staged.has(f))) {
+    return new Date().toISOString();
+  }
+
   try {
     const out = execSync(
       `git log -1 --format=%cI -- ${existing.map((f) => `"${f}"`).join(' ')}`,
