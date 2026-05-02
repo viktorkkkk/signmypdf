@@ -539,7 +539,13 @@ body > div > footer { margin-top: auto; }
       (sign / merge / compress / split). Single styled card so the
       block reads as a design component, not a wall of plain text. ── */
 .tool-description {
-  padding: 64px 0;
+  padding: 64px 48px;
+}
+/* When nested inside a .container the horizontal gutter is already
+   provided by the parent — drop our own to avoid doubling it. */
+.container .tool-description {
+  padding-left: 0;
+  padding-right: 0;
 }
 .tool-description-card {
   max-width: 720px;
@@ -569,7 +575,7 @@ body > div > footer { margin-top: auto; }
 }
 @media (max-width: 768px) {
   .tool-description {
-    padding: 40px 0;
+    padding: 40px 20px;
   }
   .tool-description-card {
     padding: 28px 22px;

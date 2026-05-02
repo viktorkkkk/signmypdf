@@ -33,6 +33,7 @@ import Logo from '../components/Logo';
 import { fillPdfInBrowser } from '../utils/fillPdf';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { addWatermarkToBlob } from '../utils/watermark';
 import { isProActive, activateSubscription } from '../utils/subscription';
@@ -625,7 +626,7 @@ export default function FillPage() {
             </p>
 
             {/* More PDF Tools */}
-            <div style={{ marginTop: 48, borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
+            <div style={{ marginTop: 48, marginBottom: 40, borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
               <h2 style={{ fontSize: 16, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 More PDF Tools
               </h2>
@@ -683,6 +684,17 @@ export default function FillPage() {
                 </a>
               </div>
             </div>
+
+            {/* SEO body — wrapped in the shared <ToolDescription> card. */}
+            <ToolDescription
+              title="Fill PDF Forms Online — Free"
+              paragraphs={[
+                'Click any field in your PDF and start typing. The tool detects form fields automatically and lets you fill them in without printing, scanning, or installing software.',
+                'Works with both interactive PDF forms (the kind with real form fields) and flat PDFs where you just need to type on top — tax forms, applications, contracts, government paperwork. Add text, dates, and checkmarks anywhere on the page.',
+                "Everything happens in your browser. Your filled-in document doesn't go through our servers, doesn't sit in a queue, and isn't stored anywhere unless you turn on Cloud History.",
+                'Free fills up to 2 PDFs per day with no watermark. Premium removes the limit and keeps your filled forms for a year.',
+              ]}
+            />
 
             {/* Compact FAQ */}
             <div className="compact-faq" style={{ marginTop: 40 }}>
