@@ -25,6 +25,7 @@ import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import {
   PADDLE_CLIENT_TOKEN,
   MERGE_FREE_FILE_LIMIT,
@@ -822,7 +823,7 @@ export default function MergePage() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
@@ -869,25 +870,21 @@ export default function MergePage() {
         </div>
       )}
 
-      {/* SEO body — short, human, no AI-spam patterns */}
+      {/* SEO body — wrapped in the shared <ToolDescription> card. */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 40 }}>
-          <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 12, letterSpacing: '-0.01em' }}>
-              Merge PDF Files Online — Free
-            </h2>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              Combine two or more PDFs into a single file in your browser. The whole job runs locally on your device — your documents never leave your computer. No upload, no account, no waiting in queue.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              Drag your files in any order, switch them around, drop one if it doesn&apos;t belong, then hit Merge. The output keeps every page from every input, in the exact order you set, with no quality loss.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              Free for up to {MERGE_FREE_FILE_LIMIT} files and {bytesToMB(MERGE_FREE_SIZE_LIMIT)} MB per merge. Premium lifts the limit to {MERGE_PRO_FILE_LIMIT} files and {bytesToMB(MERGE_PRO_SIZE_LIMIT)} MB if you do this every day.
-            </p>
-          </div>
+        <ToolDescription
+          title="Merge PDF Files Online — Free"
+          paragraphs={[
+            'Combine two or more PDFs into a single file in your browser. The whole job runs locally on your device — your documents never leave your computer. No upload, no account, no waiting in queue.',
+            "Drag your files in any order, switch them around, drop one if it doesn't belong, then hit Merge. The output keeps every page from every input, in the exact order you set, with no quality loss.",
+            `Free for up to ${MERGE_FREE_FILE_LIMIT} files and ${bytesToMB(MERGE_FREE_SIZE_LIMIT)} MB per merge. Premium lifts the limit to ${MERGE_PRO_FILE_LIMIT} files and ${bytesToMB(MERGE_PRO_SIZE_LIMIT)} MB if you do this every day.`,
+          ]}
+        />
+      )}
 
-          <div className="compact-faq" style={{ marginTop: 32 }}>
+      {step === 'upload' && (
+        <div className="container" style={{ paddingBottom: 40 }}>
+          <div className="compact-faq">
             <h2>FAQ</h2>
             <details>
               <summary>Is it really free?</summary>

@@ -535,6 +535,55 @@ body > div > footer { margin-top: auto; }
   .trust-row { font-size: 12px; gap: 8px; }
 }
 
+/* ── <ToolDescription> — reusable SEO-body card used on tool pages
+      (sign / merge / compress / split). Single styled card so the
+      block reads as a design component, not a wall of plain text. ── */
+.tool-description {
+  padding: 64px 0;
+}
+.tool-description-card {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+.tool-description-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 18px;
+}
+.tool-description-text {
+  font-size: 16px;
+  color: var(--color-muted);
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+.tool-description-text:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 768px) {
+  .tool-description {
+    padding: 40px 0;
+  }
+  .tool-description-card {
+    padding: 28px 22px;
+    border-radius: 14px;
+  }
+  .tool-description-title {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .tool-description-text {
+    font-size: 15px;
+  }
+}
+
 /* ── Compact FAQ accordion ── */
 .compact-faq {
   max-width: 560px;

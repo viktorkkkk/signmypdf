@@ -27,6 +27,7 @@ import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import {
   PADDLE_CLIENT_TOKEN,
   SPLIT_FREE_SIZE_LIMIT,
@@ -1266,7 +1267,7 @@ export default function SplitPage() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
@@ -1313,25 +1314,21 @@ export default function SplitPage() {
         </div>
       )}
 
-      {/* SEO body */}
+      {/* SEO body — wrapped in the shared <ToolDescription> card. */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 40 }}>
-          <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 12, letterSpacing: '-0.01em' }}>
-              Split PDF Files Online — Free
-            </h2>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              Drop a PDF, pick the pages you want, and get back either one extracted PDF or several smaller ones — whichever fits your task. The whole job runs in your browser, so the document never leaves your device. No upload, no account, no waiting in queue.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              Use Extract pages when you only need a few pages out of a long document, like pulling a single section out of a contract. Use Split into parts when you want to break a bigger PDF into independent files — chapters, monthly reports, anything you&apos;d normally save separately. Either way, the original page order is preserved and quality is unchanged.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              Free for files up to {bytesToMB(SPLIT_FREE_SIZE_LIMIT)} MB and {SPLIT_FREE_PAGE_LIMIT} pages, with up to {SPLIT_FREE_PARTS_LIMIT} output parts across all four split modes. Premium lifts the cap to {bytesToMB(SPLIT_PRO_SIZE_LIMIT)} MB, removes the page limit, and raises the parts cap to {SPLIT_PRO_PARTS_LIMIT}.
-            </p>
-          </div>
+        <ToolDescription
+          title="Split PDF Files Online — Free"
+          paragraphs={[
+            'Drop a PDF, pick the pages you want, and get back either one extracted PDF or several smaller ones — whichever fits your task. The whole job runs in your browser, so the document never leaves your device. No upload, no account, no waiting in queue.',
+            "Use Extract pages when you only need a few pages out of a long document, like pulling a single section out of a contract. Use Split into parts when you want to break a bigger PDF into independent files — chapters, monthly reports, anything you'd normally save separately. Either way, the original page order is preserved and quality is unchanged.",
+            `Free for files up to ${bytesToMB(SPLIT_FREE_SIZE_LIMIT)} MB and ${SPLIT_FREE_PAGE_LIMIT} pages, with up to ${SPLIT_FREE_PARTS_LIMIT} output parts across all four split modes. Premium lifts the cap to ${bytesToMB(SPLIT_PRO_SIZE_LIMIT)} MB, removes the page limit, and raises the parts cap to ${SPLIT_PRO_PARTS_LIMIT}.`,
+          ]}
+        />
+      )}
 
-          <div className="compact-faq" style={{ marginTop: 32 }}>
+      {step === 'upload' && (
+        <div className="container" style={{ paddingBottom: 40 }}>
+          <div className="compact-faq">
             <h2>FAQ</h2>
             <details>
               <summary>Is it really free?</summary>

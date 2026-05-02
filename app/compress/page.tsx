@@ -21,6 +21,7 @@ import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import {
   PADDLE_CLIENT_TOKEN,
   COMPRESS_FREE_SIZE_LIMIT,
@@ -812,7 +813,7 @@ export default function CompressPage() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
@@ -859,25 +860,21 @@ export default function CompressPage() {
         </div>
       )}
 
-      {/* SEO body — short, human, no AI-spam patterns */}
+      {/* SEO body — wrapped in the shared <ToolDescription> card. */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 40 }}>
-          <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 12, letterSpacing: '-0.01em' }}>
-              Compress PDF Files Online — Free
-            </h2>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              Drop a PDF and get a smaller file back, ready for email or upload limits. The whole job runs in your browser — your document never leaves your device. No account, no upload, no waiting in a queue.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 16 }}>
-              How much you can save depends on what&apos;s inside the file. Scanned PDFs and reports with photos compress 30–80% because we re-encode the embedded images at a lower resolution. PDFs that are mostly text barely shrink — there&apos;s nothing big to compress, and we&apos;ll tell you that on the next step instead of pretending we did real work.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              You see the before-and-after size, a preview of the result, and decide whether to keep it. If a level you picked made things worse, we hand you back the original. Free for files up to {bytesToMB(COMPRESS_FREE_SIZE_LIMIT)} MB; Premium lifts the cap to {bytesToMB(COMPRESS_PRO_SIZE_LIMIT)} MB and unlocks Light and Maximum levels.
-            </p>
-          </div>
+        <ToolDescription
+          title="Compress PDF Files Online — Free"
+          paragraphs={[
+            'Drop a PDF and get a smaller file back, ready for email or upload limits. The whole job runs in your browser — your document never leaves your device. No account, no upload, no waiting in a queue.',
+            "How much you can save depends on what's inside the file. Scanned PDFs and reports with photos compress 30–80% because we re-encode the embedded images at a lower resolution. PDFs that are mostly text barely shrink — there's nothing big to compress, and we'll tell you that on the next step instead of pretending we did real work.",
+            `You see the before-and-after size, a preview of the result, and decide whether to keep it. If a level you picked made things worse, we hand you back the original. Free for files up to ${bytesToMB(COMPRESS_FREE_SIZE_LIMIT)} MB; Premium lifts the cap to ${bytesToMB(COMPRESS_PRO_SIZE_LIMIT)} MB and unlocks Light and Maximum levels.`,
+          ]}
+        />
+      )}
 
-          <div className="compact-faq" style={{ marginTop: 32 }}>
+      {step === 'upload' && (
+        <div className="container" style={{ paddingBottom: 40 }}>
+          <div className="compact-faq">
             <h2>FAQ</h2>
             <details>
               <summary>Is it really free?</summary>

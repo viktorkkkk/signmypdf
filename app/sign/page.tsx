@@ -28,6 +28,7 @@ import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import { signPdfInBrowser } from '../utils/signPdf';
 import {
   SUBSCRIPTION_KEY,
@@ -696,7 +697,7 @@ export default function Home() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
@@ -758,32 +759,18 @@ export default function Home() {
         </div>
       )}
 
-      {/* SEO body — short, human. The juridical detail (ESIGN / UETA /
-          eIDAS) lives in /blog/electronic-signature-legal so this block
-          stays a "tool sub-cap", not a wall of text under the CTA. */}
+      {/* SEO body — wrapped in the shared <ToolDescription> card so it
+          reads as a design component, not a wall of text under the CTA. */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 8 }}>
-          <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 14, letterSpacing: '-0.01em' }}>
-              Sign PDF Files Online — Free
-            </h2>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
-              Drop your PDF, place your signature, download the signed file. Everything runs in your browser — your document never leaves your device.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
-              Draw your signature with a mouse or finger, type your name in a handwritten-style font, or upload an image of your existing one. Add dates, initials, and printed names where the form needs them.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
-              Electronic signatures are legally binding in the US, EU, UK, and most jurisdictions for everyday business documents.{' '}
-              <a href="/blog/electronic-signature-legal" style={{ color: '#2563eb', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                Read more about e-signature law →
-              </a>
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              Free signs up to {DAILY_LIMIT} PDFs per day with no watermark and no account. Premium removes the limit and keeps your files for a year.
-            </p>
-          </div>
-        </div>
+        <ToolDescription
+          title="Sign PDF Files Online — Free"
+          paragraphs={[
+            'Drop your PDF, place your signature, download the signed file. Everything runs in your browser — your document never leaves your device.',
+            'Draw your signature with a mouse or finger, type your name in a handwritten-style font, or upload an image of your existing one. Add dates, initials, and printed names where the form needs them.',
+            'Electronic signatures are legally binding in the US, EU, UK, and most jurisdictions for everyday business documents.',
+            `Free signs up to ${DAILY_LIMIT} PDFs per day with no watermark and no account. Premium removes the limit and keeps your files for a year.`,
+          ]}
+        />
       )}
 
       {/* Compact FAQ — only on upload step */}
