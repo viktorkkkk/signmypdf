@@ -6,6 +6,3 @@ Sitemap: https://www.signmypdf.io/sitemap.xml
 
 # Disallow API routes
 Disallow: /api/
-
-# Crawl delay for bots
-Crawl-delay: 1
