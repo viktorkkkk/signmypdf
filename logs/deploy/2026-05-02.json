@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-02",
+  "timestamp": "2026-05-02T02:21:35Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "594c05ae4fdef5ab94ac5db94569bece85eabe3f",
+  "newSlugs": "pdf-read-only-add-text-fix docusign-free-plan-vs-signmypdf",
+  "deployUrl": "Aliased: https://www.signmypdf.io [50s]",
+  "deployOutcome": "success",
+  "indexnowOutcome": "success",
+  "googleOutcome": "success",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25241402131"
+}
