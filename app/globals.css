@@ -573,6 +573,20 @@ body > div > footer { margin-top: auto; }
 .tool-description-text:last-child {
   margin-bottom: 0;
 }
+/* Optional H3 subheadings inside the tool-description card. Used on
+   /sign-nda's "About NDAs" block; other tool pages stick to the simple
+   title+paragraphs layout via the <ToolDescription> component. */
+.tool-description-h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  margin: 28px 0 8px;
+}
+.tool-description-card > div:first-of-type .tool-description-h3 {
+  margin-top: 4px;
+}
 @media (max-width: 768px) {
   .tool-description {
     padding: 40px 20px;
@@ -588,6 +602,16 @@ body > div > footer { margin-top: auto; }
   .tool-description-text {
     font-size: 15px;
   }
+  .tool-description-h3 {
+    font-size: 16px;
+    margin: 22px 0 6px;
+  }
+}
+
+/* /sign-nda FAQ uses the .compact-faq pattern but bumped to match the
+   720px ToolDescription card width (default .compact-faq is 560px). */
+.nda-faq-wrap .compact-faq {
+  max-width: 720px;
 }
 
 /* ── /sign-nda hero template card — thumbnail + 3 download/sign buttons ── */
@@ -595,7 +619,7 @@ body > div > footer { margin-top: auto; }
   padding: 64px 48px 32px;
 }
 .nda-hero-inner {
-  max-width: 720px;
+  max-width: 880px;
   margin: 0 auto;
   text-align: center;
 }
@@ -619,10 +643,10 @@ body > div > footer { margin-top: auto; }
   border: 1px solid var(--color-border);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  padding: 32px;
+  padding: 40px;
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 32px;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
   align-items: center;
   text-align: left;
 }
@@ -723,7 +747,7 @@ body > div > footer { margin-top: auto; }
     border-radius: 14px;
   }
   .nda-thumb {
-    max-width: 200px;
+    max-width: 220px;
     margin: 0 auto;
   }
   .nda-btn {
@@ -2232,6 +2256,30 @@ body > div > footer { margin-top: auto; }
   color: var(--color-text);
   margin: 0 0 var(--space-stack);
   letter-spacing: -0.02em;
+}
+
+/* Free-templates section — sits between the hero tool grid and the
+   "Why SignMyPDF" block. Uses the same .hub-tool-card visuals so
+   templates feel like first-class entries alongside tools. */
+.hub-templates {
+  padding: var(--space-section-tight) 0 var(--space-section-tight);
+}
+.hub-templates-sub {
+  text-align: center;
+  font-size: var(--font-lead);
+  color: var(--color-muted);
+  margin: -16px auto 32px;
+  max-width: 560px;
+}
+.hub-templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: var(--content-grid);
+  margin: 0 auto;
+}
+.hub-template-card {
+  text-decoration: none;
 }
 
 /* Why-block follows the Hero directly — visually linked, same idea.

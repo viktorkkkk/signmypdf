@@ -19,6 +19,7 @@ import {
   Files,
   Minimize2,
   Scissors,
+  FileLock,
 } from 'lucide-react';
 import NavHeader from './components/NavHeader';
 import SiteFooter from './components/SiteFooter';
@@ -297,6 +298,26 @@ export default function HomePage() {
               <span className="hub-trust-dot" aria-hidden="true">·</span>
               <span className="hub-trust-item"><Zap size={16} strokeWidth={2} /> Works in 30 seconds</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BLOCK 1.5 — Free templates: ready-to-sign documents.
+                Currently a single card (NDA); the section is the slot
+                where additional templates (offer letter, lease) will land. ─── */}
+      <section className="hub-templates">
+        <div className="hub-container">
+          <h2 className="hub-section-title">Free templates</h2>
+          <p className="hub-templates-sub">Ready-made documents you can fill and sign in your browser.</p>
+          <div className="hub-templates-grid">
+            <a href="/sign-nda" className="hub-tool-card hub-template-card tool-accent-sign">
+              <div className="hub-tool-icon-wrap">
+                <FileLock size={28} strokeWidth={2} />
+              </div>
+              <h3 className="hub-tool-name">Mutual NDA Template</h3>
+              <p className="hub-tool-desc">Free non-disclosure agreement, fill and sign online.</p>
+              <span className="hub-tool-btn">Open template →</span>
+            </a>
           </div>
         </div>
       </section>

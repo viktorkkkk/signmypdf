@@ -177,10 +177,34 @@ export default function Home() {
     // Check for pending upload from the hub (/) dropzone. IndexedDB-based
     // so PDFs up to 100MB survive the hand-off. consumePendingFile reads
     // and deletes in one go, so a refresh on /sign won't re-trigger it.
+    //
+    // Fallback: if IDB returns null AND the URL has `?from=<template>`
+    // (set by /sign-nda's "Fill & sign online" button), fetch the
+    // matching template directly. Belt-and-braces against IDB races on
+    // prod — cold-start of the IDB connection can occasionally lose to
+    // the soft-navigation handoff.
+    const TEMPLATE_FROM_PARAM: Record<string, { url: string; name: string }> = {
+      'nda-template': { url: '/templates/nda-template.pdf', name: 'nda-template.pdf' },
+    };
     consumePendingFile().then(file => {
       if (file) {
         setPdfFile(file);
         setStep('sign');
+        return;
+      }
+      const fromParam = new URLSearchParams(window.location.search).get('from');
+      const tpl = fromParam ? TEMPLATE_FROM_PARAM[fromParam] : null;
+      if (tpl) {
+        fetch(tpl.url)
+          .then(res => res.blob())
+          .then(blob => {
+            const tplFile = new File([blob], tpl.name, { type: 'application/pdf' });
+            setPdfFile(tplFile);
+            setStep('sign');
+            // Clean the URL so a refresh doesn't re-trigger the fetch.
+            window.history.replaceState({}, '', '/sign');
+          })
+          .catch(() => {/* leave on upload step; the dropzone is the safety net */});
       }
     }).catch(() => {/* no pending file or storage unavailable */});
   }, []);

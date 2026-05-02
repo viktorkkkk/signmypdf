@@ -60,9 +60,12 @@ export default function NdaHeroCard() {
     return () => { cancelled = true; };
   }, []);
 
-  // Hand off the NDA template to the /sign tool via IndexedDB. /sign
-  // calls consumePendingFile() on mount and skips straight to the sign
-  // step when a file is found.
+  // Hand off the NDA template to the /sign tool. Primary path: store
+  // the File in IndexedDB so /sign's consumePendingFile() picks it up
+  // on mount. Always also pass `?from=nda-template` so /sign can fall
+  // back to a fresh fetch if IDB races (cold-start, private mode, or
+  // any prod-only edge case where the read happens before the write
+  // is durable).
   const onFillAndSign = async () => {
     if (signing) return;
     setSigning(true);
@@ -72,12 +75,10 @@ export default function NdaHeroCard() {
       const blob = await res.blob();
       const file = new File([blob], 'nda-template.pdf', { type: 'application/pdf' });
       await storePendingFile(file);
-      router.push('/sign');
     } catch (e) {
-      console.error('NDA hand-off failed:', e);
-      // Fall back to plain navigation; the /sign dropzone is the safety net.
-      router.push('/sign');
+      console.error('NDA IDB hand-off failed (will use ?from fallback):', e);
     }
+    router.push('/sign?from=nda-template');
   };
 
   return (

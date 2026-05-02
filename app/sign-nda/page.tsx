@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
-import ToolDescription from '../components/ToolDescription';
 import NdaHeroCard from './NdaHeroCard';
 
 export const metadata: Metadata = {
@@ -25,11 +24,32 @@ export const metadata: Metadata = {
   },
 };
 
-const TOOL_DESCRIPTION_PARAGRAPHS = [
-  "A non-disclosure agreement protects information shared between two parties during business discussions — when you're talking to a potential investor, partner, contractor, or new hire about anything sensitive.",
-  "This template is mutual, meaning both parties agree to protect each other's confidential information. If only one side is sharing — for example, when hiring a contractor who needs access to your data — a one-way NDA is more common, but mutual NDAs work too and are often the simpler choice.",
-  'Electronic signatures on NDAs are legally binding in the US, EU, UK, and most jurisdictions. ESIGN Act, UETA, and eIDAS all recognize signed PDFs as valid contracts.',
-  'This template is provided for informational purposes only and does not constitute legal advice. For complex situations, consult a licensed attorney.',
+// "About NDAs" section content. Rendered inline below using the shared
+// `.tool-description-*` classes plus an extra `.tool-description-h3`
+// rule so each idea gets its own subheading. Kept inline (not pushed
+// into the shared <ToolDescription> component) so the simple
+// title+paragraphs API of that component stays unchanged for the
+// other tool pages.
+const ABOUT_SECTIONS: { h3: string; paragraphs: string[] }[] = [
+  {
+    h3: 'When to use a mutual NDA',
+    paragraphs: [
+      "A non-disclosure agreement protects information shared between two parties during business discussions — when you're talking to a potential investor, partner, contractor, or new hire about anything sensitive.",
+    ],
+  },
+  {
+    h3: 'Mutual vs one-way',
+    paragraphs: [
+      "This template is mutual, meaning both parties agree to protect each other's confidential information. If only one side is sharing — for example, when hiring a contractor who needs access to your data — a one-way NDA is more common, but mutual NDAs work too and are often the simpler choice.",
+    ],
+  },
+  {
+    h3: 'Is it legally binding?',
+    paragraphs: [
+      'Electronic signatures on NDAs are legally binding in the US, EU, UK, and most jurisdictions. ESIGN Act, UETA, and eIDAS all recognize signed PDFs as valid contracts.',
+      'This template is provided for informational purposes only and does not constitute legal advice. For complex situations, consult a licensed attorney.',
+    ],
+  },
 ];
 
 const FAQ_ITEMS: { q: string; a: string }[] = [
@@ -104,9 +124,21 @@ export default function SignNdaPage() {
           </div>
         </section>
 
-        <ToolDescription title="About NDAs" paragraphs={TOOL_DESCRIPTION_PARAGRAPHS} />
+        <section className="tool-description">
+          <div className="tool-description-card">
+            <h2 className="tool-description-title">About NDAs</h2>
+            {ABOUT_SECTIONS.map((sec) => (
+              <div key={sec.h3}>
+                <h3 className="tool-description-h3">{sec.h3}</h3>
+                {sec.paragraphs.map((p, i) => (
+                  <p key={i} className="tool-description-text">{p}</p>
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <div className="container" style={{ paddingBottom: 40 }}>
+        <div className="container nda-faq-wrap" style={{ paddingBottom: 40 }}>
           <div className="compact-faq">
             <h2>FAQ</h2>
             {FAQ_ITEMS.map((item) => (
