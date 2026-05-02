@@ -758,39 +758,29 @@ export default function Home() {
         </div>
       )}
 
-      {/* SEO body — short, human, no AI-spam patterns */}
+      {/* SEO body — short, human. The juridical detail (ESIGN / UETA /
+          eIDAS) lives in /blog/electronic-signature-legal so this block
+          stays a "tool sub-cap", not a wall of text under the CTA. */}
       {step === 'upload' && (
         <div className="container" style={{ paddingTop: 24, paddingBottom: 8 }}>
           <div style={{ maxWidth: 760, margin: '0 auto' }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 12, letterSpacing: '-0.01em' }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', marginBottom: 14, letterSpacing: '-0.01em' }}>
               Sign PDF Files Online — Free
             </h2>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', margin: '20px 0 8px' }}>
-              How it works
-            </h3>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 14 }}>
-              Drop your PDF, place your signature where it belongs, and download the signed file. The whole process takes about a minute and runs entirely in your browser — your document never goes to a server, never sits in a queue, never lands in someone&apos;s logs.
+            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
+              Drop your PDF, place your signature, download the signed file. Everything runs in your browser — your document never leaves your device.
+            </p>
+            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
+              Draw your signature with a mouse or finger, type your name in a handwritten-style font, or upload an image of your existing one. Add dates, initials, and printed names where the form needs them.
+            </p>
+            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 12 }}>
+              Electronic signatures are legally binding in the US, EU, UK, and most jurisdictions for everyday business documents.{' '}
+              <a href="/blog/electronic-signature-legal" style={{ color: '#2563eb', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                Read more about e-signature law →
+              </a>
             </p>
             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              You can draw your signature with a mouse or finger, type your name and pick a handwritten-style font, or upload an image of your existing signature. Add as many signatures as the document needs, plus dates, initials, or printed names where the form asks for them.
-            </p>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', margin: '24px 0 8px' }}>
-              Is an electronic signature legally valid
-            </h3>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 14 }}>
-              In the US, EU, UK, Canada, Australia, and most other jurisdictions, electronic signatures carry the same legal weight as ink ones for the vast majority of business and personal documents. The relevant laws — ESIGN Act and UETA in the US, eIDAS in the EU — require that both parties consent to signing electronically, that the signature can be linked to the signer, and that the signed document can&apos;t be altered afterward without detection.
-            </p>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              For most everyday cases — NDAs, offer letters, freelance contracts, lease agreements, consent forms — a signature drawn or typed in a tool like this is fully enforceable. Some specific documents still require wet ink or notarization (wills in some states, certain real estate transactions, sworn affidavits), so check the requirements if you&apos;re unsure.
-            </p>
-
-            <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0f172a', margin: '24px 0 8px' }}>
-              Free vs Premium
-            </h3>
-            <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              The free plan signs up to {DAILY_LIMIT} PDFs per day with no watermark, no account, and no email required. Premium removes the daily limit, keeps your signed files for a year through Cloud History, and unlocks all current and future tools across the site for $7.50/month billed annually.
+              Free signs up to {DAILY_LIMIT} PDFs per day with no watermark and no account. Premium removes the limit and keeps your files for a year.
             </p>
           </div>
         </div>
