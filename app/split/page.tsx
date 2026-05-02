@@ -831,13 +831,18 @@ export default function SplitPage() {
               )}
             </div>
 
-            {/* File hero */}
-            <div className="compress-hero">
+            {/* File hero — Split is a multi-screen workflow where the
+                source file's bytes-on-disk is just orientation info, not
+                a number the user is acting on. Keeping size big the way
+                /compress does pulls attention away from the mode tabs
+                that matter. Size is folded into the same line as page
+                count, /merge-style. */}
+            <div className="compress-hero compress-hero-compact">
               <div className="compress-hero-main">
                 <div className="compress-hero-name" title={pdfFile.name}>{pdfFile.name}</div>
-                <div className="compress-hero-size">{formatFileSize(pdfFile.size)}</div>
                 <div className="compress-hero-meta">
-                  {pageCount > 0 ? <>{pageCount} {pageCount === 1 ? 'page' : 'pages'}</> : <>Reading PDF…</>}
+                  {formatFileSize(pdfFile.size)}
+                  {pageCount > 0 ? <> · {pageCount} {pageCount === 1 ? 'page' : 'pages'}</> : <> · Reading PDF…</>}
                 </div>
               </div>
               <button type="button" onClick={reset} disabled={isProcessing} className="compress-hero-link">

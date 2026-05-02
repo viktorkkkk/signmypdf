@@ -2562,6 +2562,17 @@ body > div > footer { margin-top: auto; }
   padding: 22px 24px;
   margin-bottom: 18px;
 }
+/* Compact variant — used by /split where the bytes-on-disk number is
+   orientation info, not a number the user is acting on. Drops the
+   hero's vertical padding and aligns the corner link to the centre. */
+.compress-hero-compact {
+  align-items: center;
+  padding: 14px 18px;
+}
+.compress-hero-compact .compress-hero-name {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
 .compress-hero-main {
   flex: 1;
   min-width: 0;
