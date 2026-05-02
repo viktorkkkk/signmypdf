@@ -141,6 +141,8 @@ export default function HomePage() {
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
     multiple: false,
+    // See compress/page.tsx — defensive against the FS Access API quirk.
+    useFsAccessApi: false,
   });
 
   const goToTool = (tool: Tool) => {

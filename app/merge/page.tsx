@@ -266,6 +266,8 @@ export default function MergePage() {
     accept: { 'application/pdf': ['.pdf'] },
     multiple: true,
     noClick: true,
+    // See compress/page.tsx — defensive against the FS Access API quirk.
+    useFsAccessApi: false,
   });
 
   const handleAddMoreClick = () => {

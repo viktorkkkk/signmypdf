@@ -212,7 +212,12 @@ export default function ProtectPage() {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1, noClick: true,
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    maxFiles: 1,
+    noClick: true,
+    // See compress/page.tsx — defensive against the FS Access API quirk.
+    useFsAccessApi: false,
   });
 
   const reset = () => {

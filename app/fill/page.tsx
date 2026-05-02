@@ -306,6 +306,8 @@ export default function FillPage() {
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
     noClick: true,
+    // See compress/page.tsx — defensive against the FS Access API quirk.
+    useFsAccessApi: false,
   });
 
   // Generate PDF and go to preview (no watermark on preview)

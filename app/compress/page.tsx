@@ -285,12 +285,18 @@ export default function CompressPage() {
     if (f) acceptFile(f);
   }, [acceptFile]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
     multiple: false,
     noClick: true,
+    // Bypass Chrome's experimental File System Access API path. With it
+    // on, drops on a dropzone that *also* contains a nested
+    // `<input type="file">` (our explicit "Choose PDF file" picker)
+    // intermittently swallow the drop event without invoking onDrop —
+    // surfaced as a "drag-drop not working" bug report on /compress.
+    useFsAccessApi: false,
   });
 
   const handleCompress = async () => {
@@ -482,19 +488,20 @@ export default function CompressPage() {
               </div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop a PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
-              <label className="btn-primary" style={{ cursor: 'pointer' }}>
+              {/* Picker uses react-dropzone's `open` so there's only ONE
+                  hidden file input on the page (the one from
+                  getInputProps()). The previous nested
+                  `<label><input type="file"/></label>` pattern competed
+                  with the dropzone's own input on drop events and made
+                  drag-drop intermittently swallow the file. */}
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => { e.stopPropagation(); open(); }}
+              >
                 Choose PDF file
-                <input
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  style={{ display: 'none' }}
-                  onChange={e => {
-                    const file = e.target.files?.[0];
-                    if (file) acceptFile(file);
-                    e.target.value = '';
-                  }}
-                />
-              </label>
+              </button>
             </div>
             <p style={{ textAlign: 'center', fontSize: 13, color: '#64748b', marginTop: 8 }}>
               {hasSubscription

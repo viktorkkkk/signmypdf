@@ -238,7 +238,14 @@ export default function Home() {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    onDrop, accept: { 'application/pdf': ['.pdf'] }, maxFiles: 1, noClick: true,
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    maxFiles: 1,
+    noClick: true,
+    // See compress/page.tsx for rationale — Chrome's FS Access API path
+    // can swallow drops when the dropzone contains a sibling
+    // `<input type="file">`.
+    useFsAccessApi: false,
   });
 
   const canSign = (signMode === 'draw' ? !!signatureData : !!typedName.trim()) && selectedPages.length > 0;

@@ -400,12 +400,16 @@ export default function SplitPage() {
     if (f) acceptFile(f);
   }, [acceptFile]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
     multiple: false,
     noClick: true,
+    // See compress/page.tsx for the rationale — disables Chrome's
+    // experimental FS Access API path that conflicts with nested
+    // `<input type="file">` siblings inside the dropzone.
+    useFsAccessApi: false,
   });
 
   // ── Mode tabs ──────────────────────────────────────────────
@@ -672,19 +676,14 @@ export default function SplitPage() {
               </div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop a PDF here'}</p>
               <p className="dz-sub">or click to select a file from your computer</p>
-              <label className="btn-primary" style={{ cursor: 'pointer' }}>
+              <button
+                type="button"
+                className="btn-primary"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => { e.stopPropagation(); open(); }}
+              >
                 Choose PDF file
-                <input
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  style={{ display: 'none' }}
-                  onChange={e => {
-                    const file = e.target.files?.[0];
-                    if (file) acceptFile(file);
-                    e.target.value = '';
-                  }}
-                />
-              </label>
+              </button>
             </div>
             <p style={{ textAlign: 'center', fontSize: 13, color: '#64748b', marginTop: 8 }}>
               {hasSubscription
