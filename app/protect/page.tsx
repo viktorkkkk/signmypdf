@@ -23,6 +23,7 @@ import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
+import ToolDescription from '../components/ToolDescription';
 import {
   DAILY_LIMIT,
   PADDLE_CLIENT_TOKEN,
@@ -850,7 +851,7 @@ export default function ProtectPage() {
 
       {/* More PDF Tools — only on upload step */}
       {step === 'upload' && (
-        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               More PDF Tools
@@ -910,6 +911,19 @@ export default function ProtectPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* SEO body — wrapped in the shared <ToolDescription> card. */}
+      {step === 'upload' && (
+        <ToolDescription
+          title="Protect PDF with Password — Free"
+          paragraphs={[
+            'Drop your PDF, set a password, and download the protected file. Anyone who tries to open it will need that password — works with Adobe Acrobat, Preview, browsers, and any PDF reader that supports encryption.',
+            "Uses standard PDF encryption recognized by every major PDF reader. Choose what's locked: opening the document, printing, copying text, or editing — restrict any combination.",
+            "Password setup runs in your browser. The PDF and the password you set never leave your device — we don't keep copies, don't see your password, and don't have a way to recover it if you forget. Save it somewhere safe.",
+            'Free protects up to 2 PDFs per day. Premium removes the limit and keeps your protected files for a year through Cloud History.',
+          ]}
+        />
       )}
 
       {/* Compact FAQ — only on upload step */}
