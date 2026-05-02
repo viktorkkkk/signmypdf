@@ -20,6 +20,7 @@ const STATIC_URLS = [
   `https://${HOST}/merge`,
   `https://${HOST}/compress`,
   `https://${HOST}/split`,
+  `https://${HOST}/sign-nda`,
   `https://${HOST}/blog`,
   `https://${HOST}/privacy`,
   `https://${HOST}/terms`,

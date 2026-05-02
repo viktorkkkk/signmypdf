@@ -590,6 +590,148 @@ body > div > footer { margin-top: auto; }
   }
 }
 
+/* ── /sign-nda hero template card — thumbnail + 3 download/sign buttons ── */
+.nda-hero {
+  padding: 64px 48px 32px;
+}
+.nda-hero-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.nda-hero h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 16px;
+}
+.nda-hero-sub {
+  font-size: 17px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0 auto 32px;
+  max-width: 560px;
+}
+.nda-hero-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: center;
+  text-align: left;
+}
+.nda-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 595 / 842;
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nda-thumb canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.nda-thumb-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+}
+.nda-thumb-spinner {
+  animation: spin 0.8s linear infinite;
+}
+.nda-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nda-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  text-decoration: none;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.nda-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.nda-btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.nda-btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+.nda-btn-primary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+.nda-btn-secondary {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.nda-btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+@media (max-width: 640px) {
+  .nda-hero {
+    padding: 40px 20px 24px;
+  }
+  .nda-hero h1 {
+    font-size: 26px;
+  }
+  .nda-hero-sub {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+  .nda-hero-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 22px;
+    border-radius: 14px;
+  }
+  .nda-thumb {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+  .nda-btn {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+}
+
 /* ── Compact FAQ accordion ── */
 .compact-faq {
   max-width: 560px;

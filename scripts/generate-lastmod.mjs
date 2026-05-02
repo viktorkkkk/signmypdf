@@ -29,6 +29,7 @@ const ROUTES = {
   '/merge':    ['app/merge/page.tsx', 'app/merge/layout.tsx'],
   '/compress': ['app/compress/page.tsx', 'app/compress/layout.tsx'],
   '/split':    ['app/split/page.tsx', 'app/split/layout.tsx'],
+  '/sign-nda': ['app/sign-nda/page.tsx', 'app/sign-nda/NdaHeroCard.tsx'],
   '/blog':     ['app/blog/page.tsx', 'app/blog/posts.ts'],
   '/privacy':  ['app/privacy/page.tsx'],
   '/terms':    ['app/terms/page.tsx'],

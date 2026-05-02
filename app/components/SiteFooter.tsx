@@ -52,6 +52,7 @@ export default function SiteFooter() {
               <li><Link href="/merge" className="footer-link">Merge PDF</Link></li>
               <li><Link href="/compress" className="footer-link">Compress PDF</Link></li>
               <li><Link href="/split" className="footer-link">Split PDF</Link></li>
+              <li><Link href="/sign-nda" className="footer-link">Sign NDA</Link></li>
             </ul>
           </div>
 
