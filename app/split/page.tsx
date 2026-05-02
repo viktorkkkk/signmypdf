@@ -40,11 +40,13 @@ import { storePendingFile, consumePendingFile } from '../utils/pendingUpload';
 import {
   splitPdf,
   parsePageRanges,
+  readPdfBookmarks,
   SplitPdfError,
+  type PdfBookmark,
 } from '../utils/splitPdf';
 
 type Step = 'upload' | 'configure' | 'done';
-type Mode = 'extract' | 'parts' | 'every-n' | 'bookmarks';
+type Mode = 'extract' | 'parts' | 'everyN' | 'bookmarks';
 
 interface PartRange {
   id: string;
@@ -118,6 +120,12 @@ export default function SplitPage() {
 
   const [parts, setParts] = useState<PartRange[]>([]);
   const [asZip, setAsZip] = useState(true);
+  // Split-every-N state. Starts at 2 — the smallest meaningful chunk
+  // size that still produces multiple files.
+  const [everyN, setEveryN] = useState(2);
+  // Bookmarks read from the source PDF outline. `null` while we're
+  // still parsing, `[]` when the PDF has no outline.
+  const [bookmarks, setBookmarks] = useState<PdfBookmark[] | null>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -205,6 +213,7 @@ export default function SplitPage() {
     if (!pdfFile) {
       setThumbnails([]);
       setPageCount(0);
+      setBookmarks(null);
       thumbsLoadedForRef.current = null;
       return;
     }
@@ -214,6 +223,13 @@ export default function SplitPage() {
     let cancelled = false;
     setThumbsLoading(true);
     setThumbnails([]);
+    setBookmarks(null);
+
+    // Read bookmarks alongside the thumbnails — independent of pdfjs.
+    readPdfBookmarks(pdfFile).then(bm => { if (!cancelled) setBookmarks(bm); }).catch(() => {
+      if (!cancelled) setBookmarks([]);
+    });
+
     (async () => {
       try {
         const pdfjsLib = await import('pdfjs-dist');
@@ -230,6 +246,9 @@ export default function SplitPage() {
           { id: newPartId(), from: 1, to: mid },
           { id: newPartId(), from: Math.min(pc, mid + 1), to: pc },
         ]);
+        // Default `everyN` to half the doc so we hit the Free 5-part cap
+        // less aggressively on large PDFs (e.g. 30-page → N=15 → 2 parts).
+        setEveryN(Math.max(2, Math.min(pc - 1, Math.ceil(pc / 2))));
 
         // Free + > page cap → open paywall and don't render the rest.
         const renderUpTo = isProActive() ? pc : Math.min(pc, SPLIT_FREE_PAGE_LIMIT);
@@ -363,9 +382,30 @@ export default function SplitPage() {
     return Math.round((selectedPages.size / pageCount) * pdfFile.size);
   }, [pdfFile, pageCount, selectedPages.size]);
 
-  const canRunExtract = mode === 'extract' && selectedPages.size > 0 && !exceededFreePageLimit;
-  const canRunParts = mode === 'parts' && partsValid && !exceededFreePageLimit;
-  const canRun = (canRunExtract || canRunParts) && !isProcessing;
+  // ── Every-N derived state ────────────────────────────────────
+  // Number of output PDFs the chosen N produces. Used both for the
+  // "Result: N PDFs of M pages each" preview and the Free 5-part cap.
+  const everyNPartCount = pageCount > 0 && everyN > 0
+    ? Math.ceil(pageCount / everyN)
+    : 0;
+  const everyNRemainder = pageCount > 0 && everyN > 0
+    ? pageCount - (Math.floor(pageCount / everyN) * everyN)
+    : 0;
+  const everyNValid =
+    pageCount > 0
+    && Number.isFinite(everyN)
+    && everyN >= 1
+    && everyN < pageCount
+    && everyNPartCount >= 2;
+
+  // Bookmarks-mode derived state.
+  const bookmarksCount = bookmarks?.length ?? 0;
+
+  const canRunExtract   = mode === 'extract'   && selectedPages.size > 0 && !exceededFreePageLimit;
+  const canRunParts     = mode === 'parts'     && partsValid             && !exceededFreePageLimit;
+  const canRunEveryN    = mode === 'everyN'    && everyNValid            && !exceededFreePageLimit;
+  const canRunBookmarks = mode === 'bookmarks' && bookmarksCount > 0     && !exceededFreePageLimit;
+  const canRun = (canRunExtract || canRunParts || canRunEveryN || canRunBookmarks) && !isProcessing;
 
   // ── File acceptance ─────────────────────────────────────────
   const acceptFile = useCallback((file: File) => {
@@ -413,12 +453,10 @@ export default function SplitPage() {
   });
 
   // ── Mode tabs ──────────────────────────────────────────────
+  // All four modes are now Free. The earlier Pro lock on every-n and
+  // bookmarks was removed once the implementations stopped being
+  // placeholders.
   const handleModeClick = (m: Mode) => {
-    if (m === 'every-n' || m === 'bookmarks') {
-      track('split_locked_mode_clicked', { mode: m });
-      setShowPricing(true);
-      return;
-    }
     setMode(m);
   };
 
@@ -426,6 +464,29 @@ export default function SplitPage() {
   const handleRun = async () => {
     if (!pdfFile || !canRun) return;
     setErrorBanner(null);
+
+    // Free 5-part cap on the multi-output modes. We block at the run
+    // step (rather than disabling the CTA outright) so the paywall can
+    // surface the exact reason — Pro lifts the cap to 50 parts.
+    if (!hasSubscription) {
+      let intendedParts = 0;
+      if (mode === 'parts') intendedParts = parts.length;
+      else if (mode === 'everyN') intendedParts = everyNPartCount;
+      else if (mode === 'bookmarks') intendedParts = bookmarksCount;
+      if (intendedParts > SPLIT_FREE_PARTS_LIMIT) {
+        if (mode === 'everyN') {
+          setLimitBanner(`Free supports up to ${SPLIT_FREE_PARTS_LIMIT} parts. Use a larger N or upgrade.`);
+        } else if (mode === 'bookmarks') {
+          setLimitBanner(`Free supports up to ${SPLIT_FREE_PARTS_LIMIT} parts. Upgrade to split by all bookmarks.`);
+        } else {
+          setLimitBanner(`Free supports up to ${SPLIT_FREE_PARTS_LIMIT} parts per split. Upgrade for up to ${SPLIT_PRO_PARTS_LIMIT}.`);
+        }
+        setShowPricing(true);
+        track('split_paywall_opened', { reason: 'parts_limit', mode });
+        return;
+      }
+    }
+
     setIsProcessing(true);
     setProgress(0);
 
@@ -434,6 +495,18 @@ export default function SplitPage() {
       if (mode === 'extract') {
         const indices = Array.from(selectedPages).sort((a, b) => a - b).map(p => p - 1);
         result = await splitPdf(pdfFile, { mode: 'extract', pageIndices: indices }, p => setProgress(p));
+      } else if (mode === 'everyN') {
+        result = await splitPdf(
+          pdfFile,
+          { mode: 'everyN', n: everyN, asZip },
+          p => setProgress(p),
+        );
+      } else if (mode === 'bookmarks') {
+        result = await splitPdf(
+          pdfFile,
+          { mode: 'bookmarks', asZip },
+          p => setProgress(p),
+        );
       } else {
         result = await splitPdf(
           pdfFile,
@@ -603,19 +676,50 @@ export default function SplitPage() {
 
   const stepIndex = STEPS.findIndex(s => s.id === step);
 
-  const ctaLabel = mode === 'extract'
-    ? (selectedPages.size > 0
+  const ctaLabel = (() => {
+    if (mode === 'extract') {
+      return selectedPages.size > 0
         ? `Extract ${selectedPages.size} ${selectedPages.size === 1 ? 'page' : 'pages'} → 1 PDF`
-        : 'Extract pages')
-    : `Split into ${parts.length} ${parts.length === 1 ? 'part' : 'parts'}`;
+        : 'Extract pages';
+    }
+    if (mode === 'parts') {
+      return `Split into ${parts.length} ${parts.length === 1 ? 'part' : 'parts'}`;
+    }
+    if (mode === 'everyN') {
+      return everyNValid
+        ? `Split into ${everyNPartCount} ${everyNPartCount === 1 ? 'part' : 'parts'}`
+        : 'Split every N pages';
+    }
+    // bookmarks
+    return bookmarksCount > 0
+      ? `Split by ${bookmarksCount} ${bookmarksCount === 1 ? 'bookmark' : 'bookmarks'}`
+      : 'Split by bookmarks';
+  })();
 
-  const ctaPreview = mode === 'extract'
-    ? (selectedPages.size > 0
+  const ctaPreview = (() => {
+    if (mode === 'extract') {
+      return selectedPages.size > 0
         ? `Result: pages ${summarizePages(Array.from(selectedPages))} (${selectedPages.size} ${selectedPages.size === 1 ? 'page' : 'pages'}, ~${formatFileSize(extractEstimateBytes)})`
-        : 'Select at least 1 page')
-    : (parts.length > 0
+        : 'Select at least 1 page';
+    }
+    if (mode === 'parts') {
+      return parts.length > 0
         ? `Result: ${parts.length} ${parts.length === 1 ? 'PDF' : 'PDFs'}${asZip && parts.length > 1 ? ' bundled in a ZIP' : ''}`
-        : 'Add at least 1 part');
+        : 'Add at least 1 part';
+    }
+    if (mode === 'everyN') {
+      if (!everyNValid) return pageCount > 0 ? `Pick a value between 1 and ${pageCount - 1}` : 'Loading PDF…';
+      const zipNote = asZip && everyNPartCount > 1 ? ' bundled in a ZIP' : '';
+      return everyNRemainder === 0
+        ? `Result: ${everyNPartCount} PDFs of ${everyN} pages each${zipNote}`
+        : `Result: ${everyNPartCount - 1} PDFs of ${everyN} pages + 1 PDF of ${everyNRemainder} ${everyNRemainder === 1 ? 'page' : 'pages'}${zipNote}`;
+    }
+    // bookmarks
+    if (bookmarks === null) return 'Reading bookmarks…';
+    if (bookmarksCount === 0) return 'No bookmarks in this PDF';
+    const zipNote = asZip && bookmarksCount > 1 ? ' bundled in a ZIP' : '';
+    return `Result: ${bookmarksCount} ${bookmarksCount === 1 ? 'PDF' : 'PDFs'} based on bookmarks${zipNote}`;
+  })();
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -746,8 +850,8 @@ export default function SplitPage() {
               {([
                 { id: 'extract',   label: 'Extract pages',         icon: <CheckSquare size={15} />, locked: false },
                 { id: 'parts',     label: 'Split into parts',      icon: <SplitSquareHorizontal size={15} />, locked: false },
-                { id: 'every-n',   label: 'Split every N pages',   icon: <Files size={15} />,       locked: !hasSubscription },
-                { id: 'bookmarks', label: 'Split by bookmarks',    icon: <Bookmark size={15} />,    locked: !hasSubscription },
+                { id: 'everyN',    label: 'Split every N pages',   icon: <Files size={15} />,       locked: false },
+                { id: 'bookmarks', label: 'Split by bookmarks',    icon: <Bookmark size={15} />,    locked: false },
               ] as const).map(t => {
                 const active = mode === t.id;
                 return (
@@ -935,6 +1039,86 @@ export default function SplitPage() {
               </div>
             )}
 
+            {mode === 'everyN' && (
+              <div className="split-panel">
+                <p className="split-panel-sub">Cut the PDF into chunks of equal size.</p>
+                <div className="split-everyn-row">
+                  <label className="split-everyn-label" htmlFor="split-every-n-input">Pages per file:</label>
+                  <input
+                    id="split-every-n-input"
+                    type="number"
+                    min={1}
+                    max={Math.max(1, pageCount - 1)}
+                    value={Number.isFinite(everyN) ? everyN : ''}
+                    onChange={e => {
+                      const v = parseInt(e.target.value, 10);
+                      setEveryN(Number.isFinite(v) ? v : 0);
+                    }}
+                    className="split-everyn-input"
+                  />
+                  <span className="split-everyn-hint">
+                    of {pageCount} {pageCount === 1 ? 'page' : 'pages'}
+                  </span>
+                </div>
+                <div className="split-everyn-preview">
+                  {everyNValid ? (
+                    everyNRemainder === 0
+                      ? <>Result: <strong>{everyNPartCount} PDFs</strong> of {everyN} pages each</>
+                      : <>Result: <strong>{everyNPartCount - 1} PDFs</strong> of {everyN} pages + 1 PDF of {everyNRemainder} {everyNRemainder === 1 ? 'page' : 'pages'}</>
+                  ) : (
+                    pageCount > 0 ? `Choose a value between 1 and ${pageCount - 1}.` : 'Loading PDF…'
+                  )}
+                </div>
+                {everyNValid && everyNPartCount > 1 && (
+                  <label className="split-zip-toggle">
+                    <input
+                      type="checkbox"
+                      checked={asZip}
+                      onChange={e => setAsZip(e.target.checked)}
+                    />
+                    <span>Download as ZIP ({everyNPartCount} files in one archive)</span>
+                  </label>
+                )}
+              </div>
+            )}
+
+            {mode === 'bookmarks' && (
+              <div className="split-panel">
+                <p className="split-panel-sub">One file per chapter or section.</p>
+                {bookmarks === null ? (
+                  <div className="split-bookmarks-empty">Reading bookmarks…</div>
+                ) : bookmarks.length === 0 ? (
+                  <div className="split-bookmarks-empty">
+                    This PDF doesn&apos;t have bookmarks. Try Extract pages or Split into parts instead.
+                  </div>
+                ) : (
+                  <>
+                    <ul className="split-bookmarks-list">
+                      {bookmarks.map((b, i) => (
+                        <li key={i} className="split-bookmark-row">
+                          <span className="split-bookmark-title">{b.title}</span>
+                          <span className="split-bookmark-page">page {b.pageIndex + 1}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="split-everyn-preview">
+                      Result: <strong>{bookmarks.length} {bookmarks.length === 1 ? 'PDF' : 'PDFs'}</strong> based on bookmarks
+                    </div>
+                    {bookmarks.length > 1 && (
+                      <label className="split-zip-toggle">
+                        <input
+                          type="checkbox"
+                          checked={asZip}
+                          onChange={e => setAsZip(e.target.checked)}
+                        />
+                        <span>Download as ZIP ({bookmarks.length} files in one archive)</span>
+                      </label>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
             {/* Action area */}
             <div className="split-cta-block">
               <p className="compress-cta-helper">{ctaPreview}</p>
@@ -946,7 +1130,12 @@ export default function SplitPage() {
                 title={!canRun && mode === 'extract' && selectedPages.size === 0 ? 'Select at least 1 page' : undefined}
               >
                 {isProcessing ? (
-                  <><span className="spinner" /> {mode === 'extract' ? 'Extracting your pages…' : `Creating part…`}</>
+                  <><span className="spinner" /> {
+                    mode === 'extract' ? 'Extracting your pages…'
+                    : mode === 'bookmarks' ? 'Splitting by bookmarks…'
+                    : mode === 'everyN' ? 'Cutting into chunks…'
+                    : 'Creating parts…'
+                  }</>
                 ) : (
                   <><Scissors size={18} /> {ctaLabel}</>
                 )}
@@ -1133,7 +1322,7 @@ export default function SplitPage() {
               Use Extract pages when you only need a few pages out of a long document, like pulling a single section out of a contract. Use Split into parts when you want to break a bigger PDF into independent files — chapters, monthly reports, anything you&apos;d normally save separately. Either way, the original page order is preserved and quality is unchanged.
             </p>
             <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.7, marginBottom: 0 }}>
-              Free for files up to {bytesToMB(SPLIT_FREE_SIZE_LIMIT)} MB and {SPLIT_FREE_PAGE_LIMIT} pages, with up to {SPLIT_FREE_PARTS_LIMIT} output parts. Premium lifts the cap to {bytesToMB(SPLIT_PRO_SIZE_LIMIT)} MB, removes the page limit, and unlocks Split every N pages and Split by bookmarks.
+              Free for files up to {bytesToMB(SPLIT_FREE_SIZE_LIMIT)} MB and {SPLIT_FREE_PAGE_LIMIT} pages, with up to {SPLIT_FREE_PARTS_LIMIT} output parts across all four split modes. Premium lifts the cap to {bytesToMB(SPLIT_PRO_SIZE_LIMIT)} MB, removes the page limit, and raises the parts cap to {SPLIT_PRO_PARTS_LIMIT}.
             </p>
           </div>
 

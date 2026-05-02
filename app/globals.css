@@ -3227,6 +3227,101 @@ body > div > footer { margin-top: auto; }
   accent-color: var(--tool-split-fg);
 }
 
+/* ── Split — every-N tab ─────────────────────────────────────── */
+.split-panel-sub {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+.split-everyn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.split-everyn-label {
+  font-size: 13.5px;
+  color: #475569;
+  font-weight: 600;
+}
+.split-everyn-input {
+  width: 88px;
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.split-everyn-input:focus { border-color: var(--tool-split-fg); }
+.split-everyn-hint {
+  font-size: 13px;
+  color: #94a3b8;
+}
+.split-everyn-preview {
+  font-size: 13px;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  line-height: 1.5;
+}
+.split-everyn-preview strong { color: #0f172a; font-weight: 700; }
+
+/* ── Split — bookmarks tab ───────────────────────────────────── */
+.split-bookmarks-empty {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 20px;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+.split-bookmarks-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.split-bookmark-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+  background: white;
+}
+.split-bookmark-row:last-child { border-bottom: none; }
+.split-bookmark-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.split-bookmark-page {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
 .split-cta-block {
   display: flex;
   flex-direction: column;
