@@ -749,24 +749,26 @@ body.nda-editor-mode .nda-hero-inner {
   color: #fff;
 }
 
-/* Sign & Download — sidebar slot. Mobile uses .fse-fab instead. */
+/* Sign & Download — standalone block in the sidebar (sits between the
+   placed-elements card and the tip/watermark card). Mobile uses
+   .fse-fab instead. */
 .fse-sidebar-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: 12px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   background: var(--color-primary);
   color: #fff;
   border: 1px solid var(--color-primary);
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 12px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
 }
 .fse-sidebar-cta:hover:not(:disabled) {
   background: var(--color-primary-hover);
@@ -778,6 +780,7 @@ body.nda-editor-mode .nda-hero-inner {
   background: #cbd5e1;
   border-color: #cbd5e1;
   cursor: default;
+  box-shadow: none;
 }
 
 /* Pending-signature ribbon — appears once a signature is created and
@@ -1180,6 +1183,9 @@ body.nda-editor-mode .nda-hero-inner {
   position: sticky;
   top: 80px;
   align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .fse-sidebar-card {
   background: var(--color-bg);
@@ -1187,6 +1193,11 @@ body.nda-editor-mode .nda-hero-inner {
   border-radius: 14px;
   padding: 16px;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+.fse-sidebar-card-info {
+  /* Tip + watermark warning — slightly smaller padding to look like a
+     secondary block under the standalone CTA. */
+  padding: 12px 14px;
 }
 .fse-sidebar-title {
   display: flex;
@@ -1262,8 +1273,6 @@ body.nda-editor-mode .nda-hero-inner {
   font-size: 11.5px;
   color: var(--color-muted);
   line-height: 1.55;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-border);
 }
 .fse-sidebar-tip span:first-child {
   font-weight: 700;

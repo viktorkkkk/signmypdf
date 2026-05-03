@@ -762,7 +762,10 @@ export default function FillSignEditor({
         </div>
       </div>
 
-      {/* Sidebar — sticky list + Sign & Download (desktop only) */}
+      {/* Sidebar — three stacked blocks (sticky as a group):
+          1. Placed-elements card
+          2. Standalone Sign & Download CTA (desktop only — mobile uses .fse-fab)
+          3. Tip + watermark warning card */}
       <aside className="fse-sidebar">
         <div className="fse-sidebar-card">
           <div className="fse-sidebar-title">
@@ -794,18 +797,20 @@ export default function FillSignEditor({
               })}
             </ul>
           )}
+        </div>
 
-          {/* Sign & Download — desktop sidebar slot. Mobile uses .fse-fab. */}
-          <button
-            type="button"
-            className="fse-sidebar-cta"
-            disabled={!canDone}
-            onClick={handleDone}
-          >
-            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
-            <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
-          </button>
+        {/* Standalone CTA — visually distinct from the list card. */}
+        <button
+          type="button"
+          className="fse-sidebar-cta"
+          disabled={!canDone}
+          onClick={handleDone}
+        >
+          {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
+          <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
+        </button>
 
+        <div className="fse-sidebar-card fse-sidebar-card-info">
           <div className="fse-sidebar-tip">
             <span>Tip:</span> drag to move, double-click to edit, drag corners to resize signatures.
           </div>
