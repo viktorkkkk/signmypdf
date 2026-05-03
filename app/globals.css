@@ -614,6 +614,486 @@ body > div > footer { margin-top: auto; }
   max-width: 720px;
 }
 
+/* When the embedded FillSignEditor is mounted on /sign-nda the body
+   gets `.nda-editor-mode` so the hero H1 + subtitle collapse and the
+   editor host can break out of the 880px hero container. */
+body.nda-editor-mode .nda-hero h1,
+body.nda-editor-mode .nda-hero-sub {
+  display: none;
+}
+body.nda-editor-mode .nda-hero {
+  padding-top: 24px;
+}
+body.nda-editor-mode .nda-hero-inner {
+  max-width: 100%;
+}
+
+.nda-editor-host {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+.nda-editor-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-muted);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  margin-bottom: 16px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.nda-editor-back:hover {
+  color: var(--color-text);
+  border-color: var(--color-text);
+  background: var(--color-surface);
+}
+.nda-done-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #16a34a;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.35);
+  z-index: 80;
+  animation: ndaToastIn 0.25s ease-out;
+}
+@keyframes ndaToastIn {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── <FillSignEditor> — unified Fill + Sign editor surface.
+      Toolbar at top, multi-page PDF render, sidebar element list,
+      Done CTA below. Used on /sign-nda in Phase 1; future migration
+      target for /sign and /fill in Phase 2/3. ── */
+.fse {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.fse-main {
+  min-width: 0;
+}
+.fse-toolbar {
+  position: sticky;
+  top: 12px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  margin-bottom: 16px;
+}
+.fse-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.fse-tool-btn:hover {
+  background: var(--color-surface);
+}
+.fse-tool-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.fse-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px;
+  min-height: 240px;
+}
+.fse-pages-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 60px 20px;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+.fse-pages-error {
+  color: var(--color-danger);
+}
+.fse-spin {
+  animation: spin 0.8s linear infinite;
+  color: var(--color-primary);
+}
+
+.fse-page {
+  position: relative;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+.fse-page canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.fse-page-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.fse-page-overlay > * {
+  pointer-events: auto;
+}
+.fse-page-label {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+/* Crosshair cursor when a placement tool is active */
+.fse-pages.tool-text .fse-page,
+.fse-pages.tool-date .fse-page,
+.fse-pages.tool-signature .fse-page,
+.fse-pages.tool-checkbox .fse-page,
+.fse-pages.tool-initial .fse-page {
+  cursor: crosshair;
+}
+
+.fse-element {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px dashed var(--color-primary);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: grab;
+  user-select: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+.fse-element:active {
+  cursor: grabbing;
+}
+.fse-element-active {
+  border-style: solid;
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+}
+.fse-element-image {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0;
+  overflow: hidden;
+}
+.fse-element-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+.fse-element-x {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.fse-element:hover .fse-element-x,
+.fse-element-active .fse-element-x {
+  opacity: 1;
+}
+.fse-element-x:active {
+  transform: scale(0.92);
+}
+
+.fse-pending {
+  position: absolute;
+  z-index: 4;
+}
+.fse-pending-input {
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 10px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+  outline: none;
+  min-width: 160px;
+}
+
+.fse-cta-row {
+  margin-top: 16px;
+}
+.fse-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.1s;
+}
+.fse-cta:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.fse-cta:active:not(:disabled) {
+  transform: scale(0.99);
+}
+.fse-cta:disabled {
+  background: #cbd5e1;
+  cursor: default;
+}
+.fse-cta-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.fse-sidebar {
+  position: sticky;
+  top: 12px;
+}
+.fse-sidebar-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+.fse-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+.fse-sidebar-empty {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0 0 10px;
+  line-height: 1.55;
+}
+.fse-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.fse-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--color-surface);
+}
+.fse-list-type {
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.4px;
+  font-size: 10px;
+}
+.fse-list-preview {
+  color: var(--color-text);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fse-list-page {
+  color: var(--color-muted);
+  font-weight: 600;
+  font-size: 11px;
+}
+.fse-list-remove {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+}
+.fse-list-remove:hover {
+  color: var(--color-danger);
+}
+.fse-sidebar-tip {
+  font-size: 11.5px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.fse-sidebar-tip span:first-child {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.fse-sidebar-plan {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed var(--color-warning);
+  border-radius: 8px;
+  background: #fffbeb;
+  font-size: 12px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+.fse-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(2px);
+}
+.fse-modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 540px;
+  width: 100%;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+}
+.fse-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.fse-modal-head h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+.fse-modal-close {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+}
+.fse-modal-close:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 880px) {
+  .fse {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+    gap: 16px;
+  }
+  .fse-toolbar {
+    position: static;
+  }
+  .fse-tool-btn {
+    flex: 1 1 calc(33.33% - 6px);
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  .fse-tool-btn span {
+    display: none;
+  }
+  .fse-tool-btn.active span,
+  .fse-tool-btn:focus-visible span {
+    display: inline;
+  }
+  .fse-sidebar {
+    position: static;
+  }
+  .fse-cta {
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
 /* ── /sign-nda hero template card — thumbnail + 3 download/sign buttons ── */
 .nda-hero {
   padding: 64px 48px 32px;
