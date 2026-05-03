@@ -689,6 +689,8 @@ body.nda-editor-mode .nda-hero-inner {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  /* scrollIntoView lands the editor below the 68px sticky NavHeader. */
+  scroll-margin-top: 80px;
 }
 .fse-main {
   min-width: 0;
@@ -747,11 +749,15 @@ body.nda-editor-mode .nda-hero-inner {
   color: #fff;
 }
 
-.fse-cta-top {
+/* Sign & Download — sidebar slot. Mobile uses .fse-fab instead. */
+.fse-sidebar-cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 11px 18px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 16px;
   background: var(--color-primary);
   color: #fff;
   border: 1px solid var(--color-primary);
@@ -760,16 +766,15 @@ body.nda-editor-mode .nda-hero-inner {
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
-  white-space: nowrap;
   transition: background 0.15s, transform 0.1s;
 }
-.fse-cta-top:hover:not(:disabled) {
+.fse-sidebar-cta:hover:not(:disabled) {
   background: var(--color-primary-hover);
 }
-.fse-cta-top:active:not(:disabled) {
-  transform: scale(0.98);
+.fse-sidebar-cta:active:not(:disabled) {
+  transform: scale(0.99);
 }
-.fse-cta-top:disabled {
+.fse-sidebar-cta:disabled {
   background: #cbd5e1;
   border-color: #cbd5e1;
   cursor: default;
@@ -824,79 +829,143 @@ body.nda-editor-mode .nda-hero-inner {
   background: #fef3c7;
 }
 
-/* Page switcher — prev/next + mini numbered list. */
-.fse-page-switcher {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+/* Pending-date input lives inside the same .fse-pending-bar shell. */
+.fse-pending-date-input {
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 9px;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  background: #fff;
+  outline: none;
+  width: 130px;
+}
+.fse-pending-date-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+}
+.fse-pending-hint {
+  font-size: 12px;
+  color: #78350f;
+  font-weight: 500;
+}
+
+/* Thumbnail strip — copied 1:1 from /sign's PDFViewer pattern. Pages
+   are clickable; checkboxes show only while a signature is pending. */
+.fse-thumb-strip-wrap {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 10px;
-  padding: 8px 12px;
+  padding: 10px 12px 8px;
   margin-bottom: 12px;
 }
-.fse-page-nav {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  color: var(--color-text);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-.fse-page-nav:hover:not(:disabled) {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-.fse-page-nav:disabled {
-  color: #cbd5e1;
-  cursor: default;
-}
-.fse-page-numbers {
-  display: flex;
-  flex-direction: column;
+.fse-thumb-strip-label {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-}
-.fse-page-numbers-label {
-  font-size: 11px;
+  gap: 6px;
+  font-size: 12px;
   color: var(--color-muted);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-bottom: 6px;
 }
-.fse-page-mini {
+.fse-thumb-strip {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+}
+.fse-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: white;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.fse-thumb-current {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px #bfdbfe, 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+.fse-thumb-selected:not(.fse-thumb-current) {
+  border-color: #22c55e;
+}
+.fse-thumb-img-wrap {
+  position: relative;
+  height: 100px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
-.fse-page-num {
-  background: var(--color-surface);
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: var(--color-muted);
-  width: 26px;
-  height: 26px;
+.fse-thumb-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.fse-thumb-placeholder {
+  color: #94a3b8;
+  font-size: 12px;
+}
+.fse-thumb-tick {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.fse-thumb-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: #f8fafc;
+}
+.fse-thumb-selected .fse-thumb-foot {
+  background: #f0fdf4;
+}
+.fse-thumb-num {
   font-size: 12px;
   font-weight: 700;
+  color: var(--color-muted);
+}
+.fse-thumb-selected .fse-thumb-num {
+  color: #166534;
+}
+.fse-thumb-foot input[type="checkbox"] {
   cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  accent-color: var(--color-primary);
 }
-.fse-page-num:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+.fse-thumb-strip-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 6px;
 }
-.fse-page-num.active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #fff;
+.fse-selected-summary {
+  margin-top: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #166534;
 }
 
 /* Page render area */
@@ -954,24 +1023,27 @@ body.nda-editor-mode .nda-hero-inner {
   cursor: crosshair;
 }
 
-/* Placed elements ─────────────────────────────────────────────────── */
+/* Placed elements ───────────────────────────────────────────────────
+   Default state is fully transparent — the placed text reads as part of
+   the underlying PDF rather than a sticker on top. Hover gives a thin
+   dashed border (so the user knows they can grab it); editing/dragging
+   step up the affordance. */
 .fse-element {
   position: absolute;
   display: inline-flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
   border: 1px dashed transparent;
   border-radius: 4px;
   padding: 2px 6px;
   cursor: grab;
   user-select: none;
   white-space: nowrap;
-  transition: border-color 0.12s, box-shadow 0.12s, opacity 0.12s;
+  transition: border-color 0.12s, background 0.12s, box-shadow 0.12s, opacity 0.12s;
 }
 .fse-element:hover,
 .fse-element.fse-element-hover {
-  border-color: rgba(37, 99, 235, 0.6);
-  box-shadow: 0 1px 6px rgba(37, 99, 235, 0.12);
+  border-color: #94a3b8;
 }
 .fse-element-editing {
   border-style: solid;
@@ -981,9 +1053,14 @@ body.nda-editor-mode .nda-hero-inner {
   cursor: default;
 }
 .fse-element-dragging {
+  border-style: solid;
+  border-color: var(--color-primary);
   opacity: 0.7;
   cursor: grabbing;
 }
+/* Signature keeps a faint white background so a drawn signature stays
+   readable against the underlying PDF; resize handles still reveal on
+   hover. Image-shaped, so use overflow:visible for handles. */
 .fse-element-image {
   background: rgba(255, 255, 255, 0.85);
   padding: 0;
@@ -1319,23 +1396,22 @@ body.nda-editor-mode .nda-hero-inner {
   .fse-tool-btn:focus-visible span {
     display: inline;
   }
-  /* Hide the inline CTA on mobile — replaced by .fse-fab */
-  .fse-cta-top {
+  /* Hide the sidebar CTA on mobile — replaced by .fse-fab */
+  .fse-sidebar-cta {
     display: none;
   }
   .fse-pending-bar {
     flex-direction: column;
     align-items: flex-start;
   }
-  .fse-page-switcher {
-    flex-direction: column;
-    gap: 6px;
+  .fse-pending-date-input {
+    flex: 1 1 auto;
   }
-  .fse-page-nav {
-    width: 100%;
+  .fse-thumb {
+    width: 64px;
   }
-  .fse-page-numbers {
-    order: -1;
+  .fse-thumb-img-wrap {
+    height: 80px;
   }
   .fse-sidebar {
     position: static;

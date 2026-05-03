@@ -4,8 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CalendarDays,
   Check,
+  CheckSquare,
   Download,
   FileSignature,
+  FileText,
   Layers,
   Loader2,
   PenLine,
@@ -34,31 +36,17 @@ const SIG_MAX_H_PX = 150;
 
 const newId = () => `el-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-const todayPicker = () => {
+const todayDisplay = () => {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
-const isoToDisplay = (iso: string) => {
-  const [y, m, d] = iso.split('-');
-  return y && m && d ? `${m}/${d}/${y}` : iso;
-};
-const displayToIso = (display: string) => {
-  const [m, d, y] = display.split('/');
-  return y && m && d ? `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}` : todayPicker();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${mm}/${dd}/${d.getFullYear()}`;
 };
 
 interface PageInfo { index: number; width: number; height: number }
 interface SavedSig { dataUrl: string; w: number; h: number }
 interface PendingSig { dataUrl: string; applyToAllPages: boolean }
-
-type DragState = {
-  id: string;
-  mode: 'drag' | 'resize';
-  corner?: 'nw' | 'ne' | 'sw' | 'se';
-  startX: number; startY: number;
-  startEl: FsElement;
-  pageRect: DOMRect;
-};
+interface PendingDate { value: string }
 
 interface Props {
   file: File;
@@ -83,15 +71,16 @@ export default function FillSignEditor({
   const [tool, setTool] = useState<ToolId>(defaultTool);
   const [elements, setElements] = useState<FsElement[]>([]);
   const [pageInfos, setPageInfos] = useState<PageInfo[]>([]);
+  const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Inline edit (text/date)
+  // Inline edit (text/date) — both use a plain text input now.
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingDraft, setEditingDraft] = useState('');
 
-  // Hover state for picking which element shows X / resize handles.
+  // Hover state — drives delete-X visibility and resize-handle visibility.
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
@@ -100,17 +89,21 @@ export default function FillSignEditor({
   const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
   const [sigModal, setSigModal] = useState<'create' | 'choose' | null>(null);
 
+  // Date flow — pending-bar input, no native date picker.
+  const [pendingDate, setPendingDate] = useState<PendingDate | null>(null);
+
+  // Page-checkbox state — only meaningful when pendingSig is active.
+  const [selectedPages, setSelectedPages] = useState<number[]>([]);
+
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
 
   const editorRootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dateInputRef = useRef<HTMLInputElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfRef = useRef<any>(null);
-  const dragRef = useRef<DragState | null>(null);
 
-  // ── PDF load ──────────────────────────────────────────────────────────
+  // ── PDF load + thumbnails ─────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -128,6 +121,7 @@ export default function FillSignEditor({
         const containerWidth = containerEl?.clientWidth ?? 700;
         const targetWidth = Math.min(820, containerWidth);
 
+        // Compute viewport dimensions for full-size pages.
         const infos: PageInfo[] = [];
         for (let i = 1; i <= pdf.numPages; i++) {
           const p = await pdf.getPage(i);
@@ -139,6 +133,22 @@ export default function FillSignEditor({
         if (cancelled) return;
         setPageInfos(infos);
         setLoading(false);
+
+        // Generate small page thumbnails for the strip — same approach as
+        // /sign's PDFViewer (off-screen canvas at scale 0.3 → JPEG dataURL).
+        const thumbs: Record<number, string> = {};
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const p = await pdf.getPage(i);
+          const vp = p.getViewport({ scale: 0.3 });
+          const canvas = document.createElement('canvas');
+          canvas.width = vp.width;
+          canvas.height = vp.height;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await p.render({ canvas: canvas as any, viewport: vp }).promise;
+          thumbs[i] = canvas.toDataURL('image/jpeg', 0.7);
+          if (cancelled) return;
+          setThumbnails(prev => ({ ...prev, [i]: thumbs[i] }));
+        }
       } catch (e) {
         if (!cancelled) {
           console.error('FillSignEditor PDF load:', e);
@@ -191,19 +201,6 @@ export default function FillSignEditor({
     return () => window.clearTimeout(id);
   }, [loading, autoScrolled]);
 
-  // ── Auto-open native date picker when a date element enters edit mode ─
-  useEffect(() => {
-    if (!editingId) return;
-    const el = elements.find(e => e.id === editingId);
-    if (el && el.type === 'date' && dateInputRef.current) {
-      // Some browsers expose showPicker() — open the native picker right away.
-      const inputEl = dateInputRef.current as HTMLInputElement & { showPicker?: () => void };
-      if (typeof inputEl.showPicker === 'function') {
-        try { inputEl.showPicker(); } catch { /* user-gesture required in some browsers */ }
-      }
-    }
-  }, [editingId, elements]);
-
   // ── Element CRUD ─────────────────────────────────────────────────────
   const addElement = useCallback((el: FsElement) => {
     setElements(prev => [...prev, el]);
@@ -223,18 +220,21 @@ export default function FillSignEditor({
   const onToolClick = (t: ToolId) => {
     setTool(t);
     if (t === 'signature') {
-      // Open the modal IMMEDIATELY — don't wait for a click on the PDF.
+      setPendingDate(null);
       setSigModal(savedSig ? 'choose' : 'create');
-    } else {
-      // Drop any pending signature when leaving Signature tool.
+    } else if (t === 'date') {
       setPendingSig(null);
+      // Open the pending-date bar with today's date pre-filled.
+      if (!pendingDate) setPendingDate({ value: todayDisplay() });
+    } else {
+      setPendingSig(null);
+      setPendingDate(null);
     }
   };
 
   const onSigCreated = (dataUrl: string, _w: number, _h: number) => {
     if (!dataUrl) return;
-    const sig: SavedSig = { dataUrl, w: _w, h: _h };
-    setSavedSig(sig);
+    setSavedSig({ dataUrl, w: _w, h: _h });
     setPendingSig({ dataUrl, applyToAllPages: false });
     setSigModal(null);
   };
@@ -258,9 +258,9 @@ export default function FillSignEditor({
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = ((e.clientX - rect.left) / rect.width) * 100;
     const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
-    const id = newId();
 
     if (tool === 'text') {
+      const id = newId();
       addElement({
         id, type: 'text', page: currentPage, x: xPct, y: yPct,
         value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
@@ -270,20 +270,19 @@ export default function FillSignEditor({
       return;
     }
 
-    if (tool === 'date') {
-      const today = todayPicker();
+    if (tool === 'date' && pendingDate) {
       addElement({
-        id, type: 'date', page: currentPage, x: xPct, y: yPct,
-        value: isoToDisplay(today), fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
+        id: newId(), type: 'date', page: currentPage, x: xPct, y: yPct,
+        value: pendingDate.value || todayDisplay(),
+        fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
-      setEditingId(id);
-      setEditingDraft(today);
+      // pendingDate stays so the user can place more dates.
       return;
     }
 
     if (tool === 'signature' && pendingSig) {
       const sigEl: FsElement = {
-        id, type: 'signature', page: currentPage, x: xPct, y: yPct,
+        id: newId(), type: 'signature', page: currentPage, x: xPct, y: yPct,
         w: SIG_DEFAULT_W, h: SIG_DEFAULT_H, dataUrl: pendingSig.dataUrl,
       };
       if (pendingSig.applyToAllPages) {
@@ -292,7 +291,6 @@ export default function FillSignEditor({
       } else {
         addElement(sigEl);
       }
-      // pendingSig stays so user can place more.
     }
   };
 
@@ -306,8 +304,9 @@ export default function FillSignEditor({
       if (val) updateElement(editingId, { value: val } as Partial<FsElement>);
       else removeElement(editingId);
     } else if (el.type === 'date') {
-      const display = isoToDisplay(editingDraft || todayPicker());
-      updateElement(editingId, { value: display } as Partial<FsElement>);
+      const val = editingDraft.trim();
+      if (val) updateElement(editingId, { value: val } as Partial<FsElement>);
+      else removeElement(editingId);
     }
     setEditingId(null);
     setEditingDraft('');
@@ -316,8 +315,8 @@ export default function FillSignEditor({
   const cancelEdit = useCallback(() => {
     if (!editingId) return;
     const el = elements.find(e => e.id === editingId);
-    if (el && el.type === 'text' && !el.value) {
-      // Brand-new text with nothing typed → drop it.
+    if (el && (el.type === 'text' || el.type === 'date') && !el.value) {
+      // Brand-new element with nothing typed → drop it.
       removeElement(editingId);
     }
     setEditingId(null);
@@ -325,16 +324,22 @@ export default function FillSignEditor({
   }, [editingId, elements, removeElement]);
 
   const startEdit = (el: FsElement) => {
-    if (el.type === 'text') {
+    if (el.type === 'text' || el.type === 'date') {
       setEditingDraft(el.value);
-      setEditingId(el.id);
-    } else if (el.type === 'date') {
-      setEditingDraft(displayToIso(el.value));
       setEditingId(el.id);
     }
   };
 
   // ── Drag / resize ─────────────────────────────────────────────────────
+  type DragRefState = {
+    id: string;
+    mode: 'drag';
+    startX: number; startY: number;
+    startEl: FsElement;
+    pageRect: DOMRect;
+  };
+  const dragRef = useRef<DragRefState | null>(null);
+
   const beginDrag = (clientX: number, clientY: number, el: FsElement, target: HTMLElement) => {
     if (editingId === el.id) return;
     const pageEl = target.closest('.fse-page') as HTMLElement | null;
@@ -434,7 +439,6 @@ export default function FillSignEditor({
       else if (corner === 'ne') { newW = startW + dxPct; newH = startH - dyPct; newYel = startElY + dyPct; }
       else if (corner === 'nw') { newW = startW - dxPct; newXel = startElX + dxPct; newH = startH - dyPct; newYel = startElY + dyPct; }
 
-      // Preserve aspect ratio — driven by the larger fractional change.
       const wRatio = Math.abs((newW / startW) - 1);
       const hRatio = Math.abs((newH / startH) - 1);
       if (wRatio > hRatio) {
@@ -462,6 +466,23 @@ export default function FillSignEditor({
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
   };
+
+  // ── Page selection (only meaningful while pendingSig is active) ──────
+  const togglePageSelection = (pageNum: number) => {
+    setSelectedPages(prev => {
+      if (prev.includes(pageNum)) return prev.filter(p => p !== pageNum);
+      return [...prev, pageNum].sort((a, b) => a - b);
+    });
+  };
+
+  // Keep selectedPages in sync with applyToAllPages flag.
+  useEffect(() => {
+    if (pendingSig?.applyToAllPages) {
+      setSelectedPages(pageInfos.map(p => p.index));
+    } else if (!pendingSig) {
+      setSelectedPages([]);
+    }
+  }, [pendingSig?.applyToAllPages, pendingSig, pageInfos]);
 
   // ── Done ──────────────────────────────────────────────────────────────
   const handleDone = async () => {
@@ -507,7 +528,6 @@ export default function FillSignEditor({
     };
 
     if (el.type === 'text' || el.type === 'date') {
-      const isDate = el.type === 'date';
       return (
         <div
           key={el.id}
@@ -518,9 +538,8 @@ export default function FillSignEditor({
           {isEditing ? (
             <div className="fse-edit-row">
               <input
-                ref={isDate ? dateInputRef : undefined}
-                type={isDate ? 'date' : 'text'}
-                autoFocus={!isDate}
+                type="text"
+                autoFocus
                 value={editingDraft}
                 onChange={e => setEditingDraft(e.target.value)}
                 onKeyDown={e => {
@@ -528,8 +547,8 @@ export default function FillSignEditor({
                   if (e.key === 'Escape') cancelEdit();
                 }}
                 className="fse-edit-input"
-                style={{ fontSize: isDate ? 13 : `${el.fontSize}px` }}
-                placeholder={isDate ? '' : 'Type text…'}
+                style={{ fontSize: `${el.fontSize}px` }}
+                placeholder={el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…'}
                 onClick={e => e.stopPropagation()}
               />
               <button type="button" className="fse-edit-confirm" onClick={(e) => { e.stopPropagation(); commitEdit(); }} aria-label="Save">
@@ -542,7 +561,7 @@ export default function FillSignEditor({
           ) : (
             <>
               <span className="fse-element-value" style={{ fontSize: `${el.fontSize}px`, color: el.color }}>
-                {el.value || (isDate ? 'date' : 'text')}
+                {el.value || (el.type === 'date' ? 'date' : 'text')}
               </span>
               <button
                 type="button"
@@ -559,7 +578,6 @@ export default function FillSignEditor({
       );
     }
 
-    // signature
     if (el.type !== 'signature') return null;
     return (
       <div
@@ -594,11 +612,13 @@ export default function FillSignEditor({
   const visibleElements = elements.filter(e => e.page === currentPage);
   const currentInfo = pageInfos.find(p => p.index === currentPage);
   const canDone = elements.length > 0 && !processing;
+  const showThumbCheckboxes = !!pendingSig;
+  const totalPages = pageInfos.length;
 
   return (
     <div className="fse" ref={editorRootRef}>
       <div className="fse-main">
-        {/* Sticky top bar — toolbar + Sign & Download */}
+        {/* Sticky toolbar — Sign & Download moved to sidebar. */}
         <div className="fse-topbar">
           <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
             {TOOLS.map(t => (
@@ -613,18 +633,30 @@ export default function FillSignEditor({
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className="fse-cta-top"
-            disabled={!canDone}
-            onClick={handleDone}
-          >
-            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
-            <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
-          </button>
         </div>
 
-        {/* Pending signature ribbon — visible while user has a sig waiting to be placed */}
+        {/* Pending-date bar — shown while Date tool is active. Plain text input. */}
+        {pendingDate && (
+          <div className="fse-pending-bar">
+            <div className="fse-pending-info">
+              <CalendarDays size={14} />
+              <span>Type date:</span>
+              <input
+                type="text"
+                value={pendingDate.value}
+                onChange={e => setPendingDate({ value: e.target.value })}
+                placeholder="MM/DD/YYYY"
+                className="fse-pending-date-input"
+              />
+            </div>
+            <span className="fse-pending-hint">Click on the PDF to place</span>
+            <button type="button" className="fse-pending-cancel" onClick={() => { setPendingDate(null); setTool('text'); }}>
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {/* Pending-signature bar */}
         {pendingSig && (
           <div className="fse-pending-bar">
             <div className="fse-pending-info">
@@ -646,40 +678,62 @@ export default function FillSignEditor({
           </div>
         )}
 
-        {/* Page switcher */}
-        {!loading && pageInfos.length > 1 && (
-          <div className="fse-page-switcher">
-            <button
-              type="button"
-              className="fse-page-nav"
-              disabled={currentPage <= 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              ← Prev
-            </button>
-            <div className="fse-page-numbers">
-              <span className="fse-page-numbers-label">Page {currentPage} / {pageInfos.length}</span>
-              <div className="fse-page-mini">
-                {pageInfos.map(p => (
-                  <button
+        {/* Page thumbnail strip — copied from /sign's PDFViewer pattern.
+            Checkboxes are visible only while a signature is pending; they
+            mirror the "apply to all" toggle and let the user pick a custom
+            subset of pages. */}
+        {totalPages > 1 && (
+          <div className="fse-thumb-strip-wrap">
+            <div className="fse-thumb-strip-label">
+              <FileText size={14} /> Pages:
+            </div>
+            <div className="fse-thumb-strip">
+              {pageInfos.map(p => {
+                const isCurrent = currentPage === p.index;
+                const isSelected = selectedPages.includes(p.index);
+                return (
+                  <div
                     key={p.index}
-                    type="button"
-                    className={`fse-page-num${currentPage === p.index ? ' active' : ''}`}
+                    className={`fse-thumb${isCurrent ? ' fse-thumb-current' : ''}${isSelected && showThumbCheckboxes ? ' fse-thumb-selected' : ''}`}
                     onClick={() => setCurrentPage(p.index)}
                   >
-                    {p.index}
-                  </button>
-                ))}
-              </div>
+                    <div className="fse-thumb-img-wrap">
+                      {thumbnails[p.index] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={thumbnails[p.index]} alt={`Page ${p.index}`} />
+                      ) : (
+                        <span className="fse-thumb-placeholder">Page {p.index}</span>
+                      )}
+                      {isSelected && showThumbCheckboxes && (
+                        <span className="fse-thumb-tick" aria-hidden="true">✓</span>
+                      )}
+                    </div>
+                    <div className="fse-thumb-foot">
+                      <span className="fse-thumb-num">{p.index}</span>
+                      {showThumbCheckboxes && (
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onClick={e => e.stopPropagation()}
+                          onChange={() => togglePageSelection(p.index)}
+                          aria-label={`Select page ${p.index}`}
+                        />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            <button
-              type="button"
-              className="fse-page-nav"
-              disabled={currentPage >= pageInfos.length}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next →
-            </button>
+            <div className="fse-thumb-strip-hint">
+              <CheckSquare size={11} /> Click a thumbnail to switch page
+              {showThumbCheckboxes ? ' · checkboxes select where to place the signature' : ''}
+            </div>
+            {showThumbCheckboxes && selectedPages.length > 0 && (
+              <div className="fse-selected-summary">
+                <strong>✓ Signing {selectedPages.length} page{selectedPages.length > 1 ? 's' : ''}:</strong>{' '}
+                {selectedPages.join(', ')}
+              </div>
+            )}
           </div>
         )}
 
@@ -694,7 +748,7 @@ export default function FillSignEditor({
           {error && !loading && <div className="fse-pages-state fse-pages-error">{error}</div>}
           {!loading && !error && currentInfo && (
             <div
-              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}`}
+              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}${pendingDate ? ' has-pending-date' : ''}`}
               style={{ width: currentInfo.width, height: currentInfo.height }}
               onClick={onPageClick}
             >
@@ -702,12 +756,13 @@ export default function FillSignEditor({
               <div className="fse-page-overlay">
                 {visibleElements.map(renderElement)}
               </div>
+              <span className="fse-page-label">Page {currentPage} of {totalPages}</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Sidebar — sticky list of all placed elements */}
+      {/* Sidebar — sticky list + Sign & Download (desktop only) */}
       <aside className="fse-sidebar">
         <div className="fse-sidebar-card">
           <div className="fse-sidebar-title">
@@ -739,6 +794,18 @@ export default function FillSignEditor({
               })}
             </ul>
           )}
+
+          {/* Sign & Download — desktop sidebar slot. Mobile uses .fse-fab. */}
+          <button
+            type="button"
+            className="fse-sidebar-cta"
+            disabled={!canDone}
+            onClick={handleDone}
+          >
+            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
+            <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
+          </button>
+
           <div className="fse-sidebar-tip">
             <span>Tip:</span> drag to move, double-click to edit, drag corners to resize signatures.
           </div>
