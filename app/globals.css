@@ -677,10 +677,10 @@ body.nda-editor-mode .nda-hero-inner {
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
-/* ── <FillSignEditor> — unified Fill + Sign editor surface.
-      Toolbar at top, multi-page PDF render, sidebar element list,
-      Done CTA below. Used on /sign-nda in Phase 1; future migration
-      target for /sign and /fill in Phase 2/3. ── */
+/* ── <FillSignEditor> — unified Fill+Sign editor surface.
+      Sticky topbar (toolbar + Sign & Download), single-page PDF view
+      with page switcher, sticky sidebar element list, mobile FAB.
+      Used on /sign-nda only in Phase 1. ── */
 .fse {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -693,19 +693,35 @@ body.nda-editor-mode .nda-hero-inner {
 .fse-main {
   min-width: 0;
 }
-.fse-toolbar {
+.fse-spin {
+  animation: spin 0.8s linear infinite;
+  color: var(--color-primary);
+}
+
+/* Sticky topbar — toolbar (left) + Sign & Download (right). Lives just
+   under the 68px fixed NavHeader, so top: 80px clears it with a 12px
+   buffer. */
+.fse-topbar {
   position: sticky;
-  top: 12px;
-  z-index: 5;
+  top: 80px;
+  z-index: 6;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 8px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  margin-bottom: 14px;
+}
+.fse-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 auto;
 }
 .fse-tool-btn {
   display: inline-flex;
@@ -731,16 +747,170 @@ body.nda-editor-mode .nda-hero-inner {
   color: #fff;
 }
 
-.fse-pages {
+.fse-cta-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.1s;
+}
+.fse-cta-top:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.fse-cta-top:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.fse-cta-top:disabled {
+  background: #cbd5e1;
+  border-color: #cbd5e1;
+  cursor: default;
+}
+
+/* Pending-signature ribbon — appears once a signature is created and
+   the user is about to place it. Compact, distinct color so it's easy
+   to spot above the PDF. */
+.fse-pending-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #78350f;
+}
+.fse-pending-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  flex: 1 1 auto;
+}
+.fse-pending-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.fse-pending-checkbox input {
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+.fse-pending-cancel {
+  background: none;
+  border: 1px solid #fcd34d;
+  border-radius: 7px;
+  color: #78350f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.fse-pending-cancel:hover {
+  background: #fef3c7;
+}
+
+/* Page switcher — prev/next + mini numbered list. */
+.fse-page-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+.fse-page-nav {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.fse-page-nav:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.fse-page-nav:disabled {
+  color: #cbd5e1;
+  cursor: default;
+}
+.fse-page-numbers {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 4px;
+}
+.fse-page-numbers-label {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.fse-page-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.fse-page-num {
+  background: var(--color-surface);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--color-muted);
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.fse-page-num:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.fse-page-num.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Page render area */
+.fse-page-area {
+  display: flex;
+  justify-content: center;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 16px;
   min-height: 240px;
+  /* Allow horizontal scrolling on small screens if a page is wider than
+     the column — keeps the page intact rather than crushing it. */
+  overflow-x: auto;
 }
 .fse-pages-state {
   display: flex;
@@ -753,13 +923,7 @@ body.nda-editor-mode .nda-hero-inner {
   font-size: 14px;
   font-weight: 500;
 }
-.fse-pages-error {
-  color: var(--color-danger);
-}
-.fse-spin {
-  animation: spin 0.8s linear infinite;
-  color: var(--color-primary);
-}
+.fse-pages-error { color: var(--color-danger); }
 
 .fse-page {
   position: relative;
@@ -780,55 +944,50 @@ body.nda-editor-mode .nda-hero-inner {
   inset: 0;
   pointer-events: none;
 }
-.fse-page-overlay > * {
-  pointer-events: auto;
-}
-.fse-page-label {
-  position: absolute;
-  bottom: 6px;
-  right: 8px;
-  background: rgba(15, 23, 42, 0.6);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
-  pointer-events: none;
-}
-/* Crosshair cursor when a placement tool is active */
-.fse-pages.tool-text .fse-page,
-.fse-pages.tool-date .fse-page,
-.fse-pages.tool-signature .fse-page,
-.fse-pages.tool-checkbox .fse-page,
-.fse-pages.tool-initial .fse-page {
+.fse-page-overlay > * { pointer-events: auto; }
+/* Crosshair when a placement-style tool is active. Signature only gets
+   crosshair when a pending signature is queued — otherwise the click on
+   the page does nothing for that tool. */
+.fse-page.tool-text,
+.fse-page.tool-date,
+.fse-page.tool-signature.has-pending-sig {
   cursor: crosshair;
 }
 
+/* Placed elements ─────────────────────────────────────────────────── */
 .fse-element {
   position: absolute;
   display: inline-flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.95);
-  border: 1px dashed var(--color-primary);
+  border: 1px dashed transparent;
   border-radius: 4px;
   padding: 2px 6px;
   cursor: grab;
   user-select: none;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  transition: border-color 0.12s, box-shadow 0.12s, opacity 0.12s;
 }
-.fse-element:active {
-  cursor: grabbing;
+.fse-element:hover,
+.fse-element.fse-element-hover {
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow: 0 1px 6px rgba(37, 99, 235, 0.12);
 }
-.fse-element-active {
+.fse-element-editing {
   border-style: solid;
   border-color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+  background: white;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22);
+  cursor: default;
+}
+.fse-element-dragging {
+  opacity: 0.7;
+  cursor: grabbing;
 }
 .fse-element-image {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.85);
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 .fse-element-img {
   width: 100%;
@@ -837,87 +996,113 @@ body.nda-editor-mode .nda-hero-inner {
   display: block;
   pointer-events: none;
 }
+
+/* Inline edit row inside text/date elements */
+.fse-edit-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fse-edit-input {
+  font: inherit;
+  padding: 4px 8px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 5px;
+  background: white;
+  outline: none;
+  min-width: 120px;
+}
+.fse-edit-confirm,
+.fse-edit-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.fse-edit-confirm {
+  background: #16a34a;
+  color: #fff;
+}
+.fse-edit-confirm:hover { background: #15803d; }
+.fse-edit-cancel {
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+}
+.fse-edit-cancel:hover {
+  background: var(--color-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+/* Delete X — top-right of element. Visible only on hover/editing.
+   Sits OUTSIDE the element box (top:-9, right:-9) so it never overlaps
+   the placed text/signature itself. */
 .fse-element-x {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 18px;
-  height: 18px;
+  top: -9px;
+  right: -9px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--color-danger);
   color: #fff;
-  border: none;
+  border: 2px solid #fff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.15s, transform 0.1s;
+  transform: scale(0.85);
+  transition: opacity 0.12s, transform 0.12s;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+  z-index: 3;
+  padding: 0;
 }
 .fse-element:hover .fse-element-x,
-.fse-element-active .fse-element-x {
+.fse-element.fse-element-hover .fse-element-x,
+.fse-element.fse-element-editing .fse-element-x {
+  opacity: 1;
+  transform: scale(1);
+}
+.fse-element-x:hover {
+  background: #b91c1c;
+  transform: scale(1.05);
+}
+
+/* Resize handles on signature corners */
+.fse-resize {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--color-primary);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.12s;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+  z-index: 2;
+}
+.fse-element-image:hover .fse-resize,
+.fse-element-image.fse-element-hover .fse-resize,
+.fse-element-image.fse-element-dragging .fse-resize {
   opacity: 1;
 }
-.fse-element-x:active {
-  transform: scale(0.92);
-}
+.fse-resize-nw { top: -6px; left: -6px;  cursor: nwse-resize; }
+.fse-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.fse-resize-sw { bottom: -6px; left: -6px;  cursor: nesw-resize; }
+.fse-resize-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
 
-.fse-pending {
-  position: absolute;
-  z-index: 4;
-}
-.fse-pending-input {
-  font: inherit;
-  font-size: 14px;
-  padding: 6px 10px;
-  border: 1.5px solid var(--color-primary);
-  border-radius: 6px;
-  background: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
-  outline: none;
-  min-width: 160px;
-}
-
-.fse-cta-row {
-  margin-top: 16px;
-}
-.fse-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 16px 20px;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, transform 0.1s;
-}
-.fse-cta:hover:not(:disabled) {
-  background: var(--color-primary-hover);
-}
-.fse-cta:active:not(:disabled) {
-  transform: scale(0.99);
-}
-.fse-cta:disabled {
-  background: #cbd5e1;
-  cursor: default;
-}
-.fse-cta-hint {
-  margin: 8px 0 0;
-  text-align: center;
-  font-size: 13px;
-  color: var(--color-muted);
-}
-
+/* Sidebar ─────────────────────────────────────────────────────────── */
 .fse-sidebar {
   position: sticky;
-  top: 12px;
+  top: 80px;
+  align-self: start;
 }
 .fse-sidebar-card {
   background: var(--color-bg);
@@ -977,6 +1162,10 @@ body.nda-editor-mode .nda-hero-inner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+}
+.fse-list-preview:hover {
+  text-decoration: underline;
 }
 .fse-list-page {
   color: var(--color-muted);
@@ -991,19 +1180,13 @@ body.nda-editor-mode .nda-hero-inner {
   padding: 2px;
   display: inline-flex;
 }
-.fse-list-remove:hover {
-  color: var(--color-danger);
-}
+.fse-list-remove:hover { color: var(--color-danger); }
 .fse-sidebar-tip {
   font-size: 11.5px;
   color: var(--color-muted);
   line-height: 1.55;
   padding-top: 10px;
   border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
 }
 .fse-sidebar-tip span:first-child {
   font-weight: 700;
@@ -1020,6 +1203,7 @@ body.nda-editor-mode .nda-hero-inner {
   line-height: 1.5;
 }
 
+/* Modal ──────────────────────────────────────────────────────────── */
 .fse-modal {
   position: fixed;
   inset: 0;
@@ -1059,8 +1243,52 @@ body.nda-editor-mode .nda-hero-inner {
   padding: 4px;
   display: inline-flex;
 }
-.fse-modal-close:hover {
+.fse-modal-close:hover { color: var(--color-text); }
+
+/* Saved-signature chooser */
+.fse-sig-chooser {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.fse-sig-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--color-text);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.fse-sig-choice:hover {
+  border-color: var(--color-primary);
+  background: #f8faff;
+}
+.fse-sig-choice:active { transform: scale(0.99); }
+.fse-sig-choice-saved img {
+  max-width: 160px;
+  max-height: 60px;
+  object-fit: contain;
+}
+.fse-sig-choice-new {
+  color: var(--color-muted);
+}
+.fse-sig-choice-new:hover {
+  color: var(--color-primary);
+}
+
+/* Mobile FAB — hidden on desktop, takes over the Sign & Download role on
+   small screens where the topbar CTA gets too cramped. */
+.fse-fab {
+  display: none;
 }
 
 @media (max-width: 880px) {
@@ -1069,8 +1297,14 @@ body.nda-editor-mode .nda-hero-inner {
     padding: 0 16px;
     gap: 16px;
   }
-  .fse-toolbar {
+  .fse-topbar {
+    /* Drop sticky on mobile — otherwise the toolbar covers the page
+       switcher when scrolled. The FAB handles the always-visible CTA. */
     position: static;
+    flex-wrap: nowrap;
+  }
+  .fse-toolbar {
+    flex-wrap: nowrap;
   }
   .fse-tool-btn {
     flex: 1 1 calc(33.33% - 6px);
@@ -1085,12 +1319,67 @@ body.nda-editor-mode .nda-hero-inner {
   .fse-tool-btn:focus-visible span {
     display: inline;
   }
+  /* Hide the inline CTA on mobile — replaced by .fse-fab */
+  .fse-cta-top {
+    display: none;
+  }
+  .fse-pending-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .fse-page-switcher {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .fse-page-nav {
+    width: 100%;
+  }
+  .fse-page-numbers {
+    order: -1;
+  }
   .fse-sidebar {
     position: static;
   }
-  .fse-cta {
-    padding: 14px;
+  .fse-fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 18px;
+    left: 16px;
+    right: 16px;
+    z-index: 50;
+    padding: 14px 20px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
     font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.35);
+  }
+  .fse-fab:disabled {
+    background: #cbd5e1;
+    cursor: default;
+    box-shadow: none;
+  }
+  /* Avoid the FAB overlapping the page area's last content. */
+  .fse-page-area {
+    padding-bottom: 24px;
+  }
+  .fse-main {
+    padding-bottom: 96px;
+  }
+  /* Resize handles always visible on touch devices */
+  .fse-element-image .fse-resize {
+    opacity: 1;
+  }
+  .fse-element-x {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

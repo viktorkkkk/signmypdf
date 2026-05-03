@@ -6,67 +6,69 @@ import {
   Check,
   Download,
   FileSignature,
+  Layers,
   Loader2,
   PenLine,
-  SquareCheckBig,
   Type as TypeIcon,
   X,
 } from 'lucide-react';
 import SignatureCanvas from './SignatureCanvas';
 import { applyFillSign, type FsElement } from '../utils/fillSignPdf';
 
-type ToolId = 'text' | 'date' | 'signature' | 'checkbox' | 'initial';
+type ToolId = 'text' | 'date' | 'signature';
 
-interface ToolDef {
-  id: ToolId;
-  label: string;
-  Icon: typeof TypeIcon;
-}
-
-const TOOLS: ToolDef[] = [
+const TOOLS: { id: ToolId; label: string; Icon: typeof TypeIcon }[] = [
   { id: 'text',      label: 'Text',      Icon: TypeIcon },
   { id: 'date',      label: 'Date',      Icon: CalendarDays },
   { id: 'signature', label: 'Signature', Icon: FileSignature },
-  { id: 'checkbox',  label: 'Checkbox',  Icon: SquareCheckBig },
-  { id: 'initial',   label: 'Initial',   Icon: PenLine },
 ];
 
-const DEFAULT_FONT_SIZE = 14;       // PDF points
-const DEFAULT_TEXT_COLOR = '#0f172a';
+const DEFAULT_FONT = 14;
+const TEXT_DEFAULT_COLOR = '#0f172a';
 const SIG_DEFAULT_W = 22;            // % of page width
 const SIG_DEFAULT_H = 8;             // % of page height
-const INI_DEFAULT_W = 10;            // %
-const INI_DEFAULT_H = 6;             // %
+const SIG_MIN_W_PX = 50;
+const SIG_MIN_H_PX = 20;
+const SIG_MAX_W_PX = 400;
+const SIG_MAX_H_PX = 150;
 
 const newId = () => `el-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
-const todayISO = () => {
+const todayPicker = () => {
   const d = new Date();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${mm}/${dd}/${d.getFullYear()}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+const isoToDisplay = (iso: string) => {
+  const [y, m, d] = iso.split('-');
+  return y && m && d ? `${m}/${d}/${y}` : iso;
+};
+const displayToIso = (display: string) => {
+  const [m, d, y] = display.split('/');
+  return y && m && d ? `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}` : todayPicker();
 };
 
-interface PageInfo {
-  index: number;        // 1-indexed
-  width: number;        // CSS px
-  height: number;       // CSS px
-}
+interface PageInfo { index: number; width: number; height: number }
+interface SavedSig { dataUrl: string; w: number; h: number }
+interface PendingSig { dataUrl: string; applyToAllPages: boolean }
+
+type DragState = {
+  id: string;
+  mode: 'drag' | 'resize';
+  corner?: 'nw' | 'ne' | 'sw' | 'se';
+  startX: number; startY: number;
+  startEl: FsElement;
+  pageRect: DOMRect;
+};
 
 interface Props {
   file: File;
   defaultTool?: ToolId;
   hasSubscription?: boolean;
-  /** Caller-provided counter increment + watermark logic. If false the
-   *  editor renders without a watermark and assumes the caller already
-   *  decided this is allowed. */
+  /** Caller decides watermark policy (e.g. free over-limit). */
   addWatermark?: boolean;
-  /** Fired after Done; receives the final Blob. Caller handles download
-   *  / FileHistory / counter increment / paywall. */
+  /** Fired after Done; receives the final Blob. */
   onDone?: (blob: Blob) => void;
-  /** Fired on Done before the blob is generated, gives caller a chance
-   *  to deny (e.g. show paywall instead of producing the watermarked
-   *  output). Return false to abort. */
+  /** Pre-Done hook — return false to abort (e.g. show paywall). */
   onBeforeDone?: () => boolean | Promise<boolean>;
 }
 
@@ -81,24 +83,34 @@ export default function FillSignEditor({
   const [tool, setTool] = useState<ToolId>(defaultTool);
   const [elements, setElements] = useState<FsElement[]>([]);
   const [pageInfos, setPageInfos] = useState<PageInfo[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [signaturePanelOpen, setSignaturePanelOpen] = useState<{ kind: 'signature' | 'initial' } | null>(null);
-  const [savedSignature, setSavedSignature] = useState<{ dataUrl: string; w: number; h: number } | null>(null);
-  const [savedInitial, setSavedInitial] = useState<{ dataUrl: string; w: number; h: number } | null>(null);
+
+  // Inline edit (text/date)
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingDraft, setEditingDraft] = useState('');
-  const [pendingPosition, setPendingPosition] = useState<{ page: number; x: number; y: number; tool: ToolId } | null>(null);
+
+  // Hover state for picking which element shows X / resize handles.
+  const [hoverId, setHoverId] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+
+  // Signature flow
+  const [savedSig, setSavedSig] = useState<SavedSig | null>(null);
+  const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
+  const [sigModal, setSigModal] = useState<'create' | 'choose' | null>(null);
+
   const [processing, setProcessing] = useState(false);
+  const [autoScrolled, setAutoScrolled] = useState(false);
 
-  const pdfRef = useRef<unknown>(null);
-  const canvasRefs = useRef<Map<number, HTMLCanvasElement>>(new Map());
-  const containerRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ id: string; offsetX: number; offsetY: number; pageEl: HTMLElement } | null>(null);
+  const editorRootRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pdfRef = useRef<any>(null);
+  const dragRef = useRef<DragState | null>(null);
 
-  // Load PDF and render every page once. We render at the container's
-  // current width — pages stay inside their respective .fse-page slot
-  // and the document scrolls as one tall column.
+  // ── PDF load ──────────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -107,47 +119,26 @@ export default function FillSignEditor({
       try {
         const pdfjsLib = await import('pdfjs-dist');
         pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-
         const buf = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;
         pdfRef.current = pdf;
 
-        const containerWidth = containerRef.current?.clientWidth ?? 700;
+        const containerEl = editorRootRef.current?.querySelector('.fse-page-area') as HTMLElement | null;
+        const containerWidth = containerEl?.clientWidth ?? 700;
         const targetWidth = Math.min(820, containerWidth);
 
         const infos: PageInfo[] = [];
         for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const baseViewport = page.getViewport({ scale: 1 });
+          const p = await pdf.getPage(i);
+          const baseViewport = p.getViewport({ scale: 1 });
           const scale = targetWidth / baseViewport.width;
-          const viewport = page.getViewport({ scale });
+          const viewport = p.getViewport({ scale });
           infos.push({ index: i, width: viewport.width, height: viewport.height });
         }
         if (cancelled) return;
         setPageInfos(infos);
         setLoading(false);
-
-        // Render after DOM mounts the canvases.
-        await new Promise(r => requestAnimationFrame(() => r(null)));
-        if (cancelled) return;
-        const dpr = window.devicePixelRatio || 1;
-        for (const info of infos) {
-          const canvas = canvasRefs.current.get(info.index);
-          if (!canvas) continue;
-          const page = await pdf.getPage(info.index);
-          const baseViewport = page.getViewport({ scale: 1 });
-          const scale = info.width / baseViewport.width;
-          const viewport = page.getViewport({ scale });
-          canvas.width = viewport.width * dpr;
-          canvas.height = viewport.height * dpr;
-          canvas.style.width = `${viewport.width}px`;
-          canvas.style.height = `${viewport.height}px`;
-          const ctx = canvas.getContext('2d')!;
-          ctx.scale(dpr, dpr);
-          await page.render({ canvas, canvasContext: ctx, viewport }).promise;
-          if (cancelled) return;
-        }
       } catch (e) {
         if (!cancelled) {
           console.error('FillSignEditor PDF load:', e);
@@ -159,8 +150,61 @@ export default function FillSignEditor({
     return () => { cancelled = true; };
   }, [file]);
 
-  // ── Element CRUD ──────────────────────────────────────────────────────
+  // ── Render the active page ────────────────────────────────────────────
+  useEffect(() => {
+    if (loading || !pdfRef.current || !canvasRef.current) return;
+    const info = pageInfos.find(p => p.index === currentPage);
+    if (!info) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const page = await pdfRef.current.getPage(currentPage);
+        const baseViewport = page.getViewport({ scale: 1 });
+        const scale = info.width / baseViewport.width;
+        const viewport = page.getViewport({ scale });
+        const dpr = window.devicePixelRatio || 1;
+        const canvas = canvasRef.current!;
+        canvas.width = viewport.width * dpr;
+        canvas.height = viewport.height * dpr;
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.height = `${viewport.height}px`;
+        const ctx = canvas.getContext('2d')!;
+        ctx.scale(dpr, dpr);
+        await page.render({ canvas, canvasContext: ctx, viewport }).promise;
+        if (cancelled) return;
+      } catch (e) {
+        if (!cancelled) console.error('Render page:', e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [currentPage, loading, pageInfos]);
 
+  // ── Auto-scroll editor into view once on first ready render ──────────
+  useEffect(() => {
+    if (loading || autoScrolled) return;
+    const el = editorRootRef.current;
+    if (!el) return;
+    const id = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setAutoScrolled(true);
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [loading, autoScrolled]);
+
+  // ── Auto-open native date picker when a date element enters edit mode ─
+  useEffect(() => {
+    if (!editingId) return;
+    const el = elements.find(e => e.id === editingId);
+    if (el && el.type === 'date' && dateInputRef.current) {
+      // Some browsers expose showPicker() — open the native picker right away.
+      const inputEl = dateInputRef.current as HTMLInputElement & { showPicker?: () => void };
+      if (typeof inputEl.showPicker === 'function') {
+        try { inputEl.showPicker(); } catch { /* user-gesture required in some browsers */ }
+      }
+    }
+  }, [editingId, elements]);
+
+  // ── Element CRUD ─────────────────────────────────────────────────────
   const addElement = useCallback((el: FsElement) => {
     setElements(prev => [...prev, el]);
   }, []);
@@ -172,381 +216,531 @@ export default function FillSignEditor({
   const removeElement = useCallback((id: string) => {
     setElements(prev => prev.filter(e => e.id !== id));
     setEditingId(curr => (curr === id ? null : curr));
+    setHoverId(curr => (curr === id ? null : curr));
   }, []);
 
-  // ── Page click → place new element at clicked position ────────────────
+  // ── Tool changes ──────────────────────────────────────────────────────
+  const onToolClick = (t: ToolId) => {
+    setTool(t);
+    if (t === 'signature') {
+      // Open the modal IMMEDIATELY — don't wait for a click on the PDF.
+      setSigModal(savedSig ? 'choose' : 'create');
+    } else {
+      // Drop any pending signature when leaving Signature tool.
+      setPendingSig(null);
+    }
+  };
 
-  const handlePageClick = useCallback((page: number, e: React.MouseEvent<HTMLDivElement>) => {
+  const onSigCreated = (dataUrl: string, _w: number, _h: number) => {
+    if (!dataUrl) return;
+    const sig: SavedSig = { dataUrl, w: _w, h: _h };
+    setSavedSig(sig);
+    setPendingSig({ dataUrl, applyToAllPages: false });
+    setSigModal(null);
+  };
+
+  const onSigReuse = () => {
+    if (!savedSig) return;
+    setPendingSig({ dataUrl: savedSig.dataUrl, applyToAllPages: false });
+    setSigModal(null);
+  };
+
+  const onSigCreateNew = () => setSigModal('create');
+
+  const onSigCancel = () => {
+    setSigModal(null);
+    if (!pendingSig) setTool('text');
+  };
+
+  // ── Click on the PDF canvas → place an element ────────────────────────
+  const onPageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target instanceof HTMLElement && e.target.closest('.fse-element')) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = ((e.clientX - rect.left) / rect.width) * 100;
     const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
+    const id = newId();
 
     if (tool === 'text') {
-      setPendingPosition({ page, x: xPct, y: yPct, tool });
+      addElement({
+        id, type: 'text', page: currentPage, x: xPct, y: yPct,
+        value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
+      });
+      setEditingId(id);
       setEditingDraft('');
       return;
     }
+
     if (tool === 'date') {
-      const value = todayISO();
+      const today = todayPicker();
       addElement({
-        id: newId(), type: 'date', page, x: xPct, y: yPct,
-        value, fontSize: DEFAULT_FONT_SIZE, color: DEFAULT_TEXT_COLOR,
+        id, type: 'date', page: currentPage, x: xPct, y: yPct,
+        value: isoToDisplay(today), fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
+      setEditingId(id);
+      setEditingDraft(today);
       return;
     }
-    if (tool === 'checkbox') {
-      addElement({
-        id: newId(), type: 'checkbox', page, x: xPct, y: yPct,
-        checked: true, fontSize: 22, color: '#16a34a',
-      });
-      return;
-    }
-    if (tool === 'signature') {
-      if (savedSignature) {
-        addElement({
-          id: newId(), type: 'signature', page, x: xPct, y: yPct,
-          w: SIG_DEFAULT_W, h: SIG_DEFAULT_H, dataUrl: savedSignature.dataUrl,
-        });
-      } else {
-        setPendingPosition({ page, x: xPct, y: yPct, tool });
-        setSignaturePanelOpen({ kind: 'signature' });
-      }
-      return;
-    }
-    if (tool === 'initial') {
-      if (savedInitial) {
-        addElement({
-          id: newId(), type: 'initial', page, x: xPct, y: yPct,
-          w: INI_DEFAULT_W, h: INI_DEFAULT_H, dataUrl: savedInitial.dataUrl,
-        });
-      } else {
-        setPendingPosition({ page, x: xPct, y: yPct, tool });
-        setSignaturePanelOpen({ kind: 'initial' });
-      }
-    }
-  }, [tool, savedSignature, savedInitial, addElement]);
 
-  // Confirm a pending text/date placement after the inline mini-input.
-  const commitPendingText = useCallback(() => {
-    if (!pendingPosition) return;
-    const value = editingDraft.trim();
-    if (value && pendingPosition.tool === 'text') {
-      addElement({
-        id: newId(), type: 'text',
-        page: pendingPosition.page, x: pendingPosition.x, y: pendingPosition.y,
-        value, fontSize: DEFAULT_FONT_SIZE, color: DEFAULT_TEXT_COLOR,
-      });
+    if (tool === 'signature' && pendingSig) {
+      const sigEl: FsElement = {
+        id, type: 'signature', page: currentPage, x: xPct, y: yPct,
+        w: SIG_DEFAULT_W, h: SIG_DEFAULT_H, dataUrl: pendingSig.dataUrl,
+      };
+      if (pendingSig.applyToAllPages) {
+        const all: FsElement[] = pageInfos.map(p => ({ ...sigEl, id: newId(), page: p.index }));
+        setElements(prev => [...prev, ...all]);
+      } else {
+        addElement(sigEl);
+      }
+      // pendingSig stays so user can place more.
     }
-    setPendingPosition(null);
-    setEditingDraft('');
-  }, [pendingPosition, editingDraft, addElement]);
-
-  const cancelPending = () => {
-    setPendingPosition(null);
-    setEditingDraft('');
-    setSignaturePanelOpen(null);
   };
 
-  // Signature/Initial panel saves → place on the pending position.
-  const handleSignaturePanelSave = (dataUrl: string, w: number, h: number) => {
-    if (!signaturePanelOpen || !pendingPosition) {
-      // Fallback: store the signature for later placements.
-      if (signaturePanelOpen?.kind === 'initial') setSavedInitial({ dataUrl, w, h });
-      else setSavedSignature({ dataUrl, w, h });
-      setSignaturePanelOpen(null);
-      return;
+  // ── Inline edit save / cancel ─────────────────────────────────────────
+  const commitEdit = useCallback(() => {
+    if (!editingId) return;
+    const el = elements.find(e => e.id === editingId);
+    if (!el) { setEditingId(null); setEditingDraft(''); return; }
+    if (el.type === 'text') {
+      const val = editingDraft.trim();
+      if (val) updateElement(editingId, { value: val } as Partial<FsElement>);
+      else removeElement(editingId);
+    } else if (el.type === 'date') {
+      const display = isoToDisplay(editingDraft || todayPicker());
+      updateElement(editingId, { value: display } as Partial<FsElement>);
     }
-    if (signaturePanelOpen.kind === 'signature') {
-      setSavedSignature({ dataUrl, w, h });
-      addElement({
-        id: newId(), type: 'signature',
-        page: pendingPosition.page, x: pendingPosition.x, y: pendingPosition.y,
-        w: SIG_DEFAULT_W, h: SIG_DEFAULT_H, dataUrl,
-      });
-    } else {
-      setSavedInitial({ dataUrl, w, h });
-      addElement({
-        id: newId(), type: 'initial',
-        page: pendingPosition.page, x: pendingPosition.x, y: pendingPosition.y,
-        w: INI_DEFAULT_W, h: INI_DEFAULT_H, dataUrl,
-      });
+    setEditingId(null);
+    setEditingDraft('');
+  }, [editingId, editingDraft, elements, updateElement, removeElement]);
+
+  const cancelEdit = useCallback(() => {
+    if (!editingId) return;
+    const el = elements.find(e => e.id === editingId);
+    if (el && el.type === 'text' && !el.value) {
+      // Brand-new text with nothing typed → drop it.
+      removeElement(editingId);
     }
-    setSignaturePanelOpen(null);
-    setPendingPosition(null);
+    setEditingId(null);
+    setEditingDraft('');
+  }, [editingId, elements, removeElement]);
+
+  const startEdit = (el: FsElement) => {
+    if (el.type === 'text') {
+      setEditingDraft(el.value);
+      setEditingId(el.id);
+    } else if (el.type === 'date') {
+      setEditingDraft(displayToIso(el.value));
+      setEditingId(el.id);
+    }
   };
 
-  // ── Drag-to-move ──────────────────────────────────────────────────────
-
-  const onElementMouseDown = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    const target = e.currentTarget as HTMLElement;
+  // ── Drag / resize ─────────────────────────────────────────────────────
+  const beginDrag = (clientX: number, clientY: number, el: FsElement, target: HTMLElement) => {
+    if (editingId === el.id) return;
     const pageEl = target.closest('.fse-page') as HTMLElement | null;
     if (!pageEl) return;
-    const pageRect = pageEl.getBoundingClientRect();
-    const elRect = target.getBoundingClientRect();
     dragRef.current = {
-      id,
-      offsetX: e.clientX - elRect.left,
-      offsetY: e.clientY - elRect.top,
-      pageEl,
+      id: el.id, mode: 'drag',
+      startX: clientX, startY: clientY,
+      startEl: { ...el },
+      pageRect: pageEl.getBoundingClientRect(),
     };
+    setDraggingId(el.id);
+    document.body.style.userSelect = 'none';
+  };
+
+  const onElementMouseDown = (e: React.MouseEvent, el: FsElement) => {
+    if (e.target instanceof HTMLElement && e.target.closest('.fse-resize')) return;
+    e.stopPropagation();
+    e.preventDefault();
+    beginDrag(e.clientX, e.clientY, el, e.currentTarget as HTMLElement);
+
     const onMove = (ev: MouseEvent) => {
-      if (!dragRef.current) return;
-      const pr = dragRef.current.pageEl.getBoundingClientRect();
-      const newLeft = ev.clientX - pr.left - dragRef.current.offsetX;
-      const newTop  = ev.clientY - pr.top  - dragRef.current.offsetY;
-      const xPct = Math.max(0, Math.min(100, (newLeft / pr.width) * 100));
-      const yPct = Math.max(0, Math.min(100, (newTop  / pr.height) * 100));
-      updateElement(dragRef.current.id, { x: xPct, y: yPct } as Partial<FsElement>);
+      const ds = dragRef.current;
+      if (!ds || ds.mode !== 'drag') return;
+      const dxPct = ((ev.clientX - ds.startX) / ds.pageRect.width) * 100;
+      const dyPct = ((ev.clientY - ds.startY) / ds.pageRect.height) * 100;
+      const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+      const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+      updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
     };
     const onUp = () => {
       dragRef.current = null;
+      setDraggingId(null);
+      document.body.style.userSelect = '';
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
     };
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
-    void pageRect;
   };
 
-  // Touch support — single-finger drag.
-  const onElementTouchStart = (e: React.TouchEvent, id: string) => {
+  const onElementTouchStart = (e: React.TouchEvent, el: FsElement) => {
+    if (e.target instanceof HTMLElement && e.target.closest('.fse-resize')) return;
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
     e.stopPropagation();
-    const target = e.currentTarget as HTMLElement;
-    const pageEl = target.closest('.fse-page') as HTMLElement | null;
-    if (!pageEl) return;
-    const pageRect = pageEl.getBoundingClientRect();
-    const elRect = target.getBoundingClientRect();
-    const touch = e.touches[0];
-    dragRef.current = {
-      id,
-      offsetX: touch.clientX - elRect.left,
-      offsetY: touch.clientY - elRect.top,
-      pageEl,
-    };
+    beginDrag(t.clientX, t.clientY, el, e.currentTarget as HTMLElement);
+
     const onMove = (ev: TouchEvent) => {
-      if (!dragRef.current) return;
-      const t = ev.touches[0];
-      const pr = dragRef.current.pageEl.getBoundingClientRect();
-      const newLeft = t.clientX - pr.left - dragRef.current.offsetX;
-      const newTop  = t.clientY - pr.top  - dragRef.current.offsetY;
-      const xPct = Math.max(0, Math.min(100, (newLeft / pr.width) * 100));
-      const yPct = Math.max(0, Math.min(100, (newTop  / pr.height) * 100));
-      updateElement(dragRef.current.id, { x: xPct, y: yPct } as Partial<FsElement>);
       ev.preventDefault();
+      const ds = dragRef.current;
+      if (!ds) return;
+      const tt = ev.touches[0];
+      const dxPct = ((tt.clientX - ds.startX) / ds.pageRect.width) * 100;
+      const dyPct = ((tt.clientY - ds.startY) / ds.pageRect.height) * 100;
+      const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+      const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+      updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
     };
     const onUp = () => {
       dragRef.current = null;
+      setDraggingId(null);
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onUp);
     };
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onUp);
-    void pageRect;
   };
 
-  // ── Done flow ────────────────────────────────────────────────────────
+  const onResizeMouseDown = (e: React.MouseEvent, el: FsElement, corner: 'nw' | 'ne' | 'sw' | 'se') => {
+    if (el.type !== 'signature') return;
+    e.stopPropagation();
+    e.preventDefault();
+    const pageEl = (e.currentTarget as HTMLElement).closest('.fse-page') as HTMLElement | null;
+    if (!pageEl) return;
+    const pageRect = pageEl.getBoundingClientRect();
+    const aspect = el.w / el.h;
 
+    const minWpct = (SIG_MIN_W_PX / pageRect.width)  * 100;
+    const minHpct = (SIG_MIN_H_PX / pageRect.height) * 100;
+    const maxWpct = (SIG_MAX_W_PX / pageRect.width)  * 100;
+    const maxHpct = (SIG_MAX_H_PX / pageRect.height) * 100;
+
+    const startX = e.clientX, startY = e.clientY;
+    const startW = el.w, startH = el.h;
+    const startElX = el.x, startElY = el.y;
+
+    setDraggingId(el.id);
+
+    const onMove = (ev: MouseEvent) => {
+      const dxPct = ((ev.clientX - startX) / pageRect.width)  * 100;
+      const dyPct = ((ev.clientY - startY) / pageRect.height) * 100;
+      let newW = startW, newH = startH;
+      let newXel = startElX, newYel = startElY;
+
+      if (corner === 'se') { newW = startW + dxPct; newH = startH + dyPct; }
+      else if (corner === 'sw') { newW = startW - dxPct; newXel = startElX + dxPct; newH = startH + dyPct; }
+      else if (corner === 'ne') { newW = startW + dxPct; newH = startH - dyPct; newYel = startElY + dyPct; }
+      else if (corner === 'nw') { newW = startW - dxPct; newXel = startElX + dxPct; newH = startH - dyPct; newYel = startElY + dyPct; }
+
+      // Preserve aspect ratio — driven by the larger fractional change.
+      const wRatio = Math.abs((newW / startW) - 1);
+      const hRatio = Math.abs((newH / startH) - 1);
+      if (wRatio > hRatio) {
+        const adjustedH = newW / aspect;
+        if (corner === 'ne' || corner === 'nw') newYel = startElY + (startH - adjustedH);
+        newH = adjustedH;
+      } else {
+        const adjustedW = newH * aspect;
+        if (corner === 'sw' || corner === 'nw') newXel = startElX + (startW - adjustedW);
+        newW = adjustedW;
+      }
+
+      newW = Math.max(minWpct, Math.min(maxWpct, newW));
+      newH = Math.max(minHpct, Math.min(maxHpct, newH));
+      newXel = Math.max(0, Math.min(100 - newW, newXel));
+      newYel = Math.max(0, Math.min(100 - newH, newYel));
+
+      updateElement(el.id, { w: newW, h: newH, x: newXel, y: newYel } as Partial<FsElement>);
+    };
+    const onUp = () => {
+      setDraggingId(null);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  // ── Done ──────────────────────────────────────────────────────────────
   const handleDone = async () => {
     if (processing) return;
     if (elements.length === 0) return;
     if (onBeforeDone) {
-      const allow = await onBeforeDone();
-      if (!allow) return;
+      const ok = await onBeforeDone();
+      if (!ok) return;
     }
     setProcessing(true);
     try {
       const blob = await applyFillSign({ pdfFile: file, elements, addWatermark });
       onDone?.(blob);
     } catch (e) {
-      console.error('FillSignEditor done:', e);
-      setProcessing(false);
+      console.error('FillSign done:', e);
       setError(e instanceof Error ? e.message : 'Could not generate PDF.');
+    } finally {
+      setProcessing(false);
     }
   };
 
-  // ── Render helpers ───────────────────────────────────────────────────
-
+  // ── Render helpers ────────────────────────────────────────────────────
   const renderElement = (el: FsElement) => {
-    const common = {
-      onMouseDown: (e: React.MouseEvent) => onElementMouseDown(e, el.id),
-      onTouchStart: (e: React.TouchEvent) => onElementTouchStart(e, el.id),
-      onClick: (e: React.MouseEvent) => { e.stopPropagation(); setEditingId(el.id); },
+    const isEditing = editingId === el.id;
+    const isHover = hoverId === el.id;
+    const isDragging = draggingId === el.id;
+    const elementClass = [
+      'fse-element',
+      `fse-element-${el.type === 'signature' ? 'image' : el.type}`,
+      isEditing  ? 'fse-element-editing'  : '',
+      isHover    ? 'fse-element-hover'    : '',
+      isDragging ? 'fse-element-dragging' : '',
+    ].filter(Boolean).join(' ');
+
+    const onMouseEnter = () => setHoverId(el.id);
+    const onMouseLeave = () => setHoverId(curr => (curr === el.id ? null : curr));
+    const dragHandlers = {
+      onMouseDown:  (e: React.MouseEvent) => onElementMouseDown(e, el),
+      onTouchStart: (e: React.TouchEvent) => onElementTouchStart(e, el),
+      onClick:      (e: React.MouseEvent) => e.stopPropagation(),
+      onDoubleClick:(e: React.MouseEvent) => { e.stopPropagation(); startEdit(el); },
+      onMouseEnter, onMouseLeave,
     };
 
     if (el.type === 'text' || el.type === 'date') {
+      const isDate = el.type === 'date';
       return (
         <div
           key={el.id}
-          className={`fse-element fse-element-text${editingId === el.id ? ' fse-element-active' : ''}`}
+          className={elementClass}
           style={{ left: `${el.x}%`, top: `${el.y}%` }}
-          {...common}
+          {...dragHandlers}
         >
-          <span className="fse-element-value" style={{ fontSize: `${el.fontSize}px`, color: el.color }}>
-            {el.value || (el.type === 'date' ? 'date' : 'text')}
-          </span>
-          <button type="button" className="fse-element-x" onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} aria-label="Delete">
-            <X size={12} />
-          </button>
+          {isEditing ? (
+            <div className="fse-edit-row">
+              <input
+                ref={isDate ? dateInputRef : undefined}
+                type={isDate ? 'date' : 'text'}
+                autoFocus={!isDate}
+                value={editingDraft}
+                onChange={e => setEditingDraft(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') commitEdit();
+                  if (e.key === 'Escape') cancelEdit();
+                }}
+                className="fse-edit-input"
+                style={{ fontSize: isDate ? 13 : `${el.fontSize}px` }}
+                placeholder={isDate ? '' : 'Type text…'}
+                onClick={e => e.stopPropagation()}
+              />
+              <button type="button" className="fse-edit-confirm" onClick={(e) => { e.stopPropagation(); commitEdit(); }} aria-label="Save">
+                <Check size={12} />
+              </button>
+              <button type="button" className="fse-edit-cancel" onClick={(e) => { e.stopPropagation(); cancelEdit(); }} aria-label="Cancel">
+                <X size={12} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <span className="fse-element-value" style={{ fontSize: `${el.fontSize}px`, color: el.color }}>
+                {el.value || (isDate ? 'date' : 'text')}
+              </span>
+              <button
+                type="button"
+                className="fse-element-x"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
+                aria-label="Delete"
+              >
+                <X size={11} />
+              </button>
+            </>
+          )}
         </div>
       );
     }
 
-    if (el.type === 'checkbox') {
-      return (
-        <div
-          key={el.id}
-          className={`fse-element fse-element-checkbox${editingId === el.id ? ' fse-element-active' : ''}`}
-          style={{ left: `${el.x}%`, top: `${el.y}%` }}
-          {...common}
-          onDoubleClick={(e) => { e.stopPropagation(); updateElement(el.id, { checked: !el.checked } as Partial<FsElement>); }}
-        >
-          <span className="fse-element-value" style={{ fontSize: `${el.fontSize}px`, color: el.color }}>
-            {el.checked ? '✓' : '✕'}
-          </span>
-          <button type="button" className="fse-element-x" onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} aria-label="Delete">
-            <X size={12} />
-          </button>
-        </div>
-      );
-    }
-
-    if (el.type !== 'signature' && el.type !== 'initial') return null;
-    // signature / initial — discriminated union narrowed by the guard above
+    // signature
+    if (el.type !== 'signature') return null;
     return (
       <div
         key={el.id}
-        className={`fse-element fse-element-image${editingId === el.id ? ' fse-element-active' : ''}`}
+        className={elementClass}
         style={{ left: `${el.x}%`, top: `${el.y}%`, width: `${el.w}%`, height: `${el.h}%` }}
-        {...common}
+        {...dragHandlers}
       >
-        <img src={el.dataUrl} alt={el.type} className="fse-element-img" draggable={false} />
-        <button type="button" className="fse-element-x" onClick={(e) => { e.stopPropagation(); removeElement(el.id); }} aria-label="Delete">
-          <X size={12} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={el.dataUrl} alt="signature" className="fse-element-img" draggable={false} />
+        <button
+          type="button"
+          className="fse-element-x"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
+          aria-label="Delete"
+        >
+          <X size={11} />
         </button>
+        {(['nw', 'ne', 'sw', 'se'] as const).map(c => (
+          <span
+            key={c}
+            className={`fse-resize fse-resize-${c}`}
+            onMouseDown={(e) => onResizeMouseDown(e, el, c)}
+            aria-hidden="true"
+          />
+        ))}
       </div>
     );
   };
 
-  const renderListEntry = (el: FsElement) => {
-    let preview = '';
-    if (el.type === 'text' || el.type === 'date') preview = el.value || `(${el.type})`;
-    else if (el.type === 'checkbox') preview = el.checked ? '✓' : '✕';
-    else preview = el.type === 'signature' ? 'Signature' : 'Initial';
-    return (
-      <li key={el.id} className="fse-list-item">
-        <span className="fse-list-type">{el.type}</span>
-        <span className="fse-list-preview">{preview}</span>
-        <span className="fse-list-page">p{el.page}</span>
-        <button type="button" className="fse-list-remove" onClick={() => removeElement(el.id)} aria-label="Remove">
-          <X size={14} />
-        </button>
-      </li>
-    );
-  };
+  const visibleElements = elements.filter(e => e.page === currentPage);
+  const currentInfo = pageInfos.find(p => p.index === currentPage);
+  const canDone = elements.length > 0 && !processing;
 
   return (
-    <div className="fse">
+    <div className="fse" ref={editorRootRef}>
       <div className="fse-main">
-        <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
-          {TOOLS.map(t => (
-            <button
-              key={t.id}
-              type="button"
-              className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
-              onClick={() => setTool(t.id)}
-            >
-              <t.Icon size={16} strokeWidth={2} />
-              <span>{t.label}</span>
-            </button>
-          ))}
+        {/* Sticky top bar — toolbar + Sign & Download */}
+        <div className="fse-topbar">
+          <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
+            {TOOLS.map(t => (
+              <button
+                key={t.id}
+                type="button"
+                className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
+                onClick={() => onToolClick(t.id)}
+              >
+                <t.Icon size={16} strokeWidth={2} />
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="fse-cta-top"
+            disabled={!canDone}
+            onClick={handleDone}
+          >
+            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
+            <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
+          </button>
         </div>
 
-        <div className={`fse-pages tool-${tool}`} ref={containerRef}>
+        {/* Pending signature ribbon — visible while user has a sig waiting to be placed */}
+        {pendingSig && (
+          <div className="fse-pending-bar">
+            <div className="fse-pending-info">
+              <FileSignature size={14} />
+              <span>Signature ready — click on the PDF to place it</span>
+            </div>
+            <label className="fse-pending-checkbox">
+              <input
+                type="checkbox"
+                checked={pendingSig.applyToAllPages}
+                onChange={e => setPendingSig({ ...pendingSig, applyToAllPages: e.target.checked })}
+              />
+              <Layers size={13} />
+              <span>Apply to all pages</span>
+            </label>
+            <button type="button" className="fse-pending-cancel" onClick={() => setPendingSig(null)}>
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {/* Page switcher */}
+        {!loading && pageInfos.length > 1 && (
+          <div className="fse-page-switcher">
+            <button
+              type="button"
+              className="fse-page-nav"
+              disabled={currentPage <= 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              ← Prev
+            </button>
+            <div className="fse-page-numbers">
+              <span className="fse-page-numbers-label">Page {currentPage} / {pageInfos.length}</span>
+              <div className="fse-page-mini">
+                {pageInfos.map(p => (
+                  <button
+                    key={p.index}
+                    type="button"
+                    className={`fse-page-num${currentPage === p.index ? ' active' : ''}`}
+                    onClick={() => setCurrentPage(p.index)}
+                  >
+                    {p.index}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="fse-page-nav"
+              disabled={currentPage >= pageInfos.length}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              Next →
+            </button>
+          </div>
+        )}
+
+        {/* PDF area */}
+        <div className="fse-page-area">
           {loading && (
             <div className="fse-pages-state">
-              <Loader2 className="fse-spin" size={28} strokeWidth={1.7} />
+              <Loader2 className="fse-spin" size={28} />
               <span>Loading PDF…</span>
             </div>
           )}
-          {error && !loading && (
-            <div className="fse-pages-state fse-pages-error">{error}</div>
-          )}
-          {!loading && !error && pageInfos.map(info => (
+          {error && !loading && <div className="fse-pages-state fse-pages-error">{error}</div>}
+          {!loading && !error && currentInfo && (
             <div
-              key={info.index}
-              className="fse-page"
-              style={{ width: info.width, height: info.height }}
-              onClick={(e) => handlePageClick(info.index, e)}
+              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}`}
+              style={{ width: currentInfo.width, height: currentInfo.height }}
+              onClick={onPageClick}
             >
-              <canvas
-                ref={el => {
-                  if (el) canvasRefs.current.set(info.index, el);
-                  else canvasRefs.current.delete(info.index);
-                }}
-              />
+              <canvas ref={canvasRef} />
               <div className="fse-page-overlay">
-                {elements.filter(el => el.page === info.index).map(renderElement)}
-                {pendingPosition && pendingPosition.page === info.index && pendingPosition.tool === 'text' && (
-                  <div
-                    className="fse-pending"
-                    style={{ left: `${pendingPosition.x}%`, top: `${pendingPosition.y}%` }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <input
-                      type="text"
-                      autoFocus
-                      value={editingDraft}
-                      onChange={(e) => setEditingDraft(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') commitPendingText();
-                        if (e.key === 'Escape') cancelPending();
-                      }}
-                      onBlur={commitPendingText}
-                      placeholder="Type text…"
-                      className="fse-pending-input"
-                    />
-                  </div>
-                )}
+                {visibleElements.map(renderElement)}
               </div>
-              <span className="fse-page-label">Page {info.index} of {pageInfos.length}</span>
             </div>
-          ))}
+          )}
         </div>
-
-        {!loading && !error && (
-          <div className="fse-cta-row">
-            <button
-              type="button"
-              className="fse-cta"
-              disabled={processing || elements.length === 0}
-              onClick={handleDone}
-            >
-              {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
-              <span>{processing ? 'Generating PDF…' : `Done — Download PDF${addWatermark ? ' (with watermark)' : ''}`}</span>
-            </button>
-            {elements.length === 0 && (
-              <p className="fse-cta-hint">Click a tool above, then click on the PDF to place it.</p>
-            )}
-          </div>
-        )}
       </div>
 
+      {/* Sidebar — sticky list of all placed elements */}
       <aside className="fse-sidebar">
         <div className="fse-sidebar-card">
           <div className="fse-sidebar-title">
             <Check size={14} /> Placed elements ({elements.length})
           </div>
           {elements.length === 0 ? (
-            <p className="fse-sidebar-empty">Nothing yet. Pick a tool, click on the PDF.</p>
+            <p className="fse-sidebar-empty">Pick a tool above, then click on the PDF to place it.</p>
           ) : (
             <ul className="fse-list">
-              {elements.map(renderListEntry)}
+              {elements.map(el => {
+                const preview = el.type === 'signature'
+                  ? 'Signature'
+                  : (el.value || `(${el.type})`);
+                return (
+                  <li key={el.id} className="fse-list-item">
+                    <span className="fse-list-type">{el.type}</span>
+                    <span className="fse-list-preview" onClick={() => setCurrentPage(el.page)}>{preview}</span>
+                    <span className="fse-list-page">p{el.page}</span>
+                    <button
+                      type="button"
+                      className="fse-list-remove"
+                      onClick={() => removeElement(el.id)}
+                      aria-label="Remove"
+                    >
+                      <X size={14} />
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
           <div className="fse-sidebar-tip">
-            <span>Tip:</span> drag any element to reposition. Click <X size={12} /> to delete.
+            <span>Tip:</span> drag to move, double-click to edit, drag corners to resize signatures.
           </div>
           {!hasSubscription && (
             <div className="fse-sidebar-plan">
@@ -556,16 +750,53 @@ export default function FillSignEditor({
         </div>
       </aside>
 
-      {signaturePanelOpen && (
-        <div className="fse-modal" role="dialog" aria-modal="true" onClick={cancelPending}>
-          <div className="fse-modal-card" onClick={(e) => e.stopPropagation()}>
+      {/* Mobile-only floating Sign & Download */}
+      <button
+        type="button"
+        className="fse-fab"
+        disabled={!canDone}
+        onClick={handleDone}
+      >
+        {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
+        <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
+      </button>
+
+      {/* Signature creation modal */}
+      {sigModal === 'create' && (
+        <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
+          <div className="fse-modal-card" onClick={e => e.stopPropagation()}>
             <div className="fse-modal-head">
-              <h3>{signaturePanelOpen.kind === 'signature' ? 'Draw your signature' : 'Draw your initial'}</h3>
-              <button type="button" className="fse-modal-close" onClick={cancelPending} aria-label="Close">
+              <h3>Draw your signature</h3>
+              <button type="button" className="fse-modal-close" onClick={onSigCancel} aria-label="Close">
                 <X size={18} />
               </button>
             </div>
-            <SignatureCanvas onSave={(dataUrl, w, h) => handleSignaturePanelSave(dataUrl, w, h)} />
+            <SignatureCanvas onSave={onSigCreated} />
+          </div>
+        </div>
+      )}
+
+      {/* Signature reuse chooser */}
+      {sigModal === 'choose' && savedSig && (
+        <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
+          <div className="fse-modal-card" onClick={e => e.stopPropagation()}>
+            <div className="fse-modal-head">
+              <h3>Use a signature</h3>
+              <button type="button" className="fse-modal-close" onClick={onSigCancel} aria-label="Close">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="fse-sig-chooser">
+              <button type="button" className="fse-sig-choice fse-sig-choice-saved" onClick={onSigReuse}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={savedSig.dataUrl} alt="Saved signature" />
+                <span>Use this signature</span>
+              </button>
+              <button type="button" className="fse-sig-choice fse-sig-choice-new" onClick={onSigCreateNew}>
+                <PenLine size={20} />
+                <span>Create new</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

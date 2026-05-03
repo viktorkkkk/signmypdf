@@ -18,20 +18,11 @@ export type FsElement =
     }
   | {
       id: string;
-      type: 'signature' | 'initial';
+      type: 'signature';
       page: number;
       x: number; y: number;    // % of page (top-left)
       w: number; h: number;    // % of page
-      dataUrl: string;         // PNG data URL of the drawn or rendered glyph
-    }
-  | {
-      id: string;
-      type: 'checkbox';
-      page: number;
-      x: number; y: number;    // % of page (top-left)
-      checked: boolean;        // ✓ when true, ✕ when false
-      fontSize: number;        // PDF points (drives glyph size)
-      color: string;
+      dataUrl: string;         // PNG data URL
     };
 
 export interface FillSignOptions {
@@ -123,23 +114,7 @@ export async function applyFillSign(opts: FillSignOptions): Promise<Blob> {
       continue;
     }
 
-    if (el.type === 'checkbox') {
-      const glyph = el.checked ? '✓' : '✕';
-      const { dataUrl, widthPts, heightPts } = renderTextToPng(glyph, el.fontSize, el.color || '#16a34a');
-      const img = await embedDataUrl(pdfDoc, dataUrl);
-      const pdfX = (el.x / 100) * pw;
-      const topY = (el.y / 100) * ph;
-      const pdfY = ph - topY - heightPts;
-      page.drawImage(img, {
-        x: Math.max(0, pdfX),
-        y: Math.max(0, pdfY),
-        width: widthPts,
-        height: heightPts,
-      });
-      continue;
-    }
-
-    if (el.type === 'signature' || el.type === 'initial') {
+    if (el.type === 'signature') {
       if (!el.dataUrl) continue;
       const img = await embedDataUrl(pdfDoc, el.dataUrl);
       // Container in % → PDF points
