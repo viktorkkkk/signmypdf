@@ -83,6 +83,8 @@ const BLOG_SLUGS = [
   'password-protect-pdf-on-mac',
   'pdf-read-only-add-text-fix',
   'docusign-free-plan-vs-signmypdf',
+  'sign-contractor-agreement-online',
+  'password-protect-pdf-on-windows-11',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

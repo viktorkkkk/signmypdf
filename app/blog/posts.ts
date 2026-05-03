@@ -8016,6 +8016,157 @@ A password prompt means an open password protects the file — you need the corr
 `,
   },
   {
+    slug: 'sign-contractor-agreement-online',
+    title: 'Sign a Contractor Agreement Online Free',
+    excerpt: 'Need to sign a contractor agreement fast? Do it directly in your browser — no printing, no scanning, no account needed. Free, private, instant.',
+    date: '2026-05-04',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign contractor agreement online', 'contractor agreement signature', 'sign contract online free', 'pdf signature free', 'sign pdf no account', 'contractor pdf sign', 'freelance contract signature'],
+    metaTitle: 'Sign a Contractor Agreement Online Free',
+    metaDescription: 'Sign a contractor agreement in your browser — no printing, no scanning, no account. Draw or type your signature, download instantly. Free.',
+    content: `
+You've just received a contractor agreement as a PDF. The client needs it back today. Your printer is out of ink, you're traveling, or you just don't want to deal with the print-sign-scan loop for a document you'll store digitally anyway.
+
+Printing and scanning a contractor agreement to add a signature you could have added on-screen is a solved problem — it just isn't solved by most tools without an account, a monthly fee, or a mandatory workflow that wasn't designed for your situation.
+
+[CTA]Sign Your Contractor Agreement Now — Free|Draw or type your signature, place it anywhere on the PDF, download instantly. No account needed.|Sign PDF Now — Free
+
+[IMAGE: A contractor agreement PDF open in SignMyPDF with a drawn signature placed above the signature line on the final page]
+
+## How to sign a contractor agreement online
+
+1. **Upload your PDF.** Drop the contractor agreement onto the upload area or click to browse. Works on any device.
+2. **Create your signature.** Draw it with a mouse or finger, or type your name in a signature-style font.
+3. **Place it on the page.** Drag the signature onto the signature line. Resize if needed.
+4. **Sign additional pages if required.** Select any other pages that need your initials or second signature.
+5. **Download the signed PDF.** Your signed contractor agreement downloads immediately — no email required.
+
+## Why most signing tools are frustrating for contracts
+
+- **Forced account creation.** DocuSign, Adobe Sign, and HelloSign all require an account before you can do anything — even a one-off contractor agreement.
+- **Envelope or document caps.** Free tiers on most platforms cap you at 3-5 documents per month. A busy freelancer hits that in week one.
+- **Sender-recipient workflows.** Tools built for routing signatures between multiple parties add steps you don't need when you're just signing something for yourself.
+- **Files uploaded to servers.** Contractor agreements often contain rates, terms, and personal information. Uploading them to a third-party server is a privacy concern many clients flag explicitly.
+- **Paywall at download.** Some tools let you sign but hold the file behind a paid plan when you try to download.
+
+## Why SignMyPDF works better for this
+
+- **Free, no registration, no paywall at download.** Upload, sign, download — nothing blocks you at any step.
+- **Files processed in browser.** Your contractor agreement never leaves your device. Everything runs locally, so sensitive rate and scope details stay private.
+- **No document limits.** Sign as many contractor agreements as you have clients — no monthly cap.
+- **Works on any device.** iPhone, Android, Mac, Windows, Chromebook — draw your signature with a finger or stylus, or type it.
+- **Handles non-interactive PDFs.** Contractor agreements sent as flat PDFs (no fillable fields) are no problem — SignMyPDF renders each page as an image and lets you place your signature anywhere.
+
+For contracts that also need form fields filled in — like rate, project scope, or start date — the [PDF fill tool](/fill) lets you add text anywhere on the page before signing.
+
+## FAQ
+
+**Is a digitally signed contractor agreement legally binding?**
+In the US, the ESIGN Act (2000) and UETA make electronic signatures legally equivalent to handwritten ones on most contracts, including contractor agreements. The key requirement is intent to sign — dragging and placing a signature you created meets that standard. For international contracts, see [eIDAS in the EU](/blog/eidas-regulation-eu-signatures) or [electronic signature laws by state](/blog/electronic-signature-laws-by-state) for jurisdiction-specific rules.
+
+**What if the contractor agreement has multiple signature lines across several pages?**
+SignMyPDF supports multi-page signing. After placing your signature on the first page, you can switch to other pages and drop it again — or add initials on intermediate pages. Each placement is independent so you can resize and reposition per page.
+
+**Will my signature look professional on the final document?**
+Draw-mode captures your actual handwriting, so it looks identical to a pen signature. Type-mode renders your name in a signature-style font. Either way, the result is a clean PDF indistinguishable from one signed in Adobe Acrobat.
+
+[CTA]Sign Your Contractor Agreement — Free|No account, no limit, no watermark on your first two PDFs per day. Download instantly.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign an NDA online without printing](/blog/sign-nda-online-without-printing)
+- [Sign a service agreement online — free](/blog/sign-employment-offer-letter-online)
+- [Electronic signatures: what's legally admissible](/blog/digital-signatures-admissible-court)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-on-windows-11',
+    title: 'Password Protect a PDF on Windows 11 Free',
+    excerpt: 'Windows 11 has no built-in PDF password tool. Here are three ways to password protect a PDF on Windows 11 — including one that works free, in your browser, right now.',
+    date: '2026-05-04',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf windows 11', 'protect pdf windows 11', 'pdf password windows 11', 'encrypt pdf windows 11', 'pdf protection free', 'password protect pdf free', 'windows 11 pdf security'],
+    metaTitle: 'Password Protect a PDF on Windows 11 Free',
+    metaDescription: 'Windows 11 has no built-in PDF password feature. Learn three ways to password protect a PDF on Windows 11 — one free, browser-based, no install needed.',
+    content: `
+You have a sensitive PDF — a tax document, a contract, a medical record — and you're on Windows 11. You open File Explorer, right-click the PDF, and find no password option. You check the built-in PDF viewer and find no lock feature. Windows 11 simply doesn't include a native PDF password tool.
+
+This surprises a lot of people. macOS has it built into Preview. Windows doesn't. Here's what actually works.
+
+[CTA]Password Protect a PDF on Windows 11 — Free|No software to install. Works in any Windows 11 browser. Upload, set password, download.|Protect PDF Now — Free
+
+[IMAGE: A PDF file open in SignMyPDF's protect tool on a Windows 11 browser, with the password input field visible and a strong password typed in]
+
+## Option 1: Browser-based tool (free, no install)
+
+This is the fastest option if you need to password protect a PDF on Windows 11 right now without installing anything.
+
+1. **Open any browser** on Windows 11 — Edge, Chrome, or Firefox all work.
+2. **Go to [SignMyPDF Protect](/protect).**
+3. **Upload your PDF.** Drag and drop or click to browse.
+4. **Set your password.** Type a strong password — the tool scores strength in real time and can generate one for you.
+5. **Configure permissions (optional).** Restrict printing, copying, or editing if needed.
+6. **Download the protected PDF.** Your encrypted PDF downloads immediately — free, no registration, no watermark on the file.
+
+Files are processed entirely in your browser. The PDF never leaves your device — useful when the document contains personal or financial information.
+
+## Option 2: Microsoft Word (if you have Office)
+
+If you have Microsoft Word 365 or a standalone Word install on Windows 11, you can export a PDF with a password:
+
+1. Open or create the document in Word.
+2. Go to **File → Save As → PDF (*.pdf)** and click **Options**.
+3. Check **Encrypt the document with a password**, set your password, and save.
+
+This works well for documents you're creating fresh. It doesn't work if you already have a finished PDF from another source — Word will convert it to a Word document first, which often breaks the original formatting.
+
+## Option 3: Adobe Acrobat (paid, most full-featured)
+
+Adobe Acrobat Pro includes robust PDF password and permission controls. It's the most feature-complete option but costs around $20/month. If you're managing PDFs regularly in a professional context, it's worth evaluating. For a one-off document or occasional use, the browser-based option is more practical.
+
+For a detailed cost comparison, see [Adobe Acrobat vs free PDF protection tools](/blog/adobe-vs-free-pdf-protection).
+
+[IMAGE: Comparison layout: Windows 11 Edge browser with SignMyPDF protect tool open on the left, Word's Save As PDF dialog with encryption option on the right]
+
+## Why most Windows users end up frustrated
+
+- **No native Windows 11 tool.** Unlike macOS, Windows gives you no built-in PDF encryption option.
+- **Microsoft Print to PDF doesn't add passwords.** It just creates a PDF from print output — no security layer.
+- **Many free tools install adware.** A search for "free PDF password tool Windows" surfaces software that bundles toolbars or worse. Browser-based options sidestep this entirely.
+- **Adobe's tools require a subscription.** Acrobat Reader (free) cannot add passwords — only Acrobat Pro (paid) can.
+- **Cloud tools upload your files.** For sensitive documents, uploading to a third-party server before the file is protected is a privacy risk.
+
+## Why SignMyPDF works on Windows 11
+
+- **Free, no registration, no paywall at download.** Password-protect any PDF and download it immediately — no account required.
+- **Files processed in browser, never uploaded to servers.** Encryption happens locally in your browser tab. Nothing leaves your device.
+- **Works in Edge, Chrome, and Firefox.** No extension, no plugin, no download needed.
+- **AES-128 encryption.** The password protection uses the same encryption standard as Adobe Acrobat's "Standard Security" setting — readable by any PDF viewer that supports password-protected files.
+- **Permission controls.** Optionally restrict printing, copying text, or modifying the document, separate from the open password.
+
+## FAQ
+
+**Can Windows 11's built-in PDF viewer (Edge) add a password?**
+No. Microsoft Edge can view and annotate PDFs but cannot add password protection. You need a third-party tool — either browser-based like SignMyPDF or a desktop app like Acrobat.
+
+**Will a PDF password protected on Windows 11 open on Mac or iPhone?**
+Yes. PDF password protection is part of the PDF standard (ISO 32000). A file encrypted on Windows 11 will prompt for a password on macOS Preview, Adobe Reader on iPhone, or any other compliant PDF viewer. For a known compatibility issue, see [why a protected PDF won't open on some devices](/blog/protected-pdf-wont-open-some-devices).
+
+**Is there a file size limit?**
+SignMyPDF processes files in the browser, so the practical limit is your device's available memory rather than a server-side cap. Most PDFs — even multi-page documents — are well within range.
+
+[CTA]Protect Your PDF on Windows 11 — Free|Browser-based, no install, no account. Files stay on your device.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password protect a PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe)
+- [Password protect a PDF on Mac (Preview + free tools)](/blog/password-protect-pdf-on-mac)
+- [Why a protected PDF won't open on some devices](/blog/protected-pdf-wont-open-some-devices)
+`,
+  },
+  {
     slug: 'docusign-free-plan-vs-signmypdf',
     title: 'DocuSign Free Plan vs SignMyPDF: Fill PDFs',
     excerpt: "DocuSign's free plan caps at a few documents per month and lacks flexible form-filling. Compare it to SignMyPDF — unlimited, free, no account needed.",
