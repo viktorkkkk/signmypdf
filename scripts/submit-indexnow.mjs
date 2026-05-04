@@ -85,6 +85,8 @@ const BLOG_SLUGS = [
   'docusign-free-plan-vs-signmypdf',
   'sign-contractor-agreement-online',
   'password-protect-pdf-on-windows-11',
+  'accountants-tax-documents-signature',
+  'why-lawyer-asks-password-protect-pdf',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

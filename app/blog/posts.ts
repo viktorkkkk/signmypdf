@@ -8241,6 +8241,152 @@ No. The free tier lets you fill as many PDFs as you need with no cap. The only d
 - [Sign a PDF without email or account](/blog/pdf-signing-no-email-required)
 `,
   },
+  {
+    slug: 'accountants-tax-documents-signature',
+    title: 'Accountants: Fill Client Tax Forms for Free',
+    excerpt: "Adobe Acrobat costs $20+/month just to add text to a PDF. Here's how accountants fill client tax forms — scanned or fillable — free, no subscription.",
+    date: '2026-05-05',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill tax pdf forms', 'fill pdf form free', 'pdf tax forms no acrobat', 'fill scanned pdf form', 'fill pdf for clients', 'accountant pdf tool', 'fill pdf online free'],
+    metaTitle: 'Accountants: Fill Client Tax Forms for Free',
+    metaDescription: "Scanned tax PDFs have no interactive fields — most tools fail on them. Here's how accountants fill client tax forms free, without Adobe Acrobat.",
+    content: `
+You're working through a client's quarterly filing. They've sent a scanned PDF W-9, a state tax form, or a 1040-ES with no interactive fields. You need to fill tax PDF forms on their behalf — dates, amounts, business names, TINs — then return the completed document. Opening Adobe Acrobat costs $20 or more per month just to add text to a PDF. And roughly half of all government tax forms are image-based scans: Acrobat's click-to-fill won't detect any fields at all. You end up clicking on blank space and getting nothing.
+
+Filling tax PDF forms shouldn't require a paid subscription. With SignMyPDF, you can fill any tax PDF form — interactive or scanned — free, in your browser, with no account.
+
+[CTA]Fill Tax PDF Forms Free — No Acrobat Needed|Works on scanned government forms and fillable PDFs. No account. Files stay on your device.|Fill PDF Form Now — Free
+
+[IMAGE: accountant placing a text box on a scanned W-9 PDF in a browser tab, no desktop software installed]
+
+## How to fill a client tax PDF for free
+
+1. Open [SignMyPDF Fill](/fill) in your browser.
+2. Upload the client's tax form PDF.
+3. Click any area on the page to place a text box.
+4. Type the required data — name, TIN, amounts, dates.
+5. Download the completed form and send it back to the client.
+
+No install. No account creation. No watermark on filled documents.
+
+## Why most tools make this harder than it needs to be
+
+Accountants who handle tax documents repeatedly run into the same obstacles:
+
+- **Adobe Acrobat requires a paid plan for form filling.** The Fill & Sign feature is locked behind Acrobat Standard or Pro, which runs $20+/month. For occasional use across multiple clients, that's significant overhead.
+- **Scanned tax forms have no clickable fields.** Most "fill PDF" tools detect interactive form fields and move the cursor to them. When the PDF is a scanned image — which many government tax forms are — those tools fail silently or open a blank editor with nothing to click.
+- **Cloud tools upload your client documents.** Client TINs, Social Security numbers, and income figures are sensitive data. Most online PDF tools process documents on their servers, meaning that information leaves your device.
+- **Free trials lock download until you pay.** You fill the entire form, enter all the client data, then find out that saving requires a credit card.
+- **Workflow mismatch for standalone filling.** Tools built for e-signature routing add envelope and recipient layers you don't need when filling a form for your own records. For a direct comparison, see [DocuSign free plan vs SignMyPDF](/blog/docusign-free-plan-vs-signmypdf).
+
+## Why SignMyPDF works better for filling client tax forms
+
+- **Free, no registration, no paywall at download.** Fill a form, download it, done.
+- **Works on scanned forms with no interactive fields.** Free-placement text overlay lets you click anywhere on the page and place text precisely — regardless of whether the PDF has form fields. This is the critical feature for scanned government tax forms.
+- **Files processed entirely in the browser.** SignMyPDF uses pdf-lib to apply changes locally. Your client's tax data never reaches a server.
+- **No monthly cap.** Fill two forms this week, twenty next month — nothing resets.
+- **Works on any device.** Mac, Windows, iPhone, Android — no app installation required.
+
+## FAQ
+
+**Can I fill a scanned W-9 or 1099 with no interactive fields?**
+Yes. SignMyPDF uses free-placement text overlay: click anywhere on the PDF page, type your text, and drag the box into position. This works on scanned government forms that standard click-to-fill tools can't process. For more on this scenario, see [what to do when PDF form fields won't let you type](/blog/pdf-form-fields-not-working-fix).
+
+**Is it safe to fill client tax documents in a browser-based tool?**
+SignMyPDF processes files entirely in the browser using pdf-lib. No data is uploaded to any server. Your client's TINs, Social Security numbers, and income figures stay on your local device throughout the session. Files processed in the browser means zero server exposure.
+
+**What if I make an error and need to redo a form?**
+Re-upload the original blank PDF and start again — no record is kept server-side, so you always have a clean template to work from. The Pro plan adds a Save Draft feature if you need to return to a partially filled form without re-entering everything.
+
+[CTA]Fill Tax PDF Forms Free — Scanned or Fillable|No Adobe subscription. Works on any PDF, including image-based government forms.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a PDF form online — free](/blog/fill-pdf-form-online-free)
+- [Fix PDF form fields that won't let you type](/blog/pdf-form-fields-not-working-fix)
+- [Fill government forms online for free](/blog/fill-government-forms-online-free)
+`,
+  },
+  {
+    slug: 'why-lawyer-asks-password-protect-pdf',
+    title: 'Why Lawyers Ask You to Password Protect PDFs',
+    excerpt: "Your attorney keeps asking you to password protect PDFs before emailing them. Here's the real reason — and how to do it free in under a minute.",
+    date: '2026-05-05',
+    readTime: '5 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf', 'why password protect pdf', 'lawyer password protect pdf', 'protect pdf before emailing', 'password protect pdf free', 'pdf security free', 'protect confidential pdf'],
+    metaTitle: 'Why Lawyers Ask You to Password Protect PDFs',
+    metaDescription: "Standard email isn't encrypted. That's why lawyers require password-protected PDFs for contracts. Here's how to protect any PDF free, no Adobe needed.",
+    content: `
+You signed the contract, added your e-signature, and were about to email it to your attorney — when they replied with their standing instruction: password protect the PDF before you send it. Or maybe it was your mortgage broker, your accountant, or an HR coordinator. Legal and financial professionals who handle sensitive documents routinely require this step. The reasons are specific and worth understanding, because the same logic applies to every confidential document you send by email.
+
+Password protecting a PDF takes under 60 seconds. Here's why attorneys require it — and how to do it free without Adobe Acrobat.
+
+[CTA]Password Protect Your PDF Free|AES-128 encryption, strength checker built in. Files stay on your device.|Protect PDF Now — Free
+
+## Why email isn't enough on its own
+
+Standard email is not end-to-end encrypted. Your PDF attachment travels through mail servers — at your provider, potentially at relay servers, and at the recipient's provider. Any of those servers can be subpoenaed, misconfigured, or compromised in a breach. A signed contract containing compensation terms, client names, or legal obligations is exactly the kind of document that becomes a liability if it's readable by anyone with server access.
+
+A password-protected PDF adds a second lock. Even if the file is intercepted or forwarded accidentally, it's unreadable without the password. The protection travels with the file itself — it doesn't depend on the email channel being secure.
+
+[IMAGE: a PDF contract with a padlock icon being attached to an email, with a separate text message shown alongside containing the password]
+
+## Why lawyers specifically require password-protected PDFs
+
+- **Confidentiality obligations.** Attorneys are bound by professional conduct rules requiring reasonable care to protect client information. Sending a signed contract or NDA as a plain, unencrypted attachment falls short of that standard.
+- **Forwarding risk.** An email can be forwarded to anyone in one click. A password-protected PDF can be forwarded too — but it's useless without the key, which only you control.
+- **Version integrity.** PDF password protection can include permission settings that prevent editing or printing. A lawyer sending a final signed contract may restrict modifications to confirm the document wasn't altered after signature.
+- **Audit defensibility.** In regulated industries — legal, financial, healthcare — transmitting sensitive documents with encryption is a documented step that demonstrates reasonable security practice if the handling is ever questioned.
+
+For a practical look at what happens when this step gets skipped, see [what to do after sending a confidential contract unprotected](/blog/sent-confidential-contract-unprotected).
+
+## How to password protect a PDF before sending
+
+1. Open [SignMyPDF Protect](/protect) in your browser.
+2. Upload your PDF.
+3. Set a strong password — use the built-in generator if you want one.
+4. Optionally restrict printing or editing.
+5. Download the protected file and email it.
+
+Then send the password separately — by text, phone call, or a messaging app. Never in the same email thread as the file.
+
+## Why most tools make this harder
+
+- **Adobe Acrobat requires a paid plan for PDF encryption.** Basic password protection isn't available in free Acrobat Reader — you need Acrobat Standard or Pro.
+- **Many desktop tools are Windows-only.** Mac users find options thin when looking for a free, desktop-based password tool.
+- **Browser tools that upload your file to add the password** have already sent it to a third-party server — which undermines the point of protecting it.
+- **Weak defaults.** Some tools allow a password like "1234" with no warning. A dictionary attack breaks passwords that simple in seconds.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.**
+- **AES-128 encryption** — the same standard Adobe Acrobat uses. Compatible with every PDF viewer that supports password-protected files.
+- **Files processed in browser, never uploaded to a server.** Your document is encrypted locally using pdf-lib. No third party sees your content.
+- **Built-in password strength checker and generator.** You'll know your password is weak before you send the file, not after.
+- **Works on Mac, Windows, iPhone, and Android** — no install required.
+
+## FAQ
+
+**Why does my lawyer ask for a PDF password rather than encrypted email?**
+Encrypted email requires both parties to configure it — most email clients don't support it by default, and most people haven't set it up. A PDF password is simpler: the recipient opens the file, enters the password, and reads it. The protection travels with the file regardless of which email service either party uses.
+
+**Should I send the password in the same email as the PDF?**
+No. If both travel together, anyone who accesses that email thread gets the file and the key. Send the PDF by email and share the password by a separate channel — text message, phone call, or a messaging app.
+
+**Will a PDF I protect here open on any device?**
+Yes. PDF password protection follows the ISO 32000 standard, so a protected file opens correctly on macOS Preview, Adobe Reader, Foxit, and mobile apps on any platform. If you run into compatibility issues on specific devices, see [why a protected PDF won't open on some devices](/blog/protected-pdf-wont-open-some-devices).
+
+[CTA]Password Protect Your PDF Before You Send It|Free, AES-128 encryption, files stay in your browser. No Adobe required.|Protect PDF Now — Free
+
+## Related tools
+
+- [How to password protect a PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe)
+- [What to do after sending a confidential contract unprotected](/blog/sent-confidential-contract-unprotected)
+- [Why a protected PDF won't open on some devices](/blog/protected-pdf-wont-open-some-devices)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
