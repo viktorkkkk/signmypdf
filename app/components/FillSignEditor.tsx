@@ -5,9 +5,11 @@ import {
   CalendarDays,
   Check,
   CheckSquare,
+  Copy,
   Download,
   FileSignature,
   FileText,
+  GripVertical,
   Layers,
   Loader2,
   PenLine,
@@ -27,12 +29,14 @@ const TOOLS: { id: ToolId; label: string; Icon: typeof TypeIcon }[] = [
 
 const DEFAULT_FONT = 14;
 const TEXT_DEFAULT_COLOR = '#0f172a';
-const SIG_DEFAULT_W = 22;            // % of page width
-const SIG_DEFAULT_H = 8;             // % of page height
+const SIG_DEFAULT_W = 22;
+const SIG_DEFAULT_H = 8;
 const SIG_MIN_W_PX = 50;
 const SIG_MIN_H_PX = 20;
 const SIG_MAX_W_PX = 400;
 const SIG_MAX_H_PX = 150;
+const POPUP_WIDTH_PX = 300;
+const POPUP_HEIGHT_PX = 44;
 
 const newId = () => `el-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
@@ -43,20 +47,25 @@ const todayDisplay = () => {
   return `${mm}/${dd}/${d.getFullYear()}`;
 };
 
+const truncate = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : s);
+
 interface PageInfo { index: number; width: number; height: number }
 interface SavedSig { dataUrl: string; w: number; h: number }
 interface PendingSig { dataUrl: string; applyToAllPages: boolean }
-interface PendingDate { value: string }
+/** Active inline-edit state. Tracks the original value so Esc / ✕ can
+ *  revert; if the original was empty the element is removed instead. */
+interface EditingState {
+  id: string;
+  originalValue: string;
+  draftValue: string;
+}
 
 interface Props {
   file: File;
   defaultTool?: ToolId;
   hasSubscription?: boolean;
-  /** Caller decides watermark policy (e.g. free over-limit). */
   addWatermark?: boolean;
-  /** Fired after Done; receives the final Blob. */
   onDone?: (blob: Blob) => void;
-  /** Pre-Done hook — return false to abort (e.g. show paywall). */
   onBeforeDone?: () => boolean | Promise<boolean>;
 }
 
@@ -76,24 +85,17 @@ export default function FillSignEditor({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Inline edit (text/date) — both use a plain text input now.
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingDraft, setEditingDraft] = useState('');
-
-  // Hover state — drives delete-X visibility and resize-handle visibility.
-  const [hoverId, setHoverId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<EditingState | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
-  // Signature flow
   const [savedSig, setSavedSig] = useState<SavedSig | null>(null);
   const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
   const [sigModal, setSigModal] = useState<'create' | 'choose' | null>(null);
 
-  // Date flow — pending-bar input, no native date picker.
-  const [pendingDate, setPendingDate] = useState<PendingDate | null>(null);
-
-  // Page-checkbox state — only meaningful when pendingSig is active.
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
+
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
@@ -121,7 +123,6 @@ export default function FillSignEditor({
         const containerWidth = containerEl?.clientWidth ?? 700;
         const targetWidth = Math.min(820, containerWidth);
 
-        // Compute viewport dimensions for full-size pages.
         const infos: PageInfo[] = [];
         for (let i = 1; i <= pdf.numPages; i++) {
           const p = await pdf.getPage(i);
@@ -134,8 +135,6 @@ export default function FillSignEditor({
         setPageInfos(infos);
         setLoading(false);
 
-        // Generate small page thumbnails for the strip — same approach as
-        // /sign's PDFViewer (off-screen canvas at scale 0.3 → JPEG dataURL).
         const thumbs: Record<number, string> = {};
         for (let i = 1; i <= pdf.numPages; i++) {
           const p = await pdf.getPage(i);
@@ -189,7 +188,7 @@ export default function FillSignEditor({
     return () => { cancelled = true; };
   }, [currentPage, loading, pageInfos]);
 
-  // ── Auto-scroll editor into view once on first ready render ──────────
+  // Auto-scroll editor into view once.
   useEffect(() => {
     if (loading || autoScrolled) return;
     const el = editorRootRef.current;
@@ -212,23 +211,34 @@ export default function FillSignEditor({
 
   const removeElement = useCallback((id: string) => {
     setElements(prev => prev.filter(e => e.id !== id));
-    setEditingId(curr => (curr === id ? null : curr));
-    setHoverId(curr => (curr === id ? null : curr));
+    setEditing(curr => (curr?.id === id ? null : curr));
+  }, []);
+
+  const showToast = useCallback((msg: string) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToast(msg);
+    toastTimerRef.current = setTimeout(() => setToast(null), 1500);
+  }, []);
+
+  useEffect(() => () => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
   }, []);
 
   // ── Tool changes ──────────────────────────────────────────────────────
   const onToolClick = (t: ToolId) => {
     setTool(t);
     if (t === 'signature') {
-      setPendingDate(null);
       setSigModal(savedSig ? 'choose' : 'create');
-    } else if (t === 'date') {
-      setPendingSig(null);
-      // Open the pending-date bar with today's date pre-filled.
-      if (!pendingDate) setPendingDate({ value: todayDisplay() });
     } else {
       setPendingSig(null);
-      setPendingDate(null);
+    }
+    // Switching tool while editing — close the editor without saving.
+    if (editing) {
+      const el = elements.find(e => e.id === editing.id);
+      if (el && (el.type === 'text' || el.type === 'date') && !el.value) {
+        removeElement(editing.id);
+      }
+      setEditing(null);
     }
   };
 
@@ -238,23 +248,24 @@ export default function FillSignEditor({
     setPendingSig({ dataUrl, applyToAllPages: false });
     setSigModal(null);
   };
-
   const onSigReuse = () => {
     if (!savedSig) return;
     setPendingSig({ dataUrl: savedSig.dataUrl, applyToAllPages: false });
     setSigModal(null);
   };
-
   const onSigCreateNew = () => setSigModal('create');
-
   const onSigCancel = () => {
     setSigModal(null);
     if (!pendingSig) setTool('text');
   };
 
-  // ── Click on the PDF canvas → place an element ────────────────────────
+  // ── Click on the PDF canvas → place an element + open inline editor ──
   const onPageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target instanceof HTMLElement && e.target.closest('.fse-element')) return;
+    if (e.target instanceof HTMLElement && (
+      e.target.closest('.fse-text-wrap') ||
+      e.target.closest('.fse-element-image') ||
+      e.target.closest('.fse-popup')
+    )) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = ((e.clientX - rect.left) / rect.width) * 100;
     const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
@@ -265,18 +276,19 @@ export default function FillSignEditor({
         id, type: 'text', page: currentPage, x: xPct, y: yPct,
         value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
-      setEditingId(id);
-      setEditingDraft('');
+      setEditing({ id, originalValue: '', draftValue: '' });
       return;
     }
 
-    if (tool === 'date' && pendingDate) {
+    if (tool === 'date') {
+      const id = newId();
+      const today = todayDisplay();
       addElement({
-        id: newId(), type: 'date', page: currentPage, x: xPct, y: yPct,
-        value: pendingDate.value || todayDisplay(),
-        fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
+        id, type: 'date', page: currentPage, x: xPct, y: yPct,
+        value: today, fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
-      // pendingDate stays so the user can place more dates.
+      // Open popup pre-filled with today; user can leave or edit.
+      setEditing({ id, originalValue: today, draftValue: today });
       return;
     }
 
@@ -295,45 +307,61 @@ export default function FillSignEditor({
   };
 
   // ── Inline edit save / cancel ─────────────────────────────────────────
-  const commitEdit = useCallback(() => {
-    if (!editingId) return;
-    const el = elements.find(e => e.id === editingId);
-    if (!el) { setEditingId(null); setEditingDraft(''); return; }
-    if (el.type === 'text') {
-      const val = editingDraft.trim();
-      if (val) updateElement(editingId, { value: val } as Partial<FsElement>);
-      else removeElement(editingId);
-    } else if (el.type === 'date') {
-      const val = editingDraft.trim();
-      if (val) updateElement(editingId, { value: val } as Partial<FsElement>);
-      else removeElement(editingId);
+  const saveEdit = useCallback(() => {
+    if (!editing) return;
+    const draft = editing.draftValue.trim();
+    if (!draft) {
+      // Empty value on save → remove (no point in an empty placement).
+      removeElement(editing.id);
+    } else {
+      updateElement(editing.id, { value: draft } as Partial<FsElement>);
     }
-    setEditingId(null);
-    setEditingDraft('');
-  }, [editingId, editingDraft, elements, updateElement, removeElement]);
+    setEditing(null);
+  }, [editing, removeElement, updateElement]);
 
   const cancelEdit = useCallback(() => {
-    if (!editingId) return;
-    const el = elements.find(e => e.id === editingId);
-    if (el && (el.type === 'text' || el.type === 'date') && !el.value) {
-      // Brand-new element with nothing typed → drop it.
-      removeElement(editingId);
+    if (!editing) return;
+    if (editing.originalValue === '') {
+      // New placement that was never filled → remove.
+      removeElement(editing.id);
     }
-    setEditingId(null);
-    setEditingDraft('');
-  }, [editingId, elements, removeElement]);
+    // else: element stays untouched (we never updated it on keystroke).
+    setEditing(null);
+  }, [editing, removeElement]);
 
-  const startEdit = (el: FsElement) => {
-    if (el.type === 'text' || el.type === 'date') {
-      setEditingDraft(el.value);
-      setEditingId(el.id);
+  // Click anywhere outside the popup commits the current draft.
+  useEffect(() => {
+    if (!editing) return;
+    const onDocClick = (ev: MouseEvent) => {
+      const target = ev.target as HTMLElement | null;
+      if (target && target.closest('.fse-popup')) return;
+      if (target && target.closest('.fse-text-wrap')) return;
+      saveEdit();
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [editing, saveEdit]);
+
+  // Open the editor for an existing placed text/date element.
+  const openEditFor = (el: FsElement) => {
+    if (el.type !== 'text' && el.type !== 'date') return;
+    setEditing({ id: el.id, originalValue: el.value, draftValue: el.value });
+  };
+
+  const onCopyValue = async (el: FsElement) => {
+    const value = el.type === 'signature' ? '' : (el.value || '');
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      showToast('Copied!');
+    } catch {
+      showToast('Could not copy');
     }
   };
 
-  // ── Drag / resize ─────────────────────────────────────────────────────
+  // ── Drag (handle only) + signature resize ────────────────────────────
   type DragRefState = {
     id: string;
-    mode: 'drag';
     startX: number; startY: number;
     startEl: FsElement;
     pageRect: DOMRect;
@@ -341,11 +369,10 @@ export default function FillSignEditor({
   const dragRef = useRef<DragRefState | null>(null);
 
   const beginDrag = (clientX: number, clientY: number, el: FsElement, target: HTMLElement) => {
-    if (editingId === el.id) return;
     const pageEl = target.closest('.fse-page') as HTMLElement | null;
     if (!pageEl) return;
     dragRef.current = {
-      id: el.id, mode: 'drag',
+      id: el.id,
       startX: clientX, startY: clientY,
       startEl: { ...el },
       pageRect: pageEl.getBoundingClientRect(),
@@ -354,15 +381,14 @@ export default function FillSignEditor({
     document.body.style.userSelect = 'none';
   };
 
-  const onElementMouseDown = (e: React.MouseEvent, el: FsElement) => {
-    if (e.target instanceof HTMLElement && e.target.closest('.fse-resize')) return;
+  const onDragMouseDown = (e: React.MouseEvent, el: FsElement) => {
     e.stopPropagation();
     e.preventDefault();
     beginDrag(e.clientX, e.clientY, el, e.currentTarget as HTMLElement);
 
     const onMove = (ev: MouseEvent) => {
       const ds = dragRef.current;
-      if (!ds || ds.mode !== 'drag') return;
+      if (!ds) return;
       const dxPct = ((ev.clientX - ds.startX) / ds.pageRect.width) * 100;
       const dyPct = ((ev.clientY - ds.startY) / ds.pageRect.height) * 100;
       const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
@@ -380,8 +406,7 @@ export default function FillSignEditor({
     window.addEventListener('mouseup', onUp);
   };
 
-  const onElementTouchStart = (e: React.TouchEvent, el: FsElement) => {
-    if (e.target instanceof HTMLElement && e.target.closest('.fse-resize')) return;
+  const onDragTouchStart = (e: React.TouchEvent, el: FsElement) => {
     if (e.touches.length !== 1) return;
     const t = e.touches[0];
     e.stopPropagation();
@@ -425,7 +450,6 @@ export default function FillSignEditor({
     const startX = e.clientX, startY = e.clientY;
     const startW = el.w, startH = el.h;
     const startElX = el.x, startElY = el.y;
-
     setDraggingId(el.id);
 
     const onMove = (ev: MouseEvent) => {
@@ -433,7 +457,6 @@ export default function FillSignEditor({
       const dyPct = ((ev.clientY - startY) / pageRect.height) * 100;
       let newW = startW, newH = startH;
       let newXel = startElX, newYel = startElY;
-
       if (corner === 'se') { newW = startW + dxPct; newH = startH + dyPct; }
       else if (corner === 'sw') { newW = startW - dxPct; newXel = startElX + dxPct; newH = startH + dyPct; }
       else if (corner === 'ne') { newW = startW + dxPct; newH = startH - dyPct; newYel = startElY + dyPct; }
@@ -450,12 +473,10 @@ export default function FillSignEditor({
         if (corner === 'sw' || corner === 'nw') newXel = startElX + (startW - adjustedW);
         newW = adjustedW;
       }
-
       newW = Math.max(minWpct, Math.min(maxWpct, newW));
       newH = Math.max(minHpct, Math.min(maxHpct, newH));
       newXel = Math.max(0, Math.min(100 - newW, newXel));
       newYel = Math.max(0, Math.min(100 - newH, newYel));
-
       updateElement(el.id, { w: newW, h: newH, x: newXel, y: newYel } as Partial<FsElement>);
     };
     const onUp = () => {
@@ -467,15 +488,13 @@ export default function FillSignEditor({
     window.addEventListener('mouseup', onUp);
   };
 
-  // ── Page selection (only meaningful while pendingSig is active) ──────
+  // ── Page selection (sig multi-place) ─────────────────────────────────
   const togglePageSelection = (pageNum: number) => {
     setSelectedPages(prev => {
       if (prev.includes(pageNum)) return prev.filter(p => p !== pageNum);
       return [...prev, pageNum].sort((a, b) => a - b);
     });
   };
-
-  // Keep selectedPages in sync with applyToAllPages flag.
   useEffect(() => {
     if (pendingSig?.applyToAllPages) {
       setSelectedPages(pageInfos.map(p => p.index));
@@ -505,86 +524,69 @@ export default function FillSignEditor({
   };
 
   // ── Render helpers ────────────────────────────────────────────────────
-  const renderElement = (el: FsElement) => {
-    const isEditing = editingId === el.id;
-    const isHover = hoverId === el.id;
+  const renderTextOrDate = (el: FsElement) => {
+    if (el.type !== 'text' && el.type !== 'date') return null;
+    const isEditing = editing?.id === el.id;
     const isDragging = draggingId === el.id;
-    const elementClass = [
-      'fse-element',
-      `fse-element-${el.type === 'signature' ? 'image' : el.type}`,
-      isEditing  ? 'fse-element-editing'  : '',
-      isHover    ? 'fse-element-hover'    : '',
-      isDragging ? 'fse-element-dragging' : '',
-    ].filter(Boolean).join(' ');
-
-    const onMouseEnter = () => setHoverId(el.id);
-    const onMouseLeave = () => setHoverId(curr => (curr === el.id ? null : curr));
-    const dragHandlers = {
-      onMouseDown:  (e: React.MouseEvent) => onElementMouseDown(e, el),
-      onTouchStart: (e: React.TouchEvent) => onElementTouchStart(e, el),
-      onClick:      (e: React.MouseEvent) => e.stopPropagation(),
-      onDoubleClick:(e: React.MouseEvent) => { e.stopPropagation(); startEdit(el); },
-      onMouseEnter, onMouseLeave,
-    };
-
-    if (el.type === 'text' || el.type === 'date') {
-      return (
-        <div
-          key={el.id}
-          className={elementClass}
-          style={{ left: `${el.x}%`, top: `${el.y}%` }}
-          {...dragHandlers}
-        >
-          {isEditing ? (
-            <div className="fse-edit-row">
-              <input
-                type="text"
-                autoFocus
-                value={editingDraft}
-                onChange={e => setEditingDraft(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') commitEdit();
-                  if (e.key === 'Escape') cancelEdit();
-                }}
-                className="fse-edit-input"
-                style={{ fontSize: `${el.fontSize}px` }}
-                placeholder={el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…'}
-                onClick={e => e.stopPropagation()}
-              />
-              <button type="button" className="fse-edit-confirm" onClick={(e) => { e.stopPropagation(); commitEdit(); }} aria-label="Save">
-                <Check size={12} />
-              </button>
-              <button type="button" className="fse-edit-cancel" onClick={(e) => { e.stopPropagation(); cancelEdit(); }} aria-label="Cancel">
-                <X size={12} />
-              </button>
-            </div>
-          ) : (
-            <>
-              <span className="fse-element-value" style={{ fontSize: `${el.fontSize}px`, color: el.color }}>
-                {el.value || (el.type === 'date' ? 'date' : 'text')}
-              </span>
-              <button
-                type="button"
-                className="fse-element-x"
-                onMouseDown={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
-                aria-label="Delete"
-              >
-                <X size={11} />
-              </button>
-            </>
-          )}
-        </div>
-      );
-    }
-
-    if (el.type !== 'signature') return null;
+    if (isEditing) return null; // popup replaces the element while editing
+    const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}`;
+    const placeholder = el.type === 'date' ? 'date' : 'text';
     return (
       <div
         key={el.id}
-        className={elementClass}
+        className={wrapClass}
+        style={{ left: `${el.x}%`, top: `${el.y}%` }}
+      >
+        <span
+          className="fse-text-value"
+          style={{ fontSize: `${el.fontSize}px`, color: el.color }}
+          onClick={(e) => { e.stopPropagation(); openEditFor(el); }}
+        >
+          {el.value || <em className="fse-text-placeholder">{placeholder}</em>}
+        </span>
+        <span
+          className="fse-handle"
+          aria-label="Drag to move"
+          title="Drag to move"
+          onMouseDown={(e) => onDragMouseDown(e, el)}
+          onTouchStart={(e) => onDragTouchStart(e, el)}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <GripVertical size={12} strokeWidth={2.2} />
+        </span>
+        <span
+          className="fse-action fse-action-copy"
+          aria-label="Copy"
+          title="Copy"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
+        >
+          <Copy size={11} strokeWidth={2.2} />
+        </span>
+        <span
+          className="fse-action fse-action-del"
+          aria-label="Delete"
+          title="Delete"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
+        >
+          <X size={12} strokeWidth={2.4} />
+        </span>
+      </div>
+    );
+  };
+
+  const renderSignature = (el: FsElement) => {
+    if (el.type !== 'signature') return null;
+    const isDragging = draggingId === el.id;
+    return (
+      <div
+        key={el.id}
+        className={`fse-element fse-element-image${isDragging ? ' fse-element-dragging' : ''}`}
         style={{ left: `${el.x}%`, top: `${el.y}%`, width: `${el.w}%`, height: `${el.h}%` }}
-        {...dragHandlers}
+        onMouseDown={(e) => onDragMouseDown(e, el)}
+        onTouchStart={(e) => onDragTouchStart(e, el)}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={el.dataUrl} alt="signature" className="fse-element-img" draggable={false} />
@@ -609,6 +611,74 @@ export default function FillSignEditor({
     );
   };
 
+  // Inline-edit popup positioned over the page, with edge-aware clamping.
+  const renderEditPopup = () => {
+    if (!editing || !currentInfo) return null;
+    const el = elements.find(e => e.id === editing.id);
+    if (!el || el.page !== currentPage) return null;
+    if (el.type !== 'text' && el.type !== 'date') return null;
+
+    const pageW = currentInfo.width;
+    const pageH = currentInfo.height;
+    const elPx = (el.x / 100) * pageW;
+    const elPy = (el.y / 100) * pageH;
+    let left = elPx;
+    let top  = elPy;
+    const margin = 8;
+    if (left + POPUP_WIDTH_PX > pageW - margin) {
+      left = Math.max(margin, pageW - POPUP_WIDTH_PX - margin);
+    }
+    if (top + POPUP_HEIGHT_PX > pageH - margin) {
+      top = Math.max(margin, top - POPUP_HEIGHT_PX - 4);
+    }
+
+    const placeholder = el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…';
+    return (
+      <div
+        className="fse-popup"
+        style={{ left: `${left}px`, top: `${top}px`, width: POPUP_WIDTH_PX }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <input
+          ref={(node) => {
+            if (node && document.activeElement !== node) {
+              try { node.focus({ preventScroll: true }); }
+              catch { node.focus(); }
+              node.select();
+            }
+          }}
+          type="text"
+          value={editing.draftValue}
+          onChange={(e) => setEditing({ ...editing, draftValue: e.target.value })}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') saveEdit();
+            else if (e.key === 'Escape') cancelEdit();
+          }}
+          placeholder={placeholder}
+          className="fse-popup-input"
+          style={{ fontSize: `${el.fontSize}px` }}
+        />
+        <button
+          type="button"
+          className="fse-popup-confirm"
+          onClick={saveEdit}
+          aria-label="Save"
+        >
+          <Check size={14} />
+        </button>
+        <button
+          type="button"
+          className="fse-popup-cancel"
+          onClick={cancelEdit}
+          aria-label="Cancel"
+        >
+          <X size={14} />
+        </button>
+      </div>
+    );
+  };
+
   const visibleElements = elements.filter(e => e.page === currentPage);
   const currentInfo = pageInfos.find(p => p.index === currentPage);
   const canDone = elements.length > 0 && !processing;
@@ -618,7 +688,6 @@ export default function FillSignEditor({
   return (
     <div className="fse" ref={editorRootRef}>
       <div className="fse-main">
-        {/* Sticky toolbar — Sign & Download moved to sidebar. */}
         <div className="fse-topbar">
           <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
             {TOOLS.map(t => (
@@ -635,28 +704,6 @@ export default function FillSignEditor({
           </div>
         </div>
 
-        {/* Pending-date bar — shown while Date tool is active. Plain text input. */}
-        {pendingDate && (
-          <div className="fse-pending-bar">
-            <div className="fse-pending-info">
-              <CalendarDays size={14} />
-              <span>Type date:</span>
-              <input
-                type="text"
-                value={pendingDate.value}
-                onChange={e => setPendingDate({ value: e.target.value })}
-                placeholder="MM/DD/YYYY"
-                className="fse-pending-date-input"
-              />
-            </div>
-            <span className="fse-pending-hint">Click on the PDF to place</span>
-            <button type="button" className="fse-pending-cancel" onClick={() => { setPendingDate(null); setTool('text'); }}>
-              Cancel
-            </button>
-          </div>
-        )}
-
-        {/* Pending-signature bar */}
         {pendingSig && (
           <div className="fse-pending-bar">
             <div className="fse-pending-info">
@@ -678,10 +725,6 @@ export default function FillSignEditor({
           </div>
         )}
 
-        {/* Page thumbnail strip — copied from /sign's PDFViewer pattern.
-            Checkboxes are visible only while a signature is pending; they
-            mirror the "apply to all" toggle and let the user pick a custom
-            subset of pages. */}
         {totalPages > 1 && (
           <div className="fse-thumb-strip-wrap">
             <div className="fse-thumb-strip-label">
@@ -737,7 +780,6 @@ export default function FillSignEditor({
           </div>
         )}
 
-        {/* PDF area */}
         <div className="fse-page-area">
           {loading && (
             <div className="fse-pages-state">
@@ -748,13 +790,14 @@ export default function FillSignEditor({
           {error && !loading && <div className="fse-pages-state fse-pages-error">{error}</div>}
           {!loading && !error && currentInfo && (
             <div
-              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}${pendingDate ? ' has-pending-date' : ''}`}
+              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}`}
               style={{ width: currentInfo.width, height: currentInfo.height }}
               onClick={onPageClick}
             >
               <canvas ref={canvasRef} />
               <div className="fse-page-overlay">
-                {visibleElements.map(renderElement)}
+                {visibleElements.map(el => el.type === 'signature' ? renderSignature(el) : renderTextOrDate(el))}
+                {renderEditPopup()}
               </div>
               <span className="fse-page-label">Page {currentPage} of {totalPages}</span>
             </div>
@@ -762,10 +805,6 @@ export default function FillSignEditor({
         </div>
       </div>
 
-      {/* Sidebar — three stacked blocks (sticky as a group):
-          1. Placed-elements card
-          2. Standalone Sign & Download CTA (desktop only — mobile uses .fse-fab)
-          3. Tip + watermark warning card */}
       <aside className="fse-sidebar">
         <div className="fse-sidebar-card">
           <div className="fse-sidebar-title">
@@ -776,9 +815,10 @@ export default function FillSignEditor({
           ) : (
             <ul className="fse-list">
               {elements.map(el => {
-                const preview = el.type === 'signature'
-                  ? 'Signature'
-                  : (el.value || `(${el.type})`);
+                let preview: React.ReactNode;
+                if (el.type === 'signature') preview = 'Signature';
+                else if (el.value) preview = truncate(el.value, 20);
+                else preview = <em className="fse-list-empty">(empty)</em>;
                 return (
                   <li key={el.id} className="fse-list-item">
                     <span className="fse-list-type">{el.type}</span>
@@ -799,7 +839,6 @@ export default function FillSignEditor({
           )}
         </div>
 
-        {/* Standalone CTA — visually distinct from the list card. */}
         <button
           type="button"
           className="fse-sidebar-cta"
@@ -812,7 +851,7 @@ export default function FillSignEditor({
 
         <div className="fse-sidebar-card fse-sidebar-card-info">
           <div className="fse-sidebar-tip">
-            <span>Tip:</span> drag to move, double-click to edit, drag corners to resize signatures.
+            <span>Tip:</span> click text to edit, drag the handle to move, drag corners to resize signatures.
           </div>
           {!hasSubscription && (
             <div className="fse-sidebar-plan">
@@ -822,7 +861,6 @@ export default function FillSignEditor({
         </div>
       </aside>
 
-      {/* Mobile-only floating Sign & Download */}
       <button
         type="button"
         className="fse-fab"
@@ -833,7 +871,8 @@ export default function FillSignEditor({
         <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
       </button>
 
-      {/* Signature creation modal */}
+      {toast && <div className="fse-toast" role="status">{toast}</div>}
+
       {sigModal === 'create' && (
         <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
           <div className="fse-modal-card" onClick={e => e.stopPropagation()}>
@@ -848,7 +887,6 @@ export default function FillSignEditor({
         </div>
       )}
 
-      {/* Signature reuse chooser */}
       {sigModal === 'choose' && savedSig && (
         <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
           <div className="fse-modal-card" onClick={e => e.stopPropagation()}>

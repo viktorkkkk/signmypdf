@@ -832,27 +832,6 @@ body.nda-editor-mode .nda-hero-inner {
   background: #fef3c7;
 }
 
-/* Pending-date input lives inside the same .fse-pending-bar shell. */
-.fse-pending-date-input {
-  font: inherit;
-  font-size: 13px;
-  padding: 5px 9px;
-  border: 1px solid #fcd34d;
-  border-radius: 6px;
-  background: #fff;
-  outline: none;
-  width: 130px;
-}
-.fse-pending-date-input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
-}
-.fse-pending-hint {
-  font-size: 12px;
-  color: #78350f;
-  font-weight: 500;
-}
-
 /* Thumbnail strip — copied 1:1 from /sign's PDFViewer pattern. Pages
    are clickable; checkboxes show only while a signature is pending. */
 .fse-thumb-strip-wrap {
@@ -1026,11 +1005,194 @@ body.nda-editor-mode .nda-hero-inner {
   cursor: crosshair;
 }
 
-/* Placed elements ───────────────────────────────────────────────────
-   Default state is fully transparent — the placed text reads as part of
-   the underlying PDF rather than a sticker on top. Hover gives a thin
-   dashed border (so the user knows they can grab it); editing/dragging
-   step up the affordance. */
+/* Placed text / date elements ──────────────────────────────────────
+   Default state is COMPLETELY transparent — no border, no background,
+   no padding. The placed text reads as part of the underlying PDF.
+   Hover reveals a dashed grey border (via ::before pseudo so the
+   element's own box stays unaffected) plus three icons:
+     ⋮⋮ drag handle on the left, 📋 copy + ✕ delete on the right.
+   One click on the text (.fse-text-value) opens the inline editor
+   popup. */
+.fse-text-wrap {
+  position: absolute;
+  display: inline-block;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transform: translate(0, 0); /* establish stacking context for ::before */
+}
+.fse-text-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -3px -5px;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  pointer-events: none;
+  transition: border-color 0.12s;
+}
+.fse-text-wrap:hover::before {
+  border-color: #9ca3af;
+}
+.fse-text-wrap-dragging::before {
+  border-color: var(--color-primary);
+  border-style: solid;
+}
+.fse-text-wrap-dragging {
+  opacity: 0.7;
+}
+.fse-text-value {
+  display: inline-block;
+  cursor: pointer;
+}
+.fse-text-placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Drag handle: left of element, visible only on hover. */
+.fse-handle {
+  position: absolute;
+  left: -26px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+  color: var(--color-muted);
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.12s, background 0.12s, color 0.12s, border-color 0.12s;
+  z-index: 3;
+}
+.fse-handle:active { cursor: grabbing; }
+.fse-handle:hover {
+  background: var(--color-text);
+  color: white;
+  border-color: var(--color-text);
+}
+.fse-text-wrap:hover .fse-handle { opacity: 1; }
+.fse-text-wrap-dragging .fse-handle { opacity: 0; }
+
+/* Right-side action cluster (📋 copy, ✕ delete). */
+.fse-action {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+  color: var(--color-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s, background 0.12s, color 0.12s, border-color 0.12s, transform 0.12s;
+  z-index: 3;
+}
+.fse-text-wrap:hover .fse-action { opacity: 1; }
+.fse-text-wrap-dragging .fse-action { opacity: 0; }
+.fse-action-copy { right: -52px; }
+.fse-action-copy:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.fse-action-del { right: -26px; }
+.fse-action-del:hover {
+  background: var(--color-danger);
+  color: white;
+  border-color: var(--color-danger);
+}
+
+/* Inline edit popup — absolute over the page, smart edge clamping.
+   Replaces the original element while editing (the wrap is hidden via
+   `editing?.id === el.id` returning null in renderTextOrDate). */
+.fse-popup {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+  z-index: 30;
+  pointer-events: auto;
+}
+.fse-popup-input {
+  flex: 1 1 auto;
+  font: inherit;
+  padding: 6px 10px;
+  border: none;
+  outline: none;
+  background: transparent;
+  min-width: 0;
+}
+.fse-popup-confirm,
+.fse-popup-cancel {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.fse-popup-confirm {
+  background: #16a34a;
+  color: white;
+}
+.fse-popup-confirm:hover { background: #15803d; }
+.fse-popup-cancel {
+  background: var(--color-surface);
+  color: var(--color-muted);
+}
+.fse-popup-cancel:hover {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
+
+/* Toast (Copy etc.) — bottom-center, transient. */
+.fse-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 200;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.35);
+  animation: fse-toast-in 0.18s ease-out;
+}
+@keyframes fse-toast-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Signature element (image type) — keeps a faint white background so
+   the drawn signature stays readable against the underlying PDF;
+   resize handles reveal on hover. */
 .fse-element {
   position: absolute;
   display: inline-flex;
@@ -1038,36 +1200,24 @@ body.nda-editor-mode .nda-hero-inner {
   background: transparent;
   border: 1px dashed transparent;
   border-radius: 4px;
-  padding: 2px 6px;
+  padding: 0;
   cursor: grab;
   user-select: none;
   white-space: nowrap;
-  transition: border-color 0.12s, background 0.12s, box-shadow 0.12s, opacity 0.12s;
+  transition: border-color 0.12s, opacity 0.12s;
 }
-.fse-element:hover,
-.fse-element.fse-element-hover {
-  border-color: #94a3b8;
+.fse-element-image {
+  background: rgba(255, 255, 255, 0.85);
+  overflow: visible;
 }
-.fse-element-editing {
-  border-style: solid;
+.fse-element-image:hover {
   border-color: var(--color-primary);
-  background: white;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22);
-  cursor: default;
 }
 .fse-element-dragging {
   border-style: solid;
   border-color: var(--color-primary);
   opacity: 0.7;
   cursor: grabbing;
-}
-/* Signature keeps a faint white background so a drawn signature stays
-   readable against the underlying PDF; resize handles still reveal on
-   hover. Image-shaped, so use overflow:visible for handles. */
-.fse-element-image {
-  background: rgba(255, 255, 255, 0.85);
-  padding: 0;
-  overflow: visible;
 }
 .fse-element-img {
   width: 100%;
@@ -1077,52 +1227,7 @@ body.nda-editor-mode .nda-hero-inner {
   pointer-events: none;
 }
 
-/* Inline edit row inside text/date elements */
-.fse-edit-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.fse-edit-input {
-  font: inherit;
-  padding: 4px 8px;
-  border: 1.5px solid var(--color-primary);
-  border-radius: 5px;
-  background: white;
-  outline: none;
-  min-width: 120px;
-}
-.fse-edit-confirm,
-.fse-edit-cancel {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.fse-edit-confirm {
-  background: #16a34a;
-  color: #fff;
-}
-.fse-edit-confirm:hover { background: #15803d; }
-.fse-edit-cancel {
-  background: var(--color-surface);
-  color: var(--color-muted);
-  border: 1px solid var(--color-border);
-}
-.fse-edit-cancel:hover {
-  background: var(--color-bg);
-  color: var(--color-danger);
-  border-color: var(--color-danger);
-}
-
-/* Delete X — top-right of element. Visible only on hover/editing.
-   Sits OUTSIDE the element box (top:-9, right:-9) so it never overlaps
-   the placed text/signature itself. */
+/* Delete X for signatures — top-right corner. */
 .fse-element-x {
   position: absolute;
   top: -9px;
@@ -1144,9 +1249,8 @@ body.nda-editor-mode .nda-hero-inner {
   z-index: 3;
   padding: 0;
 }
-.fse-element:hover .fse-element-x,
-.fse-element.fse-element-hover .fse-element-x,
-.fse-element.fse-element-editing .fse-element-x {
+.fse-element-image:hover .fse-element-x,
+.fse-element-image.fse-element-dragging .fse-element-x {
   opacity: 1;
   transform: scale(1);
 }
@@ -1169,7 +1273,6 @@ body.nda-editor-mode .nda-hero-inner {
   z-index: 2;
 }
 .fse-element-image:hover .fse-resize,
-.fse-element-image.fse-element-hover .fse-resize,
 .fse-element-image.fse-element-dragging .fse-resize {
   opacity: 1;
 }
@@ -1177,6 +1280,12 @@ body.nda-editor-mode .nda-hero-inner {
 .fse-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
 .fse-resize-sw { bottom: -6px; left: -6px;  cursor: nesw-resize; }
 .fse-resize-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
+/* Sidebar list — empty value placeholder */
+.fse-list-empty {
+  color: var(--color-muted);
+  font-style: italic;
+}
 
 /* Sidebar ─────────────────────────────────────────────────────────── */
 .fse-sidebar {
@@ -1413,8 +1522,11 @@ body.nda-editor-mode .nda-hero-inner {
     flex-direction: column;
     align-items: flex-start;
   }
-  .fse-pending-date-input {
-    flex: 1 1 auto;
+  /* On mobile keep all action icons (handle/copy/del) visible permanently
+     — there's no hover state on touch devices. */
+  .fse-text-wrap .fse-handle,
+  .fse-text-wrap .fse-action {
+    opacity: 1;
   }
   .fse-thumb {
     width: 64px;
