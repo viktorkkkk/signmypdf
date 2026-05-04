@@ -1,14 +1,39 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, CheckCircle, Download, FileText, Loader2, PenLine } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Download, FileText, Loader2, PenLine, RefreshCw } from 'lucide-react';
 import FillSignEditor from '../components/FillSignEditor';
-import { saveToHistory } from '../components/FileHistory';
-import { getTodayCount, incrementTodayCount, isProActive } from '../utils/subscription';
-import { DAILY_LIMIT } from '../constants';
+import type { FsElement } from '../utils/fillSignPdf';
 
 const TEMPLATE_PDF_URL  = '/templates/nda-template.pdf';
 const TEMPLATE_DOCX_URL = '/templates/nda-template.docx';
+
+const DRAFT_KEY = 'sign-nda-draft';
+const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+interface SavedDraft {
+  elements: FsElement[];
+  timestamp: number;
+}
+
+function readDraft(): SavedDraft | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<SavedDraft> | null;
+    if (!parsed || !parsed.timestamp || !Array.isArray(parsed.elements)) return null;
+    if (Date.now() - parsed.timestamp > DRAFT_MAX_AGE_MS) return null;
+    if (parsed.elements.length === 0) return null;
+    return { elements: parsed.elements as FsElement[], timestamp: parsed.timestamp };
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch {/* ignore */}
+}
 
 export default function NdaHeroCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,15 +42,13 @@ export default function NdaHeroCard() {
   const [thumbError, setThumbError] = useState(false);
   const [loadingForEdit, setLoadingForEdit] = useState(false);
   const [editorFile, setEditorFile] = useState<File | null>(null);
-  const [subscribed, setSubscribed] = useState(false);
-  const [todayCount, setTodayCount] = useState(0);
+  const [editorInitialElements, setEditorInitialElements] = useState<FsElement[]>([]);
   const [downloaded, setDownloaded] = useState(false);
 
-  // Read subscription + today's count on mount.
-  useEffect(() => {
-    setSubscribed(isProActive());
-    setTodayCount(getTodayCount());
-  }, []);
+  // Restore-prompt state — shown when a saved draft is found right after
+  // the user clicks "Fill & sign online".
+  const pendingFileRef = useRef<File | null>(null);
+  const [restoreCandidate, setRestoreCandidate] = useState<SavedDraft | null>(null);
 
   // Toggle a body-level class while the editor is active so the H1 and
   // subtitle (rendered by the parent server component for SEO) collapse
@@ -82,6 +105,16 @@ export default function NdaHeroCard() {
     return () => { cancelled = true; };
   }, [editorFile]);
 
+  const launchEditor = (file: File, initial: FsElement[]) => {
+    setEditorInitialElements(initial);
+    setEditorFile(file);
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.querySelector('.fse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    });
+  };
+
   const onFillAndSign = async () => {
     if (loadingForEdit) return;
     setLoadingForEdit(true);
@@ -90,21 +123,44 @@ export default function NdaHeroCard() {
       if (!res.ok) throw new Error(`fetch ${res.status}`);
       const blob = await res.blob();
       const file = new File([blob], 'nda-template.pdf', { type: 'application/pdf' });
-      setEditorFile(file);
-      // Scroll the editor into view once it mounts.
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          document.querySelector('.fse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 80);
-      });
+
+      const draft = readDraft();
+      if (draft) {
+        // Stash the file and ask the user before mounting the editor.
+        pendingFileRef.current = file;
+        setRestoreCandidate(draft);
+        setLoadingForEdit(false);
+        return;
+      }
+
+      launchEditor(file, []);
     } catch (e) {
       console.error('NDA fetch for edit failed:', e);
       setLoadingForEdit(false);
     }
   };
 
+  const onRestoreYes = () => {
+    if (!restoreCandidate || !pendingFileRef.current) return;
+    const file = pendingFileRef.current;
+    const elements = restoreCandidate.elements;
+    pendingFileRef.current = null;
+    setRestoreCandidate(null);
+    launchEditor(file, elements);
+  };
+
+  const onRestoreNo = () => {
+    if (!pendingFileRef.current) return;
+    clearDraft();
+    const file = pendingFileRef.current;
+    pendingFileRef.current = null;
+    setRestoreCandidate(null);
+    launchEditor(file, []);
+  };
+
   const onCloseEditor = () => {
     setEditorFile(null);
+    setEditorInitialElements([]);
     setLoadingForEdit(false);
     setDownloaded(false);
     requestAnimationFrame(() => {
@@ -113,16 +169,9 @@ export default function NdaHeroCard() {
   };
 
   const onEditorDone = async (blob: Blob) => {
-    const willHaveWatermark = !subscribed && todayCount >= DAILY_LIMIT;
+    // /sign-nda is a free magnet flow — no daily counter, no FileHistory,
+    // no watermark (the editor was passed `unlimited`). Just download.
     const filename = 'signed-nda-template.pdf';
-    try {
-      await saveToHistory(filename, blob.size, blob, 'sign', willHaveWatermark);
-      window.dispatchEvent(new Event('signmypdf:saved'));
-    } catch {/* IDB unavailable — download still works */}
-
-    incrementTodayCount();
-    setTodayCount(getTodayCount());
-
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -132,13 +181,15 @@ export default function NdaHeroCard() {
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 
+    // Successful sign → discard the draft so the next visit starts clean.
+    clearDraft();
+
     setDownloaded(true);
   };
 
   // ── Editor surface ──────────────────────────────────────────────────
 
   if (editorFile) {
-    const willHaveWatermark = !subscribed && todayCount >= DAILY_LIMIT;
     return (
       <div className="nda-editor-host">
         <button type="button" className="nda-editor-back" onClick={onCloseEditor}>
@@ -148,8 +199,9 @@ export default function NdaHeroCard() {
         <FillSignEditor
           file={editorFile}
           defaultTool="text"
-          hasSubscription={subscribed}
-          addWatermark={willHaveWatermark}
+          unlimited
+          draftKey={DRAFT_KEY}
+          initialElements={editorInitialElements}
           onDone={onEditorDone}
         />
 
@@ -203,6 +255,28 @@ export default function NdaHeroCard() {
           <span>Download Word (.docx)</span>
         </a>
       </div>
+
+      {/* Restore-draft modal */}
+      {restoreCandidate && (
+        <div className="nda-restore-overlay" role="dialog" aria-modal="true" onClick={onRestoreNo}>
+          <div className="nda-restore-card" onClick={(e) => e.stopPropagation()}>
+            <RefreshCw size={22} className="nda-restore-icon" />
+            <h3>Restore your previous work?</h3>
+            <p>
+              You had <strong>{restoreCandidate.elements.length}</strong>{' '}
+              element{restoreCandidate.elements.length === 1 ? '' : 's'} placed.
+            </p>
+            <div className="nda-restore-actions">
+              <button type="button" className="nda-btn nda-btn-primary nda-restore-btn" onClick={onRestoreYes}>
+                Restore
+              </button>
+              <button type="button" className="nda-btn nda-btn-secondary nda-restore-btn" onClick={onRestoreNo}>
+                Start fresh
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

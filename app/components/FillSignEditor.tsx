@@ -11,6 +11,7 @@ import {
   FileText,
   GripVertical,
   Layers,
+  Lightbulb,
   Loader2,
   PenLine,
   Type as TypeIcon,
@@ -18,6 +19,40 @@ import {
 } from 'lucide-react';
 import SignatureCanvas from './SignatureCanvas';
 import { applyFillSign, type FsElement } from '../utils/fillSignPdf';
+
+/** Drag threshold — mousedown + this many CSS px of movement before a
+ *  click is treated as a drag instead of an "open editor" click. */
+const DRAG_THRESHOLD_PX = 5;
+
+/** Robust copy-to-clipboard. Tries the modern Clipboard API first;
+ *  falls back to the legacy textarea + execCommand path that still
+ *  works in older / permissionless contexts (and in some headless
+ *  preview environments where the modern API silently no-ops). */
+async function copyToClipboard(value: string): Promise<boolean> {
+  if (!value) return false;
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {/* fall through to legacy path */}
+  }
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '0';
+    textarea.setAttribute('readonly', '');
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, value.length);
+    const ok = document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return ok;
+  } catch {
+    return false;
+  }
+}
 
 type ToolId = 'text' | 'date' | 'signature';
 
@@ -64,7 +99,19 @@ interface Props {
   file: File;
   defaultTool?: ToolId;
   hasSubscription?: boolean;
+  /** Watermark policy. Ignored when `unlimited` is true. */
   addWatermark?: boolean;
+  /** Mark this surface as no-limits / no-watermark / no-history.
+   *  /sign-nda passes true; /sign and /fill keep the default false
+   *  so they stay on the metered free-tier path. */
+  unlimited?: boolean;
+  /** Initial elements to seed (e.g. restoring a saved draft). */
+  initialElements?: FsElement[];
+  /** localStorage key for the auto-saved draft. When set, the
+   *  editor writes a `{elements, timestamp}` JSON to this key on
+   *  every change (throttled 500ms). When empty, the key is
+   *  removed instead. */
+  draftKey?: string;
   onDone?: (blob: Blob) => void;
   onBeforeDone?: () => boolean | Promise<boolean>;
 }
@@ -74,11 +121,14 @@ export default function FillSignEditor({
   defaultTool = 'text',
   hasSubscription,
   addWatermark = false,
+  unlimited = false,
+  initialElements,
+  draftKey,
   onDone,
   onBeforeDone,
 }: Props) {
   const [tool, setTool] = useState<ToolId>(defaultTool);
-  const [elements, setElements] = useState<FsElement[]>([]);
+  const [elements, setElements] = useState<FsElement[]>(initialElements ?? []);
   const [pageInfos, setPageInfos] = useState<PageInfo[]>([]);
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,6 +249,31 @@ export default function FillSignEditor({
     }, 60);
     return () => window.clearTimeout(id);
   }, [loading, autoScrolled]);
+
+  // ── Auto-save draft (throttled 500 ms) ────────────────────────────────
+  // When `draftKey` is set, every change to elements is mirrored to
+  // localStorage[draftKey] as `{elements, timestamp}`. Empty elements
+  // array → key removed (no stale "you had 0 placed" prompts).
+  const draftThrottleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!draftKey) return;
+    if (draftThrottleRef.current) clearTimeout(draftThrottleRef.current);
+    draftThrottleRef.current = setTimeout(() => {
+      try {
+        if (elements.length === 0) {
+          localStorage.removeItem(draftKey);
+        } else {
+          localStorage.setItem(
+            draftKey,
+            JSON.stringify({ elements, timestamp: Date.now() }),
+          );
+        }
+      } catch {/* quota / private mode — fail silently */}
+    }, 500);
+    return () => {
+      if (draftThrottleRef.current) clearTimeout(draftThrottleRef.current);
+    };
+  }, [elements, draftKey]);
 
   // ── Element CRUD ─────────────────────────────────────────────────────
   const addElement = useCallback((el: FsElement) => {
@@ -351,12 +426,8 @@ export default function FillSignEditor({
   const onCopyValue = async (el: FsElement) => {
     const value = el.type === 'signature' ? '' : (el.value || '');
     if (!value) return;
-    try {
-      await navigator.clipboard.writeText(value);
-      showToast('Copied!');
-    } catch {
-      showToast('Could not copy');
-    }
+    const ok = await copyToClipboard(value);
+    showToast(ok ? 'Copied!' : 'Could not copy');
   };
 
   // ── Drag (handle only) + signature resize ────────────────────────────
@@ -513,7 +584,8 @@ export default function FillSignEditor({
     }
     setProcessing(true);
     try {
-      const blob = await applyFillSign({ pdfFile: file, elements, addWatermark });
+      const effectiveWatermark = unlimited ? false : addWatermark;
+      const blob = await applyFillSign({ pdfFile: file, elements, addWatermark: effectiveWatermark });
       onDone?.(blob);
     } catch (e) {
       console.error('FillSign done:', e);
@@ -521,6 +593,121 @@ export default function FillSignEditor({
     } finally {
       setProcessing(false);
     }
+  };
+
+  // ── Click-or-drag on the text body ────────────────────────────────────
+  // Mousedown sets up listeners; if the cursor moves more than
+  // DRAG_THRESHOLD_PX before mouseup, it's a drag — otherwise it's a
+  // click and we open the editor. Excludes handle / action targets so
+  // those buttons keep their own behaviour.
+  const onTextBodyMouseDown = (e: React.MouseEvent, el: FsElement) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('.fse-handle') || target.closest('.fse-action')) return;
+    if (editing?.id === el.id) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const startX = e.clientX, startY = e.clientY;
+    const pageEl = (e.currentTarget as HTMLElement).closest('.fse-page') as HTMLElement | null;
+    if (!pageEl) return;
+    const pageRect = pageEl.getBoundingClientRect();
+    let dragging = false;
+
+    const onMove = (ev: MouseEvent) => {
+      if (!dragging) {
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        if (Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) {
+          dragging = true;
+          setDraggingId(el.id);
+          document.body.style.userSelect = 'none';
+          dragRef.current = {
+            id: el.id,
+            startX, startY,
+            startEl: { ...el },
+            pageRect,
+          };
+        }
+      }
+      if (dragging) {
+        const ds = dragRef.current;
+        if (!ds) return;
+        const dxPct = ((ev.clientX - ds.startX) / ds.pageRect.width)  * 100;
+        const dyPct = ((ev.clientY - ds.startY) / ds.pageRect.height) * 100;
+        const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+        const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+        updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      }
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      document.body.style.userSelect = '';
+      if (dragging) {
+        dragRef.current = null;
+        setDraggingId(null);
+      } else {
+        openEditFor(el);
+      }
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  // Same click-or-drag for touch.
+  const onTextBodyTouchStart = (e: React.TouchEvent, el: FsElement) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('.fse-handle') || target.closest('.fse-action')) return;
+    if (editing?.id === el.id) return;
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    e.stopPropagation();
+
+    const startX = t.clientX, startY = t.clientY;
+    const pageEl = (e.currentTarget as HTMLElement).closest('.fse-page') as HTMLElement | null;
+    if (!pageEl) return;
+    const pageRect = pageEl.getBoundingClientRect();
+    let dragging = false;
+
+    const onMove = (ev: TouchEvent) => {
+      const tt = ev.touches[0];
+      if (!dragging) {
+        const dx = tt.clientX - startX;
+        const dy = tt.clientY - startY;
+        if (Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) {
+          dragging = true;
+          setDraggingId(el.id);
+          dragRef.current = {
+            id: el.id,
+            startX, startY,
+            startEl: { ...el },
+            pageRect,
+          };
+        }
+      }
+      if (dragging) {
+        ev.preventDefault();
+        const ds = dragRef.current;
+        if (!ds) return;
+        const dxPct = ((tt.clientX - ds.startX) / ds.pageRect.width)  * 100;
+        const dyPct = ((tt.clientY - ds.startY) / ds.pageRect.height) * 100;
+        const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+        const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+        updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      }
+    };
+    const onUp = () => {
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onUp);
+      if (dragging) {
+        dragRef.current = null;
+        setDraggingId(null);
+      } else {
+        openEditFor(el);
+      }
+    };
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onUp);
   };
 
   // ── Render helpers ────────────────────────────────────────────────────
@@ -536,11 +723,12 @@ export default function FillSignEditor({
         key={el.id}
         className={wrapClass}
         style={{ left: `${el.x}%`, top: `${el.y}%` }}
+        onMouseDown={(e) => onTextBodyMouseDown(e, el)}
+        onTouchStart={(e) => onTextBodyTouchStart(e, el)}
       >
         <span
           className="fse-text-value"
           style={{ fontSize: `${el.fontSize}px`, color: el.color }}
-          onClick={(e) => { e.stopPropagation(); openEditFor(el); }}
         >
           {el.value || <em className="fse-text-placeholder">{placeholder}</em>}
         </span>
@@ -550,7 +738,6 @@ export default function FillSignEditor({
           title="Drag to move"
           onMouseDown={(e) => onDragMouseDown(e, el)}
           onTouchStart={(e) => onDragTouchStart(e, el)}
-          onClick={(e) => e.stopPropagation()}
         >
           <GripVertical size={12} strokeWidth={2.2} />
         </span>
@@ -688,43 +875,9 @@ export default function FillSignEditor({
   return (
     <div className="fse" ref={editorRootRef}>
       <div className="fse-main">
-        <div className="fse-topbar">
-          <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
-            {TOOLS.map(t => (
-              <button
-                key={t.id}
-                type="button"
-                className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
-                onClick={() => onToolClick(t.id)}
-              >
-                <t.Icon size={16} strokeWidth={2} />
-                <span>{t.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {pendingSig && (
-          <div className="fse-pending-bar">
-            <div className="fse-pending-info">
-              <FileSignature size={14} />
-              <span>Signature ready — click on the PDF to place it</span>
-            </div>
-            <label className="fse-pending-checkbox">
-              <input
-                type="checkbox"
-                checked={pendingSig.applyToAllPages}
-                onChange={e => setPendingSig({ ...pendingSig, applyToAllPages: e.target.checked })}
-              />
-              <Layers size={13} />
-              <span>Apply to all pages</span>
-            </label>
-            <button type="button" className="fse-pending-cancel" onClick={() => setPendingSig(null)}>
-              Cancel
-            </button>
-          </div>
-        )}
-
+        {/* Layout order per spec: thumbnails on top, toolbar right above
+            the document, PDF below — tools are physically next to the
+            surface they apply to. */}
         {totalPages > 1 && (
           <div className="fse-thumb-strip-wrap">
             <div className="fse-thumb-strip-label">
@@ -780,6 +933,43 @@ export default function FillSignEditor({
           </div>
         )}
 
+        <div className="fse-topbar">
+          <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
+            {TOOLS.map(t => (
+              <button
+                key={t.id}
+                type="button"
+                className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
+                onClick={() => onToolClick(t.id)}
+              >
+                <t.Icon size={16} strokeWidth={2} />
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {pendingSig && (
+          <div className="fse-pending-bar">
+            <div className="fse-pending-info">
+              <FileSignature size={14} />
+              <span>Signature ready — click on the PDF to place it</span>
+            </div>
+            <label className="fse-pending-checkbox">
+              <input
+                type="checkbox"
+                checked={pendingSig.applyToAllPages}
+                onChange={e => setPendingSig({ ...pendingSig, applyToAllPages: e.target.checked })}
+              />
+              <Layers size={13} />
+              <span>Apply to all pages</span>
+            </label>
+            <button type="button" className="fse-pending-cancel" onClick={() => setPendingSig(null)}>
+              Cancel
+            </button>
+          </div>
+        )}
+
         <div className="fse-page-area">
           {loading && (
             <div className="fse-pages-state">
@@ -806,36 +996,87 @@ export default function FillSignEditor({
       </div>
 
       <aside className="fse-sidebar">
+        {/* Tip — prominent header banner instead of footnote text. */}
+        <div className="fse-tip-card" role="note">
+          <Lightbulb size={18} strokeWidth={2.2} />
+          <span>Click text to edit, drag to move, drag corners to resize signatures.</span>
+        </div>
+
+        {/* Placed elements grouped by page. Each row is clickable —
+            switches to the row's page and opens the inline editor for
+            that text/date element. Per-row 📋 copies the value. */}
         <div className="fse-sidebar-card">
           <div className="fse-sidebar-title">
             <Check size={14} /> Placed elements ({elements.length})
           </div>
           {elements.length === 0 ? (
-            <p className="fse-sidebar-empty">Pick a tool above, then click on the PDF to place it.</p>
+            <p className="fse-sidebar-empty">Pick a tool below, then click on the PDF to place it.</p>
           ) : (
-            <ul className="fse-list">
-              {elements.map(el => {
-                let preview: React.ReactNode;
-                if (el.type === 'signature') preview = 'Signature';
-                else if (el.value) preview = truncate(el.value, 20);
-                else preview = <em className="fse-list-empty">(empty)</em>;
+            <div className="fse-list-groups">
+              {pageInfos.map(p => {
+                const els = elements.filter(e => e.page === p.index);
+                if (els.length === 0 && p.index !== currentPage) return null;
                 return (
-                  <li key={el.id} className="fse-list-item">
-                    <span className="fse-list-type">{el.type}</span>
-                    <span className="fse-list-preview" onClick={() => setCurrentPage(el.page)}>{preview}</span>
-                    <span className="fse-list-page">p{el.page}</span>
-                    <button
-                      type="button"
-                      className="fse-list-remove"
-                      onClick={() => removeElement(el.id)}
-                      aria-label="Remove"
-                    >
-                      <X size={14} />
-                    </button>
-                  </li>
+                  <div key={p.index} className="fse-list-group">
+                    <div className="fse-list-group-title">Page {p.index}</div>
+                    {els.length === 0 ? (
+                      <div className="fse-list-group-empty">(no elements yet)</div>
+                    ) : (
+                      <ul className="fse-list">
+                        {els.map(el => {
+                          let preview: React.ReactNode;
+                          let copyable = false;
+                          if (el.type === 'signature') preview = 'Signature';
+                          else if (el.value) {
+                            preview = truncate(el.value, 30);
+                            copyable = true;
+                          } else preview = <em className="fse-list-empty">(empty)</em>;
+                          const onRowClick = () => {
+                            setCurrentPage(el.page);
+                            if (el.type === 'text' || el.type === 'date') {
+                              // Wait one frame for the page switch to render.
+                              setTimeout(() => openEditFor(el), 30);
+                            }
+                          };
+                          return (
+                            <li
+                              key={el.id}
+                              className="fse-list-item"
+                              onClick={onRowClick}
+                              role="button"
+                              tabIndex={0}
+                            >
+                              <span className="fse-list-type">{el.type}</span>
+                              <span className="fse-list-preview">{preview}</span>
+                              {copyable && (
+                                <button
+                                  type="button"
+                                  className="fse-list-copy"
+                                  onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
+                                  aria-label="Copy value"
+                                  title="Copy value"
+                                >
+                                  <Copy size={12} />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                className="fse-list-remove"
+                                onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
+                                aria-label="Remove"
+                                title="Remove"
+                              >
+                                <X size={14} />
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           )}
         </div>
 
@@ -849,16 +1090,14 @@ export default function FillSignEditor({
           <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
         </button>
 
-        <div className="fse-sidebar-card fse-sidebar-card-info">
-          <div className="fse-sidebar-tip">
-            <span>Tip:</span> click text to edit, drag the handle to move, drag corners to resize signatures.
-          </div>
-          {!hasSubscription && (
+        {/* Watermark/plan warning hidden when `unlimited` (NDA flow). */}
+        {!unlimited && !hasSubscription && (
+          <div className="fse-sidebar-card fse-sidebar-card-info">
             <div className="fse-sidebar-plan">
               Free plan — output gets a small <strong>SignMyPDF.io</strong> watermark after the daily limit.
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </aside>
 
       <button

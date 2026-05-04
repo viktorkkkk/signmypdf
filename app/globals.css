@@ -677,6 +677,53 @@ body.nda-editor-mode .nda-hero-inner {
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* Restore-draft modal — shown when /sign-nda's Fill & sign online
+   click finds a saved draft in localStorage. */
+.nda-restore-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(2px);
+}
+.nda-restore-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 28px 22px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+}
+.nda-restore-icon {
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+.nda-restore-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.nda-restore-card p {
+  font-size: 15px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0 0 22px;
+}
+.nda-restore-actions {
+  display: flex;
+  gap: 10px;
+}
+.nda-restore-btn {
+  flex: 1 1 0;
+  margin: 0;
+}
+
 /* ── <FillSignEditor> — unified Fill+Sign editor surface.
       Sticky topbar (toolbar + Sign & Download), single-page PDF view
       with page switcher, sticky sidebar element list, mobile FAB.
@@ -703,10 +750,11 @@ body.nda-editor-mode .nda-hero-inner {
 /* Sticky topbar — toolbar (left) + Sign & Download (right). Lives just
    under the 68px fixed NavHeader, so top: 80px clears it with a 12px
    buffer. */
+/* Toolbar sits between the thumbnail strip and the PDF, so the tools
+   are always next to the surface they apply to. Not sticky — scrolls
+   naturally with the rest of the editor; the FAB / sidebar CTA owns
+   the always-visible Sign & Download. */
 .fse-topbar {
-  position: sticky;
-  top: 80px;
-  z-index: 6;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1325,26 +1373,78 @@ body.nda-editor-mode .nda-hero-inner {
   margin: 0 0 10px;
   line-height: 1.55;
 }
-.fse-list {
-  list-style: none;
-  margin: 0 0 12px;
-  padding: 0;
+/* Tip-card — prominent banner at the top of the sidebar, replaces the
+   old greyed-out footnote. Gives the user one clear instruction line. */
+.fse-tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #1e3a8a;
+}
+.fse-tip-card svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  margin-top: 1px;
+}
+
+/* Placed-elements list, grouped by page. */
+.fse-list-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.fse-list-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 360px;
-  overflow-y: auto;
+}
+.fse-list-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 2px;
+}
+.fse-list-group-empty {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 4px 8px;
+}
+.fse-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .fse-list-item {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px;
+  padding: 7px 9px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 12px;
   background: var(--color-surface);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.fse-list-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 .fse-list-type {
   text-transform: uppercase;
@@ -1359,25 +1459,26 @@ body.nda-editor-mode .nda-hero-inner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: pointer;
 }
-.fse-list-preview:hover {
-  text-decoration: underline;
-}
-.fse-list-page {
-  color: var(--color-muted);
-  font-weight: 600;
-  font-size: 11px;
-}
+.fse-list-copy,
 .fse-list-remove {
   background: none;
   border: none;
   color: var(--color-muted);
   cursor: pointer;
-  padding: 2px;
+  padding: 3px;
   display: inline-flex;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
 }
-.fse-list-remove:hover { color: var(--color-danger); }
+.fse-list-copy:hover {
+  background: #dbeafe;
+  color: var(--color-primary);
+}
+.fse-list-remove:hover {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
 .fse-sidebar-tip {
   font-size: 11.5px;
   color: var(--color-muted);
