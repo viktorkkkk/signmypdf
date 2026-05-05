@@ -1,7 +1,21 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, CheckCircle, Download, FileText, Loader2, PenLine, RefreshCw } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDropzone, type FileRejection } from 'react-dropzone';
+import {
+  ArrowLeft,
+  CheckCircle,
+  Download,
+  FileSignature,
+  FileText,
+  Loader2,
+  Mail,
+  MessageCircle,
+  PenLine,
+  RefreshCw,
+  Send,
+  Upload,
+} from 'lucide-react';
 import FillSignEditor from '../components/FillSignEditor';
 import type { FsElement } from '../utils/fillSignPdf';
 
@@ -10,6 +24,9 @@ const TEMPLATE_DOCX_URL = '/templates/nda-template.docx';
 
 const DRAFT_KEY = 'sign-nda-draft';
 const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;        // 50 MB
+
+const SHARE_TEXT_BASE = "I'm sending you the signed NDA. (Attach the file from your downloads.)";
 
 interface SavedDraft {
   elements: FsElement[];
@@ -44,9 +61,12 @@ export default function NdaHeroCard() {
   const [editorFile, setEditorFile] = useState<File | null>(null);
   const [editorInitialElements, setEditorInitialElements] = useState<FsElement[]>([]);
   const [downloaded, setDownloaded] = useState(false);
+  const [downloadedFilename, setDownloadedFilename] = useState<string>('');
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // Restore-prompt state — shown when a saved draft is found right after
-  // the user clicks "Fill & sign online".
+  // the user clicks "Fill & sign online" (template flow only — uploaded
+  // PDFs always start fresh because the draft is keyed to the template).
   const pendingFileRef = useRef<File | null>(null);
   const [restoreCandidate, setRestoreCandidate] = useState<SavedDraft | null>(null);
 
@@ -108,6 +128,8 @@ export default function NdaHeroCard() {
   const launchEditor = (file: File, initial: FsElement[]) => {
     setEditorInitialElements(initial);
     setEditorFile(file);
+    setDownloaded(false);
+    setDownloadedFilename('');
     requestAnimationFrame(() => {
       setTimeout(() => {
         document.querySelector('.fse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -163,6 +185,7 @@ export default function NdaHeroCard() {
     setEditorInitialElements([]);
     setLoadingForEdit(false);
     setDownloaded(false);
+    setDownloadedFilename('');
     requestAnimationFrame(() => {
       document.querySelector('.nda-hero')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -170,8 +193,12 @@ export default function NdaHeroCard() {
 
   const onEditorDone = async (blob: Blob) => {
     // /sign-nda is a free magnet flow — no daily counter, no FileHistory,
-    // no watermark (the editor was passed `unlimited`). Just download.
-    const filename = 'signed-nda-template.pdf';
+    // no watermark (the editor was passed `unlimited`). Download, then
+    // swap to the success state with share-out CTAs.
+    const sourceName = editorFile?.name ?? 'nda-template.pdf';
+    const baseName = sourceName.replace(/\.pdf$/i, '');
+    const filename = `signed-${baseName}.pdf`;
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -184,10 +211,90 @@ export default function NdaHeroCard() {
     // Successful sign → discard the draft so the next visit starts clean.
     clearDraft();
 
+    setDownloadedFilename(filename);
     setDownloaded(true);
   };
 
-  // ── Editor surface ──────────────────────────────────────────────────
+  // ── Upload-your-own dropzone ────────────────────────────────────────
+  const onDrop = useCallback((accepted: File[], rejected: FileRejection[]) => {
+    setUploadError(null);
+    if (rejected && rejected.length) {
+      const first = rejected[0];
+      const reasons = first.errors.map(e => e.code);
+      if (reasons.includes('file-too-large')) {
+        setUploadError(`File is over the ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB limit.`);
+      } else if (reasons.includes('file-invalid-type')) {
+        setUploadError('Only PDF files are supported.');
+      } else {
+        setUploadError("Couldn't read that file.");
+      }
+      return;
+    }
+    const file = accepted?.[0];
+    if (!file) return;
+    launchEditor(file, []);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    multiple: false,
+    maxSize: MAX_UPLOAD_BYTES,
+    useFsAccessApi: false,
+  });
+
+  // ── Share-target URLs (built from current downloaded filename) ──────
+  const shareSubject = encodeURIComponent('Signed NDA');
+  const shareBody = encodeURIComponent(
+    `${SHARE_TEXT_BASE}\n\nFile: ${downloadedFilename}`,
+  );
+  const mailtoHref = `mailto:?subject=${shareSubject}&body=${shareBody}`;
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(SHARE_TEXT_BASE)}`;
+  const telegramHref = `https://t.me/share/url?url=${encodeURIComponent('https://www.signmypdf.io/sign-nda')}&text=${encodeURIComponent(SHARE_TEXT_BASE)}`;
+
+  // ── Editor / Success surface ────────────────────────────────────────
+
+  if (editorFile && downloaded) {
+    return (
+      <div className="nda-editor-host">
+        <div className="nda-success" role="status">
+          <div className="nda-success-check">
+            <CheckCircle size={64} strokeWidth={2.4} />
+          </div>
+          <h2 className="nda-success-title">Done! Your signed PDF is ready.</h2>
+          {downloadedFilename && (
+            <div className="nda-success-filename">
+              <FileSignature size={14} />
+              <span>{downloadedFilename}</span>
+            </div>
+          )}
+
+          <p className="nda-success-prompt">Send it to the other party:</p>
+          <div className="nda-success-buttons">
+            <a href={mailtoHref} className="nda-share-btn">
+              <Mail size={18} />
+              <span>Email</span>
+            </a>
+            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="nda-share-btn">
+              <MessageCircle size={18} />
+              <span>WhatsApp</span>
+            </a>
+            <a href={telegramHref} target="_blank" rel="noopener noreferrer" className="nda-share-btn">
+              <Send size={18} />
+              <span>Telegram</span>
+            </a>
+          </div>
+          <p className="nda-success-hint">
+            Open the app, then attach the signed PDF from your Downloads folder.
+          </p>
+
+          <button type="button" className="nda-success-restart" onClick={onCloseEditor}>
+            Sign another document
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (editorFile) {
     return (
@@ -204,13 +311,6 @@ export default function NdaHeroCard() {
           initialElements={editorInitialElements}
           onDone={onEditorDone}
         />
-
-        {downloaded && (
-          <div className="nda-done-toast" role="status">
-            <CheckCircle size={18} />
-            <span>PDF downloaded — check your Downloads folder.</span>
-          </div>
-        )}
       </div>
     );
   }
@@ -218,65 +318,88 @@ export default function NdaHeroCard() {
   // ── Hero card surface (default) ─────────────────────────────────────
 
   return (
-    <div className="nda-hero-card">
-      <div ref={containerRef} className="nda-thumb">
-        {!thumbReady && !thumbError && (
-          <div className="nda-thumb-state">
-            <Loader2 size={20} className="nda-thumb-spinner" />
-          </div>
-        )}
-        {thumbError && (
-          <div className="nda-thumb-state">
-            <FileText size={32} color="#94a3b8" />
-            <span>NDA template</span>
-          </div>
-        )}
-        <canvas ref={canvasRef} aria-hidden="true" />
-      </div>
+    <>
+      <div className="nda-hero-card">
+        <div ref={containerRef} className="nda-thumb">
+          {!thumbReady && !thumbError && (
+            <div className="nda-thumb-state">
+              <Loader2 size={20} className="nda-thumb-spinner" />
+            </div>
+          )}
+          {thumbError && (
+            <div className="nda-thumb-state">
+              <FileText size={32} color="#94a3b8" />
+              <span>NDA template</span>
+            </div>
+          )}
+          <canvas ref={canvasRef} aria-hidden="true" />
+        </div>
 
-      <div className="nda-actions">
-        <button
-          type="button"
-          onClick={onFillAndSign}
-          disabled={loadingForEdit}
-          className="nda-btn nda-btn-primary"
-        >
-          {loadingForEdit ? <Loader2 size={18} className="nda-thumb-spinner" /> : <PenLine size={18} />}
-          <span>{loadingForEdit ? 'Loading…' : 'Fill & sign online'}</span>
-        </button>
+        <div className="nda-actions">
+          <button
+            type="button"
+            onClick={onFillAndSign}
+            disabled={loadingForEdit}
+            className="nda-btn nda-btn-primary"
+          >
+            {loadingForEdit ? <Loader2 size={18} className="nda-thumb-spinner" /> : <PenLine size={18} />}
+            <span>{loadingForEdit ? 'Loading…' : 'Fill & sign online'}</span>
+          </button>
 
-        <a href={TEMPLATE_PDF_URL} download="nda-template.pdf" className="nda-btn nda-btn-secondary">
-          <Download size={18} />
-          <span>Download PDF</span>
-        </a>
+          <a href={TEMPLATE_PDF_URL} download="nda-template.pdf" className="nda-btn nda-btn-secondary">
+            <Download size={18} />
+            <span>Download PDF</span>
+          </a>
 
-        <a href={TEMPLATE_DOCX_URL} download="nda-template.docx" className="nda-btn nda-btn-secondary">
-          <Download size={18} />
-          <span>Download Word (.docx)</span>
-        </a>
-      </div>
+          <a href={TEMPLATE_DOCX_URL} download="nda-template.docx" className="nda-btn nda-btn-secondary">
+            <Download size={18} />
+            <span>Download Word (.docx)</span>
+          </a>
+        </div>
 
-      {/* Restore-draft modal */}
-      {restoreCandidate && (
-        <div className="nda-restore-overlay" role="dialog" aria-modal="true" onClick={onRestoreNo}>
-          <div className="nda-restore-card" onClick={(e) => e.stopPropagation()}>
-            <RefreshCw size={22} className="nda-restore-icon" />
-            <h3>Restore your previous work?</h3>
-            <p>
-              You had <strong>{restoreCandidate.elements.length}</strong>{' '}
-              element{restoreCandidate.elements.length === 1 ? '' : 's'} placed.
-            </p>
-            <div className="nda-restore-actions">
-              <button type="button" className="nda-btn nda-btn-primary nda-restore-btn" onClick={onRestoreYes}>
-                Restore
-              </button>
-              <button type="button" className="nda-btn nda-btn-secondary nda-restore-btn" onClick={onRestoreNo}>
-                Start fresh
-              </button>
+        {/* Restore-draft modal */}
+        {restoreCandidate && (
+          <div className="nda-restore-overlay" role="dialog" aria-modal="true" onClick={onRestoreNo}>
+            <div className="nda-restore-card" onClick={(e) => e.stopPropagation()}>
+              <RefreshCw size={22} className="nda-restore-icon" />
+              <h3>Restore your previous work?</h3>
+              <p>
+                You had <strong>{restoreCandidate.elements.length}</strong>{' '}
+                element{restoreCandidate.elements.length === 1 ? '' : 's'} placed.
+              </p>
+              <div className="nda-restore-actions">
+                <button type="button" className="nda-btn nda-btn-primary nda-restore-btn" onClick={onRestoreYes}>
+                  Restore
+                </button>
+                <button type="button" className="nda-btn nda-btn-secondary nda-restore-btn" onClick={onRestoreNo}>
+                  Start fresh
+                </button>
+              </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Always-visible "your own NDA" dropzone — no extra click needed.
+          Drop a PDF and the editor opens with that file. */}
+      <div className="nda-upload-divider" aria-hidden="true">
+        <span>OR</span>
+      </div>
+      <div
+        {...getRootProps({
+          className: `nda-upload-dropzone${isDragActive ? ' active' : ''}`,
+        })}
+      >
+        <input {...getInputProps()} />
+        <div className="nda-upload-icon">
+          <Upload size={32} strokeWidth={1.6} />
         </div>
-      )}
-    </div>
+        <p className="nda-upload-title">
+          {isDragActive ? 'Drop your NDA here' : 'Drop your NDA here'}
+        </p>
+        <p className="nda-upload-sub">or click to browse · PDF only · up to 50 MB</p>
+        {uploadError && <p className="nda-upload-error">{uploadError}</p>}
+      </div>
+    </>
   );
 }

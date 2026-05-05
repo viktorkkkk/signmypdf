@@ -33,7 +33,12 @@ const TOOLS: { id: ToolId; label: string; Icon: typeof TypeIcon }[] = [
   { id: 'signature', label: 'Signature', Icon: FileSignature },
 ];
 
-const DEFAULT_FONT = 14;
+const DEFAULT_FONT = 11;
+const FONT_SIZES: { id: 'sm' | 'md' | 'lg'; label: string; pt: number }[] = [
+  { id: 'sm', label: 'S', pt: 9 },
+  { id: 'md', label: 'M', pt: 11 },
+  { id: 'lg', label: 'L', pt: 14 },
+];
 const TEXT_DEFAULT_COLOR = '#0f172a';
 const SIG_DEFAULT_W = 22;
 const SIG_DEFAULT_H = 8;
@@ -973,22 +978,46 @@ export default function FillSignEditor({
           className="fse-popup-input"
           style={{ fontSize: `${el.fontSize}px` }}
         />
-        <button
-          type="button"
-          className="fse-popup-confirm"
-          onClick={saveEdit}
-          aria-label="Save"
-        >
-          <Check size={14} />
-        </button>
-        <button
-          type="button"
-          className="fse-popup-cancel"
-          onClick={cancelEdit}
-          aria-label="Cancel"
-        >
-          <X size={14} />
-        </button>
+        <div className="fse-popup-bar">
+          <div className="fse-popup-sizes" role="group" aria-label="Font size">
+            {FONT_SIZES.map(s => {
+              const active = el.fontSize === s.pt;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  className={`fse-popup-size${active ? ' active' : ''}`}
+                  onClick={() => updateElement(el.id, { fontSize: s.pt } as Partial<FsElement>)}
+                  aria-label={`${s.label === 'S' ? 'Small' : s.label === 'M' ? 'Medium' : 'Large'} (${s.pt}pt)`}
+                  title={`${s.label === 'S' ? 'Small' : s.label === 'M' ? 'Medium' : 'Large'} (${s.pt}pt)`}
+                  aria-pressed={active}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="fse-popup-actions">
+            <button
+              type="button"
+              className="fse-popup-confirm"
+              onClick={saveEdit}
+              aria-label="Save"
+              title="Save"
+            >
+              <Check size={14} />
+            </button>
+            <button
+              type="button"
+              className="fse-popup-cancel"
+              onClick={cancelEdit}
+              aria-label="Cancel"
+              title="Cancel"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
       </div>
     );
   };
@@ -1177,7 +1206,6 @@ export default function FillSignEditor({
                               </span>
                               <div className="fse-list-main">
                                 <div className="fse-list-preview">{preview}</div>
-                                <div className="fse-list-page">Page {el.page}</div>
                               </div>
                               <div className="fse-list-actions">
                                 <button

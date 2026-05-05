@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Download, Edit3, FileText, PenLine, Send } from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import NdaHeroCard from './NdaHeroCard';
@@ -23,6 +24,18 @@ export const metadata: Metadata = {
     description: 'Free mutual NDA template. Fill and sign online or download as PDF/Word.',
   },
 };
+
+// 5-step visual workflow rendered between the hero card and the
+// "About NDAs" tool description. /sign-nda only — other tool pages
+// keep their own onboarding patterns. Icons are lucide-react SVG per
+// the project's icon standards (no emoji as UI).
+const FLOW_STEPS = [
+  { Icon: FileText, title: 'Pick template',  body: 'Use ours or upload your own' },
+  { Icon: Edit3,    title: 'Fill in fields', body: 'Type names, dates' },
+  { Icon: PenLine,  title: 'Sign',           body: 'Draw or type' },
+  { Icon: Download, title: 'Download',       body: 'Get your PDF' },
+  { Icon: Send,     title: 'Send',           body: 'Email it to the other side' },
+];
 
 // "About NDAs" section content. Rendered inline below using the shared
 // `.tool-description-*` classes plus an extra `.tool-description-h3`
@@ -122,6 +135,21 @@ export default function SignNdaPage() {
             </p>
             <NdaHeroCard />
           </div>
+        </section>
+
+        <section className="nda-flow" aria-label="How it works">
+          <ol className="nda-flow-card">
+            {FLOW_STEPS.map((s, i) => (
+              <li key={s.title} className="nda-flow-step">
+                <div className="nda-flow-icon">
+                  <s.Icon size={32} strokeWidth={1.8} />
+                </div>
+                <div className="nda-flow-num">{i + 1}</div>
+                <h3 className="nda-flow-title">{s.title}</h3>
+                <p className="nda-flow-body">{s.body}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="tool-description">
