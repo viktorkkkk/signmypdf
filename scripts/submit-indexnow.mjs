@@ -87,6 +87,8 @@ const BLOG_SLUGS = [
   'password-protect-pdf-on-windows-11',
   'accountants-tax-documents-signature',
   'why-lawyer-asks-password-protect-pdf',
+  'hipaa-electronic-signatures',
+  'fill-bank-form-pdf-online',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
