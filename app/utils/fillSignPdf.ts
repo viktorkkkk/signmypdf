@@ -138,12 +138,15 @@ export async function applyFillSign(opts: FillSignOptions): Promise<Blob> {
       // Center within container
       const offsetX = (containerW - drawW) / 2;
       const offsetY = (containerH - drawH) / 2;
+      // No `opacity` — the embedded PNG already carries its own alpha
+      // channel from canvas.toDataURL, and stamping a 0.95 multiplier on
+      // top would lighten the stroke and produce a faint ghost-like
+      // signature on the PDF.
       page.drawImage(img, {
         x: Math.max(0, Math.min(pw - drawW, pdfX + offsetX)),
         y: Math.max(0, Math.min(ph - drawH, pdfY + offsetY)),
         width: drawW,
         height: drawH,
-        opacity: 0.95,
       });
       continue;
     }

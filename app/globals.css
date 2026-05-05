@@ -808,57 +808,8 @@ body.nda-editor-mode .nda-hero-inner {
   box-shadow: none;
 }
 
-/* Pending-signature ribbon — appears once a signature is created and
-   the user is about to place it. Compact, distinct color so it's easy
-   to spot above the PDF. */
-.fse-pending-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-  background: #fffbeb;
-  border: 1px solid #fcd34d;
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  color: #78350f;
-}
-.fse-pending-info {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  flex: 1 1 auto;
-}
-.fse-pending-checkbox {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  user-select: none;
-}
-.fse-pending-checkbox input {
-  cursor: pointer;
-  accent-color: var(--color-primary);
-}
-.fse-pending-cancel {
-  background: none;
-  border: 1px solid #fcd34d;
-  border-radius: 7px;
-  color: #78350f;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.fse-pending-cancel:hover {
-  background: #fef3c7;
-}
-
 /* Thumbnail strip — copied 1:1 from /sign's PDFViewer pattern. Pages
-   are clickable; checkboxes show only while a signature is pending. */
+   are clickable; ✓ tick marks pages that already hold a signature. */
 .fse-thumb-strip-wrap {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
@@ -1021,12 +972,11 @@ body.nda-editor-mode .nda-hero-inner {
   pointer-events: none;
 }
 .fse-page-overlay > * { pointer-events: auto; }
-/* Crosshair when a placement-style tool is active. Signature only gets
-   crosshair when a pending signature is queued — otherwise the click on
-   the page does nothing for that tool. */
+/* Crosshair when a placement-style tool is active. Signature is auto-
+   placed on Save in the modal, so it doesn't need a click-to-place
+   crosshair. */
 .fse-page.tool-text,
-.fse-page.tool-date,
-.fse-page.tool-signature.has-pending-sig {
+.fse-page.tool-date {
   cursor: crosshair;
 }
 
@@ -1268,9 +1218,11 @@ body.nda-editor-mode .nda-hero-inner {
   color: var(--color-danger);
 }
 
-/* Signature element (image type) — keeps a faint white background so
-   the drawn signature stays readable against the underlying PDF;
-   resize handles reveal on hover. */
+/* Signature element (image type) — fully transparent so only the
+   stroke shows on the PDF, matching the look-and-feel of placed
+   text/date elements. The selection outline is a separate dashed
+   border that only reveals on hover; resize handles reveal on hover
+   as well. No white plate behind the signature image. */
 .fse-element {
   position: absolute;
   display: inline-flex;
@@ -1285,7 +1237,7 @@ body.nda-editor-mode .nda-hero-inner {
   transition: border-color 0.12s, opacity 0.12s;
 }
 .fse-element-image {
-  background: rgba(255, 255, 255, 0.85);
+  background: transparent;
   overflow: visible;
 }
 .fse-element-image:hover {
@@ -1649,6 +1601,170 @@ body.nda-editor-mode .nda-hero-inner {
   color: var(--color-primary);
 }
 
+/* Wide modal variant — used by the create-signature flow which now
+   carries Draw / Type tabs, a 380px-tall canvas, font picker for the
+   Type tab, an Apply-to-all toggle and Save / Cancel actions. */
+.fse-modal-card-wide {
+  max-width: 600px;
+}
+
+/* Draw / Type tabs at the top of the create-signature modal. */
+.fse-sig-tabs {
+  display: inline-flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 14px;
+}
+.fse-sig-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.fse-sig-tab:hover {
+  color: var(--color-text);
+}
+.fse-sig-tab.active {
+  background: white;
+  color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* Type-tab body — font picker + name input + preview. */
+.fse-sig-type {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fse-sig-fonts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fse-sig-font {
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: white;
+  color: var(--color-muted);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.fse-sig-font:hover {
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+.fse-sig-font.active {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.fse-sig-name {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 22px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.fse-sig-name:focus {
+  border-color: var(--color-primary);
+}
+.fse-sig-type-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+}
+.fse-sig-type-preview img {
+  max-width: 100%;
+  max-height: 60px;
+  object-fit: contain;
+}
+
+/* Footer — apply-to-all on the left, Save / Cancel on the right. */
+.fse-sig-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+.fse-sig-applyall {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-weight: 500;
+}
+.fse-sig-applyall input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+.fse-sig-modal-actions {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.fse-sig-modal-cancel,
+.fse-sig-modal-save {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1.5px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+}
+.fse-sig-modal-cancel {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.fse-sig-modal-cancel:hover {
+  border-color: var(--color-muted);
+}
+.fse-sig-modal-save {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+.fse-sig-modal-save:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+.fse-sig-modal-save:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /* Mobile FAB — hidden on desktop, takes over the Sign & Download role on
    small screens where the topbar CTA gets too cramped. */
 .fse-fab {
@@ -1687,9 +1803,21 @@ body.nda-editor-mode .nda-hero-inner {
   .fse-sidebar-cta {
     display: none;
   }
-  .fse-pending-bar {
-    flex-direction: column;
-    align-items: flex-start;
+  /* Signature modal — wider on mobile so canvas + Type tab still fit. */
+  .fse-modal-card-wide {
+    max-width: 100%;
+    margin: 0 12px;
+  }
+  .fse-sig-modal-foot {
+    gap: 10px;
+  }
+  .fse-sig-modal-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+  .fse-sig-name {
+    font-size: 18px;
   }
   /* On mobile keep all action icons (handle/copy/del) visible permanently
      — there's no hover state on touch devices. */
@@ -1739,12 +1867,21 @@ body.nda-editor-mode .nda-hero-inner {
   .fse-main {
     padding-bottom: 96px;
   }
-  /* Resize handles always visible on touch devices */
+  /* Resize handles always visible on touch devices, and enlarged
+     to a comfortable touch target (24×24 with adjusted offsets so
+     the hit area extends past the corner). */
   .fse-element-image .fse-resize {
     opacity: 1;
+    width: 24px;
+    height: 24px;
   }
+  .fse-element-image .fse-resize-nw { top: -12px; left: -12px; }
+  .fse-element-image .fse-resize-ne { top: -12px; right: -12px; }
+  .fse-element-image .fse-resize-sw { bottom: -12px; left: -12px; }
+  .fse-element-image .fse-resize-se { bottom: -12px; right: -12px; }
   .fse-element-x,
-  .fse-element-dup {
+  .fse-element-dup,
+  .fse-element-edit {
     opacity: 1;
     transform: scale(1);
   }

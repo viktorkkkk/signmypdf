@@ -10,6 +10,7 @@ import {
   FileSignature,
   FileText,
   GripVertical,
+  Keyboard,
   Layers,
   Lightbulb,
   Loader2,
@@ -42,6 +43,26 @@ const FONT_SIZES: { id: 'sm' | 'md' | 'lg'; label: string; pt: number }[] = [
 const TEXT_DEFAULT_COLOR = '#0f172a';
 const SIG_DEFAULT_W = 22;
 const SIG_DEFAULT_H = 8;
+/** Vertical placement for auto-placed signatures (% of page height,
+ *  top edge). 70% drops the box into the bottom third where contracts
+ *  conventionally sit. The horizontal default is computed at place
+ *  time as 50 - SIG_DEFAULT_W / 2 so the box is centered. */
+const SIG_AUTOPLACE_Y = 70;
+
+/** Persists the most-recent signature dataUrl + dimensions across
+ *  sessions / documents. Read on mount, written on every successful
+ *  signature creation. Same key may be shared with /sign in a future
+ *  refactor, but for now /sign-nda owns it independently. */
+const SIG_LS_KEY = 'signmypdf-saved-signature';
+
+/** Type-tab font choices for the signature modal — same palette as
+ *  /sign so the user gets a consistent feel across surfaces. */
+const SIG_FONTS = [
+  { name: 'Script',      value: '"Brush Script MT", "Dancing Script", cursive' },
+  { name: 'Handwritten', value: '"Comic Sans MS", "Chalkboard SE", cursive' },
+  { name: 'Elegant',     value: '"Times New Roman", Georgia, serif' },
+  { name: 'Modern',      value: '"Segoe UI", Roboto, sans-serif' },
+] as const;
 const SIG_MIN_W_PX = 50;
 const SIG_MIN_H_PX = 20;
 const SIG_MAX_W_PX = 400;
@@ -75,7 +96,19 @@ const typeIconFor = (t: 'text' | 'date' | 'signature') => {
 
 interface PageInfo { index: number; width: number; height: number }
 interface SavedSig { dataUrl: string; w: number; h: number }
-interface PendingSig { dataUrl: string; applyToAllPages: boolean }
+/** In-flight state of the signature-creation modal. Captures both
+ *  Draw-tab and Type-tab fields so the user can flip between tabs
+ *  without losing work, and the Apply-to-all toggle decides whether
+ *  Save places the signature on every page or just the current one. */
+interface CreatingSigState {
+  mode: 'draw' | 'type';
+  drawData: string;
+  drawW: number;
+  drawH: number;
+  typedName: string;
+  typedFont: string;
+  applyToAll: boolean;
+}
 /** Active inline-edit state. Tracks the original value so Esc / ✕ can
  *  revert; if the original was empty the element is removed instead. */
 interface EditingState {
@@ -140,16 +173,37 @@ export default function FillSignEditor({
   }, []);
 
   const [savedSig, setSavedSig] = useState<SavedSig | null>(null);
-  const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
+  const [creatingSig, setCreatingSig] = useState<CreatingSigState | null>(null);
+  const [typedSigDataUrl, setTypedSigDataUrl] = useState<string>('');
+  const typedSigSizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const [sigModal, setSigModal] = useState<'create' | 'choose' | null>(null);
   /** When set, the signature-creation modal is acting as a re-draw
    *  surface for the existing element with this id (Edit button on
    *  a placed signature). On save, we update that element's dataUrl
-   *  in place rather than going through the pendingSig placement
-   *  flow. */
+   *  in place rather than auto-placing a new element. */
   const [editingSig, setEditingSig] = useState<{ id: string } | null>(null);
 
+  // Derived: the set of pages that hold at least one signature
+  // placement. Recomputed below from `elements` so the thumbnail
+  // strip's check ticks track placements automatically.
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
+
+  // ── Hydrate saved signature from localStorage on mount ─────────────
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SIG_LS_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Partial<SavedSig> | null;
+      if (parsed && typeof parsed.dataUrl === 'string' && parsed.dataUrl
+          && typeof parsed.w === 'number' && typeof parsed.h === 'number') {
+        setSavedSig({ dataUrl: parsed.dataUrl, w: parsed.w, h: parsed.h });
+      }
+    } catch {/* ignore quota / private mode */}
+  }, []);
+
+  const persistSavedSig = useCallback((sig: SavedSig) => {
+    try { localStorage.setItem(SIG_LS_KEY, JSON.stringify(sig)); } catch {/* ignore */}
+  }, []);
 
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
@@ -323,12 +377,28 @@ export default function FillSignEditor({
   }, [pageInfos]);
 
   // ── Tool changes ──────────────────────────────────────────────────────
+  const initCreatingSig = (overrides: Partial<CreatingSigState> = {}): CreatingSigState => ({
+    mode: 'draw',
+    drawData: '',
+    drawW: 0,
+    drawH: 0,
+    typedName: '',
+    typedFont: SIG_FONTS[0].value,
+    applyToAll: false,
+    ...overrides,
+  });
+
   const onToolClick = (t: ToolId) => {
     setTool(t);
     if (t === 'signature') {
-      setSigModal(savedSig ? 'choose' : 'create');
-    } else {
-      setPendingSig(null);
+      // Existing saved signature → offer "Use saved / Create new"
+      // chooser. Otherwise straight into the Draw/Type modal.
+      if (savedSig) {
+        setSigModal('choose');
+      } else {
+        setCreatingSig(initCreatingSig());
+        setSigModal('create');
+      }
     }
     // Switching tool while editing — close the editor without saving.
     if (editing) {
@@ -340,32 +410,133 @@ export default function FillSignEditor({
     }
   };
 
-  const onSigCreated = (dataUrl: string, _w: number, _h: number) => {
+  /** Single source of truth for placing a signature element. Called
+   *  from "Use this signature" (chooser) and from Save in the create
+   *  modal. Persists the dataUrl to localStorage so the next visit
+   *  keeps offering the saved sig, then auto-places at the page
+   *  bottom-third. After placing, switches tool back to 'text' so the
+   *  follow-up click on the PDF doesn't accidentally request another
+   *  signature workflow. */
+  const placeSignature = useCallback((dataUrl: string, w: number, h: number, applyToAll: boolean) => {
     if (!dataUrl) return;
-    if (editingSig) {
-      // Edit-existing flow: replace this element's dataUrl in place
-      // and exit the modal without touching pendingSig / tool.
-      updateElement(editingSig.id, { dataUrl } as Partial<FsElement>);
-      setSavedSig({ dataUrl, w: _w, h: _h });
-      setEditingSig(null);
-      setSigModal(null);
-      return;
-    }
-    setSavedSig({ dataUrl, w: _w, h: _h });
-    setPendingSig({ dataUrl, applyToAllPages: false });
+    const targetPages = applyToAll && pageInfos.length > 0
+      ? pageInfos.map(p => p.index)
+      : [currentPage];
+    const xPct = Math.max(0, 50 - SIG_DEFAULT_W / 2);
+    const yPct = Math.max(0, Math.min(100 - SIG_DEFAULT_H, SIG_AUTOPLACE_Y));
+    setElements(prev => [
+      ...prev,
+      ...targetPages.map<FsElement>(p => ({
+        id: newId(),
+        type: 'signature',
+        page: p,
+        x: xPct,
+        y: yPct,
+        w: SIG_DEFAULT_W,
+        h: SIG_DEFAULT_H,
+        dataUrl,
+      })),
+    ]);
+    const sig: SavedSig = { dataUrl, w: w || 0, h: h || 0 };
+    setSavedSig(sig);
+    persistSavedSig(sig);
     setSigModal(null);
-  };
+    setCreatingSig(null);
+    setEditingSig(null);
+    setTool('text');
+  }, [currentPage, pageInfos, persistSavedSig]);
+
+  /** "Use this signature" in the chooser modal — auto-place the saved
+   *  sig on the current page. Apply-to-all is only offered in the
+   *  create modal; chooser is one-click for the common case. */
   const onSigReuse = () => {
     if (!savedSig) return;
-    setPendingSig({ dataUrl: savedSig.dataUrl, applyToAllPages: false });
-    setSigModal(null);
+    placeSignature(savedSig.dataUrl, savedSig.w, savedSig.h, false);
   };
-  const onSigCreateNew = () => setSigModal('create');
+  const onSigCreateNew = () => {
+    setCreatingSig(initCreatingSig());
+    setSigModal('create');
+  };
   const onSigCancel = () => {
     setSigModal(null);
+    setCreatingSig(null);
     if (editingSig) { setEditingSig(null); return; }
-    if (!pendingSig) setTool('text');
+    setTool('text');
   };
+
+  /** Fired by the SignatureCanvas on every stroke-end. We only stash
+   *  the dataUrl into creatingSig — actual placement happens when the
+   *  user clicks Save in the modal toolbar. */
+  const onDrawData = useCallback((dataUrl: string, w: number, h: number) => {
+    setCreatingSig(prev => prev ? { ...prev, drawData: dataUrl, drawW: w, drawH: h } : prev);
+  }, []);
+
+  /** Save handler for the create-signature modal. Distinguishes
+   *  Edit-existing (from the pencil icon on a placed sig) from
+   *  brand-new placement. Edit replaces dataUrl in-place; new
+   *  placement auto-places via placeSignature(). */
+  const onSaveCreatingSig = () => {
+    if (!creatingSig) return;
+    let dataUrl = '', w = 0, h = 0;
+    if (creatingSig.mode === 'draw') {
+      if (!creatingSig.drawData) return;
+      dataUrl = creatingSig.drawData;
+      w = creatingSig.drawW;
+      h = creatingSig.drawH;
+    } else {
+      if (!creatingSig.typedName.trim() || !typedSigDataUrl) return;
+      dataUrl = typedSigDataUrl;
+      w = typedSigSizeRef.current.w;
+      h = typedSigSizeRef.current.h;
+    }
+    if (editingSig) {
+      updateElement(editingSig.id, { dataUrl } as Partial<FsElement>);
+      const sig: SavedSig = { dataUrl, w, h };
+      setSavedSig(sig);
+      persistSavedSig(sig);
+      setEditingSig(null);
+      setSigModal(null);
+      setCreatingSig(null);
+      return;
+    }
+    placeSignature(dataUrl, w, h, creatingSig.applyToAll);
+  };
+
+  // ── Type-tab signature → PNG dataUrl. Mirrors the canvas-render
+  // pipeline used by /sign so the on-screen preview and the embedded
+  // PNG match pixel-for-pixel. Recomputes whenever the typed name or
+  // font changes; clears when the input is empty.
+  useEffect(() => {
+    if (!creatingSig || creatingSig.mode !== 'type') return;
+    const name = creatingSig.typedName;
+    if (!name.trim()) {
+      setTypedSigDataUrl('');
+      return;
+    }
+    const canvas = document.createElement('canvas');
+    const maxW = 600;
+    const H = 100;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d')!;
+    let fontSize = 48;
+    ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+    let textW = ctx.measureText(name).width;
+    const padding = 24;
+    while (textW > maxW - padding && fontSize > 18) {
+      fontSize -= 2;
+      ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+      textW = ctx.measureText(name).width;
+    }
+    canvas.width = Math.min(maxW, textW + padding);
+    ctx.clearRect(0, 0, canvas.width, H);
+    ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+    ctx.fillStyle = '#1e3a8a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(name, canvas.width / 2, H / 2);
+    setTypedSigDataUrl(canvas.toDataURL('image/png'));
+    typedSigSizeRef.current = { w: canvas.width, h: canvas.height };
+  }, [creatingSig?.mode, creatingSig?.typedName, creatingSig?.typedFont, creatingSig]);
 
   // ── Click on the PDF canvas → place an element + open inline editor ──
   const onPageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -405,18 +576,10 @@ export default function FillSignEditor({
       return;
     }
 
-    if (tool === 'signature' && pendingSig) {
-      const sigEl: FsElement = {
-        id: newId(), type: 'signature', page: currentPage, x: xPct, y: yPct,
-        w: SIG_DEFAULT_W, h: SIG_DEFAULT_H, dataUrl: pendingSig.dataUrl,
-      };
-      if (pendingSig.applyToAllPages) {
-        const all: FsElement[] = pageInfos.map(p => ({ ...sigEl, id: newId(), page: p.index }));
-        setElements(prev => [...prev, ...all]);
-      } else {
-        addElement(sigEl);
-      }
-    }
+    // Signature tool no longer uses click-to-place — auto-placement
+    // happens when the user clicks Save in the create-signature modal
+    // (see placeSignature). A click on the page surface while
+    // tool === 'signature' is just a no-op now.
   };
 
   // ── Inline edit save / cancel ─────────────────────────────────────────
@@ -641,20 +804,21 @@ export default function FillSignEditor({
     window.addEventListener('mouseup', onUp);
   };
 
-  // ── Page selection (sig multi-place) ─────────────────────────────────
-  const togglePageSelection = (pageNum: number) => {
-    setSelectedPages(prev => {
-      if (prev.includes(pageNum)) return prev.filter(p => p !== pageNum);
-      return [...prev, pageNum].sort((a, b) => a - b);
-    });
-  };
+  // ── Page selection — derived from signature placements ──────────────
+  // The thumbnail-strip ticks reflect "which pages currently hold a
+  // signature placement". Recomputed whenever the elements list
+  // changes (signature added → page ticked, all sigs deleted on a
+  // page → page un-ticked, signature duplicated to another page →
+  // that page also ticked). Pure derived state, no user toggles.
   useEffect(() => {
-    if (pendingSig?.applyToAllPages) {
-      setSelectedPages(pageInfos.map(p => p.index));
-    } else if (!pendingSig) {
-      setSelectedPages([]);
-    }
-  }, [pendingSig?.applyToAllPages, pendingSig, pageInfos]);
+    const next = Array.from(new Set(
+      elements.filter(e => e.type === 'signature').map(e => e.page),
+    )).sort((a, b) => a - b);
+    setSelectedPages(prev => {
+      if (prev.length === next.length && prev.every((p, i) => p === next[i])) return prev;
+      return next;
+    });
+  }, [elements]);
 
   // ── Done ──────────────────────────────────────────────────────────────
   const handleDone = async () => {
@@ -1025,7 +1189,9 @@ export default function FillSignEditor({
   const visibleElements = elements.filter(e => e.page === currentPage);
   const currentInfo = pageInfos.find(p => p.index === currentPage);
   const canDone = elements.length > 0 && !processing;
-  const showThumbCheckboxes = !!pendingSig;
+  // Show signed-page ticks whenever any signature is placed; pure
+  // visual indicator (no longer tied to a placement workflow).
+  const showThumbTicks = selectedPages.length > 0;
   const totalPages = pageInfos.length;
 
   return (
@@ -1046,7 +1212,7 @@ export default function FillSignEditor({
                 return (
                   <div
                     key={p.index}
-                    className={`fse-thumb${isCurrent ? ' fse-thumb-current' : ''}${isSelected && showThumbCheckboxes ? ' fse-thumb-selected' : ''}`}
+                    className={`fse-thumb${isCurrent ? ' fse-thumb-current' : ''}${isSelected && showThumbTicks ? ' fse-thumb-selected' : ''}`}
                     onClick={() => setCurrentPage(p.index)}
                   >
                     <div className="fse-thumb-img-wrap">
@@ -1056,21 +1222,12 @@ export default function FillSignEditor({
                       ) : (
                         <span className="fse-thumb-placeholder">Page {p.index}</span>
                       )}
-                      {isSelected && showThumbCheckboxes && (
-                        <span className="fse-thumb-tick" aria-hidden="true">✓</span>
+                      {isSelected && showThumbTicks && (
+                        <span className="fse-thumb-tick" aria-hidden="true" title="Signature placed on this page">✓</span>
                       )}
                     </div>
                     <div className="fse-thumb-foot">
                       <span className="fse-thumb-num">{p.index}</span>
-                      {showThumbCheckboxes && (
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onClick={e => e.stopPropagation()}
-                          onChange={() => togglePageSelection(p.index)}
-                          aria-label={`Select page ${p.index}`}
-                        />
-                      )}
                     </div>
                   </div>
                 );
@@ -1078,11 +1235,11 @@ export default function FillSignEditor({
             </div>
             <div className="fse-thumb-strip-hint">
               <CheckSquare size={11} /> Click a thumbnail to switch page
-              {showThumbCheckboxes ? ' · checkboxes select where to place the signature' : ''}
+              {showThumbTicks ? ' · ✓ marks pages with signatures' : ''}
             </div>
-            {showThumbCheckboxes && selectedPages.length > 0 && (
+            {showThumbTicks && (
               <div className="fse-selected-summary">
-                <strong>✓ Signing {selectedPages.length} page{selectedPages.length > 1 ? 's' : ''}:</strong>{' '}
+                <strong>✓ Signed on {selectedPages.length} page{selectedPages.length > 1 ? 's' : ''}:</strong>{' '}
                 {selectedPages.join(', ')}
               </div>
             )}
@@ -1105,27 +1262,6 @@ export default function FillSignEditor({
           </div>
         </div>
 
-        {pendingSig && (
-          <div className="fse-pending-bar">
-            <div className="fse-pending-info">
-              <FileSignature size={14} />
-              <span>Signature ready — click on the PDF to place it</span>
-            </div>
-            <label className="fse-pending-checkbox">
-              <input
-                type="checkbox"
-                checked={pendingSig.applyToAllPages}
-                onChange={e => setPendingSig({ ...pendingSig, applyToAllPages: e.target.checked })}
-              />
-              <Layers size={13} />
-              <span>Apply to all pages</span>
-            </label>
-            <button type="button" className="fse-pending-cancel" onClick={() => setPendingSig(null)}>
-              Cancel
-            </button>
-          </div>
-        )}
-
         <div className="fse-page-area">
           {loading && (
             <div className="fse-pages-state">
@@ -1136,7 +1272,7 @@ export default function FillSignEditor({
           {error && !loading && <div className="fse-pages-state fse-pages-error">{error}</div>}
           {!loading && !error && currentInfo && (
             <div
-              className={`fse-page tool-${tool}${pendingSig ? ' has-pending-sig' : ''}`}
+              className={`fse-page tool-${tool}`}
               style={{ width: currentInfo.width, height: currentInfo.height }}
               onClick={onPageClick}
             >
@@ -1278,25 +1414,120 @@ export default function FillSignEditor({
         <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
       </button>
 
-      {sigModal === 'create' && (
-        <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
-          <div className="fse-modal-card" onClick={e => e.stopPropagation()}>
-            <div className="fse-modal-head">
-              <h3>Draw your signature</h3>
-              <button type="button" className="fse-modal-close" onClick={onSigCancel} aria-label="Close">
-                <X size={18} />
-              </button>
+      {sigModal === 'create' && creatingSig && (() => {
+        const headTitle = editingSig
+          ? 'Edit signature'
+          : creatingSig.mode === 'draw' ? 'Draw your signature' : 'Type your signature';
+        const canSave = creatingSig.mode === 'draw'
+          ? !!creatingSig.drawData
+          : !!creatingSig.typedName.trim() && !!typedSigDataUrl;
+        return (
+          <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
+            <div className="fse-modal-card fse-modal-card-wide" onClick={e => e.stopPropagation()}>
+              <div className="fse-modal-head">
+                <h3>{headTitle}</h3>
+                <button type="button" className="fse-modal-close" onClick={onSigCancel} aria-label="Close">
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="fse-sig-tabs" role="tablist" aria-label="Signature mode">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={creatingSig.mode === 'draw'}
+                  className={`fse-sig-tab${creatingSig.mode === 'draw' ? ' active' : ''}`}
+                  onClick={() => setCreatingSig(s => s ? { ...s, mode: 'draw' } : s)}
+                >
+                  <Pencil size={14} /> Draw
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={creatingSig.mode === 'type'}
+                  className={`fse-sig-tab${creatingSig.mode === 'type' ? ' active' : ''}`}
+                  onClick={() => setCreatingSig(s => s ? { ...s, mode: 'type' } : s)}
+                >
+                  <Keyboard size={14} /> Type
+                </button>
+              </div>
+
+              {creatingSig.mode === 'draw' && (
+                <SignatureCanvas onSave={onDrawData} />
+              )}
+
+              {creatingSig.mode === 'type' && (
+                <div className="fse-sig-type">
+                  <div className="fse-sig-fonts" role="group" aria-label="Font">
+                    {SIG_FONTS.map(f => {
+                      const active = creatingSig.typedFont === f.value;
+                      return (
+                        <button
+                          key={f.value}
+                          type="button"
+                          className={`fse-sig-font${active ? ' active' : ''}`}
+                          style={{ fontFamily: f.value }}
+                          onClick={() => setCreatingSig(s => s ? { ...s, typedFont: f.value } : s)}
+                        >
+                          {f.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <input
+                    type="text"
+                    className="fse-sig-name"
+                    placeholder="Your full name"
+                    value={creatingSig.typedName}
+                    onChange={(e) => setCreatingSig(s => s ? { ...s, typedName: e.target.value } : s)}
+                    style={{ fontFamily: creatingSig.typedFont }}
+                    autoFocus
+                  />
+                  {creatingSig.typedName.trim() && typedSigDataUrl && (
+                    <div className="fse-sig-type-preview">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={typedSigDataUrl} alt="Signature preview" />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="fse-sig-modal-foot">
+                {!editingSig && totalPages > 1 && (
+                  <label className="fse-sig-applyall">
+                    <input
+                      type="checkbox"
+                      checked={creatingSig.applyToAll}
+                      onChange={(e) => setCreatingSig(s => s ? { ...s, applyToAll: e.target.checked } : s)}
+                    />
+                    <Layers size={13} />
+                    <span>Apply to all pages</span>
+                  </label>
+                )}
+                <div className="fse-sig-modal-actions">
+                  <button type="button" className="fse-sig-modal-cancel" onClick={onSigCancel}>
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="fse-sig-modal-save"
+                    onClick={onSaveCreatingSig}
+                    disabled={!canSave}
+                  >
+                    {editingSig ? 'Update' : 'Save & place'}
+                  </button>
+                </div>
+              </div>
             </div>
-            <SignatureCanvas onSave={onSigCreated} />
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {sigModal === 'choose' && savedSig && (
         <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
           <div className="fse-modal-card" onClick={e => e.stopPropagation()}>
             <div className="fse-modal-head">
-              <h3>Use a signature</h3>
+              <h3>Use your saved signature?</h3>
               <button type="button" className="fse-modal-close" onClick={onSigCancel} aria-label="Close">
                 <X size={18} />
               </button>
