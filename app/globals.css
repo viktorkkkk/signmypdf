@@ -1069,7 +1069,9 @@ body.nda-editor-mode .nda-hero-inner {
   padding: 0;
   cursor: pointer;
   user-select: none;
-  white-space: nowrap;
+  /* `pre-wrap` so multi-line text values (Shift+Enter in the editor)
+     are rendered with their newlines preserved on the page surface. */
+  white-space: pre-wrap;
   transform: translate(0, 0); /* establish stacking context for ::before */
 }
 .fse-text-wrap::before {
@@ -1094,6 +1096,7 @@ body.nda-editor-mode .nda-hero-inner {
 .fse-text-value {
   display: inline-block;
   cursor: pointer;
+  white-space: pre-wrap;
 }
 .fse-text-placeholder {
   color: #94a3b8;
@@ -1152,10 +1155,12 @@ body.nda-editor-mode .nda-hero-inner {
 }
 .fse-text-wrap:hover .fse-action { opacity: 1; }
 .fse-text-wrap-dragging .fse-action { opacity: 0; }
-/* Action cluster, in visual order from element-edge outward:
-   📋 copy at -26  →  ⎘ duplicate at -52  →  ✕ delete at -78. */
-.fse-action-copy { right: -26px; }
-.fse-action-copy:hover {
+/* Action cluster, in visual order from element-edge outward (left → right):
+   ✏️ edit at -26  →  ⎘ duplicate at -52  →  ✕ delete at -78.
+   Edit + Duplicate share the same neutral chrome with a blue hover; Delete
+   is red-by-default so it reads as a destructive action at a glance. */
+.fse-action-edit { right: -26px; }
+.fse-action-edit:hover {
   background: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
@@ -1166,11 +1171,15 @@ body.nda-editor-mode .nda-hero-inner {
   color: white;
   border-color: var(--color-primary);
 }
-.fse-action-del { right: -78px; }
-.fse-action-del:hover {
+.fse-action-del {
+  right: -78px;
   background: var(--color-danger);
   color: white;
   border-color: var(--color-danger);
+}
+.fse-action-del:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
 }
 
 /* Inline edit popup — absolute over the page, smart edge clamping.
@@ -1179,7 +1188,7 @@ body.nda-editor-mode .nda-hero-inner {
 .fse-popup {
   position: absolute;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* keeps Save / Cancel anchored to the top edge as the textarea grows downward */
   gap: 6px;
   background: white;
   border: 1.5px solid var(--color-primary);
@@ -1189,14 +1198,24 @@ body.nda-editor-mode .nda-hero-inner {
   z-index: 30;
   pointer-events: auto;
 }
+/* Textarea — single line by default, auto-grows to fit content via
+   the inline-style height set in renderEditPopup's autoResize. */
 .fse-popup-input {
   flex: 1 1 auto;
   font: inherit;
+  font-family: inherit;
   padding: 6px 10px;
   border: none;
   outline: none;
   background: transparent;
   min-width: 0;
+  min-height: 26px;
+  max-height: 240px;
+  line-height: 1.35;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 .fse-popup-confirm,
 .fse-popup-cancel {
@@ -1223,27 +1242,6 @@ body.nda-editor-mode .nda-hero-inner {
 .fse-popup-cancel:hover {
   background: #fee2e2;
   color: var(--color-danger);
-}
-
-/* Toast (Copy etc.) — bottom-center, transient. */
-.fse-toast {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0f172a;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 200;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.35);
-  animation: fse-toast-in 0.18s ease-out;
-}
-@keyframes fse-toast-in {
-  from { opacity: 0; transform: translate(-50%, 8px); }
-  to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* Signature element (image type) — keeps a faint white background so
@@ -1283,11 +1281,13 @@ body.nda-editor-mode .nda-hero-inner {
   pointer-events: none;
 }
 
-/* Top-right corner action cluster for signatures: ⎘ duplicate then ✕
-   delete. Both buttons share the same circular chrome and only differ
-   in colour. Duplicate sits to the left of delete with a small gap. */
+/* Top-right corner action cluster for signatures, in visual order from
+   left (further inside) → right (outside the corner): ✏️ edit at +43,
+   ⎘ duplicate at +17, ✕ delete at -9. All circular, hover-revealed,
+   colour-coded by intent (edit + duplicate primary blue, delete red). */
 .fse-element-x,
-.fse-element-dup {
+.fse-element-dup,
+.fse-element-edit {
   position: absolute;
   top: -9px;
   width: 20px;
@@ -1306,12 +1306,15 @@ body.nda-editor-mode .nda-hero-inner {
   z-index: 3;
   padding: 0;
 }
-.fse-element-x   { right: -9px; background: var(--color-danger); }
-.fse-element-dup { right: 17px; background: var(--color-primary); }
+.fse-element-x    { right: -9px; background: var(--color-danger); }
+.fse-element-dup  { right: 17px; background: var(--color-primary); }
+.fse-element-edit { right: 43px; background: var(--color-primary); }
 .fse-element-image:hover .fse-element-x,
 .fse-element-image:hover .fse-element-dup,
+.fse-element-image:hover .fse-element-edit,
 .fse-element-image.fse-element-dragging .fse-element-x,
-.fse-element-image.fse-element-dragging .fse-element-dup {
+.fse-element-image.fse-element-dragging .fse-element-dup,
+.fse-element-image.fse-element-dragging .fse-element-edit {
   opacity: 1;
   transform: scale(1);
 }
@@ -1319,7 +1322,8 @@ body.nda-editor-mode .nda-hero-inner {
   background: #b91c1c;
   transform: scale(1.05);
 }
-.fse-element-dup:hover {
+.fse-element-dup:hover,
+.fse-element-edit:hover {
   background: #1d4ed8;
   transform: scale(1.05);
 }
@@ -1425,11 +1429,11 @@ body.nda-editor-mode .nda-hero-inner {
   gap: 6px;
 }
 .fse-list-group-title {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--color-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   padding: 0 2px;
 }
 .fse-list-group-empty {
@@ -1446,15 +1450,17 @@ body.nda-editor-mode .nda-hero-inner {
   flex-direction: column;
   gap: 5px;
 }
+/* Compact one-row card (~52px tall): [type-icon] [value + Page N] [actions]. */
 .fse-list-item {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
+  gap: 10px;
+  padding: 8px 10px;
+  min-height: 52px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 13px;
   background: var(--color-surface);
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
@@ -1463,12 +1469,19 @@ body.nda-editor-mode .nda-hero-inner {
   background: #f1f5f9;
   border-color: #cbd5e1;
 }
-.fse-list-type {
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--color-primary);
-  letter-spacing: 0.4px;
-  font-size: 10px;
+.fse-list-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+}
+.fse-list-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 .fse-list-preview {
   color: var(--color-text);
@@ -1476,27 +1489,46 @@ body.nda-editor-mode .nda-hero-inner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.25;
 }
-.fse-list-copy,
+.fse-list-page {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.fse-list-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fse-list-edit,
 .fse-list-dup,
 .fse-list-remove {
   background: none;
   border: none;
   color: var(--color-muted);
   cursor: pointer;
-  padding: 3px;
+  padding: 4px;
   display: inline-flex;
   border-radius: 4px;
   transition: background 0.12s, color 0.12s;
 }
-.fse-list-copy:hover,
+.fse-list-edit:hover,
 .fse-list-dup:hover {
   background: #dbeafe;
   color: var(--color-primary);
 }
+/* Delete defaults to a red glyph and only deepens on hover, so it
+   reads as destructive without the click-target jumping in size. */
+.fse-list-remove {
+  color: var(--color-danger);
+}
 .fse-list-remove:hover {
   background: #fee2e2;
-  color: var(--color-danger);
+  color: #b91c1c;
 }
 .fse-sidebar-tip {
   font-size: 11.5px;

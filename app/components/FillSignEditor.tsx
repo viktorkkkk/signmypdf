@@ -5,7 +5,6 @@ import {
   CalendarDays,
   Check,
   CheckSquare,
-  Copy,
   CopyPlus,
   Download,
   FileSignature,
@@ -15,6 +14,7 @@ import {
   Lightbulb,
   Loader2,
   PenLine,
+  Pencil,
   Type as TypeIcon,
   X,
 } from 'lucide-react';
@@ -24,36 +24,6 @@ import { applyFillSign, type FsElement } from '../utils/fillSignPdf';
 /** Drag threshold — mousedown + this many CSS px of movement before a
  *  click is treated as a drag instead of an "open editor" click. */
 const DRAG_THRESHOLD_PX = 5;
-
-/** Robust copy-to-clipboard. Tries the modern Clipboard API first;
- *  falls back to the legacy textarea + execCommand path that still
- *  works in older / permissionless contexts (and in some headless
- *  preview environments where the modern API silently no-ops). */
-async function copyToClipboard(value: string): Promise<boolean> {
-  if (!value) return false;
-  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(value);
-      return true;
-    } catch {/* fall through to legacy path */}
-  }
-  try {
-    const textarea = document.createElement('textarea');
-    textarea.value = value;
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-    textarea.style.top = '0';
-    textarea.setAttribute('readonly', '');
-    document.body.appendChild(textarea);
-    textarea.select();
-    textarea.setSelectionRange(0, value.length);
-    const ok = document.execCommand('copy');
-    document.body.removeChild(textarea);
-    return ok;
-  } catch {
-    return false;
-  }
-}
 
 type ToolId = 'text' | 'date' | 'signature';
 
@@ -84,6 +54,19 @@ const todayDisplay = () => {
 };
 
 const truncate = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : s);
+
+/** Sidebar preview: show only the FIRST line of a value, truncated to
+ *  25 chars + "…". Multi-line text values shouldn't blow out the row. */
+const previewLine = (s: string, n = 25) => {
+  const firstLine = s.split('\n')[0] ?? '';
+  return truncate(firstLine, n);
+};
+
+const typeIconFor = (t: 'text' | 'date' | 'signature') => {
+  if (t === 'text') return TypeIcon;
+  if (t === 'date') return CalendarDays;
+  return FileSignature;
+};
 
 interface PageInfo { index: number; width: number; height: number }
 interface SavedSig { dataUrl: string; w: number; h: number }
@@ -154,11 +137,14 @@ export default function FillSignEditor({
   const [savedSig, setSavedSig] = useState<SavedSig | null>(null);
   const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
   const [sigModal, setSigModal] = useState<'create' | 'choose' | null>(null);
+  /** When set, the signature-creation modal is acting as a re-draw
+   *  surface for the existing element with this id (Edit button on
+   *  a placed signature). On save, we update that element's dataUrl
+   *  in place rather than going through the pendingSig placement
+   *  flow. */
+  const [editingSig, setEditingSig] = useState<{ id: string } | null>(null);
 
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
-
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
@@ -331,16 +317,6 @@ export default function FillSignEditor({
     });
   }, [pageInfos]);
 
-  const showToast = useCallback((msg: string) => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    setToast(msg);
-    toastTimerRef.current = setTimeout(() => setToast(null), 1500);
-  }, []);
-
-  useEffect(() => () => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-  }, []);
-
   // ── Tool changes ──────────────────────────────────────────────────────
   const onToolClick = (t: ToolId) => {
     setTool(t);
@@ -361,6 +337,15 @@ export default function FillSignEditor({
 
   const onSigCreated = (dataUrl: string, _w: number, _h: number) => {
     if (!dataUrl) return;
+    if (editingSig) {
+      // Edit-existing flow: replace this element's dataUrl in place
+      // and exit the modal without touching pendingSig / tool.
+      updateElement(editingSig.id, { dataUrl } as Partial<FsElement>);
+      setSavedSig({ dataUrl, w: _w, h: _h });
+      setEditingSig(null);
+      setSigModal(null);
+      return;
+    }
     setSavedSig({ dataUrl, w: _w, h: _h });
     setPendingSig({ dataUrl, applyToAllPages: false });
     setSigModal(null);
@@ -373,6 +358,7 @@ export default function FillSignEditor({
   const onSigCreateNew = () => setSigModal('create');
   const onSigCancel = () => {
     setSigModal(null);
+    if (editingSig) { setEditingSig(null); return; }
     if (!pendingSig) setTool('text');
   };
 
@@ -464,17 +450,19 @@ export default function FillSignEditor({
     return () => document.removeEventListener('mousedown', onDocClick);
   }, [editing, saveEdit]);
 
-  // Open the editor for an existing placed text/date element.
+  // Open the editor for any placed element. Text/date opens the inline
+  // popup; signature pops the SignatureCanvas modal in re-draw mode so
+  // the user can replace the existing dataUrl without going through the
+  // place-on-click pendingSig workflow.
   const openEditFor = (el: FsElement) => {
-    if (el.type !== 'text' && el.type !== 'date') return;
-    setEditing({ id: el.id, originalValue: el.value, draftValue: el.value });
-  };
-
-  const onCopyValue = async (el: FsElement) => {
-    const value = el.type === 'signature' ? '' : (el.value || '');
-    if (!value) return;
-    const ok = await copyToClipboard(value);
-    showToast(ok ? 'Copied!' : 'Could not copy');
+    if (el.type === 'text' || el.type === 'date') {
+      setEditing({ id: el.id, originalValue: el.value, draftValue: el.value });
+      return;
+    }
+    if (el.type === 'signature') {
+      setEditingSig({ id: el.id });
+      setSigModal('create');
+    }
   };
 
   // ── Drag (handle / signature body) + signature resize ────────────────
@@ -833,18 +821,18 @@ export default function FillSignEditor({
           <GripVertical size={12} strokeWidth={2.2} />
         </span>
         <span
-          className="fse-action fse-action-copy"
-          aria-label="Copy text to clipboard"
-          title="Copy text to clipboard"
+          className="fse-action fse-action-edit"
+          aria-label="Edit"
+          title="Edit"
           onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
+          onClick={(e) => { e.stopPropagation(); openEditFor(el); }}
         >
-          <Copy size={11} strokeWidth={2.2} />
+          <Pencil size={11} strokeWidth={2.2} />
         </span>
         <span
           className="fse-action fse-action-dup"
-          aria-label="Duplicate element"
-          title="Duplicate element"
+          aria-label="Duplicate"
+          title="Duplicate"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
         >
@@ -879,11 +867,21 @@ export default function FillSignEditor({
         <img src={el.dataUrl} alt="signature" className="fse-element-img" draggable={false} />
         <button
           type="button"
+          className="fse-element-edit"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); openEditFor(el); }}
+          aria-label="Edit"
+          title="Edit"
+        >
+          <Pencil size={11} />
+        </button>
+        <button
+          type="button"
           className="fse-element-dup"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
-          aria-label="Duplicate signature"
-          title="Duplicate signature"
+          aria-label="Duplicate"
+          title="Duplicate"
         >
           <CopyPlus size={11} />
         </button>
@@ -931,6 +929,13 @@ export default function FillSignEditor({
     }
 
     const placeholder = el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…';
+    // Auto-grow the textarea to fit its content. Resets to auto first so
+    // the scrollHeight reflects current rather than previous height.
+    const autoResize = (node: HTMLTextAreaElement | null) => {
+      if (!node) return;
+      node.style.height = 'auto';
+      node.style.height = `${node.scrollHeight}px`;
+    };
     return (
       <div
         className="fse-popup"
@@ -938,20 +943,31 @@ export default function FillSignEditor({
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <input
+        <textarea
           ref={(node) => {
-            if (node && document.activeElement !== node) {
+            if (!node) return;
+            if (document.activeElement !== node) {
               try { node.focus({ preventScroll: true }); }
               catch { node.focus(); }
               node.select();
             }
+            autoResize(node);
           }}
-          type="text"
+          rows={1}
           value={editing.draftValue}
-          onChange={(e) => setEditing({ ...editing, draftValue: e.target.value })}
+          onChange={(e) => {
+            setEditing({ ...editing, draftValue: e.target.value });
+            autoResize(e.currentTarget);
+          }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') saveEdit();
-            else if (e.key === 'Escape') cancelEdit();
+            // Enter saves, Shift+Enter inserts a newline (default
+            // textarea behavior), Esc cancels.
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              saveEdit();
+            } else if (e.key === 'Escape') {
+              cancelEdit();
+            }
           }}
           placeholder={placeholder}
           className="fse-popup-input"
@@ -1136,17 +1152,16 @@ export default function FillSignEditor({
                       <ul className="fse-list">
                         {els.map(el => {
                           let preview: React.ReactNode;
-                          let copyable = false;
                           if (el.type === 'signature') preview = 'Signature';
-                          else if (el.value) {
-                            preview = truncate(el.value, 30);
-                            copyable = true;
-                          } else preview = <em className="fse-list-empty">(empty)</em>;
+                          else if (el.value) preview = previewLine(el.value);
+                          else preview = <em className="fse-list-empty">(empty)</em>;
+                          const Icon = typeIconFor(el.type);
                           const onRowClick = () => {
-                            setCurrentPage(el.page);
-                            if (el.type === 'text' || el.type === 'date') {
-                              // Wait one frame for the page switch to render.
+                            if (el.page !== currentPage) {
+                              setCurrentPage(el.page);
                               setTimeout(() => openEditFor(el), 30);
+                            } else {
+                              openEditFor(el);
                             }
                           };
                           return (
@@ -1157,37 +1172,42 @@ export default function FillSignEditor({
                               role="button"
                               tabIndex={0}
                             >
-                              <span className="fse-list-type">{el.type}</span>
-                              <span className="fse-list-preview">{preview}</span>
-                              {copyable && (
+                              <span className="fse-list-icon" aria-hidden="true">
+                                <Icon size={16} strokeWidth={2} />
+                              </span>
+                              <div className="fse-list-main">
+                                <div className="fse-list-preview">{preview}</div>
+                                <div className="fse-list-page">Page {el.page}</div>
+                              </div>
+                              <div className="fse-list-actions">
                                 <button
                                   type="button"
-                                  className="fse-list-copy"
-                                  onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
-                                  aria-label="Copy text to clipboard"
-                                  title="Copy text to clipboard"
+                                  className="fse-list-edit"
+                                  onClick={(e) => { e.stopPropagation(); onRowClick(); }}
+                                  aria-label="Edit"
+                                  title="Edit"
                                 >
-                                  <Copy size={12} />
+                                  <Pencil size={12} />
                                 </button>
-                              )}
-                              <button
-                                type="button"
-                                className="fse-list-dup"
-                                onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
-                                aria-label="Duplicate element"
-                                title="Duplicate element"
-                              >
-                                <CopyPlus size={12} />
-                              </button>
-                              <button
-                                type="button"
-                                className="fse-list-remove"
-                                onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
-                                aria-label="Delete"
-                                title="Delete"
-                              >
-                                <X size={14} />
-                              </button>
+                                <button
+                                  type="button"
+                                  className="fse-list-dup"
+                                  onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
+                                  aria-label="Duplicate"
+                                  title="Duplicate"
+                                >
+                                  <CopyPlus size={12} />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="fse-list-remove"
+                                  onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
+                                  aria-label="Delete"
+                                  title="Delete"
+                                >
+                                  <X size={14} />
+                                </button>
+                              </div>
                             </li>
                           );
                         })}
@@ -1229,8 +1249,6 @@ export default function FillSignEditor({
         {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
         <span>{processing ? 'Generating…' : 'Sign & Download'}</span>
       </button>
-
-      {toast && <div className="fse-toast" role="status">{toast}</div>}
 
       {sigModal === 'create' && (
         <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
