@@ -2174,35 +2174,60 @@ body.nda-editor-mode .nda-hero-inner {
 .nda-flow {
   padding: 0 48px 32px;
 }
+.nda-flow-heading {
+  max-width: 880px;
+  margin: 0 auto 18px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
 .nda-flow-card {
   list-style: none;
   margin: 0 auto;
-  padding: 28px;
-  max-width: 1040px;
+  padding: 32px 28px;
+  max-width: 880px;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
+  gap: 24px;
   align-items: start;
   position: relative;
-  counter-reset: nda-flow;
 }
 .nda-flow-step {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 0 8px;
+  gap: 12px;
+  padding: 0 4px;
 }
+/* Thin grey arrow between adjacent steps. Sized to span the inter-
+   step gap and vertically aligned with the icon plate's centre. */
 .nda-flow-step + .nda-flow-step::before {
-  content: '→';
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 26px;
+  width: 8px;
+  height: 1px;
+  background: #d1d5db;
+}
+.nda-flow-step + .nda-flow-step::after {
+  content: '';
   position: absolute;
   left: -10px;
-  top: 18px;
-  color: var(--color-border);
-  font-size: 18px;
-  line-height: 1;
+  top: 23px;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
+  transform: rotate(45deg);
 }
 .nda-flow-icon {
   display: inline-flex;
@@ -2211,31 +2236,15 @@ body.nda-editor-mode .nda-hero-inner {
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: #eff6ff;
-  color: var(--color-primary);
-  margin-bottom: 12px;
+  /* fg/bg supplied inline per-step so each chip carries its own
+     accent without inflating the CSS with five paired rules. */
 }
-.nda-flow-num {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-muted);
-  letter-spacing: 0.6px;
-  margin-bottom: 6px;
-}
-.nda-flow-num::before { content: 'STEP '; }
 .nda-flow-title {
-  margin: 0 0 6px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-text);
-  line-height: 1.25;
-}
-.nda-flow-body {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--color-muted);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
 }
 
 @media (max-width: 640px) {
@@ -2284,40 +2293,37 @@ body.nda-editor-mode .nda-hero-inner {
   .nda-share-btn {
     padding: 14px 14px;
   }
-  /* Flow — vertical stack, no →. */
+  /* Flow — vertical stack, no horizontal arrows. Each step is a
+     single row: [icon plate | title]. */
   .nda-flow {
     padding: 0 16px 24px;
   }
+  .nda-flow-heading {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
   .nda-flow-card {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 16px;
     padding: 20px;
     border-radius: 14px;
   }
-  .nda-flow-step + .nda-flow-step::before {
+  .nda-flow-step + .nda-flow-step::before,
+  .nda-flow-step + .nda-flow-step::after {
     content: none;
   }
   .nda-flow-step {
+    flex-direction: row;
     text-align: left;
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 14px;
     align-items: center;
+    gap: 14px;
     padding: 0;
   }
   .nda-flow-icon {
-    grid-row: 1 / span 3;
-    margin: 0;
-  }
-  .nda-flow-num {
-    margin: 0;
-    align-self: end;
+    flex-shrink: 0;
   }
   .nda-flow-title {
     margin: 0;
-  }
-  .nda-flow-body {
-    grid-column: 2;
   }
 }
 

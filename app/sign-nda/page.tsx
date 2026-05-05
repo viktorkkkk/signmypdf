@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Download, Edit3, FileText, PenLine, Send } from 'lucide-react';
+import { Download, FileText, Send, Signature, TextCursorInput } from 'lucide-react';
 import NavHeader from '../components/NavHeader';
 import SiteFooter from '../components/SiteFooter';
 import NdaHeroCard from './NdaHeroCard';
@@ -27,15 +27,21 @@ export const metadata: Metadata = {
 
 // 5-step visual workflow rendered between the hero card and the
 // "About NDAs" tool description. /sign-nda only — other tool pages
-// keep their own onboarding patterns. Icons are lucide-react SVG per
-// the project's icon standards (no emoji as UI).
+// keep their own onboarding patterns.
+//
+// Icons + colors are deliberately distinct per step: step 2 (Fill)
+// uses a typing cursor and step 3 (Sign) uses a signature line so the
+// two pencil-shaped icons (Edit3 / PenLine) don't read as duplicates.
+// Each step pairs a foreground colour with a 8% tint background plate
+// so the row reads as a series of differentiated chips rather than a
+// uniform blue strip.
 const FLOW_STEPS = [
-  { Icon: FileText, title: 'Pick template',  body: 'Use ours or upload your own' },
-  { Icon: Edit3,    title: 'Fill in fields', body: 'Type names, dates' },
-  { Icon: PenLine,  title: 'Sign',           body: 'Draw or type' },
-  { Icon: Download, title: 'Download',       body: 'Get your PDF' },
-  { Icon: Send,     title: 'Send',           body: 'Email it to the other side' },
-];
+  { Icon: FileText,         title: 'Pick template', fg: '#3B82F6', bg: '#EFF6FF' },
+  { Icon: TextCursorInput,  title: 'Fill fields',   fg: '#10B981', bg: '#ECFDF5' },
+  { Icon: Signature,        title: 'Sign',          fg: '#8B5CF6', bg: '#F5F3FF' },
+  { Icon: Download,         title: 'Download',      fg: '#F59E0B', bg: '#FFFBEB' },
+  { Icon: Send,             title: 'Send',          fg: '#06B6D4', bg: '#ECFEFF' },
+] as const;
 
 // "About NDAs" section content. Rendered inline below using the shared
 // `.tool-description-*` classes plus an extra `.tool-description-h3`
@@ -138,15 +144,17 @@ export default function SignNdaPage() {
         </section>
 
         <section className="nda-flow" aria-label="How it works">
+          <h2 className="nda-flow-heading">How it works</h2>
           <ol className="nda-flow-card">
-            {FLOW_STEPS.map((s, i) => (
+            {FLOW_STEPS.map((s) => (
               <li key={s.title} className="nda-flow-step">
-                <div className="nda-flow-icon">
-                  <s.Icon size={32} strokeWidth={1.8} />
+                <div
+                  className="nda-flow-icon"
+                  style={{ background: s.bg, color: s.fg }}
+                >
+                  <s.Icon size={28} strokeWidth={1.8} />
                 </div>
-                <div className="nda-flow-num">{i + 1}</div>
                 <h3 className="nda-flow-title">{s.title}</h3>
-                <p className="nda-flow-body">{s.body}</p>
               </li>
             ))}
           </ol>
