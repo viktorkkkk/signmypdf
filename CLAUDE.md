@@ -295,7 +295,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 - **Premium pricing** — $9/mo monthly, $7.50/mo annual ($90/yr). Kept as-is. A/B test deferred 1-2 months until enough conversion volume to read a result.
 - **Trial-with-credit-card / hybrid Free+Trial flow** — explicitly rejected. Straight free-then-subscription only. The reasoning ("we don't want auto-renew traps") is part of the v3 prompt's USP.
-- **New tools (PDF→Word, PDF→JPG, Merge PDFs, Compress PDF)** — queued as the next major build-out, but gated on GSC traffic data showing the Sign/Fill/Protect base is establishing. Don't start before GSC confirms organic traffic to existing tools is ramping.
+- **New tools (PDF↔Word, PDF→JPG)** — queued as the next major build-out, but gated on GSC traffic data showing the Sign/Fill/Protect/Merge/Compress/Split base is establishing. Don't start before GSC confirms organic traffic to existing tools is ramping. Note: Merge / Compress / Split are LIVE in prod (sitemap entries since 2026-05-02) — only conversion tools (PDF↔Word, PDF→JPG) remain in the planned queue.
 - **AdSense** — defer until organic traffic is non-trivial (target: 2-4 weeks after the Apr 25 canonical fix takes hold). Premature ads kill UX before there's traffic worth monetizing.
 - **`[IMAGE: ...]` placeholders in blog content** — the parser-skip path is in `BlogPostContent.tsx` already (placeholders silently disappear today). Actual image generation / substitution not implemented. TODO when there's content-team bandwidth.
 - **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
@@ -339,9 +339,11 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ### Bing Webmaster / IndexNow
 
-- Site added, sitemap (`https://www.signmypdf.io/sitemap.xml`) submitted.
+- **Property is a Bing Domain property** covering both apex AND www in one (Bing detected the canonical/redirect setup and merged them automatically). NO need to add a separate www-property — the previous CLAUDE.md guidance to "Add www.signmypdf.io as a separate Bing property" was wrong and is now obsolete (2026-05-05).
+- Sitemap submitted: `https://www.signmypdf.io/sitemap.xml` (80 URLs discovered as of 2026-05-05).
+- Apex sitemap entry `https://signmypdf.io/sitemap.xml` (76 URLs) **cannot be deleted** through the Bing UI (only "Re-submit" is offered). It is harmless: apex redirects 307 → www, so Bing crawls the same content. Bing will deprioritize it naturally over time. Do not chase a deletion path.
 - `scripts/submit-indexnow.mjs` uses `HOST=www.signmypdf.io` — IndexNow does not require ownership verification, so www is fine.
-- Last status from Bing UI: "Discovered but not crawled" — waiting on first crawl, no action needed.
+- "Discovered but not crawled" on Bing Index tab + "URL can be indexed by Bing / No SEO/GEO issues found" on Live URL tab is a **normal pattern for a young domain with 0 backlinks** — it is NOT a real technical error. The "some issues which are preventing indexation" wording is generic Bing template for "we don't have enough trust signals to spend crawl budget yet". The fix is backlinks, not page-level changes (Live URL tab confirms no SEO/GEO issues).
 
 ### Canonical host policy
 
@@ -404,11 +406,21 @@ Use these as the "before" benchmark when evaluating whether new SEO/marketing wo
 
 - ✅ ~~Add www.signmypdf.io to GSC~~ — done Apr 27 via Domain property `sc-domain:signmypdf.io` (covers apex + www in one).
 - ✅ ~~Flip `BASE_URL` in `index-pages.mjs` to www~~ — done Apr 27.
+- ✅ ~~Add `https://www.signmypdf.io/` as a Bing Webmaster property~~ — turned out to be unnecessary (2026-05-05). The existing Bing property is already a Domain property and covers both apex + www. See `### Bing Webmaster / IndexNow` for details.
 - **Watch GSC "Pages → Indexed"** in the Domain property over Apr 28-May 4 for the recovery curve. If it doesn't move, dig into "Page indexing" reasons in GSC (most likely culprits: alt-page with canonical, soft 404, duplicate without canonical).
-- **Add `https://www.signmypdf.io/` as a Bing Webmaster property** (use "Import from Google Search Console" — fastest). The current Bing property is apex-only, same mismatch we just fixed for GSC.
-- **Bing**: if "Discovered but not crawled" persists past May 1, manually trigger "Request Indexing" for top 5 pages from Webmaster UI.
+- **Bing**: pages ARE getting indexed (e.g. `/sign-nda` indexed 2026-05-03, `/blog/how-to-add-signature-to-pdf` ranks position 2.00 on `how to add signature to pdf for free reddit`). Bottleneck is impressions, not indexation — and impressions are gated on backlinks. See `### Bing baseline (2026-05-05)` below + `## Next Priorities` → backlink campaign for the workplan.
 - **Enable Search Console API** in Cloud project `signmypdf-seo` (https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview?project=702087743733) so URL Inspection API works programmatically. Currently only the legacy `webmasters/v3` endpoint is reachable, which doesn't expose per-URL indexing state.
 - **Conversion**: investigate why US Facebook traffic bounces in 5s. Likely culprits — homepage hero doesn't match social-share expectation, or the "drop a PDF" CTA isn't visible without scroll on mobile. A/B test homepage hero copy.
+
+### Bing baseline (2026-05-05)
+
+First full audit of Bing Webmaster Tools. Numbers below are the "before" benchmark for Bing — measure backlink-campaign progress against these.
+
+- **156 URLs discovered** total across 2 sitemap entries (80 on www-property + 76 on apex-property — same content, see `### Bing Webmaster / IndexNow`).
+- **Indexation IS working**. `/sign-nda` indexed successfully (Discover ✅ 2026-05-02, Crawl ✅ 2026-05-03 03:45, Index ✅, "URL can appear on Bing"). Live URL tab on `/` confirms "URL can be indexed by Bing / No SEO/GEO issues found / 2 Markup types found" (SoftwareApplication + FAQPage JSON-LD).
+- **Search Performance is sparse but real**: 1 impression total, on `https://www.signmypdf.io/blog/how-to-add-signature-to-pdf` for query `how to add signature to pdf for free reddit`, **average position 2.00**, 0 clicks (user clicked Reddit-thread above us, not us). The "reddit" modifier in the query is a strong signal of trust-seeking intent — actionable insight: a Reddit thread mentioning signmypdf.io would directly reinforce this exact ranking.
+- **0 backlinks in Bing index**. `link:signmypdf.io` query in Bing returns "не удалось найти ни одного результата". This is the real bottleneck for impressions growth — Bing won't allocate crawl budget or surface us in non-trivial SERPs without external trust signals.
+- **No technical blockers found**: robots.txt allows Bingbot; sitemap returns 200; all sitemap URLs (`/`, `/sign`, `/fill`, `/protect`, `/merge`, `/compress`, `/split`, `/sign-nda`, all 50+ blog posts) return 200 to Bingbot UA; per-page metadata (canonical / og:url / title / description) all clean per `seo-health-check.mjs`.
 
 ---
 
@@ -566,9 +578,25 @@ When a concept needs an icon and `lucide-react` does not have it, prefer a Dingb
 
 ### 3. Google / Bing Indexing
 See dedicated **SEO Indexing Status** section above for full state. Open follow-ups:
-- Add `www.signmypdf.io` as a separate GSC property + grant service account Owner so the indexing script can submit www directly.
-- Monitor GSC "Pages → Indexed" Apr 27-29 to confirm the canonical fix worked.
-- If Bing stays "Discovered but not crawled" past Apr 28, hit Request Indexing manually.
+- ✅ ~~Add `www.signmypdf.io` as a separate GSC property~~ — done via Domain property `sc-domain:signmypdf.io` (Apr 27).
+- ✅ ~~Add `www.signmypdf.io` as a separate Bing Webmaster property~~ — not needed; existing Bing property is Domain-type and covers both (verified 2026-05-05).
+- Monitor GSC "Pages → Indexed" weekly to confirm the canonical fix is producing the expected indexation curve.
+- Monitor Bing "Search Performance → Pages" weekly. Baseline 2026-05-05: 1 impression on `/blog/how-to-add-signature-to-pdf` at position 2.00. Track impression growth as backlink campaign progresses.
+
+### 3b. Backlink campaign (started 2026-05-05)
+**Diagnosis**: Bing reports 0 backlinks (`link:signmypdf.io` → 0 results) — the real bottleneck for SERP visibility. Goal for May 2026: get 5-10 quality dofollow backlinks to break out of the cold-domain bin.
+
+Status:
+- ✅ LinkedIn company page created, all 6 tool links use `https://www.signmypdf.io/...` (www, canonical). LinkedIn = Microsoft property → strongest possible Bing trust signal.
+- ⚠️ Facebook page "Sign My PDF in seconds" created with 6 tool links pointing to www. **Caveat**: FB external links are nofollow; signal is weak unless paired with 2-3 real content posts (still pending). 0 followers, no posts yet — looks like a dead listing right now.
+- ⏳ AlternativeTo.net — Google signup is currently disabled; need to register via email or alternate provider, then submit signmypdf.io as alternative to DocuSign / Adobe Acrobat / HelloSign / SmallPDF.
+- ⏳ Reddit thread mentioning signmypdf.io in r/freelance / r/smallbusiness / r/personalfinance. **High-priority** because Bing already ranks `/blog/how-to-add-signature-to-pdf` at position 2 for `how to add signature to pdf for free reddit` — a Reddit thread would directly reinforce that exact intent match.
+- ⏳ Quora — answer 2-3 questions on "free PDF signing tool" with natural mention.
+- ⏳ G2 + Capterra free company listings.
+- ⏳ ProductHunt "Coming Soon" page (not the full launch yet — that needs gallery assets per `### 2. Product Hunt launch prep`).
+- ⏳ SaaSHub + BetaList submissions.
+
+When measuring: re-run `link:signmypdf.io` in Bing weekly. Expectation: 1-3 results within 2 weeks of LinkedIn + AlternativeTo going live; 5-10 within 4-6 weeks.
 
 ### 4. Payment Integration (Paddle)
 - PIXELTIDE LLC is the legal entity for Paddle
@@ -581,11 +609,13 @@ See dedicated **SEO Indexing Status** section above for full state. Open follow-
 - Waiting propagation (up to 48h)
 - After verification: set up Gmail to send from `support@signmypdf.io` via Brevo SMTP
 
-### 6. New PDF Tools (planned)
-- Compress PDF
-- Merge PDFs
-- PDF → Word / Word → PDF
-- Add each as separate route + blog article for SEO
+### 6. New PDF Tools
+- ✅ Merge PDFs (`/merge`) — live, in sitemap.
+- ✅ Compress PDF (`/compress`) — live, in sitemap.
+- ✅ Split PDF (`/split`) — live, in sitemap.
+- ⏳ PDF → Word / Word → PDF — planned, gated on GSC traffic data per `## Pending decisions`.
+- ⏳ PDF → JPG / JPG → PDF — planned, same gating.
+- Each new tool ships with: own `app/<tool>/layout.tsx` (canonical + og:url + unique title/description), entry in `app/sitemap.ts`, and at least one blog article using the SEO-landing format.
 
 ### 7. A/B Testing & Conversion
 - Test toast CTA copy
