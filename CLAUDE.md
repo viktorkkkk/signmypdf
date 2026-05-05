@@ -129,6 +129,25 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Draft save (Pro): 💾 Save draft button; free users see PRO badge + paywall on click
 - [x] Draft restore: banner on upload page for Pro users with saved draft
 
+### NDA Magnet (`/sign-nda`) — shipped through 2026-05-05
+- [x] `app/sign-nda/page.tsx` — server component with metadata + JSON-LD (WebPage + FAQPage), 5-step "How it works" workflow, "About NDAs" tool description, FAQ.
+- [x] `app/sign-nda/NdaHeroCard.tsx` — client component owning the hero card + always-visible "Drop your own NDA" dropzone (react-dropzone, PDF only, 50 MB cap) + restore-prompt + Success state. Switches between landing / editor / success surfaces via `editorFile` + `downloaded` state.
+- [x] `app/components/FillSignEditor.tsx` — the editor used by `/sign-nda` (and reused-with-different-flags by `/fill`). Full feature set:
+  - Text / Date / Signature placement.
+  - **Drag-bug suppression** — `justDraggedRef` set on every drag/resize mouseup, checked in `onPageClick` to swallow the synthetic click that fires post-drag and would otherwise spawn a phantom new element when the cursor outpaces the dragged box by a few px.
+  - Multi-line text via `<textarea>` with autoResize (height: auto → scrollHeight). Enter saves, Shift+Enter newline, Esc cancels. Renders with `white-space: pre-wrap`. PDF embed (`renderTextToPng`) splits on `\n` and stacks lines at 1.35× fontSize.
+  - Font-size selector S/M/L (9/11/14 pt) inline at the bottom of the popup. Default 11 pt.
+  - Action cluster on placed elements: **Edit / Duplicate / Delete** (Copy-to-clipboard removed in 2026-05-05 — was confusing UX vs Duplicate). Delete is red-by-default both in the on-element overlay and in the sidebar.
+  - Compact 52-px sidebar cards: type-icon + value + 3 buttons. First-line + 25-char truncate via `previewLine()`.
+  - Signature flow matches `/sign`'s: Draw / Type tabs, 5 colors × 3 widths × SIGN HERE baseline × Undo / Clear, all in the shared `SignatureCanvas`. Auto-place on Save & place (no click-to-place indirection). Apply-to-all checkbox in the modal places the same sig on every page in one go.
+  - Edit (✏️) on a placed signature opens the same modal with the existing dataUrl pre-loaded into the canvas (via the `initialDataUrl` prop on `SignatureCanvas`, drawn centred at 80% canvas size, snapshot pushed into the strokes-undo buffer).
+  - **Persistent saved signature** in `localStorage` key `signmypdf-saved-signature` (rehydrated on mount, written on every successful create / Use-saved). When set, picking the Signature tool opens a "Use your saved signature?" chooser → Use saved auto-places, Create new opens the create modal.
+  - Page ticks in the thumbnail strip are derived from `elements.filter(e => e.type === 'signature')` — pure visual indicator, no user-toggle interaction.
+  - Drafts: `draftKey` prop persists `{elements, timestamp}` to localStorage on every change (throttled 500 ms). `/sign-nda` uses `sign-nda-draft`; offers Restore / Start fresh on next visit.
+- [x] **Auto-place after Sign & Download = Success state** (replaces editor surface). Big green check + "Done! Your signed PDF is ready." + filename pill + 3 share buttons (Email `mailto:` / WhatsApp `wa.me/?text=…` / Telegram `t.me/share/url?url=…&text=…`) with prefilled `SHARE_TEXT_BASE`. Hint clarifies that the file needs to be attached from Downloads. "Sign another document" returns to landing.
+- [x] **5-step "How it works"** between hero card and About NDAs (`/sign-nda` only, not on other tool pages). FileText (blue) → TextCursorInput (green) → Signature (violet) → Download (amber) → Send (cyan). Each step in its own 8% tint plate, with a thin grey arrow between desktop steps. Mobile: vertical stack with icon-left / label-right.
+- [x] Mobile resize handles enlarged 12 → 24 px on touch viewports with `-12 px` corner offsets so each handle is ≥24 × 24 — comfortable touch target.
+
 ### Sticky Sign Button
 - [x] `position:sticky` button at bottom of sign step — always visible on scroll
 - [x] Gray when not ready, blue gradient + pulse animation when ready (`canSign`)
@@ -159,6 +178,28 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Bing Webmaster Tools: site added, sitemap submitted, Request indexing sent for main pages
 - [x] `scripts/index-pages.mjs` — dynamic Google Indexing API (reads slugs from posts.ts, accepts CLI args)
 - [x] `scripts/submit-indexnow.mjs` — Bing IndexNow bulk submit (all 40 slugs)
+
+---
+
+## Recently Shipped (May 5 2026)
+
+Day-long iteration on `/sign-nda` and the shared `FillSignEditor`. Eight code commits, all on prod. Headline outcomes:
+
+- **/sign-nda is now a self-contained signing surface.** Lander shows the NDA template card, an "OR" divider, and an always-on dropzone for uploading your own PDF (50 MB, PDF only). 5-step "How it works" instruction sits between hero and "About NDAs". Sign flow ends in a Success state with three share-out CTAs (Email / WhatsApp / Telegram) and a "Sign another document" reset.
+- **`FillSignEditor` overhauled end-to-end.** Drag of any element no longer spawns a phantom duplicate (via the `justDraggedRef` post-mouseup click-suppression), text supports multi-line via auto-resize textarea, on-element actions are **Edit / Duplicate / Delete** (clipboard-copy removed; Delete now red-by-default), sidebar cards are compact 52 px one-row chips, default font is 11 pt with an inline S/M/L selector.
+- **Signature flow matches `/sign` and persists.** Modal carries the same Draw / Type tabs, colour palette, line widths, undo / clear, plus an Apply-to-all checkbox. Save & place auto-drops the signature at the page bottom-third — no click-to-place step. The dataUrl is mirrored to `localStorage.signmypdf-saved-signature`, so the next visit (same or different document) opens a "Use your saved signature?" chooser. Edit (✏️) on a placed signature now opens the same modal with the existing sig pre-loaded into the canvas — earlier the button silently no-op'd because the modal JSX was gated on `creatingSig` which was never set on the edit path.
+- **PDF signature is finally transparent.** `applyFillSign` no longer multiplies the embedded PNG by `opacity: 0.95` — the PNG already carries its own alpha — and the on-screen `.fse-element-image` plate dropped its `rgba(255,255,255,.85)` background. Only the stroke shows over the underlying PDF, both in the editor and in the rendered output.
+- **Mobile parity.** Resize handles on signatures are 24 × 24 px on touch viewports (was 12 × 12, below the touch-target floor). Modal cards use `max-width: 100%` + 12 px side margins. Success state share buttons stack one-per-row on `<= 640 px`. The 5-step "How it works" collapses to a single-column with icon-left / title-right rows.
+
+Files involved across the eight commits:
+- `app/components/FillSignEditor.tsx` — heavy refactor (drag suppress, multi-line popup, compact sidebar, sig flow, font selector).
+- `app/components/SignatureCanvas.tsx` — added optional `initialDataUrl` prop with run-once image preload + undo-buffer snapshot.
+- `app/sign-nda/page.tsx` — added 5-step "How it works", swapped pencil-twin icons for `TextCursorInput` + `Signature`.
+- `app/sign-nda/NdaHeroCard.tsx` — added always-visible upload dropzone + Success state with share buttons.
+- `app/utils/fillSignPdf.ts` — removed `opacity: 0.95` on signature `drawImage`.
+- `app/globals.css` — extensive rule additions and a few removals (`.fse-pending-bar*`, `.nda-done-toast*`, `.fse-list-page*`).
+
+Known carry-over: `app/components/SignatureCanvas.tsx` has 5 pre-existing ESLint problems (3 errors, 2 warnings — `react-hooks/immutability` forward-references on touch handlers + `react-hooks/exhaustive-deps` on the canvas-init effect). The errors predate this work; build still passes (Next config's lint stage doesn't fail the build on these specific rules). Not fixed in this batch.
 
 ---
 
@@ -288,6 +329,12 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **Trigger cycle_day anchor.** `EPOCH_ANCHOR=1776988800` in the trigger prompt corresponds to **2026-04-24 00:00 UTC**. Formula: `cycle_day = ((DATE_EPOCH − EPOCH_ANCHOR) / 86400) mod 3`. Pair mapping: `0 → Sign+Fill`, `1 → Sign+Protect`, `2 → Fill+Protect`. **To verify the anchor is correct, run:** `date -u -d '2026-04-24 00:00 UTC' +%s` — it should output `1776988800`. The anchor was wrong (`1745452800` = 2025-04-24, off by 365 days = +2 cycle_day shift) up to 2026-04-29; bug found after the Apr 29 trigger run published Sign+Protect instead of Fill+Protect. Never trust just the comment — re-verify the integer with the date command if you suspect a recurrence of the same class of bug.
 - **Deploy + indexing pipeline (`.github/workflows/deploy-on-blog-push.yml`)**. Stage B of the daily blog publishing pipeline. Fires on `push` to `main` filtered to `app/blog/posts.ts` changes (plus `workflow_dispatch` for manual / test runs). Owns: Vercel `--prod` deploy → IndexNow full submit → Google Indexing API submit (newly-added slugs only by default; `submit_all_to_google` workflow_dispatch input allows full re-submit) → write `logs/deploy/YYYY-MM-DD.json` → commit log. Created 2026-05-01 to fix the trigger runtime-timeout failure mode (Apr 29/30 + May 1 had committed-but-never-deployed articles). **Do NOT add deploy steps back to the trigger prompt** — the whole point of v3.2 is that deploy is decoupled. **Do NOT remove `workflow_dispatch`** — it's the only path for recovery / manual re-runs without faking a `posts.ts` change.
 - **Repo secrets the deploy workflow depends on**: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `GSC_CREDENTIALS` (base64-encoded service-account JSON, same one as `seo-health.yml` uses). All four were verified present 2026-05-01. If any get rotated or lost, the deploy step or Google submit step in the workflow will fail loudly — fix the secret before re-running, do not paper over by hardcoding in the workflow file.
+- **`FillSignEditor` `justDraggedRef` pattern.** Every drag/resize handler (`onDragMouseDown`, `onDragTouchStart`, `onResizeMouseDown`, the click-or-drag paths in `onTextBodyMouseDown` / `onTextBodyTouchStart`) calls `markJustDragged()` on mouseup if `hasDragged` is true. `onPageClick` checks `justDraggedRef.current` at the top and returns early. Without this guard, the synthetic click that fires immediately after `mouseup` propagates to `.fse-page` and (in text/date tool mode) spawns a phantom new element on top of the just-dragged one — exactly the bug fixed in commit `6e5163c`. The flag resets via `setTimeout(0)` so legitimate clicks aren't suppressed. **Do not remove or replace this pattern** without an end-to-end verification that drag + release into empty area still leaves the element count unchanged.
+- **`FillSignEditor` 5-px drag threshold.** All four drag/resize handlers gate `dragRef.current` setup on `Math.hypot(dx, dy) > DRAG_THRESHOLD_PX`. Sub-pixel jitter on press-then-release no longer flags as a drag, sub-pixel jitter on a click-without-move still opens the editor for text/date. Don't lower the threshold below 5 px — touch devices in particular send tiny phantom moves between touchstart and touchend that would re-introduce the original false-drag bug.
+- **`FillSignEditor` localStorage keys.** `signmypdf-saved-signature` (the persistent saved-sig dataUrl + w + h) and `sign-nda-draft` (auto-saved `{elements, timestamp}` per the `draftKey` prop). Hard-coded as `SIG_LS_KEY` constant inside `FillSignEditor.tsx` and `DRAFT_KEY` inside `NdaHeroCard.tsx` respectively. **Do not rename them silently** — existing users have data under these keys and a rename loses it.
+- **`/sign-nda` signature flow modal-state machine.** The create-signature modal's JSX is gated on `sigModal === 'create' && creatingSig` (both required). For Edit-existing flow (the ✏️ button), `openEditFor` MUST also call `setCreatingSig(initCreatingSig({ drawData: el.dataUrl }))` — without it, the modal silently fails to render. This was the bug fixed in commit `88b16ca`. Same applies to any future "Edit signature" entry points.
+- **`/sign-nda` Success state share targets.** Email uses `mailto:?subject=…&body=…`, WhatsApp uses `https://wa.me/?text=…`, Telegram uses `https://t.me/share/url?url=…&text=…`. **Do not add a "Copy link to download" option** — it requires server-side hosting of the signed PDF, which we don't have on this surface. The user spec explicitly says "НЕ ДЕЛАТЬ" for this option.
+- **`FillSignEditor` action-cluster ordering.** Visual order from element-edge outward on placed text/date is `✏️ Edit (-26 px) → ⎘ Duplicate (-52 px) → ✕ Delete (-78 px)`. Delete is **red-by-default** (`background: var(--color-danger)` for the overlay button, `color: var(--color-danger)` for the sidebar list-remove). Don't shuffle this order without re-checking the "first action is Edit, last action is Delete" affordance — putting destructive Delete in the middle reads ambiguous.
 
 ---
 
@@ -299,6 +346,8 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **AdSense** — defer until organic traffic is non-trivial (target: 2-4 weeks after the Apr 25 canonical fix takes hold). Premature ads kill UX before there's traffic worth monetizing.
 - **`[IMAGE: ...]` placeholders in blog content** — the parser-skip path is in `BlogPostContent.tsx` already (placeholders silently disappear today). Actual image generation / substitution not implemented. TODO when there's content-team bandwidth.
 - **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
+- **`SignatureCanvas.tsx` ESLint debt** — 3 errors (`react-hooks/immutability` forward-references on `startDrawingTouch` / `drawTouch` / `stopDrawing` in the canvas-init `useEffect`) + 2 warnings (`react-hooks/exhaustive-deps` on the canvas-init effect, missing dep on `color` / `width` in `initCanvas`'s `useCallback`). Pre-dates the May 5 sign-nda work. Build still passes — Next config doesn't fail on these specific rules. Fix path: hoist the touch-handler functions above the useEffect (so they're declared before being captured), and add `color` / `width` to `initCanvas`'s deps (or split the canvas-init logic into a stable function). **Do this in a dedicated commit, not bundled with feature work** — the file is in the hot path for both `/sign` and `/sign-nda` and any regression breaks both surfaces simultaneously.
+- **Phase 2/3 — extend signature persistence to `/sign`.** `/sign-nda`'s `signmypdf-saved-signature` localStorage key is currently /sign-nda-only. A future iteration can lift it into `/sign`'s sig flow so the saved sig is shared across both surfaces (and possibly across `/fill` + `/protect` if those ever grow signature support). Out of scope for May 5 batch.
 
 ---
 
@@ -869,30 +918,65 @@ Signs that the strategy is working: the 3 new-format articles outperform compara
 
 ```
 app/
-  page.tsx              # Main app (upload → sign → done), pricing modal, toast
-  globals.css           # All CSS, including mobile breakpoints
-  layout.tsx            # Root layout, metadata, GA script
+  page.tsx                           # Hub landing (upload → sign → done), pricing modal, toast
+  globals.css                        # All CSS, including mobile breakpoints + every fse-*, nda-*, hub-* rule
+  layout.tsx                         # Root layout, metadata, GA script
   utils/
-    signPdf.ts          # pdf-lib signing logic, watermark, text→PNG renderer
+    signPdf.ts                       # pdf-lib signing logic, watermark, text→PNG renderer (used by /sign)
+    fillPdf.ts                       # /fill — text-only injection
+    fillSignPdf.ts                   # /sign-nda + /fill — text/date/signature injection (PNG embed, opacity-1 alpha)
+    protectPdf.ts                    # /protect — encrypt + permissions
   components/
-    PDFViewer.tsx       # Multi-page PDF preview + drag signature placement
-    SignatureCanvas.tsx # Draw signature canvas
-    SavedSignatures.tsx # Save/reuse signatures (Pro)
-    FileHistory.tsx     # Download history (Pro)
-    Logo.tsx            # Logo component
+    PDFViewer.tsx                    # /sign — multi-page PDF preview + drag signature placement
+    PDFTextEditor.tsx                # /fill — text-fill editor (older, separate from FillSignEditor)
+    FillSignEditor.tsx               # /sign-nda + /fill — unified text/date/signature editor
+                                     #   • text-body click-or-drag with 5-px threshold
+                                     #   • justDraggedRef post-mouseup click-suppression
+                                     #   • multi-line textarea with autoResize, S/M/L (9/11/14 pt) selector
+                                     #   • Edit / Duplicate / Delete action cluster (Delete red-by-default)
+                                     #   • compact 52-px sidebar cards w/ first-line + 25-char preview
+                                     #   • signature flow: Draw / Type tabs, auto-place, Apply-to-all,
+                                     #     LS persist on `signmypdf-saved-signature`, Edit-prefill via
+                                     #     SignatureCanvas's initialDataUrl prop
+                                     #   • selectedPages derived from elements (signature ticks)
+    SignatureCanvas.tsx              # Shared by /sign and /sign-nda. New optional `initialDataUrl`
+                                     #   prop pre-loads a saved sig into the canvas (used only by
+                                     #   FillSignEditor's Edit-existing flow). Pre-existing forward-
+                                     #   reference ESLint debt — see ## Pending decisions.
+    SavedSignatures.tsx              # /sign-only — saved-sigs panel (Pro feature)
+    FileHistory.tsx                  # /sign-only — download history (Pro)
+    NavHeader.tsx, SiteFooter.tsx    # Shared chrome
+    Logo.tsx                         # Logo
+    BlogPdfUploader.tsx              # Inline upload widget for blog CTAs (isFill / isProtect routes)
+  sign/page.tsx                      # /sign tool (free + Pro flow)
+  fill/page.tsx                      # /fill tool — uses FillSignEditor (no `unlimited`)
+  protect/page.tsx                   # /protect tool
+  merge/page.tsx                     # /merge tool (live since 2026-05-02)
+  compress/page.tsx                  # /compress tool (live since 2026-05-02)
+  split/page.tsx                     # /split tool (live since 2026-05-02)
+  sign-nda/
+    page.tsx                         # /sign-nda — server component, metadata, JSON-LD,
+                                     #   5-step "How it works" flow, About NDAs, FAQ
+    NdaHeroCard.tsx                  # Hero card + "OR" + always-visible upload dropzone +
+                                     #   restore-prompt + Success state with share buttons
+                                     #   (Email / WhatsApp / Telegram). Owns DRAFT_KEY,
+                                     #   share-target URL templates.
   blog/
-    page.tsx            # Blog index (uses getPublishedPosts())
-    posts.ts            # All 40 articles content + getPublishedPosts() filter
+    page.tsx                         # Blog index (uses getPublishedPosts())
+    posts.ts                         # All 50+ articles content + getPublishedPosts() filter
     [slug]/
-      page.tsx          # Blog post route
-      BlogPostContent.tsx  # Renders article: tables, CTA, callouts, step cards
-                           # FILL_SLUGS set + isFillArticle() for CTA routing
-  components/
-    BlogPdfUploader.tsx # isFill prop — redirects to /fill when true
+      page.tsx                       # Blog post route
+      BlogPostContent.tsx            # Renders article: tables, CTA, callouts, step cards
+                                     # FILL_SLUGS / PROTECT_SLUGS sets + getArticleTool() routing
 scripts/
-  submit-indexnow.mjs  # Bing IndexNow bulk submit (all slugs)
-  index-pages.mjs      # Google Indexing API (dynamic from posts.ts, CLI args for new-only)
-  index-pages.mjs usage:
-    node scripts/index-pages.mjs              # submit all
-    node scripts/index-pages.mjs slug1 slug2  # submit specific slugs only
+  submit-indexnow.mjs                # Bing IndexNow bulk submit (all slugs)
+  index-pages.mjs                    # Google Indexing API (dynamic from posts.ts, CLI args for new-only)
+                                     # Usage:
+                                     #   node scripts/index-pages.mjs              # submit all
+                                     #   node scripts/index-pages.mjs slug1 slug2  # submit specific slugs
+  seo-health-check.mjs               # Daily 03:00 UTC sentinel — see ## SEO Infrastructure
+  setup-github-secrets.mjs           # One-shot helper to seed repo secrets from local creds
+.github/workflows/
+  seo-health.yml                     # Wraps seo-health-check.mjs on cron + workflow_dispatch
+  deploy-on-blog-push.yml            # Stage B of the daily blog pipeline (Vercel deploy + IndexNow + Google index)
 ```
