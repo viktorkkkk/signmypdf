@@ -1,0 +1,148 @@
+{
+  "date": "2026-05-05",
+  "timestamp": "2026-05-05T09:32:21.858Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-05-05T00:08:08.369Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "78",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 205,
+    "clicks28d": 0,
+    "avgPosition28d": 62.61951219512195,
+    "topPages": [
+      {
+        "url": "https://signmypdf.io/",
+        "impressions": 54,
+        "clicks": 0,
+        "position": 61.2
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 3.8
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 11,
+        "clicks": 0,
+        "position": 24.4
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-w9-form-online-free",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 8.5
+      },
+      {
+        "url": "https://signmypdf.io/blog/freelancers-sign-contracts-free",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 10.8
+      },
+      {
+        "url": "https://signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 12,
+        "clicks": 0,
+        "position": 9.3
+      },
+      {
+        "url": "https://signmypdf.io/blog/sign-nda-online-without-printing",
+        "impressions": 19,
+        "clicks": 0,
+        "position": 77.6
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 7.2
+      },
+      {
+        "url": "https://signmypdf.io/fill",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 18.3
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 3
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 81.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 5.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 37.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+        "impressions": 41,
+        "clicks": 0,
+        "position": 76.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 41.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 19.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-wont-let-me-type-fix",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+        "impressions": 54,
+        "clicks": 0,
+        "position": 69.4
+      },
+      {
+        "url": "https://www.signmypdf.io/privacy",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 5
+      }
+    ],
+    "pagesWithImpressions28d": 19
+  }
+}
