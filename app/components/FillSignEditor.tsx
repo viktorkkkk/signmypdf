@@ -628,7 +628,15 @@ export default function FillSignEditor({
       return;
     }
     if (el.type === 'signature') {
+      // Open the same create-signature modal in "edit" mode. Both the
+      // editingSig flag AND a fresh creatingSig must be set — the
+      // modal JSX is gated on `sigModal === 'create' && creatingSig`,
+      // so without the second call the modal would silently fail to
+      // render (the bug that made the ✏️ button do nothing). drawData
+      // is pre-seeded to the existing dataUrl so Save without further
+      // edits keeps the signature intact (canSave reads drawData).
       setEditingSig({ id: el.id });
+      setCreatingSig(initCreatingSig({ drawData: el.dataUrl }));
       setSigModal('create');
     }
   };
@@ -1421,6 +1429,13 @@ export default function FillSignEditor({
         const canSave = creatingSig.mode === 'draw'
           ? !!creatingSig.drawData
           : !!creatingSig.typedName.trim() && !!typedSigDataUrl;
+        // Pre-load the existing signature into the canvas when editing
+        // a placed sig — lets the user extend or redraw it instead of
+        // starting from a blank surface.
+        const editingSigEl = editingSig ? elements.find(e => e.id === editingSig.id) : null;
+        const editingSigDataUrl = editingSigEl && editingSigEl.type === 'signature'
+          ? editingSigEl.dataUrl
+          : undefined;
         return (
           <div className="fse-modal" role="dialog" aria-modal="true" onClick={onSigCancel}>
             <div className="fse-modal-card fse-modal-card-wide" onClick={e => e.stopPropagation()}>
@@ -1453,7 +1468,7 @@ export default function FillSignEditor({
               </div>
 
               {creatingSig.mode === 'draw' && (
-                <SignatureCanvas onSave={onDrawData} />
+                <SignatureCanvas onSave={onDrawData} initialDataUrl={editingSigDataUrl} />
               )}
 
               {creatingSig.mode === 'type' && (

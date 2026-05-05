@@ -5,6 +5,11 @@ import { PenLine } from 'lucide-react';
 
 interface Props {
   onSave: (dataUrl: string, width: number, height: number) => void;
+  /** Optional starting image — when provided, the canvas pre-loads
+   *  this dataUrl on first mount so the user can continue editing
+   *  an existing signature instead of redrawing from scratch.
+   *  Used by FillSignEditor's "Edit" pencil on placed signatures. */
+  initialDataUrl?: string;
 }
 
 const COLORS = [
@@ -21,7 +26,7 @@ const WIDTHS = [
   { label: 'Thick',  value: 5   },
 ];
 
-export default function SignatureCanvas({ onSave }: Props) {
+export default function SignatureCanvas({ onSave, initialDataUrl }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -96,6 +101,51 @@ export default function SignatureCanvas({ onSave }: Props) {
       canvas.removeEventListener('touchend',   onTouchEnd);
     };
   }, [initCanvas]);
+
+  // Pre-load initialDataUrl into the canvas (run-once after mount).
+  // Used by /sign-nda's edit-existing-signature flow so the user sees
+  // their current signature in the canvas and can extend or redraw it.
+  // Canvas is centred at 80% of available area to leave a comfortable
+  // margin around the strokes. The drawn image is captured into the
+  // strokes-undo buffer so Clear / Undo behave consistently. We do NOT
+  // call onSave here — the parent already has the original dataUrl
+  // pre-seeded into its state for this edit session, and the next
+  // stopDrawing will fire onSave with the merged result if the user
+  // adds strokes on top.
+  const didLoadInitialRef = useRef(false);
+  useEffect(() => {
+    if (!initialDataUrl) return;
+    if (didLoadInitialRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    didLoadInitialRef.current = true;
+    const img = new window.Image();
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.width / dpr;
+      const cssH = canvas.height / dpr;
+      const imgAspect = img.width / img.height;
+      const canvasAspect = cssW / cssH;
+      let drawW: number, drawH: number;
+      if (imgAspect > canvasAspect) {
+        drawW = cssW * 0.8;
+        drawH = drawW / imgAspect;
+      } else {
+        drawH = cssH * 0.8;
+        drawW = drawH * imgAspect;
+      }
+      const x = (cssW - drawW) / 2;
+      const y = (cssH - drawH) / 2;
+      ctx.drawImage(img, x, y, drawW, drawH);
+      setIsEmpty(false);
+      isEmptyRef.current = false;
+      // Snapshot for the undo buffer.
+      strokes.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    };
+    img.src = initialDataUrl;
+  }, [initialDataUrl]);
 
   useEffect(() => {
     colorRef.current = color;
