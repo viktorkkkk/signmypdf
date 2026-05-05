@@ -6,6 +6,7 @@ import {
   Check,
   CheckSquare,
   Copy,
+  CopyPlus,
   Download,
   FileSignature,
   FileText,
@@ -137,6 +138,18 @@ export default function FillSignEditor({
 
   const [editing, setEditing] = useState<EditingState | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+
+  // True for one event-loop tick after a drag/resize ends. Used to
+  // suppress the synthetic `click` event that fires immediately after
+  // mouseup, so the page-level onPageClick does NOT mistake a drag-
+  // release-into-empty-area for "user clicked empty page → place new
+  // element". Reset via setTimeout(0) so the click handler sees true
+  // but a future genuine click sees false.
+  const justDraggedRef = useRef(false);
+  const markJustDragged = useCallback(() => {
+    justDraggedRef.current = true;
+    setTimeout(() => { justDraggedRef.current = false; }, 0);
+  }, []);
 
   const [savedSig, setSavedSig] = useState<SavedSig | null>(null);
   const [pendingSig, setPendingSig] = useState<PendingSig | null>(null);
@@ -289,6 +302,35 @@ export default function FillSignEditor({
     setEditing(curr => (curr?.id === id ? null : curr));
   }, []);
 
+  /** Duplicate an element 20px down-and-right from its original. The
+   *  20px offset is converted to percent against the source element's
+   *  page geometry so the visual offset stays constant regardless of
+   *  zoom / page size. The new element is clamped to the page bounds
+   *  (for signatures, the right/bottom edge is also clamped against
+   *  the element's own width/height). Auto-save fires reactively from
+   *  the elements-state change in the existing draftKey effect. */
+  const duplicateElement = useCallback((id: string) => {
+    setElements(prev => {
+      const orig = prev.find(e => e.id === id);
+      if (!orig) return prev;
+      const info = pageInfos.find(p => p.index === orig.page);
+      if (!info) return prev;
+      const offsetXPct = (20 / info.width)  * 100;
+      const offsetYPct = (20 / info.height) * 100;
+      let newX = orig.x + offsetXPct;
+      let newY = orig.y + offsetYPct;
+      if (orig.type === 'signature') {
+        newX = Math.max(0, Math.min(100 - orig.w, newX));
+        newY = Math.max(0, Math.min(100 - orig.h, newY));
+      } else {
+        newX = Math.max(0, Math.min(100, newX));
+        newY = Math.max(0, Math.min(100, newY));
+      }
+      const dup: FsElement = { ...orig, id: newId(), x: newX, y: newY } as FsElement;
+      return [...prev, dup];
+    });
+  }, [pageInfos]);
+
   const showToast = useCallback((msg: string) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToast(msg);
@@ -336,6 +378,11 @@ export default function FillSignEditor({
 
   // ── Click on the PDF canvas → place an element + open inline editor ──
   const onPageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Suppress the synthetic click that fires right after a drag/
+    // resize mouseup. Without this, releasing a drag into a sliver
+    // of empty page area (cursor outpacing the element by a few px)
+    // creates a stray new element on top of the just-moved one.
+    if (justDraggedRef.current) return;
     if (e.target instanceof HTMLElement && (
       e.target.closest('.fse-text-wrap') ||
       e.target.closest('.fse-element-image') ||
@@ -430,7 +477,18 @@ export default function FillSignEditor({
     showToast(ok ? 'Copied!' : 'Could not copy');
   };
 
-  // ── Drag (handle only) + signature resize ────────────────────────────
+  // ── Drag (handle / signature body) + signature resize ────────────────
+  // All of these handlers share the same shape:
+  //   1. Track movement from mousedown.
+  //   2. Only flip into "dragging" mode once the cursor has moved
+  //      DRAG_THRESHOLD_PX. A pure click below threshold → no drag,
+  //      no spurious move-to-new-position from sub-pixel jitter.
+  //   3. On mouseup, if we were dragging, call markJustDragged() so
+  //      the synthetic click that follows is swallowed by onPageClick.
+  // Pure clicks on the drag-handle / signature body do nothing
+  // intentional — those surfaces are for dragging, not editing. Pure
+  // clicks on the text body (handled in onTextBodyMouseDown) still
+  // open the inline editor.
   type DragRefState = {
     id: string;
     startX: number; startY: number;
@@ -439,39 +497,43 @@ export default function FillSignEditor({
   };
   const dragRef = useRef<DragRefState | null>(null);
 
-  const beginDrag = (clientX: number, clientY: number, el: FsElement, target: HTMLElement) => {
-    const pageEl = target.closest('.fse-page') as HTMLElement | null;
-    if (!pageEl) return;
-    dragRef.current = {
-      id: el.id,
-      startX: clientX, startY: clientY,
-      startEl: { ...el },
-      pageRect: pageEl.getBoundingClientRect(),
-    };
-    setDraggingId(el.id);
-    document.body.style.userSelect = 'none';
-  };
-
   const onDragMouseDown = (e: React.MouseEvent, el: FsElement) => {
     e.stopPropagation();
     e.preventDefault();
-    beginDrag(e.clientX, e.clientY, el, e.currentTarget as HTMLElement);
+    const startX = e.clientX, startY = e.clientY;
+    const pageEl = (e.currentTarget as HTMLElement).closest('.fse-page') as HTMLElement | null;
+    if (!pageEl) return;
+    const pageRect = pageEl.getBoundingClientRect();
+    let hasDragged = false;
 
     const onMove = (ev: MouseEvent) => {
-      const ds = dragRef.current;
-      if (!ds) return;
-      const dxPct = ((ev.clientX - ds.startX) / ds.pageRect.width) * 100;
-      const dyPct = ((ev.clientY - ds.startY) / ds.pageRect.height) * 100;
-      const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
-      const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
-      updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      if (!hasDragged) {
+        if (Math.hypot(ev.clientX - startX, ev.clientY - startY) > DRAG_THRESHOLD_PX) {
+          hasDragged = true;
+          dragRef.current = { id: el.id, startX, startY, startEl: { ...el }, pageRect };
+          setDraggingId(el.id);
+          document.body.style.userSelect = 'none';
+        }
+      }
+      if (hasDragged) {
+        const ds = dragRef.current;
+        if (!ds) return;
+        const dxPct = ((ev.clientX - ds.startX) / ds.pageRect.width)  * 100;
+        const dyPct = ((ev.clientY - ds.startY) / ds.pageRect.height) * 100;
+        const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+        const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+        updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      }
     };
     const onUp = () => {
-      dragRef.current = null;
-      setDraggingId(null);
-      document.body.style.userSelect = '';
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
+      if (hasDragged) {
+        dragRef.current = null;
+        setDraggingId(null);
+        document.body.style.userSelect = '';
+        markJustDragged();
+      }
     };
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
@@ -481,24 +543,40 @@ export default function FillSignEditor({
     if (e.touches.length !== 1) return;
     const t = e.touches[0];
     e.stopPropagation();
-    beginDrag(t.clientX, t.clientY, el, e.currentTarget as HTMLElement);
+    const startX = t.clientX, startY = t.clientY;
+    const pageEl = (e.currentTarget as HTMLElement).closest('.fse-page') as HTMLElement | null;
+    if (!pageEl) return;
+    const pageRect = pageEl.getBoundingClientRect();
+    let hasDragged = false;
 
     const onMove = (ev: TouchEvent) => {
-      ev.preventDefault();
-      const ds = dragRef.current;
-      if (!ds) return;
       const tt = ev.touches[0];
-      const dxPct = ((tt.clientX - ds.startX) / ds.pageRect.width) * 100;
-      const dyPct = ((tt.clientY - ds.startY) / ds.pageRect.height) * 100;
-      const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
-      const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
-      updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      if (!hasDragged) {
+        if (Math.hypot(tt.clientX - startX, tt.clientY - startY) > DRAG_THRESHOLD_PX) {
+          hasDragged = true;
+          dragRef.current = { id: el.id, startX, startY, startEl: { ...el }, pageRect };
+          setDraggingId(el.id);
+        }
+      }
+      if (hasDragged) {
+        ev.preventDefault();
+        const ds = dragRef.current;
+        if (!ds) return;
+        const dxPct = ((tt.clientX - ds.startX) / ds.pageRect.width)  * 100;
+        const dyPct = ((tt.clientY - ds.startY) / ds.pageRect.height) * 100;
+        const newX = Math.max(0, Math.min(100, ds.startEl.x + dxPct));
+        const newY = Math.max(0, Math.min(100, ds.startEl.y + dyPct));
+        updateElement(ds.id, { x: newX, y: newY } as Partial<FsElement>);
+      }
     };
     const onUp = () => {
-      dragRef.current = null;
-      setDraggingId(null);
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onUp);
+      if (hasDragged) {
+        dragRef.current = null;
+        setDraggingId(null);
+        markJustDragged();
+      }
     };
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onUp);
@@ -521,9 +599,17 @@ export default function FillSignEditor({
     const startX = e.clientX, startY = e.clientY;
     const startW = el.w, startH = el.h;
     const startElX = el.x, startElY = el.y;
-    setDraggingId(el.id);
+    let hasDragged = false;
 
     const onMove = (ev: MouseEvent) => {
+      if (!hasDragged) {
+        if (Math.hypot(ev.clientX - startX, ev.clientY - startY) > DRAG_THRESHOLD_PX) {
+          hasDragged = true;
+          setDraggingId(el.id);
+        } else {
+          return;
+        }
+      }
       const dxPct = ((ev.clientX - startX) / pageRect.width)  * 100;
       const dyPct = ((ev.clientY - startY) / pageRect.height) * 100;
       let newW = startW, newH = startH;
@@ -551,9 +637,12 @@ export default function FillSignEditor({
       updateElement(el.id, { w: newW, h: newH, x: newXel, y: newYel } as Partial<FsElement>);
     };
     const onUp = () => {
-      setDraggingId(null);
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
+      if (hasDragged) {
+        setDraggingId(null);
+        markJustDragged();
+      }
     };
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
@@ -646,6 +735,7 @@ export default function FillSignEditor({
       if (dragging) {
         dragRef.current = null;
         setDraggingId(null);
+        markJustDragged();
       } else {
         openEditFor(el);
       }
@@ -702,6 +792,7 @@ export default function FillSignEditor({
       if (dragging) {
         dragRef.current = null;
         setDraggingId(null);
+        markJustDragged();
       } else {
         openEditFor(el);
       }
@@ -743,12 +834,21 @@ export default function FillSignEditor({
         </span>
         <span
           className="fse-action fse-action-copy"
-          aria-label="Copy"
-          title="Copy"
+          aria-label="Copy text to clipboard"
+          title="Copy text to clipboard"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
         >
           <Copy size={11} strokeWidth={2.2} />
+        </span>
+        <span
+          className="fse-action fse-action-dup"
+          aria-label="Duplicate element"
+          title="Duplicate element"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
+        >
+          <CopyPlus size={11} strokeWidth={2.2} />
         </span>
         <span
           className="fse-action fse-action-del"
@@ -779,10 +879,21 @@ export default function FillSignEditor({
         <img src={el.dataUrl} alt="signature" className="fse-element-img" draggable={false} />
         <button
           type="button"
+          className="fse-element-dup"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
+          aria-label="Duplicate signature"
+          title="Duplicate signature"
+        >
+          <CopyPlus size={11} />
+        </button>
+        <button
+          type="button"
           className="fse-element-x"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
           aria-label="Delete"
+          title="Delete"
         >
           <X size={11} />
         </button>
@@ -1053,18 +1164,27 @@ export default function FillSignEditor({
                                   type="button"
                                   className="fse-list-copy"
                                   onClick={(e) => { e.stopPropagation(); onCopyValue(el); }}
-                                  aria-label="Copy value"
-                                  title="Copy value"
+                                  aria-label="Copy text to clipboard"
+                                  title="Copy text to clipboard"
                                 >
                                   <Copy size={12} />
                                 </button>
                               )}
                               <button
                                 type="button"
+                                className="fse-list-dup"
+                                onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
+                                aria-label="Duplicate element"
+                                title="Duplicate element"
+                              >
+                                <CopyPlus size={12} />
+                              </button>
+                              <button
+                                type="button"
                                 className="fse-list-remove"
                                 onClick={(e) => { e.stopPropagation(); removeElement(el.id); }}
-                                aria-label="Remove"
-                                title="Remove"
+                                aria-label="Delete"
+                                title="Delete"
                               >
                                 <X size={14} />
                               </button>

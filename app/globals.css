@@ -1152,13 +1152,21 @@ body.nda-editor-mode .nda-hero-inner {
 }
 .fse-text-wrap:hover .fse-action { opacity: 1; }
 .fse-text-wrap-dragging .fse-action { opacity: 0; }
-.fse-action-copy { right: -52px; }
+/* Action cluster, in visual order from element-edge outward:
+   📋 copy at -26  →  ⎘ duplicate at -52  →  ✕ delete at -78. */
+.fse-action-copy { right: -26px; }
 .fse-action-copy:hover {
   background: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
 }
-.fse-action-del { right: -26px; }
+.fse-action-dup { right: -52px; }
+.fse-action-dup:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.fse-action-del { right: -78px; }
 .fse-action-del:hover {
   background: var(--color-danger);
   color: white;
@@ -1275,15 +1283,16 @@ body.nda-editor-mode .nda-hero-inner {
   pointer-events: none;
 }
 
-/* Delete X for signatures — top-right corner. */
-.fse-element-x {
+/* Top-right corner action cluster for signatures: ⎘ duplicate then ✕
+   delete. Both buttons share the same circular chrome and only differ
+   in colour. Duplicate sits to the left of delete with a small gap. */
+.fse-element-x,
+.fse-element-dup {
   position: absolute;
   top: -9px;
-  right: -9px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--color-danger);
   color: #fff;
   border: 2px solid #fff;
   cursor: pointer;
@@ -1292,18 +1301,26 @@ body.nda-editor-mode .nda-hero-inner {
   justify-content: center;
   opacity: 0;
   transform: scale(0.85);
-  transition: opacity 0.12s, transform 0.12s;
+  transition: opacity 0.12s, transform 0.12s, background 0.12s;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
   z-index: 3;
   padding: 0;
 }
+.fse-element-x   { right: -9px; background: var(--color-danger); }
+.fse-element-dup { right: 17px; background: var(--color-primary); }
 .fse-element-image:hover .fse-element-x,
-.fse-element-image.fse-element-dragging .fse-element-x {
+.fse-element-image:hover .fse-element-dup,
+.fse-element-image.fse-element-dragging .fse-element-x,
+.fse-element-image.fse-element-dragging .fse-element-dup {
   opacity: 1;
   transform: scale(1);
 }
 .fse-element-x:hover {
   background: #b91c1c;
+  transform: scale(1.05);
+}
+.fse-element-dup:hover {
+  background: #1d4ed8;
   transform: scale(1.05);
 }
 
@@ -1461,6 +1478,7 @@ body.nda-editor-mode .nda-hero-inner {
   white-space: nowrap;
 }
 .fse-list-copy,
+.fse-list-dup,
 .fse-list-remove {
   background: none;
   border: none;
@@ -1471,7 +1489,8 @@ body.nda-editor-mode .nda-hero-inner {
   border-radius: 4px;
   transition: background 0.12s, color 0.12s;
 }
-.fse-list-copy:hover {
+.fse-list-copy:hover,
+.fse-list-dup:hover {
   background: #dbeafe;
   color: var(--color-primary);
 }
@@ -1675,7 +1694,8 @@ body.nda-editor-mode .nda-hero-inner {
   .fse-element-image .fse-resize {
     opacity: 1;
   }
-  .fse-element-x {
+  .fse-element-x,
+  .fse-element-dup {
     opacity: 1;
     transform: scale(1);
   }
