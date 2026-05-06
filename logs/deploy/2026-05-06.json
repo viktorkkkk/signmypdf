@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-06",
+  "timestamp": "2026-05-06T02:13:04Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "ab54588e5de7e6b075ae6e941e8c0bfa80bc2ed2",
+  "newSlugs": "sign-multiple-pdf-pages accountant-wont-accept-unprotected-tax-documents",
+  "deployUrl": "Aliased: https://www.signmypdf.io [49s]",
+  "deployOutcome": "success",
+  "indexnowOutcome": "success",
+  "googleOutcome": "success",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25412772777"
+}
