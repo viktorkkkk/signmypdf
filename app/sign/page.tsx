@@ -190,6 +190,13 @@ export default function Home() {
       if (file) {
         setPdfFile(file);
         setStep('sign');
+        // Clean `?from=hub` (set by the homepage mobile dropzone) so a
+        // refresh on /sign doesn't keep re-triggering anything. Other
+        // `?from` values (e.g. nda-template) are intentionally left to
+        // the template-fallback branch below.
+        if (window.location.search.includes('from=hub')) {
+          window.history.replaceState({}, '', '/sign');
+        }
         return;
       }
       const fromParam = new URLSearchParams(window.location.search).get('from');
@@ -205,6 +212,10 @@ export default function Home() {
             window.history.replaceState({}, '', '/sign');
           })
           .catch(() => {/* leave on upload step; the dropzone is the safety net */});
+      } else if (fromParam === 'hub') {
+        // IDB returned null but we know a hub handoff was attempted —
+        // strip the query so a refresh isn't visually misleading.
+        window.history.replaceState({}, '', '/sign');
       }
     }).catch(() => {/* no pending file or storage unavailable */});
   }, []);

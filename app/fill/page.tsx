@@ -35,6 +35,7 @@ import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
+import { consumePendingFile } from '../utils/pendingUpload';
 import { addWatermarkToBlob } from '../utils/watermark';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN } from '../constants';
@@ -259,6 +260,28 @@ export default function FillPage() {
         },
       });
     }
+  }, []);
+
+  // Hub → /fill handoff: the homepage mobile dropzone (and any future
+  // entry point) writes the chosen File to IndexedDB via
+  // storePendingFile and then router.pushes here with `?from=hub`.
+  // Read-and-consume on mount, jump straight to the fill step, and
+  // clean the URL so a refresh doesn't try to consume again. If the
+  // IDB write was lost (quota, private mode, race), this is a no-op
+  // and the user lands on the regular dropzone.
+  useEffect(() => {
+    consumePendingFile()
+      .then(file => {
+        if (file) {
+          setPdfFile(file);
+          setTextFields([]);
+          setStep('fill');
+        }
+        if (typeof window !== 'undefined' && window.location.search.includes('from=hub')) {
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      })
+      .catch(() => {/* IDB unavailable — fall through to dropzone */});
   }, []);
 
   useEffect(() => {

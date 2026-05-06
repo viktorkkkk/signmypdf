@@ -163,8 +163,15 @@ export default function HomePage() {
     const file = files[0];
     if (!file) return;
     track('hub_upload_mobile', { tool: mobileTool, size: file.size });
+    // `await` is load-bearing — the IDB write must commit before
+    // router.push triggers /sign|fill|protect's consumePendingFile,
+    // otherwise the consumer sees `null` and the user lands on the
+    // dropzone instead of the editor. The `?from=hub` query is a
+    // visibility/debug marker; consume logic relies on IDB primarily,
+    // and each tool page strips the query via history.replaceState
+    // after consuming so a refresh stays clean.
     await storePendingFile(file);
-    router.push(TOOL_ROUTE[mobileTool]);
+    router.push(`${TOOL_ROUTE[mobileTool]}?from=hub`);
   }, [router, mobileTool]);
 
   const mobileDz = useDropzone({

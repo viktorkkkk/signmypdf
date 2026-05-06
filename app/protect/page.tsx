@@ -39,6 +39,7 @@ import {
   generateStrongPassword,
   scorePassword,
 } from '../utils/protectPdf';
+import { consumePendingFile } from '../utils/pendingUpload';
 
 type Step = 'upload' | 'configure' | 'done';
 
@@ -189,6 +190,28 @@ export default function ProtectPage() {
       };
       document.head.appendChild(script);
     }
+  }, []);
+
+  // Hub → /protect handoff: the homepage mobile dropzone writes the
+  // chosen File to IndexedDB via storePendingFile and router.pushes
+  // here with `?from=hub`. Read-and-consume on mount, jump straight
+  // to the configure step. URL is cleaned so a refresh doesn't try
+  // to consume again. If the IDB read fails or returns null, this is
+  // a no-op and the user sees the regular dropzone — same fallback
+  // pattern as /sign and /fill.
+  useEffect(() => {
+    consumePendingFile()
+      .then(file => {
+        if (file) {
+          setFileError('');
+          setPdfFile(file);
+          setStep('configure');
+        }
+        if (typeof window !== 'undefined' && window.location.search.includes('from=hub')) {
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      })
+      .catch(() => {/* IDB unavailable — fall through to dropzone */});
   }, []);
 
   useEffect(() => {
