@@ -146,6 +146,35 @@ export default function HomePage() {
     useFsAccessApi: false,
   });
 
+  // ── Mobile-only hero (shown < 768 px, hidden on desktop) ───────────
+  // Compact above-the-fold: H1 + sub + Sign/Fill/Protect tabs +
+  // dropzone + trust strip. The 90.7% bounce / 12.9 s avg session on
+  // mobile (per GA, May 2026) was traced to the dropzone falling
+  // below the fold on small screens — the user landed, saw H1 + 6
+  // tool cards, and bounced before the dropzone scrolled into view.
+  // This block fixes that by lifting the dropzone into the first
+  // visible screen and giving the user a tab-switcher to pick the
+  // tool BEFORE uploading. Drop / pick file → router.push to the
+  // currently-selected tool's route, not always `/sign`.
+  type MobileTool = 'sign' | 'fill' | 'protect';
+  const [mobileTool, setMobileTool] = useState<MobileTool>('sign');
+
+  const onMobileDrop = useCallback(async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+    track('hub_upload_mobile', { tool: mobileTool, size: file.size });
+    await storePendingFile(file);
+    router.push(TOOL_ROUTE[mobileTool]);
+  }, [router, mobileTool]);
+
+  const mobileDz = useDropzone({
+    onDrop: onMobileDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    maxFiles: 1,
+    multiple: false,
+    useFsAccessApi: false,
+  });
+
   const goToTool = (tool: Tool) => {
     track('hub_tool_card_click', { tool });
     router.push(TOOL_ROUTE[tool]);
@@ -197,6 +226,74 @@ export default function HomePage() {
 
       <NavHeader />
 
+      {/* ─── BLOCK 1-MOBILE — compact hero for < 768 px ───
+          Hidden on desktop via CSS. Lifts the dropzone above the fold
+          on iPhone-class viewports (iPhone SE 375×667 included) so
+          the user can tap-to-upload before bouncing. Tabs swap the
+          dropzone's destination route before the file is picked. */}
+      <section className="hub-hero-mobile" aria-label="Pick a tool and upload a PDF">
+        <div className="hub-container hub-hero-mobile-inner">
+          <h1 className="hub-h1-mobile">Sign, Fill &amp; Protect PDFs</h1>
+          <p className="hub-sub-mobile">Free, no registration</p>
+
+          <div className="hub-tabs" role="tablist" aria-label="Tool">
+            {([
+              { id: 'sign',    label: 'Sign',    Icon: PenLine },
+              { id: 'fill',    label: 'Fill',    Icon: FileText },
+              { id: 'protect', label: 'Protect', Icon: Lock },
+            ] as const).map(({ id, label, Icon }) => {
+              const active = mobileTool === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  className={`hub-tab hub-tab-${id}${active ? ' active' : ''}`}
+                  onClick={() => {
+                    setMobileTool(id);
+                    track('hub_mobile_tab', { tool: id });
+                  }}
+                >
+                  <Icon size={20} strokeWidth={2} />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            {...mobileDz.getRootProps()}
+            className={`hub-mob-dz hub-mob-dz-${mobileTool}${mobileDz.isDragActive ? ' active' : ''}`}
+            role="button"
+            tabIndex={0}
+            aria-label={`Drop PDF to ${mobileTool}`}
+          >
+            <input {...mobileDz.getInputProps()} />
+            <div className="hub-mob-dz-icon" aria-hidden="true">
+              {mobileTool === 'sign'    && <FileSignature size={36} strokeWidth={1.6} />}
+              {mobileTool === 'fill'    && <FileText      size={36} strokeWidth={1.6} />}
+              {mobileTool === 'protect' && <Lock          size={36} strokeWidth={1.6} />}
+            </div>
+            <div className="hub-mob-dz-title">
+              {mobileDz.isDragActive
+                ? 'Release to upload'
+                : mobileTool === 'sign'    ? 'Drop PDF to sign'
+                : mobileTool === 'fill'    ? 'Drop PDF to fill'
+                :                            'Drop PDF to protect'}
+            </div>
+            <div className="hub-mob-dz-sub">or tap to browse</div>
+            <button type="button" className="hub-mob-dz-btn">Choose PDF file</button>
+          </div>
+
+          <div className="hub-mob-trust">
+            <span className="hub-mob-trust-item"><Lock size={14} /> Processed locally</span>
+            <span className="hub-mob-trust-dot" aria-hidden="true">·</span>
+            <span className="hub-mob-trust-item"><CheckCircle size={14} /> No registration</span>
+          </div>
+        </div>
+      </section>
+
       {/* ─── BLOCK 1 — Hero: H1 + sub + tool cards + dropzone + trust strip ─── */}
       <section className="hub-hero">
         <div className="hub-container hub-hero-inner">
@@ -207,6 +304,12 @@ export default function HomePage() {
           <p className="hub-sub">
             Pick a tool below — finish in seconds, right in your browser.
           </p>
+
+          {/* Mobile-only "More PDF Tools" heading. The desktop H1+sub
+              block above is hidden on mobile, so the tool grid would
+              otherwise float without context. Stays display:none on
+              desktop where the H1+sub already labels what the cards are. */}
+          <h2 className="hub-tools-heading-mobile">More PDF Tools</h2>
 
           <div className="hub-tool-grid">
             <button type="button" className="hub-tool-card tool-accent-sign" onClick={() => goToTool('sign')}>
