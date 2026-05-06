@@ -8545,6 +8545,154 @@ Yes. The typed text is embedded directly into the downloaded PDF file. When you 
 - [Fix PDF Form Fields That Won't Accept Text](/blog/pdf-form-fields-not-working-fix)
 `,
   },
+  {
+    slug: 'sign-multiple-pdf-pages',
+    title: 'Sign Multiple PDF Pages at Once — Free',
+    excerpt: 'Lease, loan, or HR paperwork that needs your signature on every page? Place initials or a full signature across multiple PDF pages in one session — free, no account needed.',
+    date: '2026-05-07',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign multiple pdf pages', 'sign every page pdf', 'multi-page pdf signature', 'sign pdf online free', 'pdf signature no account', 'initials on pdf pages', 'sign lease online'],
+    metaTitle: 'Sign Multiple PDF Pages at Once — Free',
+    metaDescription: 'Place your signature or initials on multiple pages of any PDF — free, no account, no app. Lease agreements, loan docs, HR forms. Download one clean file.',
+    content: `
+You received a 10-page lease. Your employer sent a 15-page offer letter. The lender wants initials on every page of a loan document before closing. Signing multiple PDF pages one at a time — or worse, printing the whole stack to sign it — takes time you don't have.
+
+Most people assume signing multiple pages of a PDF requires special software. It doesn't. SignMyPDF lets you sign multiple PDF pages directly in your browser, free, with no account and no app to install.
+
+[CTA]Sign Multiple PDF Pages Now — Free|Place your signature or initials on as many pages as you need. No account, no app, no paywall.|Sign PDF Now — Free
+
+## How to sign multiple pages of a PDF
+
+1. **Upload your PDF.** Go to [SignMyPDF](/sign) and drop your document onto the upload area.
+2. **Create your signature.** Draw it with a mouse or finger, or type your name in a signature-style font.
+3. **Select which pages to sign.** Use the page selector to choose the pages needing your signature or initials.
+4. **Place your signature on each page.** Drag it into position and resize if needed. Repeat for each page.
+5. **Download the complete signed document.** All pages — signed and unsigned — merge into one clean PDF.
+
+The whole process takes under three minutes for a 15-page document.
+
+[IMAGE: Multi-page PDF open in SignMyPDF with a signature placed on the first page and initials on subsequent pages in a browser window]
+
+## Why signing multi-page PDFs is frustrating with most tools
+
+- **One-page limitations.** Many free signing tools only support a single signature on the final page. No provision for initialing pages 1 through 14 before you get there.
+- **Per-page exports.** Some tools export each signed page as a separate file. You end up emailing a 15-file archive when the recipient expected one PDF.
+- **Registration before anything.** DocuSign, Adobe Sign, and similar platforms require account creation before you can even open a document.
+- **Subscription caps.** Free tiers on most platforms cap you at 3 to 5 documents per month — fine for occasional use, not for onboarding paperwork or client contracts.
+- **Paywall at download.** A tool may let you sign all the pages but lock the download behind a paid plan.
+
+## Why SignMyPDF handles multi-page signing better
+
+- **Sign any page, or every page.** Place your signature or initials on as many pages as the document requires — no per-page limit.
+- **All pages stay in one document.** The download is a single PDF with all your signatures embedded, exactly as the recipient expects.
+- **Free, no registration, no paywall at download.** Upload, sign, download. Nothing asks for a credit card or account.
+- **Files processed in browser.** Your document never uploads to a server. Multi-page lease agreements, loan documents, and HR forms stay on your device throughout the process.
+- **Works on mobile.** Draw your initials with a finger on iPhone or Android — no desktop required.
+
+For contracts that also need text filled in before signing — inserting a date or filling in a blank field — use the [fill PDF tool](/fill) first, then sign the completed document.
+
+## When every page needs your signature
+
+Some legal documents require initials on every page to confirm you've read each one — common in real estate closings, employment agreements, and loan paperwork. Others require a full signature only at the end.
+
+SignMyPDF lets you handle both in the same session. Place initials on pages 1 through 11, then place your full drawn signature on page 12. Each placement is independent, so you can resize or reposition without affecting other pages.
+
+For US-based documents, electronic initials and signatures carry the same legal weight as handwritten ones under the ESIGN Act. See [electronic signature laws by state](/blog/electronic-signature-laws-by-state) if you're unsure about your jurisdiction.
+
+## Frequently asked questions
+
+**Can I sign every page automatically in one click?**
+Each page placement is manual so you can control exactly where each signature or initial lands. For a 5-page document, adding initials to all pages takes about 30 seconds of clicking and dragging.
+
+**What if I only need to sign two pages out of ten?**
+Select only those two pages in the page selector and skip the rest. The download includes all 10 pages, with signatures on only the ones you chose.
+
+**Does adding signatures on multiple pages significantly increase file size?**
+Minimally. Signatures are embedded as small image elements. A 10-page PDF signed on all 10 pages increases in size by a few kilobytes — not enough to cause email delivery problems.
+
+[CTA]Sign All Pages of Your PDF Now — Free|Initials, full signature, or both — place them on any number of pages. No account, no watermark on your first two PDFs.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDFs — Free, No Account](/sign)
+- [Sign a contractor agreement online — free](/blog/sign-contractor-agreement-online)
+- [Electronic signature laws by state — what's valid](/blog/electronic-signature-laws-by-state)
+`,
+  },
+  {
+    slug: 'accountant-wont-accept-unprotected-tax-documents',
+    title: 'Why Accountants Need Password-Protected PDFs',
+    excerpt: 'Your accountant asked you to resend tax documents with password protection. Here is why it matters, what they actually need, and how to protect a PDF free in under two minutes.',
+    date: '2026-05-07',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf tax documents', 'accountant password protected pdf', 'protect tax documents pdf', 'email tax documents securely', 'pdf encryption free', 'protect pdf online free', 'secure tax pdf'],
+    metaTitle: 'Why Accountants Need Password-Protected PDFs',
+    metaDescription: 'Your accountant wants a password-protected PDF. Here is why it matters and how to protect any tax document free in your browser — no account, no software needed.',
+    content: `
+Your accountant replied to your email with one line: "Please resend the tax documents with password protection." You've sent PDFs dozens of times without issue. Now there's a deadline, and you're not sure how to add a password to a PDF — or why it suddenly matters.
+
+Password-protecting tax documents before emailing them is a security practice that CPAs and tax preparers increasingly require. It's not bureaucracy. Unprotected financial PDFs create real exposure if the email is intercepted, misdirected, or forwarded without your knowledge.
+
+[CTA]Protect Your Tax PDF Now — Free|Add password protection to any PDF in your browser. No account, no software, files never leave your device.|Protect PDF Now — Free
+
+## How to password protect a tax PDF in two minutes
+
+1. **Open the protect tool** at [SignMyPDF's protect page](/protect) in your browser.
+2. **Upload your tax document.** Drop the PDF onto the upload area or click to browse.
+3. **Set a password.** Type a strong password and confirm it.
+4. **Adjust permissions if needed.** Disable printing or copying if the document is for review only.
+5. **Download the protected PDF.** Email this version to your accountant and share the password via a separate channel — a text message or phone call.
+
+[IMAGE: Tax document PDF open in the SignMyPDF protect tool, with a password field filled in and the protect button highlighted, in a browser]
+
+## Why sending unprotected tax documents is a real problem
+
+- **Standard email is not encrypted in transit.** An unprotected PDF attachment is readable by anyone who intercepts it between your outbox and your accountant's inbox.
+- **Tax PDFs contain high-value personal data.** Social Security numbers, bank account details, and adjusted gross income are exactly what identity thieves look for. A single intercepted file can cause years of problems.
+- **Forwarded emails are unpredictable.** Your accountant's office may forward your PDF internally — to a preparer, a partner, or an admin. A password ensures only intended recipients can open it.
+- **Accounting firms have compliance requirements.** Many CPA practices operate under IRS Publication 4557 guidelines and have written policies requiring password-protected client files.
+- **Adobe Acrobat costs money.** The most obvious tool for PDF encryption requires a subscription most people don't have just to protect one file.
+
+## Why SignMyPDF is the easiest way to protect tax documents
+
+- **Free, no registration, no paywall at download.** Upload, protect, download — nothing asks for a credit card or an account.
+- **Files processed in browser.** Your tax PDF is encrypted locally and never uploads to any server. That matters when the file contains your Social Security number or bank details.
+- **Real AES encryption.** The password protection is not cosmetic — the file is encrypted so it can't be opened without the correct password.
+- **Works on Mac, Windows, iPhone, and Android.** No software to install, no OS restriction.
+- **Takes under two minutes.** Faster than writing a reply email explaining why you didn't protect the file.
+
+Freelancers and contractors who regularly send financial documents to clients or accountants often build a consistent routine around this. See [how freelancers protect client contracts](/blog/freelancers-protect-client-contracts) for a workflow you can reuse across every client engagement.
+
+## What password should you actually use?
+
+Use a password at least 12 characters long with a mix of letters, numbers, and symbols. Avoid your birthdate, SSN digits, or anything a recipient could guess. A password manager (your browser's built-in one, 1Password, or Bitwarden) can generate one in seconds.
+
+Share the password through a separate channel — a text message or a quick call. Don't include the password in the same email as the protected file. That defeats the purpose entirely.
+
+If you've already sent a tax document without protection, there's no way to recall the email. The next-best step is to notify your accountant and ask them to delete the unprotected copy, then resend the protected version. Minor awkwardness now versus a much larger problem later.
+
+## Frequently asked questions
+
+**What if my accountant can't open a password-protected PDF?**
+Any standard PDF reader — Adobe Acrobat Reader, Preview on Mac, Chrome's built-in viewer, or Apple Books — can open a password-protected file. Your accountant just needs the password you shared when prompted.
+
+**Does password protection prevent my accountant from editing the PDF?**
+Not by default. A standard password prevents opening the file without the password but doesn't restrict editing. If you want to prevent changes, enable the restrict-permissions option when setting the password in the protect tool.
+
+**Is a browser-based tool really safe for protecting tax documents?**
+SignMyPDF processes everything locally in your browser — the PDF never leaves your device. It's equivalent in privacy to a local desktop application, without the installation.
+
+[CTA]Password Protect Your Tax PDF Now — Free|AES encryption, no account, files processed in your browser. Protect any PDF in under two minutes.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect a PDF — Free, No Account](/protect)
+- [How freelancers protect client contracts](/blog/freelancers-protect-client-contracts)
+- [I Sent a Confidential Contract Unprotected](/blog/sent-confidential-contract-unprotected)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
