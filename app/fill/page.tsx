@@ -262,34 +262,25 @@ export default function FillPage() {
     }
   }, []);
 
-  // Hub → /fill handoff: the homepage mobile dropzone (and any future
-  // entry point) writes the chosen File to IndexedDB via
-  // storePendingFile and then router.pushes here with `?from=hub`.
-  // Read-and-consume on mount, jump straight to the fill step, and
-  // clean the URL so a refresh doesn't try to consume again. If the
-  // IDB write was lost (quota, private mode, race), this is a no-op
+  // Hub → /fill handoff: the homepage mobile dropzone writes the chosen
+  // File to IndexedDB via storePendingFile and router.pushes here with
+  // `?from=hub`. Read-and-consume on mount, jump straight to the fill
+  // step, then clean the URL so a refresh doesn't try to consume again.
+  // If the IDB write failed (quota, private mode), consume returns null
   // and the user lands on the regular dropzone.
   useEffect(() => {
-    console.log('[fill] mount: starting consumePendingFile, search=', window.location.search);
     consumePendingFile()
       .then(file => {
-        console.log('[fill] consumePendingFile resolved →', file ? `File(${file.name}, ${file.size})` : 'null');
         if (file) {
           setPdfFile(file);
           setTextFields([]);
           setStep('fill');
-          console.log('[fill] state set: pdfFile + step=fill');
-        } else {
-          console.log('[fill] no pending file — staying on upload step');
         }
         if (typeof window !== 'undefined' && window.location.search.includes('from=hub')) {
           window.history.replaceState({}, '', window.location.pathname);
-          console.log('[fill] URL cleaned: ?from=hub stripped');
         }
       })
-      .catch(e => {
-        console.error('[fill] consumePendingFile threw', e);
-      });
+      .catch(() => {/* IDB unavailable — fall through to dropzone */});
   }, []);
 
   useEffect(() => {

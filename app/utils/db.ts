@@ -52,9 +52,31 @@ export async function txStore<T>(
     const t = db.transaction(storeName, mode);
     const store = t.objectStore(storeName);
     const req = fn(store);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-    t.oncomplete = () => db.close();
-    t.onerror = () => db.close();
+    let value: T | undefined;
+    let reqError: DOMException | null = null;
+    // We capture the request result here but DELIBERATELY do NOT resolve
+    // on req.onsuccess. For writes, request-success only means "the op
+    // was queued and applied within the transaction". The data is not
+    // durable until t.oncomplete fires — and a concurrent reader on a
+    // *different* page (e.g. hub → /fill via router.push) opens a fresh
+    // IDB connection that may run BEFORE this transaction commits, in
+    // which case it sees the previous (empty) state. Resolving on
+    // oncomplete makes `await txStore('readwrite', …)` mean "data is
+    // committed", which is what the hub→tool handoff actually relies
+    // on. Reads behave the same way (oncomplete fires after success).
+    req.onsuccess = () => { value = req.result; };
+    req.onerror = () => { reqError = req.error; };
+    t.oncomplete = () => {
+      db.close();
+      resolve(value as T);
+    };
+    t.onerror = () => {
+      db.close();
+      reject(t.error || reqError);
+    };
+    t.onabort = () => {
+      db.close();
+      reject(t.error || reqError || new Error('IDB transaction aborted'));
+    };
   });
 }

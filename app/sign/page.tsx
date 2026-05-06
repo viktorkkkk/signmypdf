@@ -186,51 +186,38 @@ export default function Home() {
     const TEMPLATE_FROM_PARAM: Record<string, { url: string; name: string }> = {
       'nda-template': { url: '/templates/nda-template.pdf', name: 'nda-template.pdf' },
     };
-    console.log('[sign] mount: starting consumePendingFile, search=', window.location.search);
     consumePendingFile().then(file => {
-      console.log('[sign] consumePendingFile resolved →', file ? `File(${file.name}, ${file.size})` : 'null');
       if (file) {
         setPdfFile(file);
         setStep('sign');
-        console.log('[sign] state set: pdfFile + step=sign');
         // Clean `?from=hub` (set by the homepage mobile dropzone) so a
         // refresh on /sign doesn't keep re-triggering anything. Other
         // `?from` values (e.g. nda-template) are intentionally left to
         // the template-fallback branch below.
         if (window.location.search.includes('from=hub')) {
           window.history.replaceState({}, '', '/sign');
-          console.log('[sign] URL cleaned: ?from=hub stripped');
         }
         return;
       }
       const fromParam = new URLSearchParams(window.location.search).get('from');
       const tpl = fromParam ? TEMPLATE_FROM_PARAM[fromParam] : null;
       if (tpl) {
-        console.log('[sign] fallback: fetching template', tpl.name);
         fetch(tpl.url)
           .then(res => res.blob())
           .then(blob => {
             const tplFile = new File([blob], tpl.name, { type: 'application/pdf' });
             setPdfFile(tplFile);
             setStep('sign');
-            // Clean the URL so a refresh doesn't re-trigger the fetch.
             window.history.replaceState({}, '', '/sign');
-            console.log('[sign] template loaded, state set');
           })
-          .catch(e => {
-            console.error('[sign] template fetch failed', e);
-          });
+          .catch(() => {/* leave on upload step; the dropzone is the safety net */});
       } else if (fromParam === 'hub') {
         // IDB returned null but we know a hub handoff was attempted —
-        // strip the query so a refresh isn't visually misleading.
-        console.warn('[sign] from=hub but IDB returned null → falling back to dropzone');
+        // strip the query so a refresh isn't visually misleading. The
+        // dropzone is the user's safety net.
         window.history.replaceState({}, '', '/sign');
-      } else {
-        console.log('[sign] no pending file, no template — staying on upload step');
       }
-    }).catch(e => {
-      console.error('[sign] consumePendingFile threw', e);
-    });
+    }).catch(() => {/* no pending file or storage unavailable */});
   }, []);
   
   // Multi-page signature state

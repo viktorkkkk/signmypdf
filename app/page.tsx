@@ -161,23 +161,16 @@ export default function HomePage() {
 
   const onMobileDrop = useCallback(async (files: File[]) => {
     const file = files[0];
-    if (!file) {
-      console.warn('[hub] onMobileDrop fired with no file');
-      return;
-    }
-    console.log('[hub] onMobileDrop', { name: file.name, size: file.size, tool: mobileTool });
+    if (!file) return;
     track('hub_upload_mobile', { tool: mobileTool, size: file.size });
-    // `await` is load-bearing — the IDB write must commit before
-    // router.push triggers /sign|fill|protect's consumePendingFile,
-    // otherwise the consumer sees `null` and the user lands on the
-    // dropzone instead of the editor. The `?from=hub` query is a
-    // visibility/debug marker; consume logic relies on IDB primarily,
-    // and each tool page strips the query via history.replaceState
-    // after consuming so a refresh stays clean.
+    // `await` is load-bearing AND txStore now resolves on transaction
+    // oncomplete (not request onsuccess) — together this guarantees the
+    // IDB write is durably committed before router.push fires the soft-
+    // nav. Without either, the consumer on /sign|fill|protect opens a
+    // fresh IDB connection that may run before the producer's tx commits
+    // and reads no entry, causing the "lands on dropzone" bug.
     await storePendingFile(file);
-    const target = `${TOOL_ROUTE[mobileTool]}?from=hub`;
-    console.log('[hub] storePendingFile resolved, navigating →', target);
-    router.push(target);
+    router.push(`${TOOL_ROUTE[mobileTool]}?from=hub`);
   }, [router, mobileTool]);
 
   const mobileDz = useDropzone({
