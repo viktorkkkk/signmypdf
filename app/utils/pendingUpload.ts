@@ -33,34 +33,52 @@ function tx<T>(mode: IDBTransactionMode, fn: (store: IDBObjectStore) => IDBReque
 
 /** Store a File for pickup by a tool page. Overwrites any existing entry. */
 export async function storePendingFile(file: File): Promise<void> {
-  if (typeof indexedDB === 'undefined') return;
+  if (typeof indexedDB === 'undefined') {
+    console.warn('[idb:store] indexedDB undefined — skipped', file.name);
+    return;
+  }
   const payload: Pending = {
     blob: file,
     name: file.name,
     type: file.type || 'application/pdf',
     createdAt: Date.now(),
   };
+  console.log('[idb:store] put start', { name: file.name, size: file.size, type: payload.type });
   try {
     await tx('readwrite', store => store.put(payload, KEY));
-  } catch {
+    console.log('[idb:store] put OK', file.name);
+  } catch (e) {
     // IndexedDB blocked (private mode, quota) — no-op; the tool page's own
     // dropzone is the user's fallback.
+    console.error('[idb:store] put FAIL', e);
   }
 }
 
 /** Read and delete the pending File. Returns null if none or expired. */
 export async function consumePendingFile(): Promise<File | null> {
-  if (typeof indexedDB === 'undefined') return null;
+  if (typeof indexedDB === 'undefined') {
+    console.warn('[idb:consume] indexedDB undefined — null');
+    return null;
+  }
   try {
+    console.log('[idb:consume] get start');
     const entry = await tx<Pending | undefined>('readonly', store => store.get(KEY));
-    if (!entry) return null;
-    if (Date.now() - entry.createdAt > TTL_MS) {
+    if (!entry) {
+      console.log('[idb:consume] get → no entry');
+      return null;
+    }
+    const ageMs = Date.now() - entry.createdAt;
+    console.log('[idb:consume] get → entry', { name: entry.name, ageMs, expired: ageMs > TTL_MS });
+    if (ageMs > TTL_MS) {
       await clearPendingFile();
+      console.log('[idb:consume] expired, cleared');
       return null;
     }
     await clearPendingFile();
+    console.log('[idb:consume] returning File', entry.name);
     return new File([entry.blob], entry.name, { type: entry.type });
-  } catch {
+  } catch (e) {
+    console.error('[idb:consume] FAIL', e);
     return null;
   }
 }

@@ -200,18 +200,26 @@ export default function ProtectPage() {
   // a no-op and the user sees the regular dropzone — same fallback
   // pattern as /sign and /fill.
   useEffect(() => {
+    console.log('[protect] mount: starting consumePendingFile, search=', window.location.search);
     consumePendingFile()
       .then(file => {
+        console.log('[protect] consumePendingFile resolved →', file ? `File(${file.name}, ${file.size})` : 'null');
         if (file) {
           setFileError('');
           setPdfFile(file);
           setStep('configure');
+          console.log('[protect] state set: pdfFile + step=configure');
+        } else {
+          console.log('[protect] no pending file — staying on upload step');
         }
         if (typeof window !== 'undefined' && window.location.search.includes('from=hub')) {
           window.history.replaceState({}, '', window.location.pathname);
+          console.log('[protect] URL cleaned: ?from=hub stripped');
         }
       })
-      .catch(() => {/* IDB unavailable — fall through to dropzone */});
+      .catch(e => {
+        console.error('[protect] consumePendingFile threw', e);
+      });
   }, []);
 
   useEffect(() => {

@@ -270,18 +270,26 @@ export default function FillPage() {
   // IDB write was lost (quota, private mode, race), this is a no-op
   // and the user lands on the regular dropzone.
   useEffect(() => {
+    console.log('[fill] mount: starting consumePendingFile, search=', window.location.search);
     consumePendingFile()
       .then(file => {
+        console.log('[fill] consumePendingFile resolved →', file ? `File(${file.name}, ${file.size})` : 'null');
         if (file) {
           setPdfFile(file);
           setTextFields([]);
           setStep('fill');
+          console.log('[fill] state set: pdfFile + step=fill');
+        } else {
+          console.log('[fill] no pending file — staying on upload step');
         }
         if (typeof window !== 'undefined' && window.location.search.includes('from=hub')) {
           window.history.replaceState({}, '', window.location.pathname);
+          console.log('[fill] URL cleaned: ?from=hub stripped');
         }
       })
-      .catch(() => {/* IDB unavailable — fall through to dropzone */});
+      .catch(e => {
+        console.error('[fill] consumePendingFile threw', e);
+      });
   }, []);
 
   useEffect(() => {

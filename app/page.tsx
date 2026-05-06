@@ -161,7 +161,11 @@ export default function HomePage() {
 
   const onMobileDrop = useCallback(async (files: File[]) => {
     const file = files[0];
-    if (!file) return;
+    if (!file) {
+      console.warn('[hub] onMobileDrop fired with no file');
+      return;
+    }
+    console.log('[hub] onMobileDrop', { name: file.name, size: file.size, tool: mobileTool });
     track('hub_upload_mobile', { tool: mobileTool, size: file.size });
     // `await` is load-bearing — the IDB write must commit before
     // router.push triggers /sign|fill|protect's consumePendingFile,
@@ -171,7 +175,9 @@ export default function HomePage() {
     // and each tool page strips the query via history.replaceState
     // after consuming so a refresh stays clean.
     await storePendingFile(file);
-    router.push(`${TOOL_ROUTE[mobileTool]}?from=hub`);
+    const target = `${TOOL_ROUTE[mobileTool]}?from=hub`;
+    console.log('[hub] storePendingFile resolved, navigating →', target);
+    router.push(target);
   }, [router, mobileTool]);
 
   const mobileDz = useDropzone({
