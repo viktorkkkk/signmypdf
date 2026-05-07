@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "signmypdf-dev",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "pnpm@9.15.0", "--filter", "web", "dev"],
       "port": 3000
     },
     {
