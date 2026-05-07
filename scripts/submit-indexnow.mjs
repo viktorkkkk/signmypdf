@@ -91,6 +91,8 @@ const BLOG_SLUGS = [
   'fill-bank-form-pdf-online',
   'sign-multiple-pdf-pages',
   'accountant-wont-accept-unprotected-tax-documents',
+  'zoho-sign-vs-signmypdf',
+  'password-pdf-vs-encrypted-email',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
