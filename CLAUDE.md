@@ -181,6 +181,28 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
+## Recently Shipped (May 6-7 2026)
+
+Three-commit batch (`2e17004` diag + `008695f` fix + the earlier `96bf4d9` consumer wiring) that finally closed the **mobile-hero handoff bug**: tapping a tab on `/`, picking a PDF, landing on `/sign | /fill | /protect` — but seeing the dropzone instead of the editor. Two prior fixes (`f80dbd1` adding the hub→tool handoff via `pendingUpload` + `96bf4d9` adding consumers on `/fill` and `/protect`) didn't actually solve it on prod even though both Chrome-desktop preview tests passed. Headline outcomes:
+
+- **Real root cause was a race in [`app/utils/db.ts`](app/utils/db.ts) `txStore`**, not the consumer wiring. The helper was resolving its returned Promise on `req.onsuccess` (operation applied **inside** the IDB transaction, in-memory) instead of `t.oncomplete` (transaction durably committed and visible to other connections). On Safari the gap between those two events is long enough that:
+  1. `await storePendingFile(file)` returns
+  2. `router.push('/fill')` runs
+  3. `/fill` mounts and opens a fresh IDB connection
+  4. Its read-TX fires **before** the write-TX has committed
+  5. `get` returns `undefined` → consumer returns null → user sees the dropzone
+  Chrome-dev runs the whole sequence fast enough that the race never manifested in preview. That's why the `f80dbd1` + `96bf4d9` pair "looked right" in two prior smoke-tests and still failed in prod.
+- **Fix** ([`app/utils/db.ts`](app/utils/db.ts)): capture `req.result` into a local on `req.onsuccess`, capture `req.error` into a local on `req.onerror`, but only `resolve(value)` from `t.oncomplete`. Add `t.onabort` for the abort path. The public API of `txStore` is unchanged — every caller (`pendingUpload` + `historyBlobs`) gets the durable-commit contract for free, which is the contract both layers were already implicitly assuming.
+- **Diagnostic instrumentation** (`2e17004`) was added on the way and removed in `008695f` once the fix was verified. Only `console.error` paths remain in the IDB layer (quota / private-mode failures) — no info-level logs in prod.
+- **Verification on preview (390×844, post-cleanup)**: all three tabs (Sign / Fill / Protect) handed off correctly — `/<tool>` route reached, `?from=hub` cleaned via `history.replaceState`, editor visible (`.sig-canvas` / `canvas` / `input[type=password]`), filename in DOM, dropzone hidden, console clean. Build + tsc + ESLint clean (no new lint errors over the existing baseline).
+- **Deployed on prod** as `dpl_2HywkCjrvnLMQZqt7AmdF9zdu6nW` → READY on www.signmypdf.io. Single-attempt handoff now works on iPhone Safari and on Chrome desktop alike.
+
+Files involved:
+- `app/utils/db.ts` — `txStore` resolves on `t.oncomplete`, captures result/error from request handlers, closes the connection in every terminal path. Public signature unchanged.
+- `app/page.tsx` (hub), `app/sign/page.tsx`, `app/fill/page.tsx`, `app/protect/page.tsx` — diagnostic logs added in `2e17004` and removed in `008695f`. Net delta vs. pre-batch state: zero.
+
+---
+
 ## Recently Shipped (May 5 2026)
 
 Day-long iteration on `/sign-nda` and the shared `FillSignEditor`. Eight code commits, all on prod. Headline outcomes:
@@ -335,6 +357,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **`/sign-nda` signature flow modal-state machine.** The create-signature modal's JSX is gated on `sigModal === 'create' && creatingSig` (both required). For Edit-existing flow (the ✏️ button), `openEditFor` MUST also call `setCreatingSig(initCreatingSig({ drawData: el.dataUrl }))` — without it, the modal silently fails to render. This was the bug fixed in commit `88b16ca`. Same applies to any future "Edit signature" entry points.
 - **`/sign-nda` Success state share targets.** Email uses `mailto:?subject=…&body=…`, WhatsApp uses `https://wa.me/?text=…`, Telegram uses `https://t.me/share/url?url=…&text=…`. **Do not add a "Copy link to download" option** — it requires server-side hosting of the signed PDF, which we don't have on this surface. The user spec explicitly says "НЕ ДЕЛАТЬ" for this option.
 - **`FillSignEditor` action-cluster ordering.** Visual order from element-edge outward on placed text/date is `✏️ Edit (-26 px) → ⎘ Duplicate (-52 px) → ✕ Delete (-78 px)`. Delete is **red-by-default** (`background: var(--color-danger)` for the overlay button, `color: var(--color-danger)` for the sidebar list-remove). Don't shuffle this order without re-checking the "first action is Edit, last action is Delete" affordance — putting destructive Delete in the middle reads ambiguous.
+- **`txStore` durable-commit contract in [`app/utils/db.ts`](app/utils/db.ts).** The helper resolves on `transaction.oncomplete`, NOT on `request.onsuccess`. The two events are not equivalent — `req.onsuccess` fires when the operation has been applied inside the transaction (in-memory only), while `t.oncomplete` fires only after the transaction has been durably committed and is visible to other IDB connections. Every `await txStore('readwrite', ...)` caller (currently `pendingUpload` for the hub→tool handoff and `historyBlobs` for the Pro download history) implicitly assumes "after the await, a fresh connection's read sees my write." The `req.onsuccess` form looked equivalent on Chrome dev where the gap is sub-millisecond, and silently failed on Safari prod where the gap is long enough that `router.push` + a fresh-connection read on the next route can race in front of the commit — which is exactly the multi-week mobile-hero handoff bug fixed in `008695f` (May 7 2026). **Do not "simplify" `txStore` back to resolving on `req.onsuccess`** even if a future refactor argues that the request-level handlers are "enough." They aren't, and the failure mode is silent on every browser except Safari mobile, so a regression here will look fine in dev and break the hub→tool flow in prod for every iPhone user. If you need a non-durable read-cached helper, write a separate function — don't share the `txStore` name.
 
 ---
 
