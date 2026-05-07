@@ -20,8 +20,7 @@ import {
   Minimize2,
   Scissors,
 } from 'lucide-react';
-import SignatureCanvas from '../components/SignatureCanvas';
-import PDFViewer from '../components/PDFViewer';
+import { SignatureCanvas, PdfSignViewer } from '@signmypdf/ui';
 import type { SignaturePlacement } from '@signmypdf/pdf-core';
 import SavedSignatures, { saveSig, SavedSig } from '../components/SavedSignatures';
 import Logo from '../components/Logo';
@@ -654,13 +653,14 @@ export default function Home() {
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-title">2. Select pages & place signature</div>
               {pdfFile && (
-                <PDFViewer
+                <PdfSignViewer
                   file={pdfFile}
                   signatureDataUrl={previewSig}
                   placements={placements}
                   selectedPages={selectedPages}
                   onPlacementsChange={setPlacements}
                   onSelectedPagesChange={setSelectedPages}
+                  workerSrc="/pdf.worker.min.mjs"
                 />
               )}
             </div>

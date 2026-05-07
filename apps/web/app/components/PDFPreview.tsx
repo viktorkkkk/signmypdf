@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { FileText, PenLine } from 'lucide-react';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 interface Props {
   file: File;
@@ -25,9 +26,8 @@ export default function PDFPreview({ file, signatureDataUrl, onPositionChange }:
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        // Use local worker file served from public/
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        // Worker URL resolved by host (web vs CRX); see @signmypdf/pdf-core/setupPdfjs.
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
 
         const buf = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;

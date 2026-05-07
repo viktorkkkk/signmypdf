@@ -1,12 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FileText, PenLine, CheckSquare } from 'lucide-react';
-import type { SignaturePlacement } from '@signmypdf/pdf-core';
-
-// Re-export so existing `import { SignaturePlacement } from '.../PDFViewer'`
-// callers keep working until PR B moves the component to packages/ui.
-export type { SignaturePlacement };
+import { setupPdfjs, type SignaturePlacement } from '@signmypdf/pdf-core';
 
 interface Props {
   file: File;
@@ -15,15 +11,22 @@ interface Props {
   selectedPages: number[];           // Pages selected for signing
   onPlacementsChange: (placements: SignaturePlacement[]) => void;
   onSelectedPagesChange: (pages: number[]) => void;
+  /** Per-host pdfjs worker URL. Web app passes `'/pdf.worker.min.mjs'`
+   *  (served from `apps/web/public/`); Chrome extension will pass
+   *  `chrome.runtime.getURL('pdf.worker.min.mjs')`. Defaulting it here
+   *  would couple the package to a specific runtime, so the prop is
+   *  required at the call site. */
+  workerSrc: string;
 }
 
-export default function PDFViewer({ 
-  file, 
-  signatureDataUrl, 
+export default function PdfSignViewer({
+  file,
+  signatureDataUrl,
   placements,
   selectedPages,
   onPlacementsChange,
-  onSelectedPagesChange 
+  onSelectedPagesChange,
+  workerSrc,
 }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
@@ -40,13 +43,14 @@ export default function PDFViewer({
   const dragging = useRef<null | 'move' | 'resize'>(null);
   const dragStart = useRef({ mx: 0, my: 0, sx: 0, sy: 0, sw: 0, sh: 0, cw: 0, ch: 0 });
 
-  // Load PDF and generate thumbnails
+  // Load PDF and generate thumbnails. setupPdfjs is idempotent —
+  // calling it again on subsequent mounts (or with the same workerSrc)
+  // is a no-op for browser caching, just re-asserts the URL.
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs(workerSrc);
         const buf = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;
@@ -72,7 +76,7 @@ export default function PDFViewer({
       }
     })();
     return () => { cancelled = true; };
-  }, [file]);
+  }, [file, workerSrc]);
 
   // Update sig when switching pages or placements change
   useEffect(() => {

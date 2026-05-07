@@ -1,0 +1,129 @@
+/**
+ * Styles for `@signmypdf/ui` — currently only `<SignatureCanvas>`.
+ *
+ * `<PdfSignViewer>` is fully styled inline (zero global classes), so it
+ * doesn't need any rules here. Hosts that import `<SignatureCanvas>`
+ * from `@signmypdf/ui` MUST also import this stylesheet once at app
+ * boot:
+ *
+ *   import '@signmypdf/ui/styles/signature.css';
+ *
+ * Carved verbatim from `apps/web/app/globals.css` (the source of truth
+ * before Stage 4 PR B). Hex colours are kept literal — migration onto
+ * the `--color-*` design tokens is a separate task per audit §7.
+ *
+ * Class selectors used:
+ *   - .sig-toolbar / .sig-tool-group / .sig-divider — top toolbar row
+ *   - .color-dot                                    — colour swatches
+ *   - .width-btn                                    — stroke width buttons
+ *   - .sig-container                                — canvas wrapper
+ *   - .sig-canvas                                   — the canvas element
+ *   - .sig-baseline / .sig-baseline-label          — "sign here" hint
+ *   - .sig-placeholder / .sig-placeholder-icon
+ *     / .sig-placeholder-text                       — empty-state CTA
+ *   - .sig-footer / .sig-hint                       — bottom row
+ *   - .clear-btn                                    — Undo / Clear buttons
+ */
+
+/* ── Signature toolbar (top of canvas) ───────────────────────────── */
+.sig-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+}
+.sig-tool-group { display: flex; align-items: center; gap: 6px; }
+.sig-divider { width: 1px; height: 24px; background: #e2e8f0; }
+.color-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer; transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.color-dot.active { border-color: white; box-shadow: 0 0 0 2px #2563eb; transform: scale(1.15); }
+.color-dot:hover { transform: scale(1.1); }
+.width-btn {
+  padding: 6px 8px; border: 1.5px solid transparent;
+  border-radius: 8px; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; height: 34px;
+  transition: all 0.15s;
+}
+.width-btn.active { background: #eff6ff; border-color: #93c5fd; }
+.width-btn:hover { background: #f1f5f9; }
+
+/* ── Signature canvas + container ─────────────────────────────────── */
+.sig-container {
+  background: #fafbfc;
+  border: 2px solid #c7d2fe;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.sig-container:focus-within,
+.sig-container.drawing {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+}
+.sig-canvas {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}
+.sig-baseline {
+  position: absolute;
+  bottom: 44px;
+  left: 24px;
+  right: 24px;
+  border-bottom: 1.5px dashed #a5b4fc;
+  pointer-events: none;
+}
+.sig-baseline-label {
+  position: absolute;
+  bottom: 47px;
+  left: 24px;
+  font-size: 10px;
+  color: #a5b4fc;
+  pointer-events: none;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.sig-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  text-align: center;
+}
+.sig-placeholder-icon { font-size: 28px; margin-bottom: 6px; opacity: 0.3; }
+.sig-placeholder-text { font-size: 13px; color: #94a3b8; }
+
+/* When toolbar sits above the container, square the joint corners. */
+.sig-toolbar + .sig-container { border-radius: 0 0 14px 14px; }
+
+/* ── Footer row (hint + Undo/Clear) ──────────────────────────────── */
+.sig-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0 2px;
+}
+.sig-hint { font-size: 12px; color: #94a3b8; }
+.clear-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.clear-btn:hover { background: #f1f5f9; color: #475569; }

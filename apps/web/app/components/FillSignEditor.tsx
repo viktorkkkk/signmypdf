@@ -19,8 +19,9 @@ import {
   Type as TypeIcon,
   X,
 } from 'lucide-react';
-import SignatureCanvas from './SignatureCanvas';
+import { SignatureCanvas } from '@signmypdf/ui';
 import { applyFillSign, type FsElement } from '../utils/fillSignPdf';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 /** Drag threshold — mousedown + this many CSS px of movement before a
  *  click is treated as a drag instead of an "open editor" click. */
@@ -220,8 +221,7 @@ export default function FillSignEditor({
       setLoading(true);
       setError(null);
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const buf = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;

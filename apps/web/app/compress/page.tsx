@@ -30,6 +30,7 @@ import {
 } from '../constants';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { storePendingFile, consumePendingFile } from '../utils/pendingUpload';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 import {
   compressPdf,
   analyzePdf,
@@ -198,8 +199,7 @@ export default function CompressPage() {
     setPreviewLoading(true);
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const buf = await resultBlob.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;

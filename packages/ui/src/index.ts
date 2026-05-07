@@ -1,3 +1,12 @@
-// Placeholder — exports will be added when shared React components are
-// extracted from apps/web/app/components/ (NavHeader, SiteFooter, Logo, etc.).
-export {};
+/**
+ * Public API of `@signmypdf/ui`.
+ *
+ * Shared React components for PDF sign UI, framework-agnostic. Used by:
+ *   - apps/web (Next.js site)
+ *   - apps/extension (Chrome extension, planned)
+ *
+ * Styles ship in `./styles/signature.css` — host imports it once.
+ */
+
+export { default as SignatureCanvas } from './SignatureCanvas';
+export { default as PdfSignViewer } from './PdfSignViewer';

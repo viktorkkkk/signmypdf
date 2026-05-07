@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Pencil, MousePointerClick } from 'lucide-react';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 export interface TextField {
   id: string;
@@ -67,8 +68,7 @@ export default function PDFTextEditor({ file, textFields, onTextFieldsChange }: 
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const buf = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;
