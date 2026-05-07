@@ -36,7 +36,7 @@ import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { consumePendingFile } from '../utils/pendingUpload';
-import { addWatermarkToBlob } from '../utils/watermark';
+import { addWatermarkToBlob } from '@signmypdf/pdf-core';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN } from '../constants';
 

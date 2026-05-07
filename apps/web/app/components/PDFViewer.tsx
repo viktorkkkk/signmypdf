@@ -2,14 +2,11 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { FileText, PenLine, CheckSquare } from 'lucide-react';
+import type { SignaturePlacement } from '@signmypdf/pdf-core';
 
-export interface SignaturePlacement {
-  page: number;
-  x: number;      // % from left
-  y: number;      // % from top
-  w: number;      // % width
-  h: number;      // % height
-}
+// Re-export so existing `import { SignaturePlacement } from '.../PDFViewer'`
+// callers keep working until PR B moves the component to packages/ui.
+export type { SignaturePlacement };
 
 interface Props {
   file: File;

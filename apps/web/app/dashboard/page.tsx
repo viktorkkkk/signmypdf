@@ -7,7 +7,7 @@ import { PenLine, CheckCircle } from 'lucide-react';
 import Logo from '../components/Logo';
 import { getDrafts, deleteDraft, setPendingDraft, Draft } from '../utils/drafts';
 import { getHistory, HistoryItem } from '../components/FileHistory';
-import { addWatermarkToBlob, blobToDataUrl } from '../utils/watermark';
+import { addWatermarkToBlob, blobToDataUrl } from '@signmypdf/pdf-core';
 
 const TOKEN_KEY = 'signmypdf_dashboard_token';
 
