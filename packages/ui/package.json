@@ -12,6 +12,11 @@
     "@signmypdf/pdf-core": "workspace:*",
     "lucide-react": "^1.11.0"
   },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "^19",
+    "typescript": "5.9.3"
+  },
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
