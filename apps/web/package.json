@@ -12,6 +12,7 @@
   "dependencies": {
     "@cantoo/pdf-lib": "^2.6.5",
     "@neondatabase/serverless": "^1.1.0",
+    "@signmypdf/pdf-core": "workspace:*",
     "jszip": "^3.10.1",
     "lucide-react": "^1.11.0",
     "next": "16.2.2",

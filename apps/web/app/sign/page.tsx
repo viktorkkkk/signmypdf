@@ -21,7 +21,8 @@ import {
   Scissors,
 } from 'lucide-react';
 import SignatureCanvas from '../components/SignatureCanvas';
-import PDFViewer, { SignaturePlacement } from '../components/PDFViewer';
+import PDFViewer from '../components/PDFViewer';
+import type { SignaturePlacement } from '@signmypdf/pdf-core';
 import SavedSignatures, { saveSig, SavedSig } from '../components/SavedSignatures';
 import Logo from '../components/Logo';
 import NavHeader from '../components/NavHeader';
@@ -29,7 +30,7 @@ import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
-import { signPdfInBrowser } from '../utils/signPdf';
+import { signPdfInBrowser } from '@signmypdf/pdf-core';
 import {
   SUBSCRIPTION_KEY,
   DAILY_LIMIT,
@@ -321,7 +322,7 @@ export default function Home() {
       // For download: add watermark if needed
       let blob = cleanBlob;
       if (willHaveWatermark) {
-        const { addWatermarkToBlob } = await import('../utils/watermark');
+        const { addWatermarkToBlob } = await import('@signmypdf/pdf-core');
         blob = await addWatermarkToBlob(cleanBlob);
       }
 

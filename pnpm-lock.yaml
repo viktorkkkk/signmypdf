@@ -23,6 +23,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^1.1.0
         version: 1.1.0
+      '@signmypdf/pdf-core':
+        specifier: workspace:*
+        version: link:../../packages/pdf-core
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
@@ -69,7 +72,14 @@ importers:
 
   packages/auth: {}
 
-  packages/pdf-core: {}
+  packages/pdf-core:
+    dependencies:
+      pdf-lib:
+        specifier: ^1.17.1
+        version: 1.17.1
+      pdfjs-dist:
+        specifier: ^5.6.205
+        version: 5.7.284
 
   packages/ui: {}
 

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { addWatermarkToBlob } from '../utils/watermark';
+import { addWatermarkToBlob } from '@signmypdf/pdf-core';
 import {
   saveHistoryBlob,
   getHistoryBlob,

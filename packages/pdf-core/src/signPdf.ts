@@ -1,5 +1,7 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
+import type { SignaturePlacement, SignOptions } from './types';
+
 // Render text to PNG image (supports any Unicode including Cyrillic)
 function renderTextToDataUrl(text: string, width: number, height: number): string {
   const canvas = document.createElement('canvas');
@@ -32,23 +34,6 @@ function renderTextToDataUrl(text: string, width: number, height: number): strin
   ctx.fillText(text, canvas.width / 2, H / 2);
 
   return canvas.toDataURL('image/png');
-}
-
-export interface SignaturePlacement {
-  page: number;
-  x: number;      // % from left
-  y: number;      // % from top
-  w: number;      // % width
-  h: number;      // % height
-}
-
-export interface SignOptions {
-  pdfFile: File;
-  signatureDataUrl: string;
-  typedName: string;
-  signMode: 'draw' | 'type';
-  placements: SignaturePlacement[];
-  addWatermark?: boolean;
 }
 
 /**
