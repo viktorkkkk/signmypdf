@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Capture per-page lastmod from `git log -1 --format=%cI -- <files>` and
- * write it to `app/lastmod.generated.json`. Run locally before push (or
- * via a pre-build hook in dev) so the production sitemap shows
+ * write it to `apps/web/app/lastmod.generated.json`. Run locally before
+ * push (or via a pre-build hook in dev) so the production sitemap shows
  * meaningful per-URL freshness.
  *
  * On Vercel the build clone is shallow (--depth=1), so `git log` returns
@@ -19,20 +19,20 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-// Each entry: route → list of source files whose last commit dictates
-// the route's lastmod. Add new tool pages here.
+// Each entry: route → list of source files (relative to repo root) whose
+// last commit dictates the route's lastmod. Add new tool pages here.
 const ROUTES = {
-  '/':         ['app/page.tsx', 'app/layout.tsx'],
-  '/sign':     ['app/sign/page.tsx', 'app/sign/layout.tsx'],
-  '/fill':     ['app/fill/page.tsx', 'app/fill/layout.tsx'],
-  '/protect':  ['app/protect/page.tsx', 'app/protect/layout.tsx'],
-  '/merge':    ['app/merge/page.tsx', 'app/merge/layout.tsx'],
-  '/compress': ['app/compress/page.tsx', 'app/compress/layout.tsx'],
-  '/split':    ['app/split/page.tsx', 'app/split/layout.tsx'],
-  '/sign-nda': ['app/sign-nda/page.tsx', 'app/sign-nda/NdaHeroCard.tsx'],
-  '/blog':     ['app/blog/page.tsx', 'app/blog/posts.ts'],
-  '/privacy':  ['app/privacy/page.tsx'],
-  '/terms':    ['app/terms/page.tsx'],
+  '/':         ['apps/web/app/page.tsx', 'apps/web/app/layout.tsx'],
+  '/sign':     ['apps/web/app/sign/page.tsx', 'apps/web/app/sign/layout.tsx'],
+  '/fill':     ['apps/web/app/fill/page.tsx', 'apps/web/app/fill/layout.tsx'],
+  '/protect':  ['apps/web/app/protect/page.tsx', 'apps/web/app/protect/layout.tsx'],
+  '/merge':    ['apps/web/app/merge/page.tsx', 'apps/web/app/merge/layout.tsx'],
+  '/compress': ['apps/web/app/compress/page.tsx', 'apps/web/app/compress/layout.tsx'],
+  '/split':    ['apps/web/app/split/page.tsx', 'apps/web/app/split/layout.tsx'],
+  '/sign-nda': ['apps/web/app/sign-nda/page.tsx', 'apps/web/app/sign-nda/NdaHeroCard.tsx'],
+  '/blog':     ['apps/web/app/blog/page.tsx', 'apps/web/app/blog/posts.ts'],
+  '/privacy':  ['apps/web/app/privacy/page.tsx'],
+  '/terms':    ['apps/web/app/terms/page.tsx'],
 };
 
 // Files that are staged for the about-to-be-made commit. When the script
@@ -84,10 +84,10 @@ for (const [route, files] of Object.entries(ROUTES)) {
   if (mtime) map[route] = mtime;
 }
 
-const out = resolve(repoRoot, 'app/lastmod.generated.json');
+const out = resolve(repoRoot, 'apps/web/app/lastmod.generated.json');
 writeFileSync(out, JSON.stringify(map, null, 2) + '\n', 'utf-8');
 
-console.log(`Wrote ${Object.keys(map).length} entries to app/lastmod.generated.json`);
+console.log(`Wrote ${Object.keys(map).length} entries to apps/web/app/lastmod.generated.json`);
 for (const [route, mtime] of Object.entries(map)) {
   console.log(`  ${route.padEnd(12)} ${mtime}`);
 }

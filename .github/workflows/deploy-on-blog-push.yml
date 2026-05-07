@@ -19,7 +19,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'app/blog/posts.ts'
+      - 'apps/web/app/blog/posts.ts'
   workflow_dispatch:
     inputs:
       submit_all_to_google:
@@ -62,7 +62,7 @@ jobs:
             DIFF_RANGE="HEAD~1...HEAD"
           fi
           echo "Diff range: $DIFF_RANGE"
-          NEW=$(git diff "$DIFF_RANGE" -- app/blog/posts.ts \
+          NEW=$(git diff "$DIFF_RANGE" -- apps/web/app/blog/posts.ts \
             | grep -E "^\+    slug: '" \
             | sed -E "s/^\+    slug: '([^']+)'.*/\1/" \
             | tr '\n' ' ' \
@@ -81,6 +81,10 @@ jobs:
           echo "Triggering production deploy..."
           # `vercel deploy --prod` blocks until the deployment is READY.
           # Returns deployment URL (e.g. https://signmypdf-xxx.vercel.app).
+          # Run from apps/web/ — Vercel project's rootDirectory is set to
+          # apps/web in the dashboard, but the CLI uploads from cwd, so we
+          # explicitly cd into the app to avoid bundling the monorepo root.
+          cd apps/web
           DEPLOY_URL=$(npx --yes vercel@latest deploy \
             --prod \
             --token "$VERCEL_TOKEN" \

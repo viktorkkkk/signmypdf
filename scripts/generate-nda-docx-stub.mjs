@@ -5,7 +5,7 @@
  * cleanly. The user replaces this file with the real legal text.
  *
  * Usage: node scripts/generate-nda-docx-stub.mjs
- * Output: public/templates/nda-template.docx
+ * Output: apps/web/public/templates/nda-template.docx
  */
 
 import JSZip from 'jszip';
@@ -14,7 +14,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir    = resolve(__dirname, '..', 'public', 'templates');
+const outDir    = resolve(__dirname, '..', 'apps', 'web', 'public', 'templates');
 mkdirSync(outDir, { recursive: true });
 
 const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
