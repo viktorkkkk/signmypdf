@@ -1,13 +1,13 @@
 {
   "date": "2026-05-07",
-  "timestamp": "2026-05-07T02:19:57Z",
+  "timestamp": "2026-05-07T15:04:16Z",
   "event": "push",
   "ref": "refs/heads/main",
-  "sha": "337ed36d8511eb11bbdf440892236067c789a4a4",
-  "newSlugs": "zoho-sign-vs-signmypdf password-pdf-vs-encrypted-email",
-  "deployUrl": "Aliased: https://www.signmypdf.io [50s]",
-  "deployOutcome": "success",
-  "indexnowOutcome": "success",
-  "googleOutcome": "success",
-  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25472336115"
+  "sha": "456afb99e1473acaf5116b6af6938c4e5a289ac5",
+  "newSlugs": "how-to-sign-pdf-online sign-pdf-free-without-registration how-to-add-signature-to-pdf sign-pdf-on-iphone-free sign-pdf-on-mac sign-pdf-android-free sign-pdf-windows-free sign-pdf-without-adobe sign-pdf-no-watermark sign-pdf-fast-secure how-to-sign-lease-agreement-online how-to-sign-nda-online docusign-alternative-free fill-pdf-form-online-free signmypdf-vs-docusign-freelancers real-estate-agents-sign-documents fill-w9-form-online-free electronic-signature-legal-rental sign-nda-online-without-printing pdf-wont-let-me-type-fix ilovepdf-vs-signmypdf fill-irs-form-online-free freelancers-sign-contracts-free electronic-signature-laws-by-state sign-employment-offer-letter-online cant-sign-pdf-iphone-fix adobe-acrobat-vs-signmypdf sign-pdf-on-chromebook-free sign-pdf-from-google-drive-free fill-rental-application-pdf-free small-business-document-signing eidas-regulation-eu-signatures sign-medical-release-form-online fill-medical-release-form-online eidas-fill-pdf-eu pdf-form-fields-not-working-fix sign-insurance-documents-online hellosign-alternatives-free hr-teams-collect-signatures esign-act-explained fill-job-application-pdf-online sign-pdf-no-editing-allowed smallpdf-vs-signmypdf sign-construction-contract-online password-protect-pdf-online-free remote-teams-sign-documents digital-signatures-admissible-court fill-government-forms-online-free signature-disappears-pdf-fix sent-confidential-contract-unprotected pandadoc-free-alternative sign-divorce-papers-online password-protect-pdf-without-adobe protected-pdf-wont-open-some-devices pdf-signing-no-email-required electronic-signature-business-contracts freelancers-protect-client-contracts property-managers-tenant-signatures adobe-vs-free-pdf-protection fill-visa-application-form-pdf password-protect-pdf-on-mac pdf-read-only-add-text-fix sign-contractor-agreement-online password-protect-pdf-on-windows-11 docusign-free-plan-vs-signmypdf accountants-tax-documents-signature why-lawyer-asks-password-protect-pdf hipaa-electronic-signatures fill-bank-form-pdf-online sign-multiple-pdf-pages accountant-wont-accept-unprotected-tax-documents zoho-sign-vs-signmypdf password-pdf-vs-encrypted-email",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25504089722"
 }
