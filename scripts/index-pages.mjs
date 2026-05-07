@@ -55,7 +55,7 @@ const STATIC_URLS = [
 
 // Read all slugs dynamically from posts.ts
 function getAllSlugsFromPosts() {
-  const content = readFileSync('./app/blog/posts.ts', 'utf8');
+  const content = readFileSync('./apps/web/app/blog/posts.ts', 'utf8');
   const matches = [...content.matchAll(/slug:\s*['"]([^'"]+)['"]/g)];
   return matches.map(m => m[1]).filter(s => s !== 'string'); // filter out type declarations
 }

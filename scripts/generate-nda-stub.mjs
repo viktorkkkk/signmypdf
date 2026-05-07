@@ -6,7 +6,7 @@
  * something valid to show in preview and tests.
  *
  * Usage: node scripts/generate-nda-stub.mjs
- * Output: public/templates/nda-template.pdf
+ * Output: apps/web/public/templates/nda-template.pdf
  */
 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
@@ -15,7 +15,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir    = resolve(__dirname, '..', 'public', 'templates');
+const outDir    = resolve(__dirname, '..', 'apps', 'web', 'public', 'templates');
 mkdirSync(outDir, { recursive: true });
 
 const pdf = await PDFDocument.create();

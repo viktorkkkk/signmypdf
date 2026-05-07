@@ -5,4 +5,4 @@
 # See scripts/generate-lastmod.mjs for how staged files get a `now` mtime
 # instead of the previous-commit mtime.
 node scripts/generate-lastmod.mjs >/dev/null
-git add app/lastmod.generated.json
+git add apps/web/app/lastmod.generated.json
