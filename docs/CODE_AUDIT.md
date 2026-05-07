@@ -14,17 +14,18 @@ From [apps/web/package.json](../apps/web/package.json):
 
 | Package | Version | Used in | Verdict for extension |
 |---|---|---|---|
-| `pdf-lib` | `^1.17.1` | `signPdf.ts`, `mergePdf.ts`, `watermark.ts`, `compressPdf.ts`, `fillPdf.ts`, `splitPdf.ts`, `fillSignPdf.ts`, `api/sign/route.ts` | **Required** — primary PDF engine |
+| `pdf-lib` | `^1.17.1` | `signPdf.ts`, `mergePdf.ts`, `watermark.ts`, `compressPdf.ts`, `fillPdf.ts`, `splitPdf.ts`, `fillSignPdf.ts` | **Required** — primary PDF engine |
 | `pdfjs-dist` | `^5.6.205` (resolved 5.7.284 by pnpm) | `PDFViewer.tsx`, `PDFTextEditor.tsx`, `FillSignEditor.tsx`, `PDFPreview.tsx`, plus 6 tool pages directly setting `GlobalWorkerOptions.workerSrc` | **Required** — preview rendering. Worker file copied via `apps/web/scripts/copy-pdf-worker.mjs` postinstall (per [Stage 2 fix](../apps/web/CLAUDE.md)) |
 | `react-dropzone` | `^15.0.0` | All tool pages incl. `apps/web/app/sign/page.tsx:276-285` | **Required** — drag-and-drop ergonomics. Works fine in CRX popup/sidepanel |
 | `lucide-react` | `^1.11.0` | Everywhere (chrome, components, page bodies) | **Required** — icons, plain SVG, no DOM/Next ties |
 | `react` / `react-dom` | `19.2.4` | All client components | **Required** — extension will also be React |
 | `@cantoo/pdf-lib` | `^2.6.5` | `apps/web/app/utils/protectPdf.ts:15` only | **Drop** — `/protect` only, MVP doesn't need encryption |
 | `jszip` | `^3.10.1` | `apps/web/app/utils/splitPdf.ts:296` only | **Drop** — `/split` only |
-| `signature_pad` | `^5.1.3` | **Nowhere** — verified by `grep -rn signature_pad apps/web/app` returning zero hits. `SignatureCanvas` re-implements its own canvas+stroke logic. | **Drop on next cleanup pass** — dead dep in current codebase too. Out of scope for Stage 4 |
 | `@neondatabase/serverless` | `^1.1.0` | `apps/web/app/lib/db.ts` (Postgres for Pro subscriptions) | **Drop** — server-only, web-only |
 | `next` | `16.2.2` | Framework | **Drop** — extension uses Vite or webpack (no SSR / file-system routing) |
 | `eslint-config-next` | `16.2.2` | dev | **Drop** — replace with eslint-config for the extension toolchain |
+
+> Note: `signature_pad@5.1.3` was listed here in the original audit as a dead dep (zero source imports — `SignatureCanvas` reimplements its own canvas). Cleaned up pre-Stage-4 in [PR #8](https://github.com/viktorkkkk/signmypdf/pull/8). The current `apps/web/package.json` no longer carries it.
 
 Two transitive ones worth flagging since they ship in the bundle:
 - `pdf-lib` ~280 KB gzipped — fine for an extension popup
@@ -91,8 +92,9 @@ These are not blockers — `pdf-core` for the extension only needs `signPdf.ts` 
 | `apps/web/app/sign/page.tsx` | `'use client'`, but otherwise plain React — could in principle be lifted. **However:** it imports `next/font` *transitively* via the root layout, plus `<NavHeader>` and `<SiteFooter>` which use `next/link` and Google Fonts. The orchestrator itself is portable; the chrome around it is not. |
 | `apps/web/app/sign/layout.tsx` | Pure Next metadata — drop entirely for the extension |
 | `apps/web/app/layout.tsx` | `next/font/google` (`Inter`), Google Analytics inline script, JSON-LD metadata. **All web-only.** |
-| `apps/web/app/api/sign/route.ts` (87 LoC) | Server-side PDF signing endpoint. **Currently unused by the client** — both `/sign` and `/sign-nda` go through `signPdfInBrowser` (browser-only). This is dead-weight in the web app too. Note for the future, drop for extension. |
 | `apps/web/app/sitemap.ts` | Next sitemap. Web-only. |
+
+> Original audit also flagged `apps/web/app/api/sign/route.ts` (87 LoC) — a server-side `pdf-lib` endpoint never called from the client. Cleaned up pre-Stage-4 in [PR #8](https://github.com/viktorkkkk/signmypdf/pull/8) and is no longer in the repo.
 
 ---
 
@@ -250,11 +252,10 @@ These are inert in any non-Next runtime. Not "drop"-able from `apps/web/` — th
 
 ### 4.2 Server-side surface
 
-- All of `apps/web/app/api/*` (87 + 32 + 22 + 116 + smaller) — Next route handlers, magic-link auth, Paddle webhook, subscription check
+- All of `apps/web/app/api/*` (32 + 22 + 116 + smaller) — Next route handlers, magic-link auth, Paddle webhook, subscription check (the `apps/web/app/api/sign/route.ts` line that was here in the original audit is gone — deleted in [PR #8](https://github.com/viktorkkkk/signmypdf/pull/8))
 - `apps/web/app/lib/db.ts` (Postgres / Neon)
 - `apps/web/app/lib/email.ts` (Brevo SMTP)
 - `apps/web/app/lib/jwt.ts` (custom HS256 implementation)
-- `apps/web/app/api/sign/route.ts` (server-side `pdf-lib` wrapper — **dead code, never called from the client**, but still in repo)
 
 ### 4.3 Auth / subscription / paywall
 
@@ -376,10 +377,89 @@ Then `apps/web/` calls `setupPdfjs('/pdf.worker.min.mjs')` once on boot, the ext
 
 ---
 
-## 6. Caveats & open questions
+## 6. Layout — current state of `/sign` on desktop
 
-1. **Worker URL config (§1.2 + §5.1).** Either the `setupPdfjs(workerSrc)` helper or a per-component `workerSrc` prop. Both work; the helper is less prop-drilling for a value that's typically set once per app. Recommend the helper.
-2. **CSS-tokens migration.** The `--color-primary` etc. tokens exist but are unused outside `.hub-*`. `/sign` styles use hard-coded hex. Migrating signature CSS onto tokens would let the extension theme differently if needed. **Optional, not blocking** — the MVP uses the same `#2563eb`.
-3. **Inter font in extension.** Recommend self-hosting `Inter-Regular.woff2` + `Inter-SemiBold.woff2` in extension `public/` rather than relying on system fonts. Adds ~80 KB to the extension bundle but matches the web rendering exactly.
-4. **`signature_pad` dead dep (§0).** Not part of Stage 4, but worth a one-line PR to remove from `apps/web/package.json` while we're touching dependencies. Saves ~30 KB.
-5. **`api/sign/route.ts` dead code.** Never called from the client per `grep`. Worth flagging for a separate cleanup, not part of Stage 4.
+This section documents the **current** desktop layout as a baseline. **No changes are proposed for Stage 4** — the recommendation in §6.4 is for a separate post-Stage-4 task that lifts the fix into `packages/ui` *before* the extension popup is built, so the CRX surface inherits the corrected layout from day one.
+
+### 6.1 Measured at 1280×800 desktop viewport
+
+Replicated by loading the deployed `/sign` route, dropping the 4-page NDA template via the dropzone, and reading `getBoundingClientRect()` on every relevant block. Numbers below are top/bottom Y offsets in document coordinates (i.e. they include scrollY = 0 at the start, so a `top` greater than 800 is *below* the first viewport).
+
+| Block | Top | Bottom | Height | Width | Visible in 1st screen (≤ 800)? |
+|---|---|---|---|---|---|
+| `<NavHeader>` | 0 | 68 | 68 | 1280 | ✅ |
+| Progress steps | 96 | 128 | 32 | 428 | ✅ |
+| H2 "Sign your document" | 176 | 206 | 30 | 236 | ✅ |
+| Card 1 — "1. Create your signature" | **301** | **930** | 629 | 1104 | ⚠️ only top 499 px (top 80%) |
+| → Tabs (Draw/Type) | 359 | 399 | 40 | 1054 | ✅ |
+| → `.sig-toolbar` | 419 | 474 | 56 | 1054 | ✅ |
+| → `.sig-canvas` | 476 | 856 | **380** | 1050 | ⚠️ top 324 px |
+| Sticky "Sign PDF" button | 682 | 772 | 91 | 1104 | ✅ |
+| Card 2 — "2. Select pages & place signature" | **946** | **2839** | **1894** | 1104 | ❌ entire card below fold |
+| → Thumbnail strip | 1030 | 1176 | 147 | 1054 | ❌ |
+| → PDF page canvas | 1309 | 2794 | 1485 | 1051 | ❌ requires scroll ≥ 1029 px |
+| `<SiteFooter>` | 3058 | … | 1193 | 1280 | ❌ |
+
+**Total document height: 3467 px** = 4.3 × 1280×800 viewport.
+
+### 6.2 DOM organisation
+
+[apps/web/app/sign/page.tsx:493-665](../apps/web/app/sign/page.tsx#L493) is the relevant region:
+
+```
+.container (max-width: 1200px, padding: 0 48px → inner width 1104 px on 1280)
+  └─ vertical flow:
+      ├─ <h2 class="step-title">…</h2>
+      ├─ file bar (filename + Change file)
+      ├─ <div class="card">                  ← Card 1
+      │     <div class="card-title">1. Create your signature</div>
+      │     .tabs                            (Draw / Type)
+      │     <SignatureCanvas />              (renders .sig-toolbar + .sig-canvas)
+      │     <SavedSignatures />              (Pro-only)
+      ├─ <div class="card">                  ← Card 2
+      │     <div class="card-title">2. Select pages & place signature</div>
+      │     <PDFViewer />                    (thumbs + page navigation + canvas + drag overlay)
+      └─ <div class="sticky-sign-wrap">      (button)
+```
+
+It's a **plain block flow** — no flex, no grid, no two-column structure on desktop. Both cards span 100% of the inner container width (1104 px on a 1280 viewport). The mobile layout (`<` 768 px) is the same single-column stack with smaller padding; the desktop layout simply doesn't use the extra horizontal real estate.
+
+[apps/web/app/globals.css:272-278](../apps/web/app/globals.css#L272) defines `.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }` and [globals.css:2415-2421](../apps/web/app/globals.css#L2415) defines `.card { background: white; border-radius: 20px; padding: 24px; }`. Neither has any width override at the responsive breakpoint.
+
+### 6.3 Identified problems
+
+1. **The PDF preview is entirely below the fold on a 1280×800 viewport.** Card 2 starts at Y=946 and its first useful element (the page-thumbnail strip) at Y=1030. Users have to scroll **at least 230 px just to see the thumbnail strip** and **509 px to see the rendered PDF page**. The point at which the user can place a signature on the page is at Y=1309 (PDF canvas top-left), so they have to scroll **509 px down** before the placement target enters view.
+
+2. **The signature creator is over-sized.** SignatureCanvas auto-fills its parent's `clientWidth` ([SignatureCanvas.tsx:60-72](../apps/web/app/components/SignatureCanvas.tsx#L60)) and so renders at 1050 px wide × 380 px tall — three times wider than any signature a user actually draws. The cropped output ends up small (it's the ink bounding box, not the canvas), but the **input UI** wastes screen.
+
+3. **The PDF page canvas is up-scaled.** `PDFViewer` derives a render scale from container width ([PDFViewer.tsx:99-102](../apps/web/app/components/PDFViewer.tsx#L99)): `scale = wrap.clientWidth / pageNativeWidth`. On a 1280 viewport with a Letter-size NDA (612 pt ≈ 816 logical px), that's `1051 / 816 ≈ 1.29×` — the page is rendered 29% bigger than it would print. This is fine for legibility but makes a single page (1485 px tall) take **almost 2 viewports**.
+
+4. **No sticky-positioning for the signature creator.** Once the user scrolls down to interact with the PDF preview, the signature canvas leaves the viewport completely (`top: 476` → off-screen at scrollY ≥ 856). They have to scroll back up to redraw or switch Draw/Type modes.
+
+5. **Vertical-only flow forces 4.3 viewports of total height** (3467 px / 800). The sticky "Sign PDF" button at the bottom of Card 1 helps a bit (always-on-screen during Card-1 interaction), but doesn't compensate for the preview being completely below the fold.
+
+### 6.4 Direction for a future task (NOT Stage 4)
+
+For a follow-up task **after Stage 4 finishes** and **before the extension popup is built**, lift the `/sign` step into a 2-column grid on viewports ≥ 1024 px:
+
+- **Left column (max-width 800 px):** PDF preview. Internal vertical scroll for multi-page PDFs. Keeps the page canvas at a sane render scale (612 pt × 800/816 ≈ 0.98× of native, no upscaling).
+- **Right column (320–360 px, sticky):** signature creator (Draw/Type tabs + canvas + saved signatures), thumbnail strip, page selector, sticky "Sign PDF" button. Sticky on `position: sticky; top: 80px` so it doesn't scroll out of view while the user pages through the PDF.
+- **Mobile (`<` 1024 px):** keep the current vertical stack (it works fine on mobile — both blocks fit a portrait phone screen because the canvas height drops to 240 px and the PDF page renders narrow).
+
+Acceptance bar for that future task:
+- On a 1280×800 viewport, **both columns are fully visible** without scrolling — the PDF page and the signature canvas live side-by-side above the fold.
+- Total document height fits in **≤ 1.5 viewports** (vs current 4.3) on a 4-page PDF.
+- Mobile rendering is unchanged.
+- No regression in sticky sign button behaviour.
+
+**Why before extension, not after:** the CRX popup or sidepanel will be ~600–800 px wide × 600 px tall (Chrome popup max is 800×600 unless using sidepanel/full-tab). The current 1104-px-wide card layout doesn't even fit the popup. If we lift the layout fix into `packages/ui` as part of the same component that the extension imports, the extension gets a sensible size from day one. Doing it after means writing an extension-only override and then later reconciling with the web app.
+
+The **size** of this future task: ~1 day of work. Touches `apps/web/app/sign/page.tsx` (the JSX wrapping Card 1 and Card 2 in a 2-column grid) + new CSS rules in `apps/web/app/globals.css` (or — better — in `packages/ui/src/styles/signature.css` once Stage 4 lands). No changes to `SignatureCanvas`, `PDFViewer`, or the signing engine — only the page-level layout container.
+
+---
+
+## 7. Caveats & open questions
+
+1. **Worker URL config (§1.2 + §5.1).** Either the `setupPdfjs(workerSrc)` helper or a per-component `workerSrc` prop. Both work; the helper is less prop-drilling for a value that's typically set once per app. Recommend the helper. **Decided**: helper.
+2. **CSS-tokens migration.** The `--color-primary` etc. tokens exist but are unused outside `.hub-*`. `/sign` styles use hard-coded hex. Migrating signature CSS onto tokens would let the extension theme differently if needed. **Decided**: defer — Stage 4 lifts inline-styles as-is; tokens migration is a separate task.
+3. **Inter font in extension.** **Decided**: use system font stack `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` — do not bundle `.woff2`. The web app keeps `next/font/google` for Inter; the extension uses the system stack. Output PDFs are unaffected (signing renders into PNG before pdf-lib embeds it).
