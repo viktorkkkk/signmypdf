@@ -181,25 +181,44 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
-## Recently Shipped (May 6-7 2026)
+## ⚠️ KNOWN BROKEN (May 6-7 2026): mobile-hero handoff still fails on prod
 
-Three-commit batch (`2e17004` diag + `008695f` fix + the earlier `96bf4d9` consumer wiring) that finally closed the **mobile-hero handoff bug**: tapping a tab on `/`, picking a PDF, landing on `/sign | /fill | /protect` — but seeing the dropzone instead of the editor. Two prior fixes (`f80dbd1` adding the hub→tool handoff via `pendingUpload` + `96bf4d9` adding consumers on `/fill` and `/protect`) didn't actually solve it on prod even though both Chrome-desktop preview tests passed. Headline outcomes:
+**Status: NOT FIXED** despite 3 commits. User-confirmed broken on prod across **all browsers** (not Safari-only as earlier hypothesis assumed). Reproduces every time: tap a tab on `/`, pick a PDF, land on `/sign | /fill | /protect` — and see the **dropzone twice** instead of the editor with the filename loaded.
 
-- **Real root cause was a race in [`app/utils/db.ts`](app/utils/db.ts) `txStore`**, not the consumer wiring. The helper was resolving its returned Promise on `req.onsuccess` (operation applied **inside** the IDB transaction, in-memory) instead of `t.oncomplete` (transaction durably committed and visible to other connections). On Safari the gap between those two events is long enough that:
-  1. `await storePendingFile(file)` returns
-  2. `router.push('/fill')` runs
-  3. `/fill` mounts and opens a fresh IDB connection
-  4. Its read-TX fires **before** the write-TX has committed
-  5. `get` returns `undefined` → consumer returns null → user sees the dropzone
-  Chrome-dev runs the whole sequence fast enough that the race never manifested in preview. That's why the `f80dbd1` + `96bf4d9` pair "looked right" in two prior smoke-tests and still failed in prod.
-- **Fix** ([`app/utils/db.ts`](app/utils/db.ts)): capture `req.result` into a local on `req.onsuccess`, capture `req.error` into a local on `req.onerror`, but only `resolve(value)` from `t.oncomplete`. Add `t.onabort` for the abort path. The public API of `txStore` is unchanged — every caller (`pendingUpload` + `historyBlobs`) gets the durable-commit contract for free, which is the contract both layers were already implicitly assuming.
-- **Diagnostic instrumentation** (`2e17004`) was added on the way and removed in `008695f` once the fix was verified. Only `console.error` paths remain in the IDB layer (quota / private-mode failures) — no info-level logs in prod.
-- **Verification on preview (390×844, post-cleanup)**: all three tabs (Sign / Fill / Protect) handed off correctly — `/<tool>` route reached, `?from=hub` cleaned via `history.replaceState`, editor visible (`.sig-canvas` / `canvas` / `input[type=password]`), filename in DOM, dropzone hidden, console clean. Build + tsc + ESLint clean (no new lint errors over the existing baseline).
-- **Deployed on prod** as `dpl_2HywkCjrvnLMQZqt7AmdF9zdu6nW` → READY on www.signmypdf.io. Single-attempt handoff now works on iPhone Safari and on Chrome desktop alike.
+**Business impact**: this is the primary mobile conversion path and it is currently 0% conversion to `pdf_signed` event on mobile. Every iPhone user who taps the hero CTA and picks a file gets an empty dropzone on arrival, has to find their file again, gets confused, bounces. **This is the single highest-priority bug on the project right now.** Until it's fixed, no other SEO/marketing/feature work moves the needle on mobile revenue.
 
-Files involved:
-- `app/utils/db.ts` — `txStore` resolves on `t.oncomplete`, captures result/error from request handlers, closes the connection in every terminal path. Public signature unchanged.
-- `app/page.tsx` (hub), `app/sign/page.tsx`, `app/fill/page.tsx`, `app/protect/page.tsx` — diagnostic logs added in `2e17004` and removed in `008695f`. Net delta vs. pre-batch state: zero.
+### Three failed attempts so far
+
+1. **`f80dbd1` (May 6)** — added `pendingUpload` IDB-backed handoff on `/`. Hub writes file to IDB before `router.push('/sign')`. Tool screens were not updated to read it. **Result**: dropzone on arrival because nothing consumed the pending file.
+
+2. **`96bf4d9` (May 6)** — added consumer hooks on `/fill` and `/protect` (and confirmed `/sign` already had one). Each tool reads `pendingUpload` on mount and primes its file state. Verified in Chrome desktop preview. **Result**: still dropzone-on-arrival on prod — but Chrome-dev preview kept showing it as working.
+
+3. **`2e17004` + `008695f` (May 7)** — instrumented the full hub→tool handoff with `console.log`s, found that `txStore` was resolving on `req.onsuccess` instead of `t.oncomplete` (request-applied vs. transaction-committed), patched `txStore` in [`app/utils/db.ts`](app/utils/db.ts) to resolve on `t.oncomplete`. Fix is genuinely correct in isolation — `req.onsuccess` and `t.oncomplete` are not equivalent and the IDB spec says cross-connection reads need the latter. **Result on prod**: STILL dropzone-on-arrival, on every browser. The IDB-race hypothesis was either wrong, or only one of multiple co-occurring failures.
+
+### Verification gap: preview ≠ prod
+
+All three commits were "verified" via the local Claude Preview tool (Chrome desktop, 390×844 viewport simulating mobile). Each "verification" came back clean and was cited as proof the fix worked. Each one then failed on prod. **Lesson: preview-tool DOM checks are not a substitute for actually testing the deployed prod URL on a real iOS Safari and a real Android Chrome.** The preview tool runs Chrome on macOS and inherits Chrome's IDB timing, font rendering, viewport assumptions, and PWA install state — none of which match a real iPhone visiting `https://www.signmypdf.io`. Future verification of mobile-affecting code MUST include either a real-device check or BrowserStack/Sauce equivalent before claiming "fixed."
+
+### Candidate next approach: drop IndexedDB, use sessionStorage + base64
+
+User-suggested architectural change. Rationale:
+
+- IDB is the wrong primitive for a sub-second cross-route handoff. It's designed for **persistent client-side storage**, with a deliberately complex transaction model precisely so writes survive crashes — and that complexity is exactly what's biting us. Even with `t.oncomplete`, there are reports in the wild of Safari delaying transaction commit further when the page is unloading (which is exactly when `router.push` fires in our flow).
+- `sessionStorage` is **synchronous, single-tab, no transaction model, no async commits**. `sessionStorage.setItem(key, value)` returns when the value is durably written and visible to every subsequent same-tab `getItem`. There is no race possible by construction.
+- Tradeoff: `sessionStorage` is string-only, so the file has to be base64-encoded. Cost: ~33% size inflation + ~50ms encode/decode for a 1MB PDF. Mobile users typically upload 1-5MB PDFs, so worst case ~250ms of CPU on a mid-range Android. Acceptable for the conversion gain.
+- Storage limit: ~5MB on Safari (the canonical floor). PDFs over ~3.7MB raw (= ~5MB base64) won't fit. Fallback: keep IDB as the >3.7MB path, use sessionStorage for everything below. Or: cap the hub upload at 3.7MB and require users with bigger files to upload directly on the tool screen (which currently works fine).
+- Downside: `sessionStorage` is per-tab, doesn't survive a closed tab. That's actually fine for handoff — if the user closes the tab between hub and tool, we WANT to forget the file.
+
+**Decision pending**: implement sessionStorage+base64 path as primary, leave IDB as >3.7MB fallback. **Do NOT start without explicit user go-ahead** — the next session should first reproduce the bug on a real device and confirm the diagnosis before touching code.
+
+### What is genuinely fixed (don't undo)
+
+- **`txStore` durable-commit contract** in [`app/utils/db.ts`](app/utils/db.ts). The fix from `008695f` is correct in isolation regardless of whether it solved the user-visible bug. Resolving on `t.oncomplete` is the IDB-spec-correct semantics for a "commit and read elsewhere" workflow, and `historyBlobs` (Pro download history) implicitly relies on it. Keep this. See `## What NOT to touch` → `txStore` entry.
+- **Per-tool consumer wiring** on `/sign`, `/fill`, `/protect`. Each route reads `pendingUpload` on mount and primes its file state. Even when we switch to sessionStorage, the consumer pattern stays — only the underlying storage changes.
+
+Files touched in the failed batch:
+- `app/utils/db.ts` — `txStore` rewrite (kept).
+- `app/page.tsx` (hub), `app/sign/page.tsx`, `app/fill/page.tsx`, `app/protect/page.tsx` — diagnostic logs added in `2e17004` and removed in `008695f`. Net delta vs. pre-batch state: zero (logs are gone, consumer wiring from `96bf4d9` is still there).
 
 ---
 
@@ -357,7 +376,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **`/sign-nda` signature flow modal-state machine.** The create-signature modal's JSX is gated on `sigModal === 'create' && creatingSig` (both required). For Edit-existing flow (the ✏️ button), `openEditFor` MUST also call `setCreatingSig(initCreatingSig({ drawData: el.dataUrl }))` — without it, the modal silently fails to render. This was the bug fixed in commit `88b16ca`. Same applies to any future "Edit signature" entry points.
 - **`/sign-nda` Success state share targets.** Email uses `mailto:?subject=…&body=…`, WhatsApp uses `https://wa.me/?text=…`, Telegram uses `https://t.me/share/url?url=…&text=…`. **Do not add a "Copy link to download" option** — it requires server-side hosting of the signed PDF, which we don't have on this surface. The user spec explicitly says "НЕ ДЕЛАТЬ" for this option.
 - **`FillSignEditor` action-cluster ordering.** Visual order from element-edge outward on placed text/date is `✏️ Edit (-26 px) → ⎘ Duplicate (-52 px) → ✕ Delete (-78 px)`. Delete is **red-by-default** (`background: var(--color-danger)` for the overlay button, `color: var(--color-danger)` for the sidebar list-remove). Don't shuffle this order without re-checking the "first action is Edit, last action is Delete" affordance — putting destructive Delete in the middle reads ambiguous.
-- **`txStore` durable-commit contract in [`app/utils/db.ts`](app/utils/db.ts).** The helper resolves on `transaction.oncomplete`, NOT on `request.onsuccess`. The two events are not equivalent — `req.onsuccess` fires when the operation has been applied inside the transaction (in-memory only), while `t.oncomplete` fires only after the transaction has been durably committed and is visible to other IDB connections. Every `await txStore('readwrite', ...)` caller (currently `pendingUpload` for the hub→tool handoff and `historyBlobs` for the Pro download history) implicitly assumes "after the await, a fresh connection's read sees my write." The `req.onsuccess` form looked equivalent on Chrome dev where the gap is sub-millisecond, and silently failed on Safari prod where the gap is long enough that `router.push` + a fresh-connection read on the next route can race in front of the commit — which is exactly the multi-week mobile-hero handoff bug fixed in `008695f` (May 7 2026). **Do not "simplify" `txStore` back to resolving on `req.onsuccess`** even if a future refactor argues that the request-level handlers are "enough." They aren't, and the failure mode is silent on every browser except Safari mobile, so a regression here will look fine in dev and break the hub→tool flow in prod for every iPhone user. If you need a non-durable read-cached helper, write a separate function — don't share the `txStore` name.
+- **`txStore` durable-commit contract in [`app/utils/db.ts`](app/utils/db.ts).** The helper resolves on `transaction.oncomplete`, NOT on `request.onsuccess`. The two events are not equivalent — `req.onsuccess` fires when the operation has been applied inside the transaction (in-memory only), while `t.oncomplete` fires only after the transaction has been durably committed and is visible to other IDB connections. Every `await txStore('readwrite', ...)` caller (currently `pendingUpload` for the hub→tool handoff and `historyBlobs` for the Pro download history) implicitly assumes "after the await, a fresh connection's read sees my write." **Important caveat**: this fix (commit `008695f`, May 7 2026) is correct in isolation per the IDB spec, but it did **NOT** solve the user-visible mobile-hero handoff bug — that bug is still live on prod. See `## ⚠️ KNOWN BROKEN (May 6-7 2026)` for the full story. The IDB race was either not the only problem, or not a problem at all in the way the diagnostic suggested. Either way, **the durable-commit contract is the right semantics** for `historyBlobs` and any future cross-connection IDB read, so the fix is kept regardless. Do not "simplify" `txStore` back to resolving on `req.onsuccess` — if you need a non-durable read-cached helper, write a separate function with a different name. (And if the team eventually migrates the hub→tool handoff off IDB onto `sessionStorage` + base64 per the candidate-next-approach in `## ⚠️ KNOWN BROKEN`, `txStore` and `pendingUpload` may both be removed entirely. That's fine — but in the meantime do not weaken the contract.)
 
 ---
 
@@ -371,10 +390,13 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
 - **`SignatureCanvas.tsx` ESLint debt** — 3 errors (`react-hooks/immutability` forward-references on `startDrawingTouch` / `drawTouch` / `stopDrawing` in the canvas-init `useEffect`) + 2 warnings (`react-hooks/exhaustive-deps` on the canvas-init effect, missing dep on `color` / `width` in `initCanvas`'s `useCallback`). Pre-dates the May 5 sign-nda work. Build still passes — Next config doesn't fail on these specific rules. Fix path: hoist the touch-handler functions above the useEffect (so they're declared before being captured), and add `color` / `width` to `initCanvas`'s deps (or split the canvas-init logic into a stable function). **Do this in a dedicated commit, not bundled with feature work** — the file is in the hot path for both `/sign` and `/sign-nda` and any regression breaks both surfaces simultaneously.
 - **Phase 2/3 — extend signature persistence to `/sign`.** `/sign-nda`'s `signmypdf-saved-signature` localStorage key is currently /sign-nda-only. A future iteration can lift it into `/sign`'s sig flow so the saved sig is shared across both surfaces (and possibly across `/fill` + `/protect` if those ever grow signature support). Out of scope for May 5 batch.
+- **Hub→tool handoff transport: IDB vs sessionStorage+base64.** Current implementation (commits `f80dbd1` + `96bf4d9` + `008695f`) uses IDB via `pendingUpload` and is **broken on prod** in all browsers (see `## ⚠️ KNOWN BROKEN (May 6-7 2026)`). Candidate replacement: `sessionStorage.setItem('pendingFile', base64String)` on hub, `sessionStorage.getItem('pendingFile')` on tool mount, immediate decode + `URL.createObjectURL`. Pros: synchronous, no race, no transaction model, no async commit window. Cons: ~5MB Safari limit (= ~3.7MB raw PDF after base64), string-only, +33% memory + ~50-150ms encode/decode CPU on mid-range mobile. Mitigation: keep IDB as the >3.7MB fallback path. **Decision pending**: needs real-device repro of the current bug first to confirm the diagnosis before committing to the swap.
 
 ---
 
 ## Next session checklist
+
+0. **🚨 Mobile-hero handoff bug is still live on prod and is the #1 priority.** See `## ⚠️ KNOWN BROKEN (May 6-7 2026)` for the full diagnosis. Three commits attempted, none fixed it. User reports dropzone-on-arrival on **all browsers** (not Safari-only), blocking 100% of mobile conversions to `pdf_signed`. Candidate next approach: drop IndexedDB for the hub→tool transport, switch to `sessionStorage` + base64 (synchronous, no transaction model, no race possible). Before writing any code: reproduce the bug on a real iPhone Safari and a real Android Chrome — DO NOT rely on Claude Preview tool, it gave false-positive "fixed" verdicts on all three previous attempts. After confirming the repro, decide whether sessionStorage swap is the right move or whether the actual bug is somewhere else entirely (e.g. a stale `useEffect` deps array, a Next.js App Router quirk, a React 19 strict-mode double-mount, etc.).
 
 1. **Morning May 2 — first end-to-end sanity-check of trigger v3.2 + the deploy GH Action.** May 2 has `cycle_day == 2` (Fill+Protect) but both slots are already taken by `1a267f1`'s articles (`fill-visa-application-form-pdf` + `password-protect-pdf-on-mac`), so the trigger should forward-walk to **May 3** (`cycle_day == 0`, Sign+Fill) and write **2 articles** (next-unused SIGN: `sign-construction-contract-online`; next-unused FILL: `remote-teams-sign-documents`). Then v3.2 ends at `git push`. The deploy workflow fires `on: push` filtered to `app/blog/posts.ts`.
    - **Verify deploy fired**: check https://github.com/viktorkkkk/signmypdf/actions → look for a recent "Deploy on Blog Push" run.
@@ -394,7 +416,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ## SEO Indexing Status
 
-**Last updated: 2026-04-25.** If you change anything indexing-related, update this section so the next session has accurate ground truth.
+**Last updated: 2026-05-07.** If you change anything indexing-related, update this section so the next session has accurate ground truth. Fresh GSC snapshot: see `### GSC snapshot 2026-05-07 (12 days post canonical-fix)` below.
 
 ### Google Search Console
 
@@ -455,6 +477,41 @@ After step 3 the Indexing API began returning `403` because GSC ownership is on 
 - Apr 25 evening: per-page metadata fix shipped (this commit); URLs re-submitted again so Google picks up the new metadata. Daily RemoteTrigger (`trig_01Mw8wt1nCK3jpDA7ymfp4g2`, 02:00 UTC) continues to submit each new article on publish.
 - Bing: IndexNow ping fires on each new article + bulk submit available via `submit-indexnow.mjs`.
 - Monitoring window: GSC indexing data lags 2-4 days, so first proof of recovery expected Apr 27-29.
+
+### GSC snapshot 2026-05-07 (12 days post canonical-fix)
+
+First clean snapshot of GSC after the canonical-fix re-evaluation cycle started to settle. Use as the **post-fix benchmark** for next sessions — rerun `scripts/seo-gsc-check.mjs` and compare against these numbers.
+
+**Page Indexing report (`sc-domain:signmypdf.io`):**
+- **8 pages "Indexed"** (down from a peak of 11 around 23.04.2026 — explained below, this is canonical-consolidation, not regression)
+- **5 pages "Not indexed"** with 2 reasons:
+  - **4 × "Page with redirect"** — apex (`signmypdf.io/...`) URLs that Google had in its index from before the canonical fix. Each apex URL now follows a 307 → www redirect; Google correctly logs the apex variant as "redirected" and consolidates indexing under the www-canonical version. **This is the intended outcome of the canonical fix, not a problem.** Each "redirect"-classified page is matched by an "indexed" www-canonical page.
+  - **1 × "Crawled — currently not indexed"** — single page in normal Google "thinking about it" backlog. Statistical noise at this volume.
+  - **0 × "Discovered — not indexed"** — trend dropped from >0 to 0 in the past two weeks. **Strong positive signal**: Google has crawled everything it knows about and isn't sitting on a backlog of unprocessed URLs. Young domains often have hundreds of URLs stuck in this state for months; we have zero.
+- **Why 11 → 8 is not regression**: before Apr 25 Google indexed apex AND www variants of the same page as separate "indexed" entries (because canonicals were broken). After Apr 25 it consolidates them — apex variant → "Page with redirect" bucket, www variant → "Indexed" bucket. The total `indexed + redirect` is roughly the same; only the "indexed" sub-count appears to drop because dedup is doing its job. Expect indexed-count to grow back past 11 over next 2-4 weeks as more www-canonical URLs get crawled (sitemap currently has 82 URLs, GSC tracks 13).
+
+**Search Performance (28d, GSC Search Analytics API):**
+- **212 impressions** total (vs ~0 in March before canonical fix — real recovery)
+- **0 clicks** still
+- **avg position 61.5** (page 6 of SERP)
+- **23 unique URLs** received at least 1 impression each
+- **Best positions** (close to clickable territory):
+  - `/blog/signmypdf-vs-docusign-freelancers` — position **7.2** (bottom of page 1) on apex variant, 6 impressions
+  - `/blog/ilovepdf-vs-signmypdf` — position **9.3** (page 1) on apex variant, 12 impressions
+  - `/terms` — position **3.0** on 3 impressions (likely brand query "signmypdf terms")
+  - `/blog` index — position **3.8** on 4 apex / **5.2** on 6 www impressions
+  - `/blog/fill-w9-form-online-free` — **43 impressions** on www at position 75.8 (broad-keyword volume but page 8 — needs internal-link boost or content tightening to climb)
+  - `/blog/sign-nda-online-without-printing` — 19 impressions, position 77.6
+- **Apex+www split is still partially live in Search Analytics** — Google reports impressions for both `signmypdf.io/blog/X` AND `www.signmypdf.io/blog/X` for the same canonical page. This is the consolidation in progress; expect apex-impressions to fade to zero over the next 2-4 weeks as Google re-crawls and confirms the redirects.
+
+**Sitemap state:**
+- `https://www.signmypdf.io/sitemap.xml` — 82 URLs submitted, 0 errors, 0 warnings
+- `sitemapWebIndexed: 0` per the API — note this is GSC's separate sitemap-coverage metric and is **always lagging behind the page-indexing metric**; it's not contradicting the "8 indexed" count above. Don't optimize for this number specifically.
+
+**What to do with this baseline:**
+- **Do nothing for 2-4 weeks.** Canonical consolidation is in progress; pre-emptive re-submits via Indexing API only delay it further by forcing Google to restart its evaluation.
+- **Recheck in 2 weeks (~2026-05-21).** Expected: indexed-count climbs to 12-15, "Page with redirect" stays around 4-6 as Google finishes consolidating apex history, impressions grow to 400-600 if no other changes, position improves on the page-1 candidates above.
+- **Convert to clicks**: position 7.2 on `signmypdf-vs-docusign-freelancers` and position 9.3 on `ilovepdf-vs-signmypdf` are the most actionable wins. Title/description optimization on those two articles could plausibly produce the first organic clicks within a week. **But** they're frozen under Hard Rule 1 (dates already passed). The escape hatch is to write a follow-up SEO-landing article on the same intent and let it climb to share traffic.
 
 ### Google Analytics Data API (added Apr 25)
 
@@ -635,6 +692,12 @@ When a concept needs an icon and `lucide-react` does not have it, prefer a Dingb
 ---
 
 ## Next Priorities
+
+### 0. 🚨 CONVERSION-BLOCKER: fix mobile-hero handoff bug — **#1 priority**
+- Status: live on prod across all browsers (3 commits attempted, none worked — see `## ⚠️ KNOWN BROKEN (May 6-7 2026)`).
+- Impact: **0% mobile conversion to `pdf_signed`**. Every iPhone user who taps the hero CTA, picks a PDF, and lands on `/sign | /fill | /protect` sees the dropzone again instead of the loaded editor.
+- Recommended approach: switch hub→tool transport from IndexedDB to `sessionStorage` + base64 (per `## Pending decisions` → "Hub→tool handoff transport"). Decision still pending real-device repro.
+- Until this is fixed, every other priority below is downstream of a leaky funnel — even successful SEO/marketing brings traffic that bounces at the handoff. **Fix this first.**
 
 ### 1. Sticky CTA float polish — ✅ done Apr 23
 - `/protect` mobile CTA now floats (no backdrop/border, button shadow does the lifting).
