@@ -181,7 +181,13 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 
 ---
 
-## ⚠️ KNOWN BROKEN (May 6-7 2026): mobile-hero handoff still fails on prod
+## ✅ FIXED (was KNOWN BROKEN May 6-7 2026): mobile-hero handoff
+
+**Status: RESOLVED.** Verified working on a fresh browser by an outside tester. The user's local repro had been a stale browser-cache pinning the pre-fix bundle — the May 7 fix (`008695f`, `txStore` resolves on `t.oncomplete` instead of `req.onsuccess`) actually did close the bug. The repro disappeared as soon as the cached bundle expired. Mobile hero with Sign/Fill/Protect tabs → file pick → editor loaded works end-to-end on every browser checked.
+
+The history below is preserved as a record of how the bug was diagnosed across three failed-looking commits. Don't undo `008695f`'s `t.oncomplete` resolve — it IS the fix, even though it was misattributed at the time.
+
+### Original notes (kept for archaeology)
 
 **Status: NOT FIXED** despite 3 commits. User-confirmed broken on prod across **all browsers** (not Safari-only as earlier hypothesis assumed). Reproduces every time: tap a tab on `/`, pick a PDF, land on `/sign | /fill | /protect` — and see the **dropzone twice** instead of the editor with the filename loaded.
 
@@ -219,6 +225,43 @@ User-suggested architectural change. Rationale:
 Files touched in the failed batch:
 - `app/utils/db.ts` — `txStore` rewrite (kept).
 - `app/page.tsx` (hub), `app/sign/page.tsx`, `app/fill/page.tsx`, `app/protect/page.tsx` — diagnostic logs added in `2e17004` and removed in `008695f`. Net delta vs. pre-batch state: zero (logs are gone, consumer wiring from `96bf4d9` is still there).
+
+---
+
+## Recently Shipped (May 7-8 2026): Stage 4 monorepo extraction
+
+**Stage 4 closed.** Two PRs landed back-to-back over 24h that promote `packages/pdf-core` and `packages/ui` from placeholders to working workspace packages. `packages/auth` stays placeholder (extension MVP is free, deferred per audit §5.3).
+
+**[PR #9](https://github.com/viktorkkkk/signmypdf/pull/9) — pdf-core extraction (May 7):**
+- Moved `app/utils/signPdf.ts` (193 LoC) and `app/utils/watermark.ts` (27 LoC) into `packages/pdf-core/src/` via `git mv` (rename history preserved).
+- New `packages/pdf-core/src/types.ts` exposes `SignaturePlacement` + `SignOptions` as the single source of truth (was duplicated in signPdf.ts AND PDFViewer.tsx, per audit §1.1).
+- New `packages/pdf-core/src/pdfjs.ts` — `setupPdfjs(workerSrc)` helper. Per-host worker URL config: web passes `'/pdf.worker.min.mjs'`, future CRX passes `chrome.runtime.getURL('pdf.worker.min.mjs')`.
+- Public API: `signPdfInBrowser`, `addWatermarkToBlob`, `blobToDataUrl`, `setupPdfjs`, types.
+- 5 import sites in apps/web rewritten to `from '@signmypdf/pdf-core'`. Next.js `transpilePackages` registered.
+
+**[PR #10](https://github.com/viktorkkkk/signmypdf/pull/10) — ui extraction (May 8):**
+- Moved `app/components/SignatureCanvas.tsx` (366 LoC) → `packages/ui/src/SignatureCanvas.tsx`.
+- Moved `app/components/PDFViewer.tsx` (476 LoC) → `packages/ui/src/PdfSignViewer.tsx` (renamed for clarity).
+- New `packages/ui/src/styles/signature.css` — ~135 LoC carved verbatim from globals.css. Owns `.sig-*`, `.color-dot`, `.width-btn`, `.clear-btn`, `.sig-toolbar` selectors. Hosts `@import '@signmypdf/ui/styles/signature.css'` once.
+- `PdfSignViewer` gains a required `workerSrc: string` prop, replaces inline `await import('pdfjs-dist'); GlobalWorkerOptions.workerSrc = ...` with `await setupPdfjs(workerSrc)`.
+- **9 inline `pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'`** literals across apps/web migrated to `setupPdfjs()` (kills the hardcoded URL completely outside packages/ui).
+- **SignatureCanvas ESLint debt cleared in the same commit (audit §5.2 acceptance criterion):** all event handlers hoisted above the canvas-init useEffect and wrapped in useCallback (no more forward references); `onSaveRef` pattern keeps handler identity stable across parent re-renders; `initCanvas` reads color/width from refs (correct empty-deps array); extracted `advanceStroke()` to dedupe the mouse + touch curve-drawing routine. 5 problems → 0.
+- `packages/ui/package.json` declares `@types/react` + `@types/react-dom` + `typescript` as devDeps (Vercel's per-package TS-check fails without them; pnpm doesn't extend types from non-declaring packages — local `pnpm dev` skips the strict check, prod build runs it. Caught by Vercel preview build, fixed in commit `78aaf73`).
+
+**Final monorepo structure (frozen as of 2026-05-08):**
+```
+apps/web/                     ← Next.js 16 prod app
+packages/
+  pdf-core/src/               ← signPdf, watermark, pdfjs(setupPdfjs), types, index
+  ui/src/                     ← SignatureCanvas, PdfSignViewer, styles/signature.css, index
+  auth/src/                   ← placeholder (deferred — extension MVP free)
+```
+
+`apps/web/next.config.ts` lists all three packages in `transpilePackages` so Next compiles raw TypeScript from workspace deps.
+
+**What's queued next** (in priority order, see §`Pending decisions` below for detail):
+1. **Layout fix `/sign`** — 2-column grid with sticky right sidebar 320–360px, PDF column max-width 800px. Per audit §6.4. **This is the LAST task before `apps/extension/`** — lifting the layout fix into `packages/ui` first means the Chrome extension popup (max 800×600) inherits the right size from day one rather than needing a CRX-only override.
+2. **Stage 5: `apps/extension/`** — Chrome MV3 popup. Imports `@signmypdf/pdf-core` and `@signmypdf/ui` directly. Calls `setupPdfjs(chrome.runtime.getURL('pdf.worker.min.mjs'))` once on boot. System font stack only (no Inter `.woff2` bundle, per audit §7).
 
 ---
 
@@ -388,17 +431,26 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 - **AdSense** — defer until organic traffic is non-trivial (target: 2-4 weeks after the Apr 25 canonical fix takes hold). Premature ads kill UX before there's traffic worth monetizing.
 - **`[IMAGE: ...]` placeholders in blog content** — the parser-skip path is in `BlogPostContent.tsx` already (placeholders silently disappear today). Actual image generation / substitution not implemented. TODO when there's content-team bandwidth.
 - **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
-- **`SignatureCanvas.tsx` ESLint debt** — 3 errors (`react-hooks/immutability` forward-references on `startDrawingTouch` / `drawTouch` / `stopDrawing` in the canvas-init `useEffect`) + 2 warnings (`react-hooks/exhaustive-deps` on the canvas-init effect, missing dep on `color` / `width` in `initCanvas`'s `useCallback`). Pre-dates the May 5 sign-nda work. Build still passes — Next config doesn't fail on these specific rules. Fix path: hoist the touch-handler functions above the useEffect (so they're declared before being captured), and add `color` / `width` to `initCanvas`'s deps (or split the canvas-init logic into a stable function). **Do this in a dedicated commit, not bundled with feature work** — the file is in the hot path for both `/sign` and `/sign-nda` and any regression breaks both surfaces simultaneously.
-- **Phase 2/3 — extend signature persistence to `/sign`.** `/sign-nda`'s `signmypdf-saved-signature` localStorage key is currently /sign-nda-only. A future iteration can lift it into `/sign`'s sig flow so the saved sig is shared across both surfaces (and possibly across `/fill` + `/protect` if those ever grow signature support). Out of scope for May 5 batch.
-- **Hub→tool handoff transport: IDB vs sessionStorage+base64.** Current implementation (commits `f80dbd1` + `96bf4d9` + `008695f`) uses IDB via `pendingUpload` and is **broken on prod** in all browsers (see `## ⚠️ KNOWN BROKEN (May 6-7 2026)`). Candidate replacement: `sessionStorage.setItem('pendingFile', base64String)` on hub, `sessionStorage.getItem('pendingFile')` on tool mount, immediate decode + `URL.createObjectURL`. Pros: synchronous, no race, no transaction model, no async commit window. Cons: ~5MB Safari limit (= ~3.7MB raw PDF after base64), string-only, +33% memory + ~50-150ms encode/decode CPU on mid-range mobile. Mitigation: keep IDB as the >3.7MB fallback path. **Decision pending**: needs real-device repro of the current bug first to confirm the diagnosis before committing to the swap.
+- ~~**`SignatureCanvas.tsx` ESLint debt**~~ — **CLEARED in PR #10 (May 8 2026)**. The 5 problems (3 forward-reference errors + 2 missing-deps warnings) are gone. The component now uses useCallback ordering, refs for color/width inside initCanvas, and an `onSaveRef` pattern for stable handler identity across parent re-renders. File lives at `packages/ui/src/SignatureCanvas.tsx`.
+- **Phase 2 — migrate `/sign` to `FillSignEditor`.** `/sign` currently uses `SignatureCanvas` + `PdfSignViewer` directly (the post-Stage-4 path that we just shipped). `/sign-nda` uses `FillSignEditor` (the unified text+date+signature editor). The plan was to consolidate `/sign` onto `FillSignEditor` after Stage 5 ships so both surfaces share one editor. **Do this AFTER the extension is live**, otherwise we're refactoring a third surface (sig + fill + extension) simultaneously. When it happens: extract `FillSignEditor` to `packages/ui/src/FillSignEditor.tsx`, lift the `signmypdf-saved-signature` localStorage key from `/sign-nda`-only to shared.
+- **Phase 3 — migrate `/fill` to `FillSignEditor`.** Same idea as Phase 2 but for `/fill`, which currently uses the older `PDFTextEditor` (683 LoC, text-only). After Phase 2 lands, `/fill` is the last route still on the legacy text-only editor. Phase 3 retires `PDFTextEditor` entirely.
+- **`/split` UX bugs (carry-over).** Three small annoyances reported but not fixed:
+  - Number input: typing replaces the `0` placeholder cleanly on most fields, but on at least one of the page-range / parts inputs the `0` doesn't clear on first keystroke (typing "5" produces "05" briefly).
+  - Buttons jump position when state transitions between modes (the Pro-locked tabs collapsing/expanding causes layout shift in the action row).
+  - Two rare modes — **Split every N pages** and **Split by bookmarks** — are Pro-only stubs that do little for free users and add visual clutter. Decision: remove both modes from the UI entirely; `extract` and `parts` cover 95% of use cases. Leaves `splitPdf.ts` `parsePageRanges` + parts mode intact.
+- **Hub→tool handoff transport: ~~IDB vs sessionStorage+base64~~ — CLOSED (May 8).** The bug is fixed. `008695f`'s `t.oncomplete` resolve in `txStore` was the actual fix; the 24h of "still broken" reports were a stale browser-cache, confirmed by independent fresh-browser testing. IndexedDB stays. The sessionStorage+base64 swap that was queued is no longer needed. Don't undo `008695f`.
 
 ---
 
 ## Next session checklist
 
-0. **🚨 Mobile-hero handoff bug is still live on prod and is the #1 priority.** See `## ⚠️ KNOWN BROKEN (May 6-7 2026)` for the full diagnosis. Three commits attempted, none fixed it. User reports dropzone-on-arrival on **all browsers** (not Safari-only), blocking 100% of mobile conversions to `pdf_signed`. Candidate next approach: drop IndexedDB for the hub→tool transport, switch to `sessionStorage` + base64 (synchronous, no transaction model, no race possible). Before writing any code: reproduce the bug on a real iPhone Safari and a real Android Chrome — DO NOT rely on Claude Preview tool, it gave false-positive "fixed" verdicts on all three previous attempts. After confirming the repro, decide whether sessionStorage swap is the right move or whether the actual bug is somewhere else entirely (e.g. a stale `useEffect` deps array, a Next.js App Router quirk, a React 19 strict-mode double-mount, etc.).
+0. **🎯 Layout fix `/sign` (highest priority, gates Stage 5).** Per audit §6.4: 2-column grid on viewports ≥1024 px — left column max-width 800 px PDF preview (vertical scroll for multi-page), right column sticky sidebar 320–360 px with signature creator + thumbnail strip + sticky "Sign PDF" button. Mobile (<1024 px) keeps the current vertical stack. **Implement inside `packages/ui`** (likely a new `<PdfSignSurface>` orchestrator that composes `SignatureCanvas` + `PdfSignViewer`) so the Chrome extension popup inherits the corrected layout from day one. Acceptance: on 1280×800, both columns fully visible without scroll; total document height ≤1.5 viewports for a 4-page PDF (currently 4.3); mobile rendering unchanged; sticky sign button still works. ~1 day of work.
 
-1. **Morning May 2 — first end-to-end sanity-check of trigger v3.2 + the deploy GH Action.** May 2 has `cycle_day == 2` (Fill+Protect) but both slots are already taken by `1a267f1`'s articles (`fill-visa-application-form-pdf` + `password-protect-pdf-on-mac`), so the trigger should forward-walk to **May 3** (`cycle_day == 0`, Sign+Fill) and write **2 articles** (next-unused SIGN: `sign-construction-contract-online`; next-unused FILL: `remote-teams-sign-documents`). Then v3.2 ends at `git push`. The deploy workflow fires `on: push` filtered to `app/blog/posts.ts`.
+1. **Stage 5: `apps/extension/`.** Chrome MV3 popup. Imports `@signmypdf/pdf-core` + `@signmypdf/ui` directly. Calls `setupPdfjs(chrome.runtime.getURL('pdf.worker.min.mjs'))` once on boot; manifest `web_accessible_resources` lists the worker file. System font stack only (no Inter `.woff2` bundle, per audit §7). Distribution: Chrome Web Store. Free MVP — no auth, paywall, or watermark. Blocks on item 0 above.
+
+### Operational follow-ups (any time, not blocking Stage 5)
+
+2. **Morning May 2 — first end-to-end sanity-check of trigger v3.2 + the deploy GH Action.** May 2 has `cycle_day == 2` (Fill+Protect) but both slots are already taken by `1a267f1`'s articles (`fill-visa-application-form-pdf` + `password-protect-pdf-on-mac`), so the trigger should forward-walk to **May 3** (`cycle_day == 0`, Sign+Fill) and write **2 articles** (next-unused SIGN: `sign-construction-contract-online`; next-unused FILL: `remote-teams-sign-documents`). Then v3.2 ends at `git push`. The deploy workflow fires `on: push` filtered to `app/blog/posts.ts`.
    - **Verify deploy fired**: check https://github.com/viktorkkkk/signmypdf/actions → look for a recent "Deploy on Blog Push" run.
    - **Verify Vercel got the deploy**: `curl -sH "Authorization: Bearer $VERCEL_TOKEN" "https://api.vercel.com/v6/deployments?projectId=prj_vINyT8bno6KjwutaPoX05rZaXQNI&teamId=team_KV06sgJAaYS4OqFZHaskKPj2&limit=1"` and confirm a `READY` deployment created within 5 min after the trigger commit. (Apr 29-May 1 the gap was 15-72h because deploy never fired.)
    - **Verify articles live on prod**: both new slugs return HTTP 200 from `https://www.signmypdf.io/blog/<slug>`.
@@ -693,11 +745,13 @@ When a concept needs an icon and `lucide-react` does not have it, prefer a Dingb
 
 ## Next Priorities
 
-### 0. 🚨 CONVERSION-BLOCKER: fix mobile-hero handoff bug — **#1 priority**
-- Status: live on prod across all browsers (3 commits attempted, none worked — see `## ⚠️ KNOWN BROKEN (May 6-7 2026)`).
-- Impact: **0% mobile conversion to `pdf_signed`**. Every iPhone user who taps the hero CTA, picks a PDF, and lands on `/sign | /fill | /protect` sees the dropzone again instead of the loaded editor.
-- Recommended approach: switch hub→tool transport from IndexedDB to `sessionStorage` + base64 (per `## Pending decisions` → "Hub→tool handoff transport"). Decision still pending real-device repro.
-- Until this is fixed, every other priority below is downstream of a leaky funnel — even successful SEO/marketing brings traffic that bounces at the handoff. **Fix this first.**
+### 0. 🎯 Layout fix `/sign` — **#1 priority, gates Stage 5**
+- Per audit §6.4: 2-column grid on viewports ≥1024 px. Left column max-width 800 px PDF preview (vertical scroll for multi-page); right column sticky sidebar 320–360 px with signature creator + thumbnail strip + sticky "Sign PDF" button. Mobile (<1024 px) keeps current vertical stack.
+- **Implement inside `packages/ui`** (likely a new `<PdfSignSurface>` orchestrator that composes `SignatureCanvas` + `PdfSignViewer`) so the Chrome extension popup inherits the corrected layout from day one.
+- Acceptance: 1280×800 fits both columns above the fold; total document height ≤1.5 viewports for a 4-page PDF (currently 4.3); mobile rendering unchanged.
+
+### 0a. ~~Mobile-hero handoff~~ — ✅ FIXED (May 7-8)
+- The original `008695f` `t.oncomplete` fix in `txStore` was the actual fix; reports of "still broken" were a stale browser-cache. Confirmed working on a fresh browser by an outside tester. See `## ✅ FIXED (was KNOWN BROKEN May 6-7 2026)`.
 
 ### 1. Sticky CTA float polish — ✅ done Apr 23
 - `/protect` mobile CTA now floats (no backdrop/border, button shadow does the lifting).
@@ -1002,18 +1056,40 @@ Signs that the strategy is working: the 3 new-format articles outperform compara
 
 ## Key Files
 
+> **NOTE (2026-05-08):** Stage 4 moved `signPdf.ts` + `watermark.ts` → `packages/pdf-core/src/`, and `SignatureCanvas.tsx` + `PDFViewer.tsx` (renamed `PdfSignViewer.tsx`) → `packages/ui/src/`. The `app/` paths below are kept for blame/archaeology of what used to live where; any new edit to those files happens at the new path. The Stage-4 `### Key Files` block at the top of the workspace `## Recently Shipped (May 7-8 2026)` section is the authoritative current map.
+
 ```
-app/
+packages/pdf-core/src/                # Stage 4 PR #9 (May 7 2026)
+  signPdf.ts                          # pdf-lib signing logic, watermark, text→PNG renderer
+  watermark.ts                        # addWatermarkToBlob + blobToDataUrl
+  pdfjs.ts                            # setupPdfjs(workerSrc) — per-host worker URL config
+  types.ts                            # SignaturePlacement + SignOptions (single source of truth)
+  index.ts                            # Public re-exports
+
+packages/ui/src/                      # Stage 4 PR #10 (May 8 2026)
+  SignatureCanvas.tsx                 # Draw + Type signature canvas. ESLint debt cleared
+                                      #   in PR #10 (forward-ref → useCallback ordering;
+                                      #   onSaveRef pattern; refs for color/width inside
+                                      #   initCanvas; advanceStroke() dedupes touch+mouse).
+  PdfSignViewer.tsx                   # was PDFViewer. Multi-page PDF preview + drag-to-place.
+                                      #   New required prop workerSrc: string. Calls
+                                      #   setupPdfjs() from @signmypdf/pdf-core.
+  styles/signature.css                # CSS slice for SignatureCanvas only.
+                                      #   PdfSignViewer is fully styled inline.
+  index.ts                            # Public re-exports
+
+app/                                  # apps/web/app/
   page.tsx                           # Hub landing (upload → sign → done), pricing modal, toast
   globals.css                        # All CSS, including mobile breakpoints + every fse-*, nda-*, hub-* rule
+                                     # Top of file: @import '@signmypdf/ui/styles/signature.css'
   layout.tsx                         # Root layout, metadata, GA script
   utils/
-    signPdf.ts                       # pdf-lib signing logic, watermark, text→PNG renderer (used by /sign)
     fillPdf.ts                       # /fill — text-only injection
     fillSignPdf.ts                   # /sign-nda + /fill — text/date/signature injection (PNG embed, opacity-1 alpha)
     protectPdf.ts                    # /protect — encrypt + permissions
+    # signPdf.ts + watermark.ts MOVED to packages/pdf-core/src/ (PR #9)
   components/
-    PDFViewer.tsx                    # /sign — multi-page PDF preview + drag signature placement
+    # PDFViewer.tsx + SignatureCanvas.tsx MOVED to packages/ui/src/ (PR #10)
     PDFTextEditor.tsx                # /fill — text-fill editor (older, separate from FillSignEditor)
     FillSignEditor.tsx               # /sign-nda + /fill — unified text/date/signature editor
                                      #   • text-body click-or-drag with 5-px threshold
@@ -1025,10 +1101,7 @@ app/
                                      #     LS persist on `signmypdf-saved-signature`, Edit-prefill via
                                      #     SignatureCanvas's initialDataUrl prop
                                      #   • selectedPages derived from elements (signature ticks)
-    SignatureCanvas.tsx              # Shared by /sign and /sign-nda. New optional `initialDataUrl`
-                                     #   prop pre-loads a saved sig into the canvas (used only by
-                                     #   FillSignEditor's Edit-existing flow). Pre-existing forward-
-                                     #   reference ESLint debt — see ## Pending decisions.
+                                     # Imports SignatureCanvas from @signmypdf/ui (was './SignatureCanvas').
     SavedSignatures.tsx              # /sign-only — saved-sigs panel (Pro feature)
     FileHistory.tsx                  # /sign-only — download history (Pro)
     NavHeader.tsx, SiteFooter.tsx    # Shared chrome
