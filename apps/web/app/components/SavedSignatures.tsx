@@ -67,18 +67,26 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
 
   if (sigs.length === 0 && !currentSig) return null;
 
+  // Hide the "SAVED SIGNATURES" header + thumbnail strip when nothing
+  // is saved yet — only the "Save current" CTA stays so a fresh user
+  // sees a single nudge, not an empty section. Header + list reappear
+  // as soon as the first signature is saved.
+  const hasSaved = sigs.length > 0;
+
   return (
     <div className="saved-sigs">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          <Save size={12} /> Saved signatures
-        </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: hasSaved ? 'space-between' : 'flex-end', marginBottom: hasSaved ? 10 : 0 }}>
+        {hasSaved && (
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Save size={12} /> Saved signatures
+          </span>
+        )}
         {currentSig && (
           <button
             onClick={hasSubscription ? onSaveCurrent : onShowPricing}
             style={{
               fontSize: 11, fontWeight: 600, color: hasSubscription ? '#2563eb' : '#d97706',
-              background: hasSubscription ? '#eff6ff' : '#fffbeb', 
+              background: hasSubscription ? '#eff6ff' : '#fffbeb',
               border: hasSubscription ? '1px solid #bfdbfe' : '1px solid #fcd34d',
               borderRadius: 8, padding: '4px 10px', cursor: 'pointer',
               display: 'flex',
@@ -94,6 +102,7 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
           </button>
         )}
       </div>
+      {hasSaved && (
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
         {sigs.map(s => {
           const isSelected = selectedId === s.id || (!selectedId && currentSig === s.dataUrl && currentType === s.type);
@@ -123,6 +132,7 @@ export default function SavedSignatures({ onSelect, currentSig, currentType, cur
           </div>
         );})}
       </div>
+      )}
     </div>
   );
 }

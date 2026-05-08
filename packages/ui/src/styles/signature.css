@@ -127,3 +127,85 @@
   transition: all 0.15s;
 }
 .clear-btn:hover { background: #f1f5f9; color: #475569; }
+
+/* ── Page-level layout: 2-column grid for the sign surface ─────────
+ * Per audit §6.4. On viewports ≥1024 px:
+ *   - Left column (max-width 800 px): PDF preview with internal
+ *     vertical scroll (capped at calc(100vh - 120px)).
+ *   - Right column (.sign-side-col, 400 px wide, sticky top: 80px):
+ *     signature creator + Sign button stacked in a flex column. The
+ *     button is glued to the bottom of the side column via
+ *     `margin-top: auto`, so it can never paint on top of the canvas.
+ * On mobile (<1024 px) .sign-side-col is `display: contents`, so its
+ * two children sit flat inside .sign-layout-grid (a flex column) and
+ * `order` reproduces the previous DOM order: signature → PDF →
+ * Sign button.
+ *
+ * Lifted into @signmypdf/ui so the planned Chrome MV3 popup
+ * (apps/extension) inherits the same layout.
+ */
+.sign-layout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sign-side-col { display: contents; }
+.sign-grid-signature { order: 1; }
+.sign-grid-pdf { order: 2; }
+.sign-grid-sticky { order: 3; }
+
+@media (min-width: 1024px) {
+  .sign-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    grid-template-areas: "pdf side";
+    gap: 24px;
+    align-items: start;
+  }
+  .sign-grid-pdf {
+    grid-area: pdf;
+    min-width: 0;
+    max-width: 800px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    align-self: start;
+    order: 0;
+  }
+  .sign-side-col {
+    grid-area: side;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+  }
+  .sign-grid-signature {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
+    order: 0;
+  }
+  /* Sign button sits at the bottom of the side column (flex `auto`
+     margin) instead of being viewport-stuck. Inside the sticky side
+     column there is no risk of the button painting on top of the
+     canvas — they are flex siblings with a 16 px gap. The compound
+     selector `.sign-side-col .sticky-sign-wrap` outweighs the plain
+     `.sticky-sign-wrap { position: sticky; bottom: 28px }` rule in
+     apps/web/app/globals.css so the desktop override actually wins. */
+  .sign-side-col .sticky-sign-wrap {
+    flex: 0 0 auto;
+    margin: auto 0 0 0;
+    position: static;
+    bottom: auto;
+    width: 100%;
+    order: 0;
+  }
+  /* In the 400 px right column, let the Sign button fill the column
+     instead of clinging to its 340 px desktop min-width. */
+  .sign-side-col .sticky-sign-btn {
+    min-width: 0;
+    width: 100%;
+  }
+}
