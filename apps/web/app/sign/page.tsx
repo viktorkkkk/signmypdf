@@ -490,7 +490,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="container" style={{ paddingTop: 48, paddingBottom: step === 'upload' ? 0 : 64 }}>
+      <div className="container" style={{ paddingTop: step === 'sign' ? 12 : 48, paddingBottom: step === 'upload' ? 0 : 64 }}>
 
         {/* ── UPLOAD ── */}
         {step === 'upload' && (
@@ -561,20 +561,25 @@ export default function Home() {
                 </div>
               )}
             </div>
-            {/* File bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '10px 14px', marginBottom: 16 }}>
-              <div className="doc-badge" style={{ width: 32, height: 32, fontSize: 9, flexShrink: 0 }}>PDF</div>
-              <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pdfFile?.name}</span>
-              <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}><RefreshCw size={12} /> Change file</button>
+            {/* File bar — compact (~38 px), single row. Audit §6.4 polish. */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '8px 12px', marginBottom: 12 }}>
+              <FileText size={18} color="#dc2626" strokeWidth={2} style={{ flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: '#334155', fontWeight: 600, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+                {(pdfFile?.name?.length ?? 0) > 40 ? pdfFile!.name.slice(0, 37) + '…' : pdfFile?.name}
+              </span>
+              <button onClick={reset} style={{ fontSize: 11, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 6, padding: '3px 10px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}><RefreshCw size={11} /> Change</button>
             </div>
 
-            {/* 2-col grid on ≥1024px: PDF left (max-w 800), signature
-                + sticky button right (sticky 320–360px). On mobile,
-                .sign-layout-grid is a flex column, so the DOM order
-                (signature → PDF → button) drives the existing vertical
-                stack — see packages/ui/src/styles/signature.css for the
-                area mapping. Audit §6.4. */}
+            {/* 2-col grid on ≥1024px: PDF left (max-w 800), the signature
+                creator + sticky button live together inside .sign-side-col
+                (sticky top: 80, flex column, 400 px wide). On mobile the
+                wrapper is `display: contents`, so the three children
+                appear directly under .sign-layout-grid (a flex column)
+                in the order signature → PDF → button via CSS `order`.
+                Audit §6.4. */}
             <div className="sign-layout-grid">
+
+            <div className="sign-side-col">
 
             {/* 1. SIGNATURE AREA (top) */}
             <div className="card sign-grid-signature">
@@ -657,23 +662,10 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 2. DOCUMENT PREVIEW (below) */}
-            <div className="card sign-grid-pdf">
-              <div className="card-title">2. Select pages & place signature</div>
-              {pdfFile && (
-                <PdfSignViewer
-                  file={pdfFile}
-                  signatureDataUrl={previewSig}
-                  placements={placements}
-                  selectedPages={selectedPages}
-                  onPlacementsChange={setPlacements}
-                  onSelectedPagesChange={setSelectedPages}
-                  workerSrc="/pdf.worker.min.mjs"
-                />
-              )}
-            </div>
-
-            {/* Sticky sign button */}
+            {/* Sticky sign button — sibling of signature card inside the
+                sticky side column. On mobile (display:contents on
+                .sign-side-col) it joins .sign-layout-grid as a flat
+                child and `order: 3` keeps it last in the visual stack. */}
             <div className={`sticky-sign-wrap sign-grid-sticky${canSign && !isProcessing ? ' ready' : ''}`}>
               <button
                 className={`sticky-sign-btn${canSign && !isProcessing ? ' ready' : ''}`}
@@ -694,6 +686,26 @@ export default function Home() {
               )}
               {!canSign && selectedPages.length > 0 && (
                 <p className="sticky-sign-hint">Create your signature above to continue</p>
+              )}
+            </div>
+
+            </div>{/* /.sign-side-col */}
+
+            {/* 2. DOCUMENT PREVIEW — sibling of .sign-side-col so it
+                lands in the left grid column on desktop. On mobile its
+                `order: 2` puts it between signature (1) and sticky (3). */}
+            <div className="card sign-grid-pdf">
+              <div className="card-title">2. Select pages & place signature</div>
+              {pdfFile && (
+                <PdfSignViewer
+                  file={pdfFile}
+                  signatureDataUrl={previewSig}
+                  placements={placements}
+                  selectedPages={selectedPages}
+                  onPlacementsChange={setPlacements}
+                  onSelectedPagesChange={setSelectedPages}
+                  workerSrc="/pdf.worker.min.mjs"
+                />
               )}
             </div>
 
