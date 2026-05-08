@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import FillSignEditor from '../components/FillSignEditor';
 import type { FsElement } from '../utils/fillSignPdf';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 const TEMPLATE_PDF_URL  = '/templates/nda-template.pdf';
 const TEMPLATE_DOCX_URL = '/templates/nda-template.docx';
@@ -87,8 +88,7 @@ export default function NdaHeroCard() {
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
 
         const res = await fetch(TEMPLATE_PDF_URL);
         if (!res.ok) throw new Error(`fetch ${res.status}`);

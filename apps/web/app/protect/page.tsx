@@ -40,6 +40,7 @@ import {
   scorePassword,
 } from '../utils/protectPdf';
 import { consumePendingFile } from '../utils/pendingUpload';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 type Step = 'upload' | 'configure' | 'done';
 
@@ -97,8 +98,7 @@ export default function ProtectPage() {
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const buf = await pdfFile.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         if (cancelled) return;

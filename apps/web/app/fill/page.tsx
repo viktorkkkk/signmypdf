@@ -36,7 +36,7 @@ import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
 import { saveDraft as saveDraftUtil, consumePendingDraft, getDrafts } from '../utils/drafts';
 import { consumePendingFile } from '../utils/pendingUpload';
-import { addWatermarkToBlob } from '@signmypdf/pdf-core';
+import { addWatermarkToBlob, setupPdfjs } from '@signmypdf/pdf-core';
 import { isProActive, activateSubscription } from '../utils/subscription';
 import { SUBSCRIPTION_KEY as SUB_KEY, PADDLE_CLIENT_TOKEN } from '../constants';
 
@@ -52,8 +52,7 @@ function FilledPDFPreview({ url }: { url: string }) {
     let cancelled = false;
     (async () => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const resp = await fetch(url);
         const buf  = await resp.arrayBuffer();
         const pdf  = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;

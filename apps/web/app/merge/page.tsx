@@ -37,6 +37,7 @@ import { isProActive, activateSubscription } from '../utils/subscription';
 import { storePendingFile } from '../utils/pendingUpload';
 import { mergePdf, MergePdfError } from '../utils/mergePdf';
 import { useRouter } from 'next/navigation';
+import { setupPdfjs } from '@signmypdf/pdf-core';
 
 type Step = 'upload' | 'arrange' | 'done';
 
@@ -178,8 +179,7 @@ export default function MergePage() {
 
     pending.forEach(async (entry) => {
       try {
-        const pdfjsLib = await import('pdfjs-dist');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+        const pdfjsLib = await setupPdfjs('/pdf.worker.min.mjs');
         const buf = await entry.file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
         const pageCount = pdf.numPages;

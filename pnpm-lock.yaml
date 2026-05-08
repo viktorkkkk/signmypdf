@@ -26,6 +26,9 @@ importers:
       '@signmypdf/pdf-core':
         specifier: workspace:*
         version: link:../../packages/pdf-core
+      '@signmypdf/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
@@ -81,7 +84,30 @@ importers:
         specifier: ^5.6.205
         version: 5.7.284
 
-  packages/ui: {}
+  packages/ui:
+    dependencies:
+      '@signmypdf/pdf-core':
+        specifier: workspace:*
+        version: link:../pdf-core
+      lucide-react:
+        specifier: ^1.11.0
+        version: 1.14.0(react@19.2.4)
+      react:
+        specifier: '>=19.0.0'
+        version: 19.2.4
+      react-dom:
+        specifier: '>=19.0.0'
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
 
 packages:
 
