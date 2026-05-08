@@ -128,6 +128,57 @@
 }
 .clear-btn:hover { background: #f1f5f9; color: #475569; }
 
+/* ── Save-current hint + delete-undo toast ────────────────────────
+ * Used by <SavedSignatures>. Caption sits under the "Save current"
+ * pill button; the toast surfaces a 3 s undo window after a saved
+ * signature is deleted.
+ */
+.save-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+  text-align: right;
+  line-height: 1.3;
+}
+
+.signature-undo-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+  max-width: calc(100vw - 32px);
+}
+.signature-undo-toast button {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.signature-undo-toast button:hover { background: rgba(255, 255, 255, 0.1); }
+@media (max-width: 480px) {
+  .signature-undo-toast {
+    left: 16px;
+    right: 16px;
+    transform: none;
+    bottom: 16px;
+  }
+}
+
 /* ── Page-level layout: 2-column grid for the sign surface ─────────
  * Per audit §6.4. On viewports ≥1024 px:
  *   - Left column (max-width 800 px): PDF preview with internal
