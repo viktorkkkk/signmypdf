@@ -93,6 +93,8 @@ const BLOG_SLUGS = [
   'accountant-wont-accept-unprotected-tax-documents',
   'zoho-sign-vs-signmypdf',
   'password-pdf-vs-encrypted-email',
+  'sign-car-purchase-agreement-online',
+  'law-firms-free-pdf-tools',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

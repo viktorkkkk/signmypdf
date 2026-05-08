@@ -62,6 +62,7 @@ const FILL_SLUGS = new Set([
   'adobe-fill-sign-vs-signmypdf',
   // Persona / use-case slugs whose name doesn't match the fill-* heuristic
   'property-managers-tenant-signatures',
+  'law-firms-free-pdf-tools',
 ]);
 
 // Slugs for articles about password protection / encryption.
