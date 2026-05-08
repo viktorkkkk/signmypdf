@@ -568,8 +568,16 @@ export default function Home() {
               <button onClick={reset} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}><RefreshCw size={12} /> Change file</button>
             </div>
 
+            {/* 2-col grid on ≥1024px: PDF left (max-w 800), signature
+                + sticky button right (sticky 320–360px). On mobile,
+                .sign-layout-grid is a flex column, so the DOM order
+                (signature → PDF → button) drives the existing vertical
+                stack — see packages/ui/src/styles/signature.css for the
+                area mapping. Audit §6.4. */}
+            <div className="sign-layout-grid">
+
             {/* 1. SIGNATURE AREA (top) */}
-            <div className="card" style={{ marginBottom: 16 }}>
+            <div className="card sign-grid-signature">
               <div className="card-title">1. Create your signature</div>
               <div className="tabs">
                 <button className={`tab${signMode === 'draw' ? ' active' : ''}`} onClick={() => setSignMode('draw')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Pencil size={14} /> Draw</button>
@@ -650,7 +658,7 @@ export default function Home() {
             </div>
 
             {/* 2. DOCUMENT PREVIEW (below) */}
-            <div className="card" style={{ marginBottom: 16 }}>
+            <div className="card sign-grid-pdf">
               <div className="card-title">2. Select pages & place signature</div>
               {pdfFile && (
                 <PdfSignViewer
@@ -666,7 +674,7 @@ export default function Home() {
             </div>
 
             {/* Sticky sign button */}
-            <div className={`sticky-sign-wrap${canSign && !isProcessing ? ' ready' : ''}`}>
+            <div className={`sticky-sign-wrap sign-grid-sticky${canSign && !isProcessing ? ' ready' : ''}`}>
               <button
                 className={`sticky-sign-btn${canSign && !isProcessing ? ' ready' : ''}`}
                 onClick={handleSign}
@@ -687,6 +695,8 @@ export default function Home() {
               {!canSign && selectedPages.length > 0 && (
                 <p className="sticky-sign-hint">Create your signature above to continue</p>
               )}
+            </div>
+
             </div>
           </div>
         )}

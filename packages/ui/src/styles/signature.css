@@ -127,3 +127,65 @@
   transition: all 0.15s;
 }
 .clear-btn:hover { background: #f1f5f9; color: #475569; }
+
+/* ── Page-level layout: 2-column grid for the sign surface ─────────
+ * Per audit §6.4. On viewports ≥1024 px:
+ *   - Left column (max-width 800 px): PDF preview with internal
+ *     vertical scroll (capped at calc(100vh - 120px)).
+ *   - Right column (320–360 px, sticky top: 80px): signature creator
+ *     and sticky Sign button.
+ * Mobile (<1024 px) keeps the existing vertical stack — the wrapper
+ * is just a flex column there, and DOM order (signature → PDF →
+ * sticky button) preserves the previous mobile rendering.
+ *
+ * Lifted into @signmypdf/ui so the planned Chrome MV3 popup
+ * (apps/extension) inherits the same layout.
+ */
+.sign-layout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .sign-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+    grid-template-areas:
+      "pdf signature"
+      "pdf sticky";
+    grid-template-rows: max-content 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .sign-grid-pdf {
+    grid-area: pdf;
+    min-width: 0;
+    max-width: 800px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    align-self: start;
+  }
+  .sign-grid-signature {
+    grid-area: signature;
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    margin: 0;
+  }
+  .sign-grid-sticky {
+    grid-area: sticky;
+    position: sticky;
+    bottom: 24px;
+    align-self: end;
+    width: 100%;
+    margin: 0;
+  }
+  /* In the 320–360 px right column, let the Sign button fill the
+     column instead of clinging to its 340 px desktop min-width. */
+  .sign-grid-sticky .sticky-sign-btn {
+    min-width: 0;
+    width: 100%;
+  }
+}
