@@ -95,6 +95,8 @@ const BLOG_SLUGS = [
   'password-pdf-vs-encrypted-email',
   'sign-car-purchase-agreement-online',
   'law-firms-free-pdf-tools',
+  'electronic-signature-real-estate-legal',
+  'zip-password-vs-pdf-password',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
