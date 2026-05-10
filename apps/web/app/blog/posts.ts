@@ -9190,6 +9190,166 @@ It's rarely worth the added friction. If the PDF is already AES-256 encrypted wi
 - [PDF password vs encrypted email](/blog/password-pdf-vs-encrypted-email)
 `,
   },
+  {
+    slug: 'fill-college-application-pdf',
+    title: 'Fill Your College Application PDF Fast',
+    excerpt: 'College application PDFs can be flat, scanned, or locked — most tools will not let you type. Fill any college application PDF free in your browser, no account needed.',
+    date: '2026-05-11',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill college application PDF', 'college application PDF', 'fill PDF form online free', 'PDF form filler', 'fill flat PDF online', 'college application forms', 'fill PDF without Adobe'],
+    metaTitle: 'Fill Your College Application PDF Fast',
+    metaDescription: 'Stuck on a college application PDF that will not let you type? Fill flat, scanned, or locked forms free in your browser — no account, no watermark.',
+    content: `
+You downloaded the college application PDF — and it will not let you type. Some universities send flat, scanned forms that look fillable but reject every click. Others send locked PDFs that work in one browser and refuse all input in another. With the deadline three days away, you do not have time to print, fill by hand, and re-scan twenty pages.
+
+This is not a settings issue on your end. It is the reality of how colleges distribute application PDFs — no single format standard applies.
+
+[CTA]Fill Your College Application PDF — Free|No registration, no watermark. Your file stays in your browser.|Fill PDF Form Now — Free
+
+## How to fill a college application PDF in minutes
+
+1. Open SignMyPDF.com and go to the Fill tool
+2. Upload your college application PDF from your device
+3. Click anywhere on the page and start typing your answers
+4. Add your signature where the form requires one
+5. Download the completed PDF — ready to submit
+
+No account. No upgrade prompt before you can save. The filled PDF goes straight to your Downloads folder.
+
+[IMAGE: screenshot of a college application PDF open in SignMyPDF's Fill tool with text typed into multiple fields]
+
+## What usually blocks students from filling application PDFs
+
+Most PDF readers — including the free version of Adobe Acrobat Reader — only let you type inside pre-built interactive form fields. If the college sent a flat PDF, Acrobat shows you a read-only document and nothing else. Students end up trying workarounds that all have problems:
+
+- **Print and handwrite.** Adds time, and handwritten applications can look less polished than typed ones.
+- **Convert to Word.** Table-heavy application forms fall apart when converted. Columns merge, borders vanish, spacing shifts.
+- **Take a screenshot and annotate.** Results in a low-resolution image, not a professional PDF.
+- **Use the college's online portal instead.** Not always an option — many schools still send standalone PDFs for supplemental forms, scholarship applications, and verifier signatures.
+
+SignMyPDF's Fill tool lets you click anywhere on the page — including flat, scanned pages — and type directly. It works on fillable PDFs and non-fillable PDFs the same way. If you've already had trouble with a form that appeared to accept input in one browser but not another, this is worth trying before your deadline hits. See [what to do when a PDF won't let you type](/blog/pdf-wont-let-me-type-fix) for the specific causes behind that problem.
+
+## Why most online PDF fill tools frustrate students
+
+- **Watermarks on the download.** The form is filled correctly, then stamped with a brand logo you can't remove without paying.
+- **Per-document limits.** Free tiers allow 1-3 documents per month. A student with five supplemental forms burns through that immediately.
+- **Account walls before first use.** You upload the file, see a preview, and hit a "sign up to continue" gate before typing a single character.
+- **File uploads to external servers.** Your address, student ID, personal essay, and contact details get sent to a third-party cloud before anything happens to the document.
+- **Mobile tools that only work with form fields.** iOS PDF apps often can't add freehand text to flat pages — the interface just doesn't support it.
+
+## Why SignMyPDF works for college applications
+
+- **Free, no registration, no paywall at download.** Fill any PDF and download it without entering an email address.
+- **Works on flat and fillable PDFs.** Form fields built in or not — click-to-type works either way.
+- **Files processed in browser.** Your personal information — name, address, school history — stays on your device. Nothing is uploaded to a server.
+- **Text, signatures, and dates in one session.** Most college applications need typed answers and a signature line. Both happen in the same tool.
+- **Clean output.** The downloaded PDF keeps the original layout. Your answers appear exactly where you typed them.
+
+For scholarship or financial aid forms that use government-style flat layouts, [filling government forms online for free](/blog/fill-government-forms-online-free) covers that specific scenario.
+
+[IMAGE: close-up of a completed college application PDF with typed name, GPA, and activities filled into blank lines on a scanned page]
+
+## Frequently asked questions
+
+**What if the college application PDF has no fillable fields — just blank lines on a scanned page?**
+SignMyPDF's Fill tool lets you click anywhere on a flat or scanned PDF and place text directly. You don't need interactive form fields. Click near the blank line, type, and position the text precisely over it.
+
+**Can I sign the form in the same tool without switching apps?**
+Yes. The Fill tool supports drawing or typing a signature. Add your typed answers and your signature in the same session, then download a single complete PDF.
+
+**Is it safe to fill in my application information using an online tool?**
+Your file is processed entirely in your browser using JavaScript. Nothing is sent to a server or stored anywhere. When you close the tab, nothing remains — not the file, not your typed answers.
+
+[CTA]Fill Your College Application PDF Now — Free|Click anywhere to type. Works on flat and fillable PDFs. Nothing uploaded to any server.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill government forms online — free](/blog/fill-government-forms-online-free)
+- [Fill a job application PDF online](/blog/fill-job-application-pdf-online)
+- [PDF form fields not working? Here is the fix](/blog/pdf-form-fields-not-working-fix)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-on-iphone',
+    title: 'Password Protect a PDF on iPhone Free',
+    excerpt: 'iOS has no built-in option to password protect a PDF on iPhone. Here is how to add AES-256 encryption to any PDF from Safari in under a minute — free, no app needed.',
+    date: '2026-05-11',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect PDF on iPhone', 'protect PDF iPhone', 'password protect PDF free', 'PDF encryption iPhone', 'iOS PDF password', 'AES-256 PDF iPhone', 'password protect PDF Safari'],
+    metaTitle: 'Password Protect a PDF on iPhone Free',
+    metaDescription: 'No built-in way to password protect a PDF on iPhone? Use SignMyPDF in Safari — AES-256 encryption, no app, no account, no server upload. Free.',
+    content: `
+You need to password protect a PDF on your iPhone before sending it — but iOS has no built-in way to do it. The Files app opens PDFs and lets you share them, but there is no option to add a password anywhere in the interface. You either send the document unprotected, or AirDrop it to a Mac just to lock it there and AirDrop back.
+
+There is a faster path, and it does not require downloading any app.
+
+[CTA]Password Protect a PDF on iPhone — Free|AES-256 encryption. Runs in Safari. Files never leave your device.|Protect PDF Now — Free
+
+## How to password protect a PDF on iPhone
+
+1. Open Safari on your iPhone (Chrome or Firefox work too)
+2. Go to SignMyPDF.com and tap the Protect tool
+3. Tap "Choose File" and select your PDF from Files, iCloud Drive, or Downloads
+4. Enter a strong password and confirm it in the second field
+5. Tap "Protect PDF" — the encrypted file downloads straight to your Files app
+
+From there, share it via Mail, Messages, or any app. The recipient will need the password to open it in any PDF reader.
+
+[IMAGE: iPhone screen in Safari showing SignMyPDF's Protect tool with a PDF selected and a password field filled in]
+
+## Why iOS has no native PDF password option
+
+Apple encrypts your iPhone at the device level — the whole storage is protected by hardware encryption. But a per-file password that a recipient needs to open one specific PDF? That is not a built-in iOS feature. Share a PDF from Files and you get AirDrop, Mail, Messages, and Copy — no "lock with password" option exists.
+
+The workarounds iPhone users typically reach for:
+
+- **AirDrop to a Mac, lock it in Preview, AirDrop back.** Works — but requires a nearby Mac and adds several minutes of back-and-forth.
+- **PDF editor apps from the App Store.** Most charge for encryption or cap file size on the free tier. Many upload your file to their servers to process it.
+- **iCloud "share with specific people" links.** This controls who has the link, not the file itself. If someone forwards the link, the access follows it.
+- **Send it unprotected.** The option most people eventually take — and sometimes regret.
+
+SignMyPDF's Protect tool ([signmypdf.io/protect](/protect)) runs directly in your Safari browser. Upload the PDF from your Files app, set a password, and download the locked file. No app required. If you've ever sent a sensitive document without protection, [what to do when you send a confidential file unprotected](/blog/sent-confidential-contract-unprotected) covers the recovery steps.
+
+## Why most iPhone PDF protection tools fall short
+
+- **File size caps on free tiers.** Try to protect a 15 MB contract and you hit a paywall.
+- **Server-side encryption.** Your file gets uploaded to a third-party server before being locked — which defeats the purpose when the file is sensitive.
+- **Subscription required for passwords.** Adobe Acrobat for iOS can add passwords, but only with an active paid subscription.
+- **Poor iOS file-picker support.** Some web tools don't handle the iOS Files picker correctly, making it impossible to select a PDF from iCloud Drive.
+- **Open password only — no permissions control.** Basic tools only restrict opening the file. They can't limit printing, copying, or editing after it's unlocked.
+
+## Why SignMyPDF works on iPhone
+
+- **Free, no registration, no paywall at download.** Lock any PDF and download it without creating an account.
+- **No app download needed.** Runs in Safari or any iOS browser. Nothing installs on your phone.
+- **Files processed in browser.** AES-256 encryption is applied locally using JavaScript. The PDF never leaves your device.
+- **AES-256 encryption.** The same standard used by enterprise tools. Any PDF reader — Adobe Acrobat, macOS Preview, Chrome — prompts for the password when the file is opened.
+- **Owner password support.** Set restrictions on printing, copying, and editing in addition to the open password.
+
+The same browser-based tool works on desktop too. If you also protect PDFs on your laptop, [how to password protect a PDF on Mac](/blog/password-protect-pdf-on-mac) covers the same steps for macOS.
+
+## Frequently asked questions
+
+**Will the protected PDF open correctly on my iPhone after downloading?**
+Yes. Tap the file in your Files app and you'll be prompted for the password. Apple's built-in PDF viewer and any third-party iOS PDF reader handle AES-256 protected files without issue.
+
+**Can I select the PDF from iCloud Drive or Google Drive on my iPhone?**
+Yes. When you tap "Choose File" in SignMyPDF, you can browse iCloud Drive, Google Drive, Dropbox, and any other location accessible through the iOS Files app.
+
+**Is it secure to encrypt a PDF in a mobile browser?**
+Yes. SignMyPDF applies AES-256 encryption locally using JavaScript — the same standard as desktop applications. The file never leaves your device. Only the already-encrypted file is downloaded to your phone.
+
+[CTA]Protect a PDF on Your iPhone — Free|AES-256 encryption in Safari. No app, no account, no upload to any server.|Protect PDF Now — Free
+
+## Related tools
+
+- [How to password protect a PDF on Mac](/blog/password-protect-pdf-on-mac)
+- [How to password protect a PDF on Windows 11](/blog/password-protect-pdf-on-windows-11)
+- [PDF password vs encrypted email: which is safer?](/blog/password-pdf-vs-encrypted-email)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
