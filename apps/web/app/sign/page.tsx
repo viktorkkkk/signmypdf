@@ -42,6 +42,7 @@ import {
   activateSubscription,
 } from '../utils/subscription';
 import { consumePendingFile } from '../utils/pendingUpload';
+import { useExtensionFile } from './useExtensionFile';
 
 type Step = 'upload' | 'sign' | 'done';
 
@@ -300,6 +301,26 @@ export default function Home() {
       });
     } catch {}
   };
+
+  // ── Chrome extension handoff ────────────────────────────────
+  // When `/sign` is opened with `?from=extension`, the @signmypdf
+  // Chrome extension has stashed a PDF in `chrome.storage.local`.
+  // This hook runs the postMessage handshake with the extension's
+  // content-script bridge and primes the editor with the resulting
+  // File — the same code path as the dropzone's `onDrop` callback.
+  // Stage 5 PR 2.
+  useExtensionFile({
+    onFile: (file, meta) => {
+      setPdfFile(file);
+      setStep('sign');
+      setSelectedPages([1]);
+      setPlacements([{ page: 1, x: 5, y: 75, w: 30, h: 12 }]);
+      trackEvent('pdf_from_extension', {
+        source: meta.source,
+        size: meta.size,
+      });
+    },
+  });
 
   const handleSign = async () => {
     if (!pdfFile || !canSign) return;
