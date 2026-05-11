@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-11",
+  "timestamp": "2026-05-11T02:11:30Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "1ddb8fcbd7b362f9b63d014f50070df1d40d0743",
+  "newSlugs": "signed-pdf-looks-different-fix signnow-free-alternative",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25646686119"
+}
