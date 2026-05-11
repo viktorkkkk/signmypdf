@@ -9350,6 +9350,172 @@ Yes. SignMyPDF applies AES-256 encryption locally using JavaScript — the same 
 - [PDF password vs encrypted email: which is safer?](/blog/password-pdf-vs-encrypted-email)
 `,
   },
+  {
+    slug: 'signed-pdf-looks-different-fix',
+    title: 'Signed PDF Looks Wrong — How to Fix It',
+    excerpt: 'You signed the PDF carefully, but recipients see the signature in the wrong spot or a shifted layout. Here is why it happens and how to fix it.',
+    date: '2026-05-12',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['signed pdf looks different', 'signed pdf looks wrong', 'pdf signature rendering issue', 'fix signed pdf', 'pdf layout shift after signing', 'signature position wrong', 'pdf signing fix'],
+    metaTitle: 'Signed PDF Looks Wrong — How to Fix It',
+    metaDescription: 'Your signed PDF looks different on the recipient screen? Here is why it happens and how to fix it without re-doing the whole document.',
+    content: `
+Your client says the signature is in the wrong spot. Your colleague opens the same file and sees a completely shifted layout. You signed the document carefully — but now the signed PDF looks different on their screen from what you saw when you placed it.
+
+A signed PDF looks different across viewers when the signing tool changes the document structure during processing. This is more common than it should be, and it is almost never your fault.
+
+[CTA]Fix Your Signed PDF — Free|No account, no server upload, no watermark at download.|Sign PDF Now — Free
+
+## What causes a signed PDF to look wrong
+
+[IMAGE: Two screenshots side by side — the same signed PDF open in Chrome's built-in viewer and Adobe Acrobat, with the signature in visibly different positions]
+
+The most common causes:
+
+- **Upload-and-re-render tools.** Many online signing tools upload your PDF to a server, convert it internally, then return a new file. That internal conversion changes the page dimensions and shifts the coordinate grid your signature was placed on.
+- **Compression applied during saving.** If the tool compresses the output to reduce file size, text boxes, images, and signature layers can float out of their original positions.
+- **Font substitution.** If the PDF uses a font that is not embedded in the file, some viewers substitute a different one — which shifts line breaks, changes spacing, and makes the whole layout look structurally different.
+- **Viewer scaling differences.** PDF viewers interpret page size differently. A signature placed at 85% of page height may render in a visually different position if the viewer rescales the page before displaying it.
+
+The original document usually renders correctly. If the layout is fine before signing but off afterwards, the signing tool itself changed something it should not have.
+
+## How to diagnose and fix it
+
+1. Open the original unsigned PDF and the signed version side by side in the same viewer
+2. Check whether only the signature shifted, or whether the underlying text and layout also moved
+3. If only the signature shifted, a viewer is scaling the page differently — try a browser-based tool that does not re-render the document
+4. If the layout itself changed, the signing tool processed the file structure — re-sign using a tool that writes directly to the original file
+5. Download the corrected version and open it in both Chrome and Adobe Reader to confirm it renders consistently
+
+If the PDF has interactive form fields, always fill them before signing. Signing first locks the fields in some readers, which causes layout drift. See [how to fill a PDF form online for free](/blog/fill-pdf-form-online-free) if you need to complete the form content first.
+
+[IMAGE: SignMyPDF browser interface showing a signature placed precisely on a document, with a zoom control visible for verification before download]
+
+## Why most PDF tools make this worse
+
+- They upload your file to a server and re-render it — the page geometry can change during that round-trip
+- They compress the output automatically, shifting element positions without any warning
+- No 100% zoom preview before downloading means you cannot spot placement drift until the file is already on the recipient's end
+- Some wrap the file in a proprietary digital certificate format that third-party readers misinterpret
+- If you have run into [signatures disappearing entirely in some viewers](/blog/signature-disappears-pdf-fix), it is often the same root cause — inconsistent PDF spec implementation during the signing step
+
+## Why SignMyPDF handles this correctly
+
+- Signing happens entirely in your browser using pdf-lib — the PDF is never uploaded to a server, so no re-rendering occurs
+- Signature coordinates are written directly into the original file structure, preserving the existing page geometry
+- You can zoom in and verify placement before downloading anything
+- The output opens consistently in Chrome, Safari, Edge, Firefox, and Adobe Reader — what you see in the tool is what recipients see
+- Free, no registration, no paywall at download
+
+If the original document is marked read-only and that is part of the problem, see [how to add text to a read-only PDF](/blog/pdf-read-only-add-text-fix) before re-signing.
+
+## Frequently asked questions
+
+**Why does the signature position look different on mobile vs. desktop?**
+Some PDF viewers scale pages to fit the screen, which changes the visual position of elements even though the underlying coordinates are correct. Browser-based signing tools that write to the original file's coordinate space generally display consistently across screen sizes.
+
+**Can I fix a signature that is already embedded in the wrong position?**
+No — once a signature is embedded, it cannot be repositioned without re-signing. Open the original unsigned document, sign again using a consistent browser-based tool, and send the corrected version.
+
+**Does the visual difference affect whether the signature is legally valid?**
+The rendering difference does not change the legal validity — the signature is still cryptographically attached to the document. But if the shifted position makes the document appear inconsistent or tampered with, re-signing with a reliable tool is the cleanest resolution.
+
+[CTA]Sign Your PDF Correctly — Free|Browser-only. No server upload. What you see is what recipients get.|Sign PDF Now — Free
+
+## Related tools
+
+- [Why PDF signatures disappear in some readers — and the fix](/blog/signature-disappears-pdf-fix)
+- [How to add text to a read-only PDF](/blog/pdf-read-only-add-text-fix)
+- [Start signing — no account needed](/sign)
+`,
+  },
+  {
+    slug: 'signnow-free-alternative',
+    title: 'Free SignNow Alternative for Filling PDFs',
+    excerpt: 'SignNow offers a 7-day trial, then requires a paid plan. If you need to fill and sign PDFs for free with no account and no expiration, here is what to use instead.',
+    date: '2026-05-12',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['signnow free alternative', 'signnow alternative', 'fill pdf form free', 'free pdf signing tool', 'signnow vs signmypdf', 'docusign signnow comparison', 'free pdf fill no account'],
+    metaTitle: 'Free SignNow Alternative for Filling PDFs',
+    metaDescription: 'SignNow free trial lasts 7 days, then requires a subscription. Fill and sign PDFs for free with no account, no expiry, no server upload.',
+    content: `
+You need to fill and sign a PDF — a client intake form, a lease, a W-9. You find SignNow, create an account, and realize the free option is a 7-day trial. Once that ends, paid plans start at around $8 per user per month, billed annually.
+
+If you want a SignNow free alternative that does not expire, SignMyPDF is worth a look. As a SignNow free alternative, it handles the same core tasks — filling PDF forms, adding signatures, downloading the result — without a subscription, a trial clock, or an account.
+
+[CTA]Fill Your PDF Form — Free|No trial limit. No account. Your file stays in your browser.|Fill PDF Form Now — Free
+
+## SignNow vs SignMyPDF: the key differences
+
+| Feature | SignNow | SignMyPDF |
+|---|---|---|
+| Free access | 7-day trial only | Unlimited, no expiration |
+| Account required | Yes | No |
+| Price after trial | From ~$8/user/month | Free |
+| File processing | Cloud servers | Browser only |
+| PDF form filling | Yes | Yes |
+| eSignature | Yes | Yes |
+| Mobile access | App required | Any mobile browser |
+| Multi-signer workflows | Yes | No |
+
+The differences that matter most for occasional form work: SignNow requires an account before you can do anything, and the free access expires in a week. SignMyPDF requires neither.
+
+## How to fill a PDF form with SignMyPDF
+
+1. Open SignMyPDF and go to the Fill tool
+2. Upload your PDF from your device
+3. Click anywhere on the page and type your response
+4. Drag the text box to sit precisely over the field
+5. Add a signature if the form requires one, then download
+
+The filled PDF downloads directly to your device. No confirmation email, no "your document is ready" link, no waiting for a server to process.
+
+[IMAGE: SignMyPDF fill tool showing a PDF form with typed text boxes positioned over blank fields and a signature placed at the bottom]
+
+## Where SignNow genuinely has the advantage
+
+SignNow is the stronger choice in specific situations:
+
+- **Multi-party signing workflows.** You need to send a document to several people who each sign in sequence, with automatic reminders sent between steps. SignNow is built for that; SignMyPDF is not.
+- **Reusable document templates.** If you send the same form repeatedly — a service agreement, an NDA, a client intake form — SignNow lets you save a template and reuse it without re-uploading each time.
+- **Audit trail requirements.** Some contracts or regulated industries require a timestamped log showing when each party viewed and signed. SignNow generates that audit trail; SignMyPDF does not.
+
+If any of those workflows apply to your situation, a paid plan at those price points may genuinely be worth it. For a similar breakdown of another major tool, see [DocuSign's free plan vs SignMyPDF](/blog/docusign-free-plan-vs-signmypdf) — the tradeoffs are comparable.
+
+## Why most people look for a SignNow alternative
+
+- **Account required before anything works.** SignNow asks you to create an account and verify your email before you can upload a file — even during the trial.
+- **The 7-day clock starts immediately.** Sign up, get distracted, come back in a week, and the trial is already over.
+- **No ongoing free tier.** Once the trial ends, it is a subscription or nothing. There is no permanent free plan for light users.
+- **Files live on external servers.** Your signed contracts, tax documents, and client forms are stored on SignNow's cloud infrastructure. If data privacy is a concern, that matters.
+- **Mobile requires the app.** SignNow's mobile browser experience is limited; full functionality requires installing their app.
+
+SignMyPDF's model is different: no account, no trial period, no server storage. Files are processed in your browser. Free, no paywall at download.
+
+[IMAGE: Side-by-side comparison — SignNow's subscription prompt after trial expiration vs SignMyPDF's open fill interface with no gate]
+
+## Frequently asked questions
+
+**Does SignNow have any permanently free plan?**
+As of the time of writing, SignNow offers a 7-day free trial but no ongoing free tier after the trial ends. All features require a paid subscription after that period.
+
+**Is SignMyPDF legal for signed contracts?**
+Yes. Electronic signatures created with SignMyPDF satisfy the requirements of the ESIGN Act in the US and eIDAS in the EU for standard electronic signatures. For a full overview of what makes a digital signature legally binding, see [the ESIGN Act explained](/blog/esign-act-explained).
+
+**Can I fill a PDF on my phone without downloading an app?**
+Yes. SignMyPDF runs in any mobile browser — Safari on iPhone, Chrome on Android. No app installation required. Open the site, upload your PDF, fill it, and download. It works the same way it does on desktop.
+
+[CTA]Fill a PDF Form Right Now — Free|No account, no trial, no app. Works on any device in any browser.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [DocuSign free plan vs SignMyPDF: the real comparison](/blog/docusign-free-plan-vs-signmypdf)
+- [How to fill a government form online for free](/blog/fill-government-forms-online-free)
+- [How to fill a PDF form online for free](/blog/fill-pdf-form-online-free)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
