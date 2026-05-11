@@ -3,7 +3,11 @@ import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — SignMyPDF Chrome Extension',
+  // Root layout already appends " | SignMyPDF" — keep this title
+  // bare so the SERP / browser tab reads
+  //   "Privacy Policy — Chrome Extension | SignMyPDF"
+  // instead of the doubled "... | SignMyPDF | SignMyPDF".
+  title: 'Privacy Policy — Chrome Extension',
   description:
     'Privacy policy for the SignMyPDF Chrome extension. What data the extension collects, what it does not, and how the extension talks to signmypdf.io.',
   alternates: { canonical: '/extension/privacy' },

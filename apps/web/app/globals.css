@@ -5409,3 +5409,75 @@ body.nda-editor-mode .nda-hero-inner {
   .ext-banner-success { display: none; }
 }
 
+/* ── /sign minimal mode (Stage 5 PR 4) ──────────────────────────────
+ * Triggered when /sign is opened with ?from=extension. The toolbar
+ * icon and right-click menu always open the page with this query.
+ * Layout: slim top bar with logo only (link back to full /sign),
+ * then a big centered dropzone that fills the rest of the viewport.
+ * NavHeader, SiteFooter, ExtensionBanner, More Tools, FAQ are all
+ * suppressed in JSX — these rules just polish what remains.
+ */
+.sign-minimal-topbar {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.sign-minimal-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+}
+.sign-minimal-logo:hover { color: #2563eb; }
+.sign-minimal-logo > :first-child {
+  width: 28px;
+  height: 28px;
+}
+
+.sign-minimal-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 24px 0;
+}
+.dropzone.dropzone-minimal {
+  width: 100%;
+  max-width: 720px;
+  padding: 72px 32px;
+  border-width: 2.5px;
+  border-radius: 28px;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.dropzone.dropzone-minimal .dz-icon {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 20px;
+}
+.dropzone.dropzone-minimal .dz-title {
+  font-size: 26px;
+}
+.dropzone.dropzone-minimal .dz-sub {
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 540px) {
+  .sign-minimal-topbar { padding: 12px 16px; }
+  .sign-minimal-upload { min-height: calc(100vh - 160px); padding: 16px; }
+  .dropzone.dropzone-minimal { padding: 40px 20px; min-height: 50vh; }
+  .dropzone.dropzone-minimal .dz-icon { width: 72px; height: 72px; }
+  .dropzone.dropzone-minimal .dz-title { font-size: 20px; }
+}
+

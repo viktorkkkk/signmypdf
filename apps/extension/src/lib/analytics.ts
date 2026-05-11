@@ -31,11 +31,9 @@ async function getClientId(): Promise<string> {
 
 export type ExtensionEventName =
   | 'extension_installed'
-  | 'extension_popup_opened'
-  | 'extension_pdf_dropped'
-  | 'extension_pdf_too_large'
+  | 'extension_icon_clicked'
   | 'extension_context_menu_used'
-  | 'extension_pdf_transferred_to_site';
+  | 'extension_context_menu_failed';
 
 /**
  * Best-effort GA4 event. Swallows errors — we never want analytics

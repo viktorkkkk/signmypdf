@@ -18,8 +18,10 @@ export interface PendingPdf {
   size: number;
   /** `Date.now()` at write time — bridge rejects stale entries. */
   timestamp: number;
-  /** How the PDF entered: popup drop vs. right-click on a link. */
-  source: 'popup' | 'context-menu';
+  /** How the PDF entered. PR 4 removed the popup; only the right-click
+      context menu still writes here. Kept as a union so future
+      sources (e.g. drag-onto-icon) can be added without churn. */
+  source: 'context-menu';
 }
 
 /** popup → service-worker — open the sign tab. */
