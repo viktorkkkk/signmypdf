@@ -1,0 +1,354 @@
+/* /chrome landing styles. Scoped under .chrome-landing so they
+   never collide with the rest of the site. Mobile-first; the
+   `@media (min-width: 720px)` block expands cards to a 2/3-col
+   grid. Inherits the global .container max-width / padding. */
+
+.chrome-landing {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.chrome-hero {
+  padding-top: 56px;
+  padding-bottom: 32px;
+  text-align: center;
+}
+.chrome-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.chrome-h1 {
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 auto 14px;
+  max-width: 760px;
+}
+.chrome-sub {
+  font-size: 17px;
+  color: #475569;
+  max-width: 640px;
+  margin: 0 auto 28px;
+}
+.chrome-cta-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.chrome-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.32);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.chrome-cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.42);
+}
+.chrome-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+}
+.chrome-cta-secondary:hover {
+  background: #eff6ff;
+}
+.chrome-trust {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+.chrome-trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Sections ─────────────────────────────────────────────── */
+.chrome-section {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.chrome-h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+  margin: 0 0 28px;
+  letter-spacing: -0.3px;
+}
+
+/* ── How it works ─────────────────────────────────────────── */
+.chrome-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.chrome-step {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+}
+.chrome-step-num {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chrome-step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.chrome-step-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+.chrome-step-body {
+  font-size: 14px;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Screenshots (placeholders) ───────────────────────────── */
+.chrome-screens {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.chrome-screen-placeholder {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.chrome-screen-bar {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #e2e8f0;
+}
+.chrome-screen-bar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+.chrome-screen-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 180px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+.chrome-screens-note {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 12px 0 0;
+}
+
+/* ── Features ─────────────────────────────────────────────── */
+.chrome-features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.chrome-feature {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+.chrome-feature-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.chrome-feature-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+.chrome-feature-body {
+  font-size: 13px;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Pricing ──────────────────────────────────────────────── */
+.chrome-pricing {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.chrome-plan {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.chrome-plan-featured {
+  border-color: #2563eb;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 60%);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.12);
+}
+.chrome-plan-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.chrome-plan-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.chrome-plan-price span {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+}
+.chrome-plan-sub {
+  font-size: 13px;
+  color: #475569;
+}
+
+/* ── FAQ ──────────────────────────────────────────────────── */
+.chrome-faq {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.chrome-faq-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.chrome-faq-item summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #0f172a;
+  list-style: none;
+}
+.chrome-faq-item summary::-webkit-details-marker { display: none; }
+.chrome-faq-item summary::after {
+  content: '+';
+  float: right;
+  font-size: 18px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+.chrome-faq-item[open] summary::after { content: '–'; }
+.chrome-faq-item p {
+  padding: 0 18px 16px;
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* ── Final CTA ────────────────────────────────────────────── */
+.chrome-final {
+  text-align: center;
+}
+.chrome-final-or {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #64748b;
+}
+.chrome-final-or a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ── Desktop layout ───────────────────────────────────────── */
+@media (min-width: 720px) {
+  .chrome-h1 { font-size: 52px; }
+  .chrome-sub { font-size: 19px; }
+  .chrome-steps,
+  .chrome-features,
+  .chrome-pricing {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .chrome-screens {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

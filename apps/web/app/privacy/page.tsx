@@ -33,6 +33,10 @@ export default function PrivacyPage() {
         Company address: 833 Saint Vincent, Irvine, CA 92618, USA.<br />
         Contact: <a href="mailto:support@signmypdf.io" style={{ color: '#2563eb' }}>support@signmypdf.io</a>
       </p>
+      <p style={{ marginBottom: 16, padding: 12, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+        Using the SignMyPDF <strong>Chrome extension</strong>? It has its own short, extension-specific policy at{' '}
+        <a href="/extension/privacy" style={{ color: '#2563eb' }}>signmypdf.io/extension/privacy</a>.
+      </p>
 
       <h2 style={{ fontSize: 20, fontWeight: 600, color: '#1e293b', marginTop: 32, marginBottom: 16 }}>
         1. Your Documents Stay on Your Device

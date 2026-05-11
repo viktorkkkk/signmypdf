@@ -75,6 +75,8 @@ export default function SiteFooter() {
             <ul className="footer-links">
               <li><Link href="/terms" className="footer-link">Terms of Service</Link></li>
               <li><Link href="/privacy" className="footer-link">Privacy Policy</Link></li>
+              <li><Link href="/extension/privacy" className="footer-link">Extension Privacy</Link></li>
+              <li><Link href="/chrome" className="footer-link">Chrome Extension</Link></li>
             </ul>
           </div>
 
