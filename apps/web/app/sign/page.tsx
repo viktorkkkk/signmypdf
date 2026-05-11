@@ -29,6 +29,7 @@ import SiteFooter from '../components/SiteFooter';
 import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
+import ExtensionBanner from '../components/ExtensionBanner';
 import { signPdfInBrowser } from '@signmypdf/pdf-core';
 import {
   SUBSCRIPTION_KEY,
@@ -493,6 +494,10 @@ export default function Home() {
       {/* Header */}
       <NavHeader activeTool="sign" />
 
+      {/* Chrome extension install nudge. Hides itself for mobile,
+          for ?from=extension visitors, and for 7 days after dismiss. */}
+      <ExtensionBanner variant="sticky" />
+
       {/* Progress */}
       {step !== 'upload' && (
         <div className="progress-wrap">
@@ -757,6 +762,10 @@ export default function Home() {
               <button className="btn-ghost" style={{ width: '100%', maxWidth: 480, padding: '13px', fontSize: 15, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }} onClick={reset}>
                 <FileText size={16} /> Sign another document
               </button>
+
+              {/* Post-success upsell — invites users to install the
+                  extension so the next sign is one click shorter. */}
+              <ExtensionBanner variant="post-success" />
             </div>
           </div>
         )}

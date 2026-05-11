@@ -72,6 +72,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
+      url: `${baseUrl}/chrome`,
+      lastModified: lastModFor('/chrome'),
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/extension/privacy`,
+      lastModified: lastModFor('/extension/privacy'),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+    {
       url: `${baseUrl}/blog`,
       lastModified: lastModFor('/blog'),
       changeFrequency: 'daily' as const,
