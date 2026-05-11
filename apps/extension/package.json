@@ -1,0 +1,27 @@
+{
+  "name": "@signmypdf/extension",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome MV3 extension — drag a PDF into the popup, land in signmypdf.io/sign with the file pre-loaded.",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "package": "pnpm build && cd dist && zip -r ../signmypdf-extension.zip ."
+  },
+  "dependencies": {
+    "@signmypdf/pdf-core": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@types/chrome": "^0.0.260",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.0"
+  }
+}
