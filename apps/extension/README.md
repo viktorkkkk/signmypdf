@@ -1,48 +1,54 @@
 # @signmypdf/extension
 
-Chrome MV3 extension that hands a PDF off to `signmypdf.io/sign` for
-signing. Thin bridge by design — see the root `CLAUDE.md` and the
-Stage 5 ТЗ for the full architecture rationale.
+Chrome MV3 extension that opens `signmypdf.io/sign` in a new tab so
+the user signs PDFs in the full site editor, not a popup. Thin bridge
+by design — see the root `CLAUDE.md` and the Stage 5 ТЗ for the full
+architecture rationale.
 
 ## Architecture in one paragraph
 
-The popup (`src/popup/`) accepts a drag/drop or right-click PDF,
-base64-encodes it, writes it to `chrome.storage.local`, and opens
-`signmypdf.io/sign?from=extension`. A content script bridge
-(`src/content/bridge.ts`) running on that page reads the file out of
-extension storage and posts it to the web app. The web app then
-reconstitutes the `File` and feeds it into the existing signing
-editor — no signing logic in the extension itself. PR 1 ships
-everything except the matching web-app receiver (PR 2).
+Two entry points, one destination:
 
-## What's in PR 1
+- **Click the toolbar icon** → `chrome.action.onClicked` fires in the
+  service worker and opens `signmypdf.io/sign?from=extension`. The
+  site renders a "minimal mode" surface (no NavHeader, no footer,
+  no install-nudge banner) so the user feels like they're inside an
+  app, not on the marketing site.
+- **Right-click a `*.pdf` link** → context menu *Sign with SignMyPDF*
+  fetches the PDF in the service worker, base64-encodes it, stashes
+  it in `chrome.storage.local`, and opens the same `/sign` URL. The
+  page's content script bridge picks up the file via postMessage and
+  primes the editor.
 
-- `apps/extension/` skeleton with Vite + `@crxjs/vite-plugin` build
-- MV3 `src/manifest.ts` (single source of truth — crxjs emits the
-  final `dist/manifest.json`)
-- Popup UI: drag/drop, file-picker, base64 → `chrome.storage.local`,
-  open new tab on success
-- Service worker: `extension_installed` event, right-click context
-  menu on `*.pdf` links, fetch + stash + open `/sign`
-- Content script bridge stub — listens for `SIGNMYPDF_REQUEST_FILE`
-  but no caller exists yet (web-app hook lands in PR 2)
-- GA4 Measurement Protocol client (no `gtag.js` in service workers)
+No popup, no signing logic in the extension itself, no second tab
+to context-switch into.
+
+## What's in this build (Stage 5 PR 4)
+
+- `apps/extension/` Vite + `@crxjs/vite-plugin` build (no popup
+  bundle — that was removed in PR 4)
+- MV3 `src/manifest.ts` — `action` has no `default_popup`; toolbar
+  click is intercepted by the service worker
+- Service worker: `extension_installed`, `extension_icon_clicked`,
+  context-menu registration on `*.pdf` patterns, fetch + stash +
+  open-tab handler
+- Content script bridge on signmypdf.io — replies to
+  `SIGNMYPDF_REQUEST_FILE` with the stashed `chrome.storage.local`
+  entry, then clears it
+- GA4 Measurement Protocol client (gtag.js doesn't work in MV3
+  service workers)
 - Placeholder icons (blue circle, white "S") in
-  `public/icons/icon-{16,32,48,128}.png` — replace before publish
+  `public/icons/icon-{16,32,48,128}.png` — replace before publishing
 
-## What's NOT here yet
+## Site-side surfaces
 
-PR 2:
-- `apps/web/app/sign/page.tsx` reader hook for `?from=extension`
-- Site → extension postMessage handshake gets a caller
+| URL | Purpose |
+|---|---|
+| `/sign?from=extension` | Receives the handoff from the toolbar icon or context menu. Renders minimal mode (no chrome) |
+| `/chrome` | Marketing landing — hero with embedded dropzone, "Add to Chrome" CTA, screenshots, 3-step how-it-works |
+| `/extension/privacy` | Privacy policy required by the Chrome Web Store reviewer |
 
-PR 3:
-- `apps/web/app/chrome/` landing page
-- `apps/web/app/extension/privacy/` policy
-- Banner on `/sign` advertising the extension
-- Production icons + Chrome Web Store submission artefacts
-
-## Local testing
+## Local testing (with terminal)
 
 ```bash
 # From repo root — installs all workspace deps once.
@@ -55,7 +61,7 @@ pnpm --filter @signmypdf/extension build
 pnpm --filter @signmypdf/extension dev
 ```
 
-Then load it into Chrome:
+Load it into Chrome:
 
 1. Open `chrome://extensions`
 2. Enable **Developer mode** (top right)
@@ -63,21 +69,24 @@ Then load it into Chrome:
 4. Select `apps/extension/dist`
 5. The icon ("S" on blue) appears in the toolbar
 
-### Smoke tests (PR 1)
+### Smoke tests
 
 | # | Action | Expected |
 |---|---|---|
-| 1 | Click the extension icon | Popup opens, drop zone visible |
-| 2 | Drop or pick a small PDF | Status flips to "Opening editor…", popup closes, a new tab opens at `signmypdf.io/sign?from=extension` |
-| 3 | Drop a > 7 MB PDF | Error "File is N MB — extension limit is 7 MB" + link to signmypdf.io/sign |
-| 4 | Drop a non-PDF | Error "Only PDF files are supported in the extension." |
-| 5 | After (2), open chrome://extensions → Inspect views → service worker → Application → Storage → IndexedDB / Local Storage | `pendingPdf` entry visible until the bridge consumes it (PR 2) OR until 60 s elapse |
-| 6 | Right-click a `*.pdf` link in any tab | Context menu shows "Sign with SignMyPDF" |
-| 7 | Click that item | A new tab opens at `signmypdf.io/sign?from=extension`. The file is in `chrome.storage.local` — PR 2 will surface it on the page. |
+| 1 | Click the toolbar icon | A new tab opens at `signmypdf.io/sign?from=extension`. Page is in minimal mode: small `SignMyPDF` logo top-left, big dropzone, no nav/footer. No popup. |
+| 2 | Drop a PDF on that page's dropzone | Editor primes with the file (same as the standard `/sign` flow) |
+| 3 | Right-click any `*.pdf` link in another tab | Context menu shows **Sign with SignMyPDF** |
+| 4 | Click *Sign with SignMyPDF* | A new tab opens at `/sign?from=extension`, the PDF is fetched in the service worker, stashed in `chrome.storage.local`, and the page's bridge surfaces it via postMessage — editor primes automatically |
+| 5 | Right-click a link to a PDF behind auth / 404 | Page falls through to the empty dropzone (the bridge gets no file, the SW logged a console warning) |
+| 6 | Click the small logo on the minimal-mode page | Navigates to `/sign` without query params → full site mode (NavHeader + footer return) |
 
-The site-side reading of `pendingPdf` is **not** yet wired (PR 2). In
-PR 1, the handoff record is visible only via the extension's storage
-inspector.
+## Local testing (no terminal)
+
+A pre-built bundle lives on the `test/extension-unpacked` branch and
+on the [`ext-test-1` GitHub Release][release]. Download the ZIP,
+extract it, and `Load unpacked` the resulting folder.
+
+[release]: https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1
 
 ## Production zip for Chrome Web Store
 
@@ -87,17 +96,17 @@ pnpm --filter @signmypdf/extension package
 ```
 
 Upload that ZIP at <https://chrome.google.com/webstore/devconsole>.
-PR 3 lands the matching landing page + privacy policy required for
-the listing.
+The matching landing page and privacy policy are live at
+<https://signmypdf.io/chrome> and
+<https://signmypdf.io/extension/privacy>.
 
 ## Files at a glance
 
 | Path | Role |
 |---|---|
-| `src/manifest.ts` | MV3 manifest as a typed module |
-| `src/popup/popup.html`, `popup.tsx`, `popup.css`, `DropZone.tsx` | Popup UI |
-| `src/background/service-worker.ts` | Install hook, context menu |
-| `src/content/bridge.ts` | Stub site-side reader (PR 2 plugs in) |
+| `src/manifest.ts` | MV3 manifest as a typed module — no `default_popup` |
+| `src/background/service-worker.ts` | Install hook, icon-click handler, context menu |
+| `src/content/bridge.ts` | Site-side reader of `chrome.storage.local` (talks to /sign via postMessage) |
 | `src/lib/constants.ts` | URLs, storage keys, size limits |
 | `src/lib/fileTransfer.ts` | File → base64, validation, `chrome.storage.local` writes |
 | `src/lib/analytics.ts` | GA4 Measurement Protocol client |

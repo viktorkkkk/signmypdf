@@ -14,7 +14,7 @@ export default function SiteFooter() {
               <Logo />
               <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.25 }}>
                 <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>SignMyPDF</span>
-                <span style={{ fontSize: 11, color: '#475569', fontWeight: 500 }}>Sign &amp; Fill PDF — No Registration</span>
+                <span style={{ fontSize: 11, color: '#475569', fontWeight: 500 }}>Sign &amp; Fill PDF, No Registration</span>
               </div>
             </Link>
 

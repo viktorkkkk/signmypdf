@@ -300,20 +300,36 @@ body > div > footer { margin-top: auto; }
   margin-bottom: 36px;
 }
 
+/* Unified dropzone — 720×480, centred. Used by every tool page
+   (/sign, /fill, /protect, /merge, /split, /compress) and the
+   /sign minimal-mode upload step. Stage 5 PR 4 polish round 4
+   pinned this size so the experience reads the same everywhere. */
 .dropzone {
+  width: 100%;
+  max-width: 720px;
+  min-height: 480px;
+  margin: 0 auto;
   border: 2.5px dashed #c7d2fe;
   border-radius: 24px;
-  padding: 56px 32px;
+  padding: 48px 32px;
   cursor: pointer;
   transition: all 0.2s;
   background: white;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .dropzone:hover, .dropzone.active {
   border-color: #2563eb;
   background: #eff6ff;
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(37,99,235,0.1);
+}
+@media (max-width: 540px) {
+  .dropzone { min-height: 360px; padding: 36px 20px; }
 }
 .dz-icon {
   width: 80px;
@@ -5315,13 +5331,12 @@ body.nda-editor-mode .nda-hero-inner {
   }
 }
 
-/* ── Extension install nudge (ExtensionBanner) ─────────────────────
- * Two flavours; both live above the rest of /sign so they're easy
- * to see without crowding the editor.
- *   .ext-banner-sticky    — slim bar pinned just under NavHeader
- *   .ext-banner-success   — short follow-up after the download toast
- * Hidden on mobile via the component (extensions are desktop-only),
- * never rendered when /sign is opened with `?from=extension`.
+/* ── Post-success extension nudge (ExtensionBanner variant="post-success") ─
+ * Small inline strip that follows the download CTA on /sign's done
+ * step. The bigger install card lives on .ext-card (defined below)
+ * and replaces the old .ext-banner-sticky banner removed in PR 4.
+ * Hidden on mobile by the component (extensions are desktop-only)
+ * and never rendered when /sign is opened with ?from=extension.
  */
 .ext-banner {
   display: inline-flex;
@@ -5337,57 +5352,18 @@ body.nda-editor-mode .nda-hero-inner {
   justify-content: center;
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  background: #eff6ff;
-  color: #1d4ed8;
   flex-shrink: 0;
 }
-.ext-banner-cta {
-  margin-left: auto;
-  font-weight: 700;
-  color: #2563eb;
-  text-decoration: none;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  font-size: 12px;
-  white-space: nowrap;
-}
-.ext-banner-cta:hover { background: #dbeafe; }
 .ext-banner-cta-inline {
   color: #2563eb;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-}
-.ext-banner-cta-inline:hover { text-decoration: underline; }
-.ext-banner-dismiss {
-  background: transparent;
-  border: none;
-  color: #94a3b8;
-  cursor: pointer;
-  padding: 4px;
   display: inline-flex;
   align-items: center;
-  border-radius: 6px;
-  flex-shrink: 0;
+  gap: 5px;
 }
-.ext-banner-dismiss:hover { color: #475569; background: #f1f5f9; }
-
-.ext-banner-sticky {
-  display: flex;
-  margin: 16px auto 0;
-  max-width: 720px;
-  width: calc(100% - 32px);
-  padding: 8px 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #334155;
-}
-.ext-banner-sticky .ext-banner-text {
-  font-weight: 500;
-}
+.ext-banner-cta-inline:hover { text-decoration: underline; }
 
 .ext-banner-success {
   display: flex;
@@ -5405,7 +5381,167 @@ body.nda-editor-mode .nda-hero-inner {
 }
 
 @media (max-width: 540px) {
-  .ext-banner-sticky { display: none; }
   .ext-banner-success { display: none; }
+}
+
+/* ── /sign minimal mode (Stage 5 PR 4) ──────────────────────────────
+ * Triggered when /sign is opened with ?from=extension. The toolbar
+ * icon and right-click menu always open the page with this query.
+ * Layout (no site nav/footer):
+ *   topbar — small logo (left, clickable → full mode) + "No signup"
+ *            chip on the right, sticky, slim
+ *   row 1  — H1 + subtitle, centred
+ *   row 2  — dropzone (smaller than full-screen; ~42 vh)
+ * Page ends with the dropzone. No More Tools / FAQ / install banner.
+ */
+.sign-minimal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 16px;
+}
+.sign-minimal-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 24px;
+}
+.sign-minimal-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+  text-decoration: none;
+}
+.sign-minimal-logo-link > :first-child {
+  width: 32px;
+  height: 32px;
+}
+.sign-minimal-brand {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+}
+.sign-minimal-logo-link:hover .sign-minimal-brand { color: #2563eb; }
+.sign-minimal-tag {
+  /* extends .header-tag with slightly smaller padding to read as a
+     compact trust signal sat opposite the brand. */
+  padding: 5px 12px;
+  font-size: 12px;
+}
+.sign-minimal-intro {
+  text-align: center;
+  max-width: 600px;
+}
+.sign-minimal-h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.15;
+  letter-spacing: -0.4px;
+  margin: 0 0 8px;
+}
+.sign-minimal-sub {
+  font-size: 16px;
+  color: #475569;
+  margin: 0;
+}
+/* Minimal-mode dropzone uses the unified .dropzone base — no
+   size / padding overrides needed any more. The .dropzone-minimal
+   modifier stays on the JSX for hooks and future tweaks but is
+   currently a no-op. Audit §6.4 follow-up. */
+@media (max-width: 540px) {
+  .sign-minimal-topbar { padding: 10px 16px; }
+  .sign-minimal-upload { gap: 16px; padding: 20px 16px; }
+  .sign-minimal-brand { font-size: 14px; }
+  .sign-minimal-tag { padding: 4px 10px; font-size: 11px; }
+  .sign-minimal-h1 { font-size: 24px; }
+  .sign-minimal-sub { font-size: 14px; }
+}
+
+/* ── Install-extension card (Stage 5 PR 4 polish) ───────────────────
+ * Replaces the slim sticky banner. Used below the dropzone on /sign
+ * full mode (variant="card") and as the install CTA card on /chrome.
+ */
+.ext-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #eff6ff, #ffffff 60%);
+  border: 1.5px solid #bfdbfe;
+  border-radius: 18px;
+  padding: 20px 24px;
+  min-height: 150px;
+  max-width: 1080px;
+  margin: 32px auto;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.10);
+}
+.ext-card-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+.ext-card-text {
+  flex: 1;
+  min-width: 0;
+}
+.ext-card-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+}
+.ext-card-sub {
+  font-size: 14px;
+  color: #475569;
+  margin: 0;
+  line-height: 1.45;
+  max-width: 540px;
+}
+.ext-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.32);
+  flex-shrink: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.ext-card-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+@media (max-width: 720px) {
+  .ext-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+    min-height: 0;
+  }
+  .ext-card-icon { width: 64px; height: 64px; }
 }
 

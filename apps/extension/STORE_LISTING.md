@@ -1,28 +1,31 @@
-# Chrome Web Store listing — Sign PDF Free, SignMyPDF
+# Chrome Web Store listing, Sign PDF Free
 
 Copy-ready text for <https://chrome.google.com/webstore/devconsole>.
 
 ## Title (45 chars max)
 
-`Sign PDF Free — SignMyPDF`
+`Sign PDF Free`
 
 ## Short description (132 chars max)
 
-`Sign PDFs in your browser. Free, no signup, no watermark. Drag, drop, sign, download. Works with Gmail and Drive.`
+`Sign PDFs in your browser. Click the icon or right-click any PDF link. Free, no signup, no watermark.`
 
 ## Detailed description (16,000 chars max)
 
 ```
-✍️ SIGN PDFS IN YOUR BROWSER — FREE, NO SIGNUP
+✍️ SIGN PDFS IN YOUR BROWSER, FREE, NO SIGNUP
 
 Stop printing, scanning, and emailing PDFs back. Sign any PDF document
 directly in Chrome — fast, free, and without creating an account.
 
 🚀 HOW IT WORKS
 
-1. Drop your PDF into the extension popup
-2. Add your signature (draw, type, or upload)
-3. Place it anywhere on any page
+1. Click the extension icon → the signing tool opens instantly in a
+   new tab
+2. Or right-click any PDF link → "Sign with SignMyPDF" → same tool,
+   file pre-loaded
+3. Drop your PDF in the page (or it's already there), add your
+   signature, place it anywhere
 4. Download the signed PDF
 
 That's it. No registration. No watermark on the free plan. No
@@ -86,17 +89,18 @@ Bug reports welcome. We respond within 24 hours.
 
 `English`
 
-## Assets needed before submission (NOT in this PR)
+## Assets needed before submission
 
 - 5 screenshots (1280×800):
-  1. Drag-and-drop a PDF into the popup
-  2. `signmypdf.io/sign` with the PDF loaded — signature canvas open
-  3. Signature placed on a page
-  4. Downloaded signed PDF in OS Finder/Explorer
-  5. Pricing tile — Free vs Pro
-- Promo tile 440×280 — extension logo + "Sign PDFs in Chrome — Free"
+  1. Toolbar icon clicked → minimal-mode `/sign?from=extension`
+     with empty dropzone
+  2. Right-click menu *Sign with SignMyPDF* on a Gmail attachment
+     PDF link
+  3. PDF loaded in the editor with the signature canvas open
+  4. Signature placed on a page
+  5. Downloaded signed PDF in OS Finder/Explorer
+- Promo tile 440×280 — extension logo + "Sign PDFs in Chrome, Free"
 - Final brand-mark icons replacing the placeholder set in
   `public/icons/icon-{16,32,48,128}.png`
-- Privacy policy live at `https://signmypdf.io/extension/privacy`
-  (lands in PR 3)
-- Landing page live at `https://signmypdf.io/chrome` (lands in PR 3)
+- Privacy policy live at <https://signmypdf.io/extension/privacy> ✓
+- Landing page live at <https://signmypdf.io/chrome> ✓

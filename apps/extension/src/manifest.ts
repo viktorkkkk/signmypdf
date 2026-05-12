@@ -14,7 +14,7 @@ import pkg from '../package.json' with { type: 'json' };
  */
 export default defineManifest({
   manifest_version: 3,
-  name: 'Sign PDF Free — SignMyPDF',
+  name: 'Sign PDF Free',
   short_name: 'SignMyPDF',
   version: pkg.version,
   description:
@@ -25,8 +25,11 @@ export default defineManifest({
     48: 'icons/icon-48.png',
     128: 'icons/icon-128.png',
   },
+  // No `default_popup` — clicking the toolbar icon should open the
+  // signing tool directly in a new tab. The service worker's
+  // `chrome.action.onClicked` listener handles that, which only
+  // fires when the action has no popup. See service-worker.ts.
   action: {
-    default_popup: 'src/popup/popup.html',
     default_title: 'Sign PDF Free',
     default_icon: {
       16: 'icons/icon-16.png',

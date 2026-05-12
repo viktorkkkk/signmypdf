@@ -35,8 +35,12 @@ function sanitiseFilename(name: string): string {
  * Validate, encode, and stash a PDF into `chrome.storage.local`.
  * Returns a discriminated result so callers can render the right
  * empty-state / error UI.
+ *
+ * Internal helper now — popup was removed in Stage 5 PR 4, so the
+ * only call site is the context-menu path below. Kept un-exported
+ * so accidental new callers don't bypass the URL-fetch wrapper.
  */
-export async function stashPdfForHandoff(
+async function stashPdfForHandoff(
   file: File,
   source: PendingPdf['source'],
 ): Promise<StashResult> {

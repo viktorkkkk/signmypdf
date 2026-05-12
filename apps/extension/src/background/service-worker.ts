@@ -7,18 +7,22 @@ const CONTEXT_MENU_ID = 'signmypdf-sign-with';
 /**
  * Background service worker.
  *
- * Three jobs in PR 1:
- *   1. Fire `extension_installed` once on first install.
- *   2. Register a right-click context menu on PDF links so users
- *      can hand a remote PDF off to signmypdf.io without opening
- *      the popup.
- *   3. Handle the context-menu click: fetch the PDF, stash it in
- *      `chrome.storage.local`, then open `/sign?from=extension`.
+ * Stage 5 PR 4 — no-popup UX. The toolbar icon no longer opens a
+ * popup; clicking it opens `signmypdf.io/sign?from=extension`
+ * directly so the experience feels like one application, not a
+ * tiny side panel that hands off to the real tool. The right-click
+ * context menu still grabs PDF link URLs and routes them through
+ * the same handoff path.
  *
- * Site-side bridge that actually loads the file into the editor
- * lands in PR 2 — for now, PR 1 just verifies that the handoff
- * record appears in extension storage (visible via DevTools →
- * Application → Storage on the extension's background page).
+ * Jobs:
+ *   1. Fire `extension_installed` once on first install.
+ *   2. Toolbar-icon click → open `/sign?from=extension` in a new
+ *      tab. `chrome.action.onClicked` only fires when the action
+ *      has no `default_popup` set (see manifest.ts).
+ *   3. Right-click "Sign with SignMyPDF" on `*.pdf` links → fetch
+ *      the PDF in the SW, stash it in `chrome.storage.local`, then
+ *      open `/sign?from=extension`. The site-side bridge picks the
+ *      file up via the postMessage handshake.
  */
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -46,6 +50,11 @@ chrome.runtime.onInstalled.addListener((details) => {
   });
 });
 
+chrome.action.onClicked.addListener(async () => {
+  void track('extension_icon_clicked');
+  await chrome.tabs.create({ url: SIGN_URL });
+});
+
 chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId !== CONTEXT_MENU_ID) return;
   const linkUrl = info.linkUrl;
@@ -57,10 +66,11 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
   if (!result.ok) {
     // We can't surface a popup error here — service workers have no
     // DOM. The simplest user-visible feedback is to open /sign
-    // anyway; PR 2's bridge will detect the missing file and fall
-    // through to the existing dropzone. We log here for `chrome://
+    // anyway; the bridge detects the missing file and falls through
+    // to the page's own dropzone (minimal mode). Log for `chrome://
     // extensions → service worker` debug visibility.
     console.warn('[SignMyPDF] context-menu fetch failed:', result.reason, linkUrl);
+    void track('extension_context_menu_failed', { reason: result.reason });
   }
 
   await chrome.tabs.create({ url: SIGN_URL });

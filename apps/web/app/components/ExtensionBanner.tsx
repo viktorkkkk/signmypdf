@@ -1,28 +1,21 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Puzzle, X } from 'lucide-react';
+import ChromeIcon from './ChromeIcon';
 
 /**
  * Two-mode install nudge for the Chrome extension.
  *
- *  - `variant="sticky"` — slim bar above the page content. Hides on
- *    Chrome Web Store install, hides when /sign was opened with
- *    `?from=extension` (the visitor already has the extension), and
- *    hides for 7 days after the user clicks the × dismiss button.
- *    Mobile users see nothing (the extension is desktop-only).
- *  - `variant="post-success"` — nestled under the post-download
- *    success toast. Same hide rules, no dismiss button (the toast
- *    itself auto-dismisses).
+ *  - `variant="card"` — main install pitch on /sign full mode,
+ *    rendered below the upload dropzone and above the More Tools
+ *    grid. Full-bleed card, ~200 px tall, no dismiss.
+ *  - `variant="post-success"` — small inline nudge under the
+ *    download CTA on the done step.
  *
- * Hide state persists in localStorage under `extension_banner_dismissed_until`
- * (ISO date string of the next time the sticky banner is allowed to
- * appear). The 7-day window is the user expressing "not interested for
- * now" without nuking the prompt forever.
+ * Hidden on mobile (the extension is desktop-only) and for
+ * `?from=extension` visitors (they already installed it).
  */
 
-const DISMISS_KEY = 'extension_banner_dismissed_until';
-const DISMISS_DAYS = 7;
 const CHROME_LANDING = '/chrome';
 
 function isMobile(): boolean {
@@ -34,15 +27,6 @@ function isMobile(): boolean {
 function fromExtension(): boolean {
   if (typeof window === 'undefined') return false;
   return new URLSearchParams(window.location.search).get('from') === 'extension';
-}
-
-function dismissedActive(): boolean {
-  if (typeof window === 'undefined') return false;
-  const raw = localStorage.getItem(DISMISS_KEY);
-  if (!raw) return false;
-  const until = Date.parse(raw);
-  if (!Number.isFinite(until)) return false;
-  return Date.now() < until;
 }
 
 function track(name: string, params?: Record<string, string | number | boolean>) {
@@ -58,19 +42,28 @@ function track(name: string, params?: Record<string, string | number | boolean>)
 }
 
 interface Props {
-  /** Which slot the banner is rendered in. */
-  variant?: 'sticky' | 'post-success';
+  /**
+   * Which slot the banner is rendered in.
+   *   `card` — main install nudge below the upload dropzone on
+   *     /sign (full mode). Big 200 px card, no dismiss.
+   *   `post-success` — small inline nudge after the download CTA
+   *     on the done step.
+   * (The pre-PR-4 `sticky` variant was removed: too noisy at the
+   * top of the page, and dismissals leaked across all surfaces.)
+   */
+  variant?: 'card' | 'post-success';
 }
 
-export default function ExtensionBanner({ variant = 'sticky' }: Props) {
+export default function ExtensionBanner({ variant = 'card' }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // All exclusions live in a single useEffect so SSR markup is
-    // empty and we don't ship a flash-of-banner on first paint.
+    // Single useEffect so SSR ships empty markup and we don't flash
+    // the banner on first paint. ?from=extension visitors and mobile
+    // visitors never see it; the `card` variant ignores the legacy
+    // dismiss cookie (it's a section, not a popover).
     if (fromExtension()) return;
     if (isMobile()) return;
-    if (variant === 'sticky' && dismissedActive()) return;
     setVisible(true);
   }, [variant]);
 
@@ -78,54 +71,39 @@ export default function ExtensionBanner({ variant = 'sticky' }: Props) {
     track('extension_banner_clicked', { variant });
   }, [variant]);
 
-  const handleDismiss = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    const until = new Date(Date.now() + DISMISS_DAYS * 24 * 3600 * 1000).toISOString();
-    try {
-      localStorage.setItem(DISMISS_KEY, until);
-    } catch {
-      // ignore quota failures
-    }
-    track('extension_banner_dismissed', { variant });
-    setVisible(false);
-  }, [variant]);
-
   if (!visible) return null;
 
-  if (variant === 'sticky') {
+  if (variant === 'card') {
     return (
-      <div className="ext-banner ext-banner-sticky" role="region" aria-label="Install Chrome extension">
-        <span className="ext-banner-icon" aria-hidden="true"><Puzzle size={14} /></span>
-        <span className="ext-banner-text">
-          Sign PDFs faster — install our Chrome extension
-        </span>
-        <a
-          href={CHROME_LANDING}
-          onClick={handleInstallClick}
-          className="ext-banner-cta"
-        >
-          Install →
-        </a>
-        <button
-          type="button"
-          className="ext-banner-dismiss"
-          aria-label="Dismiss extension banner for 7 days"
-          onClick={handleDismiss}
-        >
-          <X size={14} />
-        </button>
+      <div className="container">
+        <section className="ext-card" role="region" aria-label="Install Chrome extension">
+          <span className="ext-card-icon" aria-hidden="true"><ChromeIcon size={40} /></span>
+          <div className="ext-card-text">
+            <h3 className="ext-card-title">Sign PDFs faster with Chrome extension</h3>
+            <p className="ext-card-sub">
+              Sign any PDF in one click. Right-click any PDF link and sign instantly.
+            </p>
+          </div>
+          <a
+            href={CHROME_LANDING}
+            onClick={handleInstallClick}
+            className="ext-card-btn"
+          >
+            <ChromeIcon size={20} /> Install Free Chrome Extension
+          </a>
+        </section>
       </div>
     );
   }
 
-  // post-success variant — no dismiss, parent toast handles fade-out.
+  // post-success variant — small inline nudge after the download CTA.
   return (
     <div className="ext-banner ext-banner-success" role="status">
-      <span className="ext-banner-icon" aria-hidden="true"><Puzzle size={14} /></span>
+      <span className="ext-banner-icon" aria-hidden="true"><ChromeIcon size={16} /></span>
       <span className="ext-banner-text">
         Want to sign PDFs in one click?{' '}
         <a href={CHROME_LANDING} onClick={handleInstallClick} className="ext-banner-cta-inline">
-          Install Chrome extension →
+          <ChromeIcon size={13} /> Install Chrome extension
         </a>
       </span>
     </div>

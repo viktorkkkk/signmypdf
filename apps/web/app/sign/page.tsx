@@ -64,6 +64,12 @@ declare global {
 
 export default function Home() {
   const [step, setStep] = useState<Step>('upload');
+  // Minimal mode strips NavHeader / footer / install banner / SEO
+  // marketing sections and replaces the upload step with a centred
+  // logo + full-viewport dropzone, so a click from the Chrome
+  // extension's toolbar icon feels like a native app, not a browse
+  // through the marketing site.
+  const [isMinimalMode, setIsMinimalMode] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [signedPdfUrl, setSignedPdfUrl] = useState<string | null>(null);
   const [signatureData, setSignatureData] = useState('');
@@ -92,6 +98,14 @@ export default function Home() {
 
   // Check subscription and count on mount
   useEffect(() => {
+    // Detect minimal mode from the URL the same way as the rest of
+    // the ?from= handling further down. Done in useEffect (not
+    // useState initializer) to avoid SSR/CSR hydration mismatches.
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('from') === 'extension') setIsMinimalMode(true);
+    }
+
     setHasSubscription(isProActive());
     setTodayCount(getTodayCount());
 
@@ -192,11 +206,13 @@ export default function Home() {
       if (file) {
         setPdfFile(file);
         setStep('sign');
-        // Clean `?from=hub` (set by the homepage mobile dropzone) so a
+        // Clean `?from=hub` (set by the homepage mobile dropzone) and
+        // `?from=chrome-landing` (set by /chrome hero dropzone) so a
         // refresh on /sign doesn't keep re-triggering anything. Other
-        // `?from` values (e.g. nda-template) are intentionally left to
-        // the template-fallback branch below.
-        if (window.location.search.includes('from=hub')) {
+        // `?from` values (e.g. nda-template, extension) are intentionally
+        // left for downstream handling.
+        const search = window.location.search;
+        if (search.includes('from=hub') || search.includes('from=chrome-landing')) {
           window.history.replaceState({}, '', '/sign');
         }
         return;
@@ -491,12 +507,24 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Header */}
-      <NavHeader activeTool="sign" />
+      {/* Header — hidden in minimal mode so the extension UX feels
+          like a native app, not a browse through the marketing site. */}
+      {!isMinimalMode && <NavHeader activeTool="sign" />}
 
-      {/* Chrome extension install nudge. Hides itself for mobile,
-          for ?from=extension visitors, and for 7 days after dismiss. */}
-      <ExtensionBanner variant="sticky" />
+      {/* Minimal-mode top bar: small logo on the left, "No signup"
+          trust chip on the right. Clicking the logo navigates to
+          /sign (no query) → full site mode comes back. */}
+      {isMinimalMode && (
+        <header className="sign-minimal-topbar">
+          <a href="/sign" className="sign-minimal-logo-link" aria-label="Open SignMyPDF in full mode">
+            <Logo />
+            <span className="sign-minimal-brand">SignMyPDF</span>
+          </a>
+          <span className="header-tag sign-minimal-tag">
+            <Lock size={13} strokeWidth={2.2} /> No signup
+          </span>
+        </header>
+      )}
 
       {/* Progress */}
       {step !== 'upload' && (
@@ -518,12 +546,12 @@ export default function Home() {
 
       <div className="container" style={{ paddingTop: step === 'sign' ? 12 : 48, paddingBottom: step === 'upload' ? 0 : 64 }}>
 
-        {/* ── UPLOAD ── */}
-        {step === 'upload' && (
+        {/* ── UPLOAD (full mode) ── */}
+        {step === 'upload' && !isMinimalMode && (
           <div>
             <h1 className="hero-title">Sign your PDF in seconds</h1>
-            <p className="hero-sub">No registration. No software. Upload, sign, download — done.</p>
-            
+            <p className="hero-sub">No registration. No software. Upload, sign, download. Done.</p>
+
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
@@ -554,6 +582,35 @@ export default function Home() {
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Zap size={14} color="#64748b" /> 30 seconds</span>
             </p>
 
+          </div>
+        )}
+
+        {/* ── UPLOAD (minimal mode for extension visitors) ── */}
+        {step === 'upload' && isMinimalMode && (
+          <div className="sign-minimal-upload">
+            <div className="sign-minimal-intro">
+              <h1 className="sign-minimal-h1">Sign your PDF in seconds</h1>
+              <p className="sign-minimal-sub">No registration. Upload, sign, download. Done.</p>
+            </div>
+            <div {...getRootProps()} className={`dropzone dropzone-minimal${isDragActive ? ' active' : ''}`}>
+              <input {...getInputProps()} />
+              <div className="dz-icon" style={{ display: 'inline-flex' }}><FileText size={48} color="#2563eb" strokeWidth={1.6} /></div>
+              <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
+              <p className="dz-sub">or click to select</p>
+              <label className="btn-primary" style={{ cursor: 'pointer', marginTop: 8 }}>
+                Choose PDF file
+                <input
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) onDrop([file]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+            </div>
           </div>
         )}
 
@@ -764,16 +821,17 @@ export default function Home() {
               </button>
 
               {/* Post-success upsell — invites users to install the
-                  extension so the next sign is one click shorter. */}
-              <ExtensionBanner variant="post-success" />
+                  extension so the next sign is one click shorter.
+                  Hidden in minimal mode (they already have it). */}
+              {!isMinimalMode && <ExtensionBanner variant="post-success" />}
             </div>
           </div>
         )}
 
       </div>
 
-      {/* File History — only after download (done step) */}
-      {step === 'done' && (
+      {/* File History — only after download (done step), full mode only */}
+      {step === 'done' && !isMinimalMode && (
         <div className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <FileHistory
             hasSubscription={hasSubscription}
@@ -783,8 +841,15 @@ export default function Home() {
         </div>
       )}
 
-      {/* More PDF Tools — only on upload step */}
-      {step === 'upload' && (
+      {/* Install-extension card — below the dropzone, before the
+          More Tools grid. PR 4 replaces the sticky-top banner with
+          this larger, content-anchored card. */}
+      {step === 'upload' && !isMinimalMode && (
+        <ExtensionBanner variant="card" />
+      )}
+
+      {/* More PDF Tools — only on upload step, full mode only */}
+      {step === 'upload' && !isMinimalMode && (
         <div className="container" style={{ paddingTop: 48, paddingBottom: 32 }}>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 32 }}>
             <h2 style={{ fontSize: 15, fontWeight: 700, color: '#64748b', textAlign: 'center', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -848,12 +913,13 @@ export default function Home() {
       )}
 
       {/* SEO body — wrapped in the shared <ToolDescription> card so it
-          reads as a design component, not a wall of text under the CTA. */}
-      {step === 'upload' && (
+          reads as a design component, not a wall of text under the CTA.
+          Hidden in minimal mode for the extension's native-app feel. */}
+      {step === 'upload' && !isMinimalMode && (
         <ToolDescription
-          title="Sign PDF Files Online — Free"
+          title="Sign PDF Files Online, Free"
           paragraphs={[
-            'Drop your PDF, place your signature, download the signed file. Everything runs in your browser — your document never leaves your device.',
+            'Drop your PDF, place your signature, download the signed file. Everything runs in your browser, your document never leaves your device.',
             'Draw your signature with a mouse or finger, type your name in a handwritten-style font, or upload an image of your existing one. Add dates, initials, and printed names where the form needs them.',
             'Electronic signatures are legally binding in the US, EU, UK, and most jurisdictions for everyday business documents.',
             `Free signs up to ${DAILY_LIMIT} PDFs per day with no watermark and no account. Premium removes the limit and keeps your files for a year.`,
@@ -861,8 +927,8 @@ export default function Home() {
         />
       )}
 
-      {/* Compact FAQ — only on upload step */}
-      {step === 'upload' && (
+      {/* Compact FAQ — only on upload step, full mode only */}
+      {step === 'upload' && !isMinimalMode && (
         <div className="container" style={{ paddingTop: 0, paddingBottom: 40 }}>
           <div className="compact-faq">
             <h2>FAQ</h2>
@@ -933,7 +999,7 @@ export default function Home() {
             <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, marginTop: 1 }}><CheckCircle size={18} color="#22c55e" /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35, marginBottom: 3 }}>
-                PDF signed — contains SignMyPDF watermark
+                PDF signed, contains SignMyPDF watermark
               </div>
               <a
                 href="#pricing"
@@ -992,7 +1058,7 @@ export default function Home() {
         }
       `}</style>
 
-      <SiteFooter />
+      {!isMinimalMode && <SiteFooter />}
     </>
   );
 }
