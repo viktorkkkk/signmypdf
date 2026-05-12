@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Sign PDF Free",
+  "short_name": "SignMyPDF",
+  "version": "1.0.0",
+  "description": "Sign PDF files in your browser. Free, no signup, no watermark. Drag, drop, sign, download.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Sign PDF Free",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/bridge.ts-loader-CgvmiHc3.js"
+      ],
+      "matches": [
+        "https://signmypdf.io/*",
+        "https://www.signmypdf.io/*"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://signmypdf.io/*",
+    "https://www.signmypdf.io/*"
+  ],
+  "homepage_url": "https://signmypdf.io/chrome",
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "https://signmypdf.io/*",
+        "https://www.signmypdf.io/*"
+      ],
+      "resources": [
+        "assets/constants-DN_w3xe4.js",
+        "assets/bridge.ts-CQ5Re4ro.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}
