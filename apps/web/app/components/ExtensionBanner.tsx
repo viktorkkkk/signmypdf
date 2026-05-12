@@ -77,7 +77,7 @@ export default function ExtensionBanner({ variant = 'card' }: Props) {
     return (
       <div className="container">
         <section className="ext-card" role="region" aria-label="Install Chrome extension">
-          <span className="ext-card-icon" aria-hidden="true"><ChromeIcon size={48} /></span>
+          <span className="ext-card-icon" aria-hidden="true"><ChromeIcon size={40} /></span>
           <div className="ext-card-text">
             <h3 className="ext-card-title">Sign PDFs faster with Chrome extension</h3>
             <p className="ext-card-sub">

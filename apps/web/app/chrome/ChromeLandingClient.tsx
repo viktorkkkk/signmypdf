@@ -114,12 +114,9 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           onClick={installClicked}
         >
           <span className="chrome-install-icon" aria-hidden="true">
-            <ChromeIcon size={48} />
+            <ChromeIcon size={40} />
           </span>
-          <span className="chrome-install-text">
-            <span className="chrome-install-title">Install Free Chrome Extension</span>
-            <span className="chrome-install-sub">Free forever. No credit card.</span>
-          </span>
+          <span className="chrome-install-title">Install Free Chrome Extension</span>
         </a>
       </section>
 
@@ -171,12 +168,9 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           onClick={installClicked}
         >
           <span className="chrome-install-icon" aria-hidden="true">
-            <ChromeIcon size={48} />
+            <ChromeIcon size={40} />
           </span>
-          <span className="chrome-install-text">
-            <span className="chrome-install-title">Install Free Chrome Extension</span>
-            <span className="chrome-install-sub">Free forever. No credit card.</span>
-          </span>
+          <span className="chrome-install-title">Install Free Chrome Extension</span>
         </a>
       </section>
     </>

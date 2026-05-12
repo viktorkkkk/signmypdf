@@ -508,9 +508,23 @@ export default function Home() {
       />
 
       {/* Header — hidden in minimal mode so the extension UX feels
-          like a native app, not a browse through the marketing site.
-          The minimal-mode logo lives inline above the dropzone now. */}
+          like a native app, not a browse through the marketing site. */}
       {!isMinimalMode && <NavHeader activeTool="sign" />}
+
+      {/* Minimal-mode top bar: small logo on the left, "No signup"
+          trust chip on the right. Clicking the logo navigates to
+          /sign (no query) → full site mode comes back. */}
+      {isMinimalMode && (
+        <header className="sign-minimal-topbar">
+          <a href="/sign" className="sign-minimal-logo-link" aria-label="Open SignMyPDF in full mode">
+            <Logo />
+            <span className="sign-minimal-brand">SignMyPDF</span>
+          </a>
+          <span className="header-tag sign-minimal-tag">
+            <Lock size={13} strokeWidth={2.2} /> No signup
+          </span>
+        </header>
+      )}
 
       {/* Progress */}
       {step !== 'upload' && (
@@ -574,19 +588,6 @@ export default function Home() {
         {/* ── UPLOAD (minimal mode for extension visitors) ── */}
         {step === 'upload' && isMinimalMode && (
           <div className="sign-minimal-upload">
-            {/* Logo (left) + "No signup" badge (right) at the
-                dropzone's own width, so the brand and trust signal
-                visually anchor the dropzone box below. */}
-            <div className="sign-minimal-row">
-              <a href="/sign" className="sign-minimal-logo-link" aria-label="Open SignMyPDF in full mode">
-                <Logo />
-                <span className="sign-minimal-brand">SignMyPDF</span>
-              </a>
-              <span className="header-tag sign-minimal-tag">
-                <Lock size={13} strokeWidth={2.2} /> No signup
-              </span>
-            </div>
-
             <div className="sign-minimal-intro">
               <h1 className="sign-minimal-h1">Sign your PDF in seconds</h1>
               <p className="sign-minimal-sub">No registration. Upload, sign, download. Done.</p>

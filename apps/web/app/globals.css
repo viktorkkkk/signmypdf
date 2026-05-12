@@ -5372,26 +5372,30 @@ body.nda-editor-mode .nda-hero-inner {
  * Triggered when /sign is opened with ?from=extension. The toolbar
  * icon and right-click menu always open the page with this query.
  * Layout (no site nav/footer):
- *   row 1 — logo (left) + "No signup" badge (right), aligned to
- *           dropzone width so they visually anchor it
- *   row 2 — H1 + subtitle, centred
- *   row 3 — dropzone (smaller than full-screen; ~40 vh)
- * Page ends with the dropzone. No More Tools / FAQ / banner.
+ *   topbar — small logo (left, clickable → full mode) + "No signup"
+ *            chip on the right, sticky, slim
+ *   row 1  — H1 + subtitle, centred
+ *   row 2  — dropzone (smaller than full-screen; ~42 vh)
+ * Page ends with the dropzone. No More Tools / FAQ / install banner.
  */
+.sign-minimal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 16px;
+}
 .sign-minimal-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
   padding: 48px 24px;
-}
-.sign-minimal-row {
-  width: 100%;
-  max-width: 720px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
 }
 .sign-minimal-logo-link {
   display: inline-flex;
@@ -5413,7 +5417,7 @@ body.nda-editor-mode .nda-hero-inner {
 .sign-minimal-logo-link:hover .sign-minimal-brand { color: #2563eb; }
 .sign-minimal-tag {
   /* extends .header-tag with slightly smaller padding to read as a
-     compact trust signal next to the brand. */
+     compact trust signal sat opposite the brand. */
   padding: 5px 12px;
   font-size: 12px;
 }
@@ -5459,8 +5463,8 @@ body.nda-editor-mode .nda-hero-inner {
   margin-bottom: 20px;
 }
 @media (max-width: 540px) {
+  .sign-minimal-topbar { padding: 10px 16px; }
   .sign-minimal-upload { gap: 16px; padding: 20px 16px; }
-  .sign-minimal-row { max-width: 100%; }
   .sign-minimal-brand { font-size: 14px; }
   .sign-minimal-tag { padding: 4px 10px; font-size: 11px; }
   .sign-minimal-h1 { font-size: 24px; }
@@ -5477,12 +5481,12 @@ body.nda-editor-mode .nda-hero-inner {
 .ext-card {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   background: linear-gradient(135deg, #eff6ff, #ffffff 60%);
   border: 1.5px solid #bfdbfe;
   border-radius: 18px;
-  padding: 24px 28px;
-  min-height: 200px;
+  padding: 20px 24px;
+  min-height: 150px;
   max-width: 1080px;
   margin: 32px auto;
   box-shadow: 0 10px 30px rgba(37, 99, 235, 0.10);
@@ -5492,10 +5496,10 @@ body.nda-editor-mode .nda-hero-inner {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 .ext-card-text {
@@ -5503,18 +5507,18 @@ body.nda-editor-mode .nda-hero-inner {
   min-width: 0;
 }
 .ext-card-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: #0f172a;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   line-height: 1.25;
   letter-spacing: -0.2px;
 }
 .ext-card-sub {
-  font-size: 15px;
+  font-size: 14px;
   color: #475569;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.45;
   max-width: 540px;
 }
 .ext-card-btn {
