@@ -101,6 +101,8 @@ const BLOG_SLUGS = [
   'password-protect-pdf-on-iphone',
   'signed-pdf-looks-different-fix',
   'signnow-free-alternative',
+  'sign-service-agreement-online',
+  'forgot-my-pdf-password-options',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

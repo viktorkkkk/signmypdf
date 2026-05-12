@@ -9516,6 +9516,144 @@ Yes. SignMyPDF runs in any mobile browser — Safari on iPhone, Chrome on Androi
 - [How to fill a PDF form online for free](/blog/fill-pdf-form-online-free)
 `,
   },
+  {
+    slug: 'sign-service-agreement-online',
+    title: 'Sign a Service Agreement Online Fast',
+    excerpt: 'You received a service agreement and need it back signed by end of day — no printer, no subscription, no account required. Here is how to sign it in under two minutes.',
+    date: '2026-05-13',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign service agreement online', 'sign service agreement', 'service agreement pdf', 'sign pdf online free', 'electronic signature service agreement', 'sign pdf no account', 'free pdf signature no subscription'],
+    metaTitle: 'Sign a Service Agreement Online Fast',
+    metaDescription: 'Need to sign a service agreement online today? No printer, no subscription, no account required. Sign your PDF in under two minutes — free.',
+    content: `
+Your new client just sent a service agreement and needs it signed before Monday. You can't print it. Adobe asks for a subscription before you can sign anything. DocuSign requires an account just to open the file. You've spent more time hunting for a tool than reading the service agreement itself. Signing a service agreement online should not take this long.
+
+[CTA]Sign a Service Agreement — Free|No account, no subscription. Your file never leaves your browser.|Sign PDF Now — Free
+
+## How to sign a service agreement online in minutes
+
+1. Open SignMyPDF and upload the service agreement.
+2. Click the spot on the page where your signature belongs.
+3. Draw, type, or upload your signature image.
+4. Adjust placement, then save.
+5. Download the signed PDF and send it to your client.
+
+No email confirmation step. No "invite the other party" workflow. No watermark on the result. If the agreement has designated signature fields, SignMyPDF places your signature in them directly. If it's a flat document with a blank line, you can drop your signature anywhere on the page.
+
+For agreements where both parties need to sign, you sign your copy first, download it, then forward it. The recipient opens the file in any standard PDF reader — they don't need an account or access to SignMyPDF. If you regularly sign documents like [contractor agreements](/blog/sign-contractor-agreement-online), the workflow is identical.
+
+[IMAGE: SignMyPDF interface showing a multi-page service agreement with a signature placed precisely on the signature line at the bottom of the final page]
+
+## Why signing a service agreement is harder than it should be
+
+- **Account walls before anything works.** Most tools make you create an account and verify your email before you can see the signing interface — even for a single document.
+- **Trial limits that expire fast.** Free tiers on major platforms cap you at a few documents per month. Sign a service agreement, an NDA, and a contractor agreement in the same month and you've hit the ceiling.
+- **The signed file lives on their servers.** Some tools route the signed PDF through their platform — the recipient gets a link, not the actual file. That link can expire.
+- **Watermarks on the result.** Some tools let you sign for free but brand the downloaded PDF with a visible watermark, making it look unprofessional to the client receiving it.
+- **Built for workflows you don't need.** Multi-signer sequences, audit trails, template libraries — if you're signing your own copy of a service agreement, none of that applies to you.
+
+## Why SignMyPDF works for service agreements
+
+- Free, no registration required — no account, no trial, no paywall at download
+- Your service agreement is processed entirely in your browser. The file never reaches a server, so the contents stay between you and your client.
+- Works on any device: Mac, Windows, iPhone, Android, Chromebook
+- No watermarks — the downloaded file looks as professional as the original
+- Multi-page PDFs work the same as single-page ones
+
+Electronic signatures are legally binding for service agreements under the ESIGN Act in the US and eIDAS in the EU. For a full breakdown of what makes a signature legally valid on [business contracts](/blog/electronic-signature-business-contracts), that guide covers the requirements in detail.
+
+## Frequently asked questions
+
+**Is a digitally signed service agreement legally enforceable?**
+Yes. In the US, the ESIGN Act makes electronic signatures on service agreements legally equivalent to handwritten ones. The EU's eIDAS regulation covers the same for European contracts. Standard electronic signatures satisfy the requirements for the vast majority of service agreements.
+
+**Does the other party need to use SignMyPDF?**
+No. You sign your copy, download the PDF, and email it to the other party. They open it in any PDF reader — no account, no app, no access to SignMyPDF needed.
+
+**What if the service agreement has multiple fields to sign?**
+SignMyPDF handles both form-field PDFs and flat documents. If the agreement has designated fields for initials, date, and full signature, you can click each one and add the appropriate content. If it's a flat PDF with blank lines, you can place signature and text blocks wherever they belong on the page.
+
+[CTA]Sign Your Service Agreement Now — Free|No account, no server upload. What you see is what your client receives.|Sign PDF Now — Free
+
+## Related tools
+
+- [How to sign a contractor agreement online](/blog/sign-contractor-agreement-online)
+- [Electronic signatures for business contracts](/blog/electronic-signature-business-contracts)
+- [Sign a PDF without Adobe — free](/blog/sign-pdf-without-adobe)
+`,
+  },
+  {
+    slug: 'forgot-my-pdf-password-options',
+    title: 'Forgot PDF Password? Your Real Options',
+    excerpt: 'You password-protected a PDF and now you cannot open it. Here are your honest options — what works, what does not, and how to protect future files without losing access.',
+    date: '2026-05-13',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['forgot pdf password', 'lost pdf password', 'pdf password recovery', 'forgot my pdf password options', 'pdf password unlock', 'password protected pdf', 'aes-256 pdf password'],
+    metaTitle: 'Forgot PDF Password? Your Real Options',
+    metaDescription: 'Forgot your PDF password? Here are your real options — what works, what does not, and how to protect future files without losing access.',
+    content: `
+Forgetting a PDF password is more common than you'd think. You set one on a sensitive contract months ago and now you can't open your own copy. Or a client sent you a protected PDF with a password that no longer works. Either way, you're locked out of a file you need. A forgotten PDF password rarely has a clean fix — but there are legitimate things to try, and some honest limits you should understand before spending time on approaches that won't work.
+
+[CTA]Protect Your Next PDF — Free|AES-256 encryption. Set a password you'll remember. No account required.|Protect PDF Now — Free
+
+## What to try first
+
+1. Search your email for the thread where the password was shared.
+2. Check any password manager you used at that time.
+3. Try obvious passwords from that period — dates, project names, client names.
+4. Ask whoever sent or set the PDF — they may still have it.
+5. Find the original unprotected source and re-protect it with a new password.
+
+That last step is underused. If you created the PDF from a Word document, a spreadsheet, or a scanned file, the original probably exists somewhere. Re-exporting it and setting a new password with [SignMyPDF's protect tool](/protect) is often faster than any recovery attempt.
+
+[IMAGE: SignMyPDF protect tool showing a PDF being locked with a new password in a browser window — no account, no server upload required]
+
+## Why online "PDF unlockers" usually fail — and when they're risky
+
+If the PDF was protected with AES-256 encryption — which is what most modern tools apply, including SignMyPDF — online recovery tools cannot crack it. AES-256 has no practical brute-force shortcut. The math does not permit recovery in any realistic timeframe.
+
+What those tools actually do:
+
+- **Upload your file to an unknown server.** Your sensitive contract, tax document, or client report is now on someone else's system.
+- **Strip weak legacy encryption only.** Older PDFs protected with 40-bit RC4 (pre-2008) are sometimes recoverable. Modern AES-128 or AES-256 is not.
+- **Mislead with progress bars.** Some tools show a countdown and then fail at the last step. Others charge you before revealing they couldn't unlock the file.
+- **Expose confidential content.** If the PDF includes personal data, financial records, or signed agreements, uploading it to a random recovery site is a real privacy risk.
+
+For context on how seriously professionals treat document security, see [why your lawyer asks you to password-protect PDFs](/blog/why-lawyer-asks-password-protect-pdf).
+
+## How to avoid this problem next time
+
+The real reason PDF passwords get forgotten is usually that they were set under time pressure with an unusual string, and no record was made. SignMyPDF's protect workflow is designed to reduce that friction:
+
+- Files are encrypted with AES-256, entirely in your browser — the PDF never leaves your device
+- Free, no registration, no paywall at download
+- The process takes under a minute, so there's no pressure to rush the password choice
+- A simpler workflow means you're more likely to set a password you'll actually remember
+
+The habit that prevents most forgotten-password situations: write the password in your password manager the moment you set it — not ten minutes later, right then. For a broader look at how PDF password protection actually works, [PDF password vs encrypted email](/blog/password-pdf-vs-encrypted-email) covers the tradeoffs in plain language.
+
+## Frequently asked questions
+
+**Can AES-256 PDF encryption actually be cracked?**
+Not in any practical sense. AES-256 is the same encryption standard used by governments and banks. Brute-force recovery would take longer than the age of the universe with today's hardware. If you've lost the password to a strongly encrypted PDF, re-creating from the original source is the only realistic path.
+
+**Is it safe to use an online PDF password remover?**
+Only if the PDF contains no sensitive information. Most recovery tools upload your file to their servers. If the document includes personal data, financial records, or confidential agreements, uploading it to an unverified third-party service is a genuine privacy risk — and usually pointless if the file used modern encryption.
+
+**How do I avoid forgetting my PDF password in the future?**
+Write it in your password manager at the same moment you set it. If you don't use a password manager, email the password to yourself with a clear subject line immediately after protecting the file. That single two-step habit — protect, then record — prevents nearly every forgotten-password situation.
+
+[CTA]Protect Your Next PDF the Right Way — Free|AES-256 in your browser. No account, no server, no paywall at download.|Protect PDF Now — Free
+
+## Related tools
+
+- [How to password-protect a PDF without Adobe](/blog/password-protect-pdf-without-adobe)
+- [PDF password vs encrypted email: which is safer?](/blog/password-pdf-vs-encrypted-email)
+- [Why your lawyer asks you to password-protect PDFs](/blog/why-lawyer-asks-password-protect-pdf)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
