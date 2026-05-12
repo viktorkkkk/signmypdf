@@ -508,24 +508,9 @@ export default function Home() {
       />
 
       {/* Header — hidden in minimal mode so the extension UX feels
-          like a native app, not a browse through the marketing site. */}
+          like a native app, not a browse through the marketing site.
+          The minimal-mode logo lives inline above the dropzone now. */}
       {!isMinimalMode && <NavHeader activeTool="sign" />}
-
-      {/* Minimal-mode top bar: small logo only. Clicking it drops the
-          ?from=extension query and re-enters full site mode. */}
-      {isMinimalMode && (
-        <header className="sign-minimal-topbar">
-          <a href="/sign" className="sign-minimal-logo" aria-label="Open SignMyPDF in full mode">
-            <Logo />
-            <span>SignMyPDF</span>
-          </a>
-        </header>
-      )}
-
-      {/* Chrome extension install nudge. Hides itself for mobile,
-          for ?from=extension visitors, and for 7 days after dismiss.
-          Also explicitly suppressed in minimal mode. */}
-      {!isMinimalMode && <ExtensionBanner variant="sticky" />}
 
       {/* Progress */}
       {step !== 'upload' && (
@@ -589,13 +574,26 @@ export default function Home() {
         {/* ── UPLOAD (minimal mode for extension visitors) ── */}
         {step === 'upload' && isMinimalMode && (
           <div className="sign-minimal-upload">
+            {/* Logo (left) + "No signup" badge (right) at the
+                dropzone's own width, so the brand and trust signal
+                visually anchor the dropzone box below. */}
+            <div className="sign-minimal-row">
+              <a href="/sign" className="sign-minimal-logo-link" aria-label="Open SignMyPDF in full mode">
+                <Logo />
+                <span className="sign-minimal-brand">SignMyPDF</span>
+              </a>
+              <span className="header-tag sign-minimal-tag">
+                <Lock size={13} strokeWidth={2.2} /> No signup
+              </span>
+            </div>
+
             <div className="sign-minimal-intro">
               <h1 className="sign-minimal-h1">Sign your PDF in seconds</h1>
               <p className="sign-minimal-sub">No registration. Upload, sign, download. Done.</p>
             </div>
             <div {...getRootProps()} className={`dropzone dropzone-minimal${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
-              <div className="dz-icon" style={{ display: 'inline-flex' }}><FileText size={56} color="#2563eb" strokeWidth={1.6} /></div>
+              <div className="dz-icon" style={{ display: 'inline-flex' }}><FileText size={48} color="#2563eb" strokeWidth={1.6} /></div>
               <p className="dz-title">{isDragActive ? 'Drop it here!' : 'Drop your PDF here'}</p>
               <p className="dz-sub">or click to select</p>
               <label className="btn-primary" style={{ cursor: 'pointer', marginTop: 8 }}>
@@ -840,6 +838,13 @@ export default function Home() {
             showDlHint={showDlHint}
           />
         </div>
+      )}
+
+      {/* Install-extension card — below the dropzone, before the
+          More Tools grid. PR 4 replaces the sticky-top banner with
+          this larger, content-anchored card. */}
+      {step === 'upload' && !isMinimalMode && (
+        <ExtensionBanner variant="card" />
       )}
 
       {/* More PDF Tools — only on upload step, full mode only */}

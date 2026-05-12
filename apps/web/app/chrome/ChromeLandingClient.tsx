@@ -75,7 +75,7 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="container chrome-hero">
         <h1 className="chrome-h1">Sign PDF in your browser</h1>
-        <p className="chrome-sub">Free · No signup · No watermark</p>
+        <p className="chrome-sub">Free · No signup · In seconds</p>
 
         <div
           {...getRootProps()}
@@ -110,11 +110,16 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           href={chromeStoreUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="chrome-cta-primary"
+          className="chrome-install-card"
           onClick={installClicked}
         >
-          <ChromeIcon size={24} />
-          Install Free Chrome Extension
+          <span className="chrome-install-icon" aria-hidden="true">
+            <ChromeIcon size={48} />
+          </span>
+          <span className="chrome-install-text">
+            <span className="chrome-install-title">Install Free Chrome Extension</span>
+            <span className="chrome-install-sub">Free forever. No credit card.</span>
+          </span>
         </a>
       </section>
 
@@ -162,11 +167,16 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           href={chromeStoreUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="chrome-cta-primary"
+          className="chrome-install-card"
           onClick={installClicked}
         >
-          <ChromeIcon size={24} />
-          Install Free Chrome Extension
+          <span className="chrome-install-icon" aria-hidden="true">
+            <ChromeIcon size={48} />
+          </span>
+          <span className="chrome-install-text">
+            <span className="chrome-install-title">Install Free Chrome Extension</span>
+            <span className="chrome-install-sub">Free forever. No credit card.</span>
+          </span>
         </a>
       </section>
     </>
