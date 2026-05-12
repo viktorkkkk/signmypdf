@@ -300,20 +300,36 @@ body > div > footer { margin-top: auto; }
   margin-bottom: 36px;
 }
 
+/* Unified dropzone — 720×480, centred. Used by every tool page
+   (/sign, /fill, /protect, /merge, /split, /compress) and the
+   /sign minimal-mode upload step. Stage 5 PR 4 polish round 4
+   pinned this size so the experience reads the same everywhere. */
 .dropzone {
+  width: 100%;
+  max-width: 720px;
+  min-height: 480px;
+  margin: 0 auto;
   border: 2.5px dashed #c7d2fe;
   border-radius: 24px;
-  padding: 56px 32px;
+  padding: 48px 32px;
   cursor: pointer;
   transition: all 0.2s;
   background: white;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .dropzone:hover, .dropzone.active {
   border-color: #2563eb;
   background: #eff6ff;
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(37,99,235,0.1);
+}
+@media (max-width: 540px) {
+  .dropzone { min-height: 360px; padding: 36px 20px; }
 }
 .dz-icon {
   width: 80px;
@@ -5438,30 +5454,10 @@ body.nda-editor-mode .nda-hero-inner {
   color: #475569;
   margin: 0;
 }
-.dropzone.dropzone-minimal {
-  width: 100%;
-  max-width: 720px;
-  padding: 48px 32px;
-  border-width: 2.5px;
-  border-radius: 24px;
-  min-height: 42vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.dropzone.dropzone-minimal .dz-icon {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 16px;
-}
-.dropzone.dropzone-minimal .dz-title {
-  font-size: 22px;
-}
-.dropzone.dropzone-minimal .dz-sub {
-  font-size: 15px;
-  margin-bottom: 20px;
-}
+/* Minimal-mode dropzone uses the unified .dropzone base — no
+   size / padding overrides needed any more. The .dropzone-minimal
+   modifier stays on the JSX for hooks and future tweaks but is
+   currently a no-op. Audit §6.4 follow-up. */
 @media (max-width: 540px) {
   .sign-minimal-topbar { padding: 10px 16px; }
   .sign-minimal-upload { gap: 16px; padding: 20px 16px; }
@@ -5469,9 +5465,6 @@ body.nda-editor-mode .nda-hero-inner {
   .sign-minimal-tag { padding: 4px 10px; font-size: 11px; }
   .sign-minimal-h1 { font-size: 24px; }
   .sign-minimal-sub { font-size: 14px; }
-  .dropzone.dropzone-minimal { padding: 32px 18px; min-height: 36vh; max-width: 100%; }
-  .dropzone.dropzone-minimal .dz-icon { width: 64px; height: 64px; }
-  .dropzone.dropzone-minimal .dz-title { font-size: 18px; }
 }
 
 /* ── Install-extension card (Stage 5 PR 4 polish) ───────────────────

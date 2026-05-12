@@ -106,6 +106,10 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
 
         <div className="chrome-or">or</div>
 
+        <p className="chrome-install-pitch">
+          Sign any PDF in one click. Right-click any PDF link and sign instantly.
+        </p>
+
         <a
           href={chromeStoreUrl}
           target="_blank"
@@ -160,6 +164,9 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
 
       {/* ── Final CTA ──────────────────────────────────────── */}
       <section className="container chrome-section chrome-final">
+        <p className="chrome-install-pitch">
+          Sign any PDF in one click. Right-click any PDF link and sign instantly.
+        </p>
         <a
           href={chromeStoreUrl}
           target="_blank"
