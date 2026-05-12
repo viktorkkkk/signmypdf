@@ -1,10 +1,10 @@
-# Chrome Web Store listing — Sign PDF Free, SignMyPDF
+# Chrome Web Store listing, Sign PDF Free
 
 Copy-ready text for <https://chrome.google.com/webstore/devconsole>.
 
 ## Title (45 chars max)
 
-`Sign PDF Free — SignMyPDF`
+`Sign PDF Free`
 
 ## Short description (132 chars max)
 
@@ -13,7 +13,7 @@ Copy-ready text for <https://chrome.google.com/webstore/devconsole>.
 ## Detailed description (16,000 chars max)
 
 ```
-✍️ SIGN PDFS IN YOUR BROWSER — FREE, NO SIGNUP
+✍️ SIGN PDFS IN YOUR BROWSER, FREE, NO SIGNUP
 
 Stop printing, scanning, and emailing PDFs back. Sign any PDF document
 directly in Chrome — fast, free, and without creating an account.
@@ -99,7 +99,7 @@ Bug reports welcome. We respond within 24 hours.
   3. PDF loaded in the editor with the signature canvas open
   4. Signature placed on a page
   5. Downloaded signed PDF in OS Finder/Explorer
-- Promo tile 440×280 — extension logo + "Sign PDFs in Chrome — Free"
+- Promo tile 440×280 — extension logo + "Sign PDFs in Chrome, Free"
 - Final brand-mark icons replacing the placeholder set in
   `public/icons/icon-{16,32,48,128}.png`
 - Privacy policy live at <https://signmypdf.io/extension/privacy> ✓

@@ -551,7 +551,7 @@ export default function Home() {
         {step === 'upload' && !isMinimalMode && (
           <div>
             <h1 className="hero-title">Sign your PDF in seconds</h1>
-            <p className="hero-sub">No registration. No software. Upload, sign, download — done.</p>
+            <p className="hero-sub">No registration. No software. Upload, sign, download. Done.</p>
 
 
             <div {...getRootProps()} className={`dropzone${isDragActive ? ' active' : ''}`}>
@@ -589,6 +589,10 @@ export default function Home() {
         {/* ── UPLOAD (minimal mode for extension visitors) ── */}
         {step === 'upload' && isMinimalMode && (
           <div className="sign-minimal-upload">
+            <div className="sign-minimal-intro">
+              <h1 className="sign-minimal-h1">Sign your PDF in seconds</h1>
+              <p className="sign-minimal-sub">No registration. Upload, sign, download. Done.</p>
+            </div>
             <div {...getRootProps()} className={`dropzone dropzone-minimal${isDragActive ? ' active' : ''}`}>
               <input {...getInputProps()} />
               <div className="dz-icon" style={{ display: 'inline-flex' }}><FileText size={56} color="#2563eb" strokeWidth={1.6} /></div>
@@ -907,9 +911,9 @@ export default function Home() {
           Hidden in minimal mode for the extension's native-app feel. */}
       {step === 'upload' && !isMinimalMode && (
         <ToolDescription
-          title="Sign PDF Files Online — Free"
+          title="Sign PDF Files Online, Free"
           paragraphs={[
-            'Drop your PDF, place your signature, download the signed file. Everything runs in your browser — your document never leaves your device.',
+            'Drop your PDF, place your signature, download the signed file. Everything runs in your browser, your document never leaves your device.',
             'Draw your signature with a mouse or finger, type your name in a handwritten-style font, or upload an image of your existing one. Add dates, initials, and printed names where the form needs them.',
             'Electronic signatures are legally binding in the US, EU, UK, and most jurisdictions for everyday business documents.',
             `Free signs up to ${DAILY_LIMIT} PDFs per day with no watermark and no account. Premium removes the limit and keeps your files for a year.`,
@@ -989,7 +993,7 @@ export default function Home() {
             <span style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0, marginTop: 1 }}><CheckCircle size={18} color="#22c55e" /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.35, marginBottom: 3 }}>
-                PDF signed — contains SignMyPDF watermark
+                PDF signed, contains SignMyPDF watermark
               </div>
               <a
                 href="#pricing"

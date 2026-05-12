@@ -14,7 +14,7 @@ import pkg from '../package.json' with { type: 'json' };
  */
 export default defineManifest({
   manifest_version: 3,
-  name: 'Sign PDF Free — SignMyPDF',
+  name: 'Sign PDF Free',
   short_name: 'SignMyPDF',
   version: pkg.version,
   description:

@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Puzzle, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import ChromeIcon from './ChromeIcon';
 
 /**
  * Two-mode install nudge for the Chrome extension.
@@ -95,16 +96,16 @@ export default function ExtensionBanner({ variant = 'sticky' }: Props) {
   if (variant === 'sticky') {
     return (
       <div className="ext-banner ext-banner-sticky" role="region" aria-label="Install Chrome extension">
-        <span className="ext-banner-icon" aria-hidden="true"><Puzzle size={14} /></span>
+        <span className="ext-banner-icon" aria-hidden="true"><ChromeIcon size={16} /></span>
         <span className="ext-banner-text">
-          Sign PDFs faster — install our Chrome extension
+          Sign PDFs faster with our Chrome extension
         </span>
         <a
           href={CHROME_LANDING}
           onClick={handleInstallClick}
           className="ext-banner-cta"
         >
-          Install →
+          <ChromeIcon size={14} /> Install
         </a>
         <button
           type="button"
@@ -121,11 +122,11 @@ export default function ExtensionBanner({ variant = 'sticky' }: Props) {
   // post-success variant — no dismiss, parent toast handles fade-out.
   return (
     <div className="ext-banner ext-banner-success" role="status">
-      <span className="ext-banner-icon" aria-hidden="true"><Puzzle size={14} /></span>
+      <span className="ext-banner-icon" aria-hidden="true"><ChromeIcon size={16} /></span>
       <span className="ext-banner-text">
         Want to sign PDFs in one click?{' '}
         <a href={CHROME_LANDING} onClick={handleInstallClick} className="ext-banner-cta-inline">
-          Install Chrome extension →
+          <ChromeIcon size={13} /> Install Chrome extension
         </a>
       </span>
     </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import { FileText, MousePointer2, PenLine } from 'lucide-react';
 import { storePendingFile } from '../utils/pendingUpload';
+import ChromeIcon from '../components/ChromeIcon';
 
 interface Props {
   chromeStoreUrl: string;
@@ -103,7 +104,7 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           </label>
         </div>
 
-        <div className="chrome-or">— or —</div>
+        <div className="chrome-or">or</div>
 
         <a
           href={chromeStoreUrl}
@@ -113,7 +114,7 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           onClick={installClicked}
         >
           <ChromeIcon size={24} />
-          Add to Chrome — Free
+          Install Free Chrome Extension
         </a>
       </section>
 
@@ -165,39 +166,9 @@ export default function ChromeLandingClient({ chromeStoreUrl, howItWorks, whyUse
           onClick={installClicked}
         >
           <ChromeIcon size={24} />
-          Add to Chrome — Free
+          Install Free Chrome Extension
         </a>
       </section>
     </>
-  );
-}
-
-/**
- * The Chrome browser brand mark — four-segment circle.
- * Built inline because lucide-react@1.14 doesn't export a Chrome icon.
- * Sized via the `size` prop; brand colours are hard-coded since this
- * is a single, very specific use case.
- */
-function ChromeIcon({ size = 24 }: { size?: number }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 48 48"
-      width={size}
-      height={size}
-      aria-hidden="true"
-      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
-    >
-      {/* Red top sector */}
-      <path fill="#EA4335" d="M24 4a20 20 0 0 1 17.32 10H24a10 10 0 0 0-8.66 5L9.04 8.06A19.94 19.94 0 0 1 24 4z" />
-      {/* Yellow bottom-left sector */}
-      <path fill="#FBBC05" d="M4 24a20 20 0 0 1 5.04-13.94l8.92 15.46a10 10 0 0 0 5.79 8.65L18.07 43.4A20 20 0 0 1 4 24z" />
-      {/* Green bottom-right sector */}
-      <path fill="#34A853" d="M24 44a20 20 0 0 1-5.93-.6L26.7 28.5a10 10 0 0 0 9.4-5.62l5.91 10.24A20 20 0 0 1 24 44z" />
-      {/* White inner */}
-      <circle cx="24" cy="24" r="9" fill="#FFFFFF" />
-      {/* Blue centre */}
-      <circle cx="24" cy="24" r="6.5" fill="#4285F4" />
-    </svg>
   );
 }

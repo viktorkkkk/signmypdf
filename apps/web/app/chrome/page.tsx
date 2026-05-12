@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   // Root layout already appends " | SignMyPDF" — keep this title
   // bare so we don't end up with "X | SignMyPDF | SignMyPDF" in the
   // SERP / browser tab.
-  title: 'Sign PDF in your browser — Free Chrome extension',
+  title: 'Sign PDF in your browser, free Chrome extension',
   description:
     'Free Chrome extension to sign PDF files in your browser. No signup, no watermark. Drag, drop, sign, download. Works with Gmail, Drive, and any website.',
   alternates: { canonical: '/chrome' },
   openGraph: {
-    title: 'Sign PDF in your browser — Free Chrome extension',
+    title: 'Sign PDF in your browser, free Chrome extension',
     description: 'Sign any PDF in your browser. Free, no signup needed.',
     url: '/chrome',
     siteName: 'SignMyPDF',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sign PDF in your browser — Free Chrome extension',
+    title: 'Sign PDF in your browser, free Chrome extension',
     description: 'Sign any PDF in your browser. Free, no signup needed.',
   },
 };
@@ -38,7 +38,7 @@ const HOW_IT_WORKS = [
   },
   {
     n: 2,
-    title: 'Click the icon — or right-click a PDF',
+    title: 'Click the icon or right-click a PDF',
     body: 'Toolbar click opens a clean signing tab. Right-click any PDF link → Sign with SignMyPDF.',
   },
   {
@@ -63,14 +63,14 @@ const jsonLd = {
       '@type': 'WebPage',
       '@id': 'https://www.signmypdf.io/chrome#webpage',
       url: 'https://www.signmypdf.io/chrome',
-      name: 'Sign PDF in your browser — Free Chrome extension',
+      name: 'Sign PDF in your browser, free Chrome extension',
       description:
         'Free Chrome extension to sign PDF files in your browser. No signup, no watermark.',
       inLanguage: 'en',
     },
     {
       '@type': 'SoftwareApplication',
-      name: 'Sign PDF Free — SignMyPDF',
+      name: 'Sign PDF Free',
       applicationCategory: 'BrowserApplication',
       operatingSystem: 'Chrome',
       offers: {
