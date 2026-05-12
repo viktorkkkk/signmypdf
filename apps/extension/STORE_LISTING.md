@@ -91,7 +91,12 @@ Bug reports welcome. We respond within 24 hours.
 
 ## Assets needed before submission
 
-- 5 screenshots (1280×800):
+Web-side surfaces are ready; what's left is creative assets and the
+Trader-verification approval.
+
+### Still to produce
+
+- **5 screenshots, 1280×800** for the listing:
   1. Toolbar icon clicked → minimal-mode `/sign?from=extension`
      with empty dropzone
   2. Right-click menu *Sign with SignMyPDF* on a Gmail attachment
@@ -99,8 +104,36 @@ Bug reports welcome. We respond within 24 hours.
   3. PDF loaded in the editor with the signature canvas open
   4. Signature placed on a page
   5. Downloaded signed PDF in OS Finder/Explorer
-- Promo tile 440×280 — extension logo + "Sign PDFs in Chrome, Free"
-- Final brand-mark icons replacing the placeholder set in
-  `public/icons/icon-{16,32,48,128}.png`
-- Privacy policy live at <https://signmypdf.io/extension/privacy> ✓
-- Landing page live at <https://signmypdf.io/chrome> ✓
+- **Promo tile 440×280** — extension logo + "Sign PDFs in Chrome, Free"
+- **Final brand-mark icons** replacing the placeholder set in
+  `public/icons/icon-{16,32,48,128}.png` (16/32/48/128 px PNG, square).
+- **Real screenshots inside `apps/web/app/chrome/ChromeLandingClient.tsx`**
+  — the *How the extension works* section currently has four
+  400×300 placeholder tiles. Dimensions are fixed by the
+  `.chrome-step-screenshot` CSS class so the swap is drop-in.
+- **Trader verification** on `viktor.kolektionok@gmail.com` — Google
+  reviews this independently, typical wait is a few days to a few weeks.
+
+### Already live ✓
+
+- Privacy policy: <https://signmypdf.io/extension/privacy>
+- Landing page: <https://signmypdf.io/chrome>
+- Pre-built test ZIP for non-technical reviewers:
+  <https://github.com/viktorkkkk/signmypdf/releases/download/ext-test-1/signmypdf-extension.zip>
+- Production ZIP build pipeline:
+  `pnpm --filter @signmypdf/extension package` → 75 KB ZIP at
+  `apps/extension/signmypdf-extension.zip`.
+
+## Submission flow
+
+1. Produce the creative assets above.
+2. Run `pnpm --filter @signmypdf/extension package` from repo root.
+3. Verify the resulting ZIP loads cleanly in a fresh Chrome profile
+   via `chrome://extensions → Load unpacked` (extract the ZIP first).
+4. Upload at <https://chrome.google.com/webstore/devconsole> using the
+   `viktor.kolektionok@gmail.com` developer account.
+5. Paste the title / short / detailed description from this file.
+6. Upload screenshots + promo tile + icons.
+7. Point the listing's privacy policy field at
+   <https://signmypdf.io/extension/privacy>.
+8. Submit. Moderation window is typically 2–5 days.
