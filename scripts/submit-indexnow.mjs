@@ -103,6 +103,8 @@ const BLOG_SLUGS = [
   'signnow-free-alternative',
   'sign-service-agreement-online',
   'forgot-my-pdf-password-options',
+  'consultants-proposals-digital-signature',
+  'real-estate-agents-protect-property-documents',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
