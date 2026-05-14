@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CalendarDays,
   Check,
-  CheckSquare,
+  ChevronLeft,
+  ChevronRight,
   CopyPlus,
   Download,
   FileSignature,
@@ -10,10 +11,11 @@ import {
   GripVertical,
   Keyboard,
   Layers,
-  Lightbulb,
   Loader2,
+  Minus,
   PenLine,
   Pencil,
+  Plus,
   Type as TypeIcon,
   Upload as UploadIcon,
   X,
@@ -34,31 +36,38 @@ const TOOLS: { id: ToolId; label: string; Icon: typeof TypeIcon }[] = [
   { id: 'signature', label: 'Signature', Icon: FileSignature },
 ];
 
-const DEFAULT_FONT = 11;
-const FONT_SIZES: { id: 'sm' | 'md' | 'lg'; label: string; pt: number }[] = [
-  { id: 'sm', label: 'S', pt: 9 },
-  { id: 'md', label: 'M', pt: 11 },
-  { id: 'lg', label: 'L', pt: 14 },
-];
+/** Default font size for new text/date elements (in PDF points).
+ *  14pt is the sweet spot for typical form fields — large enough to
+ *  read without leaning in, small enough to fit in tight cells.
+ *  Per-element size is editable via the floating font-size bar. */
+const DEFAULT_FONT = 14;
+/** Available sizes in the floating font-size bar dropdown. */
+const FONT_SIZE_OPTIONS = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48] as const;
+const FONT_SIZE_MIN = 6;
+const FONT_SIZE_MAX = 72;
+const FONT_SIZE_STEP = 2;
 const TEXT_DEFAULT_COLOR = '#0f172a';
-const SIG_DEFAULT_W = 22;
-const SIG_DEFAULT_H = 8;
-/** Vertical placement for auto-placed signatures (% of page height,
- *  top edge). 70% drops the box into the bottom third where contracts
- *  conventionally sit. The horizontal default is computed at place
- *  time as 50 - SIG_DEFAULT_W / 2 so the box is centered. */
-const SIG_AUTOPLACE_Y = 70;
+/** New signatures land roughly in the visible centre of the page with
+ *  enough size to read at a glance. We aim for 25% of page width and
+ *  match the typed-/drawn-signature aspect ratio (~2.5:1) for the
+ *  bounding box — the embedded PNG fits inside preserving its own
+ *  aspect via fillSignPdf. Min 200x80 CSS-px so signatures on small
+ *  pages don't render as a sliver. */
+const SIG_DEFAULT_W_PCT = 25;
+const SIG_DEFAULT_H_PCT = 10;
+const SIG_MIN_W_CSS_PX = 200;
+const SIG_MIN_H_CSS_PX = 80;
+/** Vertical placement: ~30% from the top puts the box squarely in
+ *  the visible viewport on the first page render. */
+const SIG_AUTOPLACE_Y = 30;
+/** Anti-overlap offset when there's already an element on the page
+ *  (20 CSS px shifted into percent at place time). */
+const ANTI_OVERLAP_OFFSET_PX = 20;
 
-/** Type-tab font choices for the signature modal. "Script" uses the
- *  locally-bundled Dancing Script woff2 (loaded via @font-face in
- *  editor.css) so the rendered signature looks identical on every OS.
- *  The others lean on cross-platform system fonts. */
-const SIG_FONTS = [
-  { name: 'Script',      value: '"Dancing Script", "Brush Script MT", cursive' },
-  { name: 'Handwritten', value: '"Comic Sans MS", "Chalkboard SE", cursive' },
-  { name: 'Elegant',     value: '"Times New Roman", Georgia, serif' },
-  { name: 'Modern',      value: '"Segoe UI", Roboto, sans-serif' },
-] as const;
+/** Type-tab signature font — single locally-bundled Dancing Script
+ *  woff2 (loaded via @font-face in editor.css). Industry convention
+ *  is one handwriting style, so we don't offer alternates. */
+const SIG_TYPED_FONT = '"Dancing Script", cursive';
 const SIG_MIN_W_PX = 50;
 const SIG_MIN_H_PX = 20;
 const SIG_MAX_W_PX = 400;
@@ -73,6 +82,30 @@ const todayDisplay = () => {
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   return `${mm}/${dd}/${d.getFullYear()}`;
+};
+
+/** Strip all non-digits and insert `/` after positions 2 and 4 so the
+ *  user can type plain digits and the slashes appear automatically.
+ *  Limits the digit count to 8 (MM/DD/YYYY = 8 digits). Backspace
+ *  removes characters left to right; an auto-inserted `/` is removed
+ *  by the next backspace as soon as the digit count drops below the
+ *  threshold that justified it. */
+const applyDateMask = (input: string): string => {
+  const digits = input.replace(/\D/g, '').slice(0, 8);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+};
+/** Format check + calendar sanity (month 01-12, day 01-31 plus
+ *  Date roll-over check so 02/30/2026 is rejected). */
+const isValidDate = (s: string): boolean => {
+  const m = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/(\d{4})$/.exec(s);
+  if (!m) return false;
+  const mm = parseInt(m[1], 10);
+  const dd = parseInt(m[2], 10);
+  const yyyy = parseInt(m[3], 10);
+  const d = new Date(yyyy, mm - 1, dd);
+  return d.getMonth() === mm - 1 && d.getDate() === dd && d.getFullYear() === yyyy;
 };
 
 const truncate = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : s);
@@ -102,7 +135,6 @@ interface CreatingSigState {
   drawW: number;
   drawH: number;
   typedName: string;
-  typedFont: string;
   /** Uploaded signature image (PNG/JPG → dataUrl). Same shape as drawn
    *  signatures — a single dataUrl + intrinsic pixel dimensions. */
   uploadData: string;
@@ -141,6 +173,11 @@ export default function FillSignEditor({ file, onDone }: Props) {
 
   const [editing, setEditing] = useState<EditingState | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  /** Currently-selected element id. Single-click on a placed element
+   *  selects it; clicking outside any element clears the selection.
+   *  When non-null and the element is text/date, the floating font-
+   *  size bar renders above it. */
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // True for one event-loop tick after a drag/resize ends. Used to
   // suppress the synthetic `click` event that fires immediately after
@@ -171,6 +208,15 @@ export default function FillSignEditor({ file, onDone }: Props) {
   // placement. Recomputed below from `elements` so the thumbnail
   // strip's check ticks track placements automatically.
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
+
+  /** Right-sidebar collapse state. Initially collapsed on narrow
+   *  viewports where 280 px on the right would crowd the document.
+   *  Does NOT auto-react to subsequent resizes — once the user has
+   *  expressed a preference (toggled), we stop second-guessing. */
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 1024;
+  });
 
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
@@ -286,6 +332,7 @@ export default function FillSignEditor({ file, onDone }: Props) {
   const removeElement = useCallback((id: string) => {
     setElements(prev => prev.filter(e => e.id !== id));
     setEditing(curr => (curr?.id === id ? null : curr));
+    setSelectedId(curr => (curr === id ? null : curr));
   }, []);
 
   /** Duplicate an element 20px down-and-right from its original. The
@@ -323,7 +370,6 @@ export default function FillSignEditor({ file, onDone }: Props) {
     drawW: 0,
     drawH: 0,
     typedName: '',
-    typedFont: SIG_FONTS[0].value,
     uploadData: '',
     uploadW: 0,
     uploadH: 0,
@@ -390,29 +436,65 @@ export default function FillSignEditor({ file, onDone }: Props) {
 
   /** Single source of truth for placing a signature element. Called
    *  from "Use this signature" (chooser) and from Save in the create
-   *  modal. Auto-places at the page bottom-third. After placing,
-   *  switches tool back to 'text' so the follow-up click on the PDF
-   *  doesn't accidentally request another signature workflow. */
+   *  modal. Auto-places at the centre of the page in a readably-large
+   *  bounding box, anti-overlaps any existing element on the page,
+   *  and selects the new signature so its resize handles are visible
+   *  immediately. After placing, switches tool back to 'text'. */
   const placeSignature = useCallback((dataUrl: string, w: number, h: number, applyToAll: boolean) => {
     if (!dataUrl) return;
     const targetPages = applyToAll && pageInfos.length > 0
       ? pageInfos.map(p => p.index)
       : [currentPage];
-    const xPct = Math.max(0, 50 - SIG_DEFAULT_W / 2);
-    const yPct = Math.max(0, Math.min(100 - SIG_DEFAULT_H, SIG_AUTOPLACE_Y));
-    setElements(prev => [
-      ...prev,
-      ...targetPages.map<FsElement>(p => ({
-        id: newId(),
-        type: 'signature',
-        page: p,
-        x: xPct,
-        y: yPct,
-        w: SIG_DEFAULT_W,
-        h: SIG_DEFAULT_H,
-        dataUrl,
-      })),
-    ]);
+    // Compute (x%, y%, w%, h%) per page so the bounding box is at
+    // least 200×80 CSS-px and at least 25% × 10% of the page —
+    // whichever is larger wins. Same shape for every page when
+    // apply-to-all is on.
+    const computePlacement = (page: number, existingElementsByPage: Record<number, FsElement[]>) => {
+      const info = pageInfos.find(p => p.index === page);
+      const pageW = info?.width ?? 800;
+      const pageH = info?.height ?? 1040;
+      const minWPct = Math.min(60, (SIG_MIN_W_CSS_PX / pageW) * 100);
+      const minHPct = Math.min(40, (SIG_MIN_H_CSS_PX / pageH) * 100);
+      const boxWPct = Math.max(SIG_DEFAULT_W_PCT, minWPct);
+      const boxHPct = Math.max(SIG_DEFAULT_H_PCT, minHPct);
+      let xPct = Math.max(0, 50 - boxWPct / 2);
+      let yPct = Math.max(0, Math.min(100 - boxHPct, SIG_AUTOPLACE_Y));
+      // Anti-overlap: if anything is already on this page, shift the
+      // new sig 20 CSS-px down and right of the most recently-added
+      // element on that page. Clamp to page bounds.
+      const existing = existingElementsByPage[page] ?? [];
+      const last = existing.length > 0 ? existing[existing.length - 1] : null;
+      if (last) {
+        const dxPct = (ANTI_OVERLAP_OFFSET_PX / pageW) * 100;
+        const dyPct = (ANTI_OVERLAP_OFFSET_PX / pageH) * 100;
+        xPct = Math.min(100 - boxWPct, last.x + dxPct);
+        yPct = Math.min(100 - boxHPct, last.y + dyPct);
+      }
+      return { x: xPct, y: yPct, w: boxWPct, h: boxHPct };
+    };
+    const newSigs: FsElement[] = [];
+    setElements(prev => {
+      const byPage: Record<number, FsElement[]> = {};
+      for (const e of prev) (byPage[e.page] ||= []).push(e);
+      const additions = targetPages.map<FsElement>(p => {
+        const { x, y, w: bw, h: bh } = computePlacement(p, byPage);
+        const el: FsElement = {
+          id: newId(),
+          type: 'signature',
+          page: p,
+          x, y, w: bw, h: bh,
+          dataUrl,
+        };
+        newSigs.push(el);
+        return el;
+      });
+      return [...prev, ...additions];
+    });
+    // Select the newly-placed signature on the current page so the
+    // user sees its resize handles immediately. With apply-to-all
+    // we still only "live" on the current page, so prefer that one.
+    const focused = newSigs.find(s => s.page === currentPage) ?? newSigs[0];
+    if (focused) setSelectedId(focused.id);
     setSavedSig({ dataUrl, w: w || 0, h: h || 0 });
     setSigModal(null);
     setCreatingSig(null);
@@ -497,24 +579,24 @@ export default function FillSignEditor({ file, onDone }: Props) {
     canvas.height = H;
     const ctx = canvas.getContext('2d')!;
     let fontSize = 48;
-    ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+    ctx.font = `italic ${fontSize}px ${SIG_TYPED_FONT}`;
     let textW = ctx.measureText(name).width;
     const padding = 24;
     while (textW > maxW - padding && fontSize > 18) {
       fontSize -= 2;
-      ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+      ctx.font = `italic ${fontSize}px ${SIG_TYPED_FONT}`;
       textW = ctx.measureText(name).width;
     }
     canvas.width = Math.min(maxW, textW + padding);
     ctx.clearRect(0, 0, canvas.width, H);
-    ctx.font = `italic ${fontSize}px ${creatingSig.typedFont}`;
+    ctx.font = `italic ${fontSize}px ${SIG_TYPED_FONT}`;
     ctx.fillStyle = '#1e3a8a';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(name, canvas.width / 2, H / 2);
     setTypedSigDataUrl(canvas.toDataURL('image/png'));
     typedSigSizeRef.current = { w: canvas.width, h: canvas.height };
-  }, [creatingSig?.mode, creatingSig?.typedName, creatingSig?.typedFont, creatingSig]);
+  }, [creatingSig?.mode, creatingSig?.typedName, creatingSig]);
 
   // ── Click on the PDF canvas → place an element + open inline editor ──
   const onPageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -526,8 +608,12 @@ export default function FillSignEditor({ file, onDone }: Props) {
     if (e.target instanceof HTMLElement && (
       e.target.closest('.fse-text-wrap') ||
       e.target.closest('.fse-element-image') ||
-      e.target.closest('.fse-popup')
+      e.target.closest('.fse-popup') ||
+      e.target.closest('.fse-fontbar')
     )) return;
+    // Click on PDF background deselects any previously-selected
+    // element. New placements below set their own selection.
+    setSelectedId(null);
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = ((e.clientX - rect.left) / rect.width) * 100;
     const yPct = ((e.clientY - rect.top)  / rect.height) * 100;
@@ -538,19 +624,26 @@ export default function FillSignEditor({ file, onDone }: Props) {
         id, type: 'text', page: currentPage, x: xPct, y: yPct,
         value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
+      // New text: open the editor immediately AND mark it selected so
+      // when the user dismisses the editor (Enter / blur) the font-
+      // size bar appears above the freshly-placed value.
       setEditing({ id, originalValue: '', draftValue: '' });
+      setSelectedId(id);
       return;
     }
 
     if (tool === 'date') {
       const id = newId();
+      // todayDisplay() is recomputed at place time so a long-running
+      // editor session never stamps yesterday's date.
       const today = todayDisplay();
       addElement({
         id, type: 'date', page: currentPage, x: xPct, y: yPct,
         value: today, fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
       });
-      // Open popup pre-filled with today; user can leave or edit.
-      setEditing({ id, originalValue: today, draftValue: today });
+      // No auto-edit: today's date is correct by default. The user
+      // single-clicks the placed element to select / re-size, or
+      // double-clicks to enter masked edit-mode.
       return;
     }
 
@@ -674,6 +767,10 @@ export default function FillSignEditor({ file, onDone }: Props) {
         setDraggingId(null);
         document.body.style.userSelect = '';
         markJustDragged();
+      } else {
+        // Click without drag → select. The font-size bar (for text /
+        // date) or the resize handles (for signature) become visible.
+        setSelectedId(el.id);
       }
     };
     window.addEventListener('mousemove', onMove);
@@ -717,6 +814,8 @@ export default function FillSignEditor({ file, onDone }: Props) {
         dragRef.current = null;
         setDraggingId(null);
         markJustDragged();
+      } else {
+        setSelectedId(el.id);
       }
     };
     window.addEventListener('touchmove', onMove, { passive: false });
@@ -874,7 +973,13 @@ export default function FillSignEditor({ file, onDone }: Props) {
         setDraggingId(null);
         markJustDragged();
       } else {
-        openEditFor(el);
+        // Single click on a placed text/date element now SELECTS it
+        // (shows the floating font-size bar) instead of opening the
+        // editor. Edit-mode is reached via double-click or the
+        // pencil button. This split keeps single-click instant and
+        // separates the "tweak size" path from the "tweak content"
+        // path.
+        setSelectedId(el.id);
       }
     };
     window.addEventListener('mousemove', onMove);
@@ -931,7 +1036,8 @@ export default function FillSignEditor({ file, onDone }: Props) {
         setDraggingId(null);
         markJustDragged();
       } else {
-        openEditFor(el);
+        // Tap (no drag) → select. Same rationale as the mouse path.
+        setSelectedId(el.id);
       }
     };
     window.addEventListener('touchmove', onMove, { passive: false });
@@ -943,8 +1049,9 @@ export default function FillSignEditor({ file, onDone }: Props) {
     if (el.type !== 'text' && el.type !== 'date') return null;
     const isEditing = editing?.id === el.id;
     const isDragging = draggingId === el.id;
+    const isSelected = selectedId === el.id;
     if (isEditing) return null; // popup replaces the element while editing
-    const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}`;
+    const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}${isSelected ? ' fse-text-wrap-selected' : ''}`;
     const placeholder = el.type === 'date' ? 'date' : 'text';
     return (
       <div
@@ -953,6 +1060,7 @@ export default function FillSignEditor({ file, onDone }: Props) {
         style={{ left: `${el.x}%`, top: `${el.y}%` }}
         onMouseDown={(e) => onTextBodyMouseDown(e, el)}
         onTouchStart={(e) => onTextBodyTouchStart(e, el)}
+        onDoubleClick={(e) => { e.stopPropagation(); openEditFor(el); }}
       >
         <span
           className="fse-text-value"
@@ -1003,14 +1111,16 @@ export default function FillSignEditor({ file, onDone }: Props) {
   const renderSignature = (el: FsElement) => {
     if (el.type !== 'signature') return null;
     const isDragging = draggingId === el.id;
+    const isSelected = selectedId === el.id;
     return (
       <div
         key={el.id}
-        className={`fse-element fse-element-image${isDragging ? ' fse-element-dragging' : ''}`}
+        className={`fse-element fse-element-image${isDragging ? ' fse-element-dragging' : ''}${isSelected ? ' fse-element-selected' : ''}`}
         style={{ left: `${el.x}%`, top: `${el.y}%`, width: `${el.w}%`, height: `${el.h}%` }}
         onMouseDown={(e) => onDragMouseDown(e, el)}
         onTouchStart={(e) => onDragTouchStart(e, el)}
         onClick={(e) => e.stopPropagation()}
+        onDoubleClick={(e) => { e.stopPropagation(); openEditFor(el); }}
       >
         <img src={el.dataUrl} alt="signature" className="fse-element-img" draggable={false} />
         <button
@@ -1055,6 +1165,84 @@ export default function FillSignEditor({ file, onDone }: Props) {
     );
   };
 
+  /** Floating font-size bar — anchored above (or below, if no room)
+   *  the currently-selected text/date element. Carries a dropdown
+   *  with stock sizes plus −2pt / +2pt fine-tune buttons clamped to
+   *  the global font-size limits. Hidden while the element is being
+   *  edited or dragged so it doesn't fight for focus. */
+  const FONT_BAR_W = 168;
+  const FONT_BAR_H = 36;
+  const renderFontSizeBar = () => {
+    if (!selectedId || !currentInfo) return null;
+    const el = elements.find(e => e.id === selectedId);
+    if (!el || el.page !== currentPage) return null;
+    if (el.type !== 'text' && el.type !== 'date') return null;
+    if (editing?.id === el.id) return null;
+    if (draggingId === el.id) return null;
+
+    const pageW = currentInfo.width;
+    const pageH = currentInfo.height;
+    const elTopPx = (el.y / 100) * pageH;
+    const elLeftPx = (el.x / 100) * pageW;
+    // Anchor above the element when there's room; below otherwise.
+    // 14px is the rough single-line height we assume for the element
+    // below-anchored case — close enough since the bar is small.
+    const placeAbove = elTopPx > FONT_BAR_H + 8;
+    const top = placeAbove
+      ? Math.max(4, elTopPx - FONT_BAR_H - 6)
+      : elTopPx + 22;
+    const margin = 4;
+    let left = elLeftPx;
+    if (left + FONT_BAR_W > pageW - margin) {
+      left = Math.max(margin, pageW - FONT_BAR_W - margin);
+    }
+    const setSize = (size: number) => {
+      const clamped = Math.max(FONT_SIZE_MIN, Math.min(FONT_SIZE_MAX, size));
+      updateElement(el.id, { fontSize: clamped } as Partial<FsElement>);
+    };
+    const hasStandard = (FONT_SIZE_OPTIONS as readonly number[]).includes(el.fontSize);
+    return (
+      <div
+        className={`fse-fontbar${placeAbove ? ' fse-fontbar-above' : ' fse-fontbar-below'}`}
+        style={{ left, top, width: FONT_BAR_W }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <select
+          className="fse-fontbar-size"
+          value={el.fontSize}
+          onChange={(e) => setSize(parseInt(e.target.value, 10))}
+          aria-label="Font size"
+        >
+          {!hasStandard && <option value={el.fontSize}>{el.fontSize}pt</option>}
+          {FONT_SIZE_OPTIONS.map(s => (
+            <option key={s} value={s}>{s}pt</option>
+          ))}
+        </select>
+        <button
+          type="button"
+          className="fse-fontbar-btn"
+          onClick={() => setSize(el.fontSize - FONT_SIZE_STEP)}
+          aria-label="Decrease font size"
+          title="Decrease font size"
+          disabled={el.fontSize <= FONT_SIZE_MIN}
+        >
+          <Minus size={12} strokeWidth={2.4} />
+        </button>
+        <button
+          type="button"
+          className="fse-fontbar-btn"
+          onClick={() => setSize(el.fontSize + FONT_SIZE_STEP)}
+          aria-label="Increase font size"
+          title="Increase font size"
+          disabled={el.fontSize >= FONT_SIZE_MAX}
+        >
+          <Plus size={12} strokeWidth={2.4} />
+        </button>
+      </div>
+    );
+  };
+
   // Inline-edit popup positioned over the page, with edge-aware clamping.
   const renderEditPopup = () => {
     if (!editing || !currentInfo) return null;
@@ -1077,6 +1265,9 @@ export default function FillSignEditor({ file, onDone }: Props) {
     }
 
     const placeholder = el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…';
+    const dateInvalid = el.type === 'date'
+      && editing.draftValue.length > 0
+      && !isValidDate(editing.draftValue);
     // Auto-grow the textarea to fit its content. Resets to auto first so
     // the scrollHeight reflects current rather than previous height.
     const autoResize = (node: HTMLTextAreaElement | null) => {
@@ -1091,55 +1282,69 @@ export default function FillSignEditor({ file, onDone }: Props) {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <textarea
-          ref={(node) => {
-            if (!node) return;
-            if (document.activeElement !== node) {
-              try { node.focus({ preventScroll: true }); }
-              catch { node.focus(); }
-              node.select();
-            }
-            autoResize(node);
-          }}
-          rows={1}
-          value={editing.draftValue}
-          onChange={(e) => {
-            setEditing({ ...editing, draftValue: e.target.value });
-            autoResize(e.currentTarget);
-          }}
-          onKeyDown={(e) => {
-            // Enter saves, Shift+Enter inserts a newline (default
-            // textarea behavior), Esc cancels.
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              saveEdit();
-            } else if (e.key === 'Escape') {
-              cancelEdit();
-            }
-          }}
-          placeholder={placeholder}
-          className="fse-popup-input"
-          style={{ fontSize: `${el.fontSize}px` }}
-        />
+        {el.type === 'date' ? (
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            ref={(node) => {
+              if (!node) return;
+              if (document.activeElement !== node) {
+                try { node.focus({ preventScroll: true }); }
+                catch { node.focus(); }
+                node.select();
+              }
+            }}
+            value={editing.draftValue}
+            onChange={(e) => {
+              setEditing({ ...editing, draftValue: applyDateMask(e.target.value) });
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                saveEdit();
+              } else if (e.key === 'Escape') {
+                cancelEdit();
+              }
+            }}
+            placeholder={placeholder}
+            className={`fse-popup-input${dateInvalid ? ' fse-popup-input-invalid' : ''}`}
+            style={{ fontSize: `${el.fontSize}px` }}
+            maxLength={10}
+          />
+        ) : (
+          <textarea
+            ref={(node) => {
+              if (!node) return;
+              if (document.activeElement !== node) {
+                try { node.focus({ preventScroll: true }); }
+                catch { node.focus(); }
+                node.select();
+              }
+              autoResize(node);
+            }}
+            rows={1}
+            value={editing.draftValue}
+            onChange={(e) => {
+              setEditing({ ...editing, draftValue: e.target.value });
+              autoResize(e.currentTarget);
+            }}
+            onKeyDown={(e) => {
+              // Enter saves, Shift+Enter inserts a newline (default
+              // textarea behavior), Esc cancels.
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                saveEdit();
+              } else if (e.key === 'Escape') {
+                cancelEdit();
+              }
+            }}
+            placeholder={placeholder}
+            className="fse-popup-input"
+            style={{ fontSize: `${el.fontSize}px` }}
+          />
+        )}
         <div className="fse-popup-bar">
-          <div className="fse-popup-sizes" role="group" aria-label="Font size">
-            {FONT_SIZES.map(s => {
-              const active = el.fontSize === s.pt;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  className={`fse-popup-size${active ? ' active' : ''}`}
-                  onClick={() => updateElement(el.id, { fontSize: s.pt } as Partial<FsElement>)}
-                  aria-label={`${s.label === 'S' ? 'Small' : s.label === 'M' ? 'Medium' : 'Large'} (${s.pt}pt)`}
-                  title={`${s.label === 'S' ? 'Small' : s.label === 'M' ? 'Medium' : 'Large'} (${s.pt}pt)`}
-                  aria-pressed={active}
-                >
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
           <div className="fse-popup-actions">
             <button
               type="button"
@@ -1174,56 +1379,50 @@ export default function FillSignEditor({ file, onDone }: Props) {
   const totalPages = pageInfos.length;
 
   return (
-    <div className="fse" ref={editorRootRef}>
-      <div className="fse-main">
-        {/* Layout order per spec: thumbnails on top, toolbar right above
-            the document, PDF below — tools are physically next to the
-            surface they apply to. */}
-        {totalPages > 1 && (
-          <div className="fse-thumb-strip-wrap">
-            <div className="fse-thumb-strip-label">
-              <FileText size={14} /> Pages:
-            </div>
-            <div className="fse-thumb-strip">
-              {pageInfos.map(p => {
-                const isCurrent = currentPage === p.index;
-                const isSelected = selectedPages.includes(p.index);
-                return (
-                  <div
-                    key={p.index}
-                    className={`fse-thumb${isCurrent ? ' fse-thumb-current' : ''}${isSelected && showThumbTicks ? ' fse-thumb-selected' : ''}`}
-                    onClick={() => setCurrentPage(p.index)}
-                  >
-                    <div className="fse-thumb-img-wrap">
-                      {thumbnails[p.index] ? (
-                        <img src={thumbnails[p.index]} alt={`Page ${p.index}`} />
-                      ) : (
-                        <span className="fse-thumb-placeholder">Page {p.index}</span>
-                      )}
-                      {isSelected && showThumbTicks && (
-                        <span className="fse-thumb-tick" aria-hidden="true" title="Signature placed on this page">✓</span>
-                      )}
-                    </div>
-                    <div className="fse-thumb-foot">
-                      <span className="fse-thumb-num">{p.index}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="fse-thumb-strip-hint">
-              <CheckSquare size={11} /> Click a thumbnail to switch page
-              {showThumbTicks ? ' · ✓ marks pages with signatures' : ''}
-            </div>
-            {showThumbTicks && (
-              <div className="fse-selected-summary">
-                <strong>✓ Signed on {selectedPages.length} page{selectedPages.length > 1 ? 's' : ''}:</strong>{' '}
-                {selectedPages.join(', ')}
-              </div>
-            )}
+    <div
+      className={`fse fse-three-col${sidebarCollapsed ? ' fse-sidebar-collapsed' : ''}${totalPages <= 1 ? ' fse-no-thumbs' : ''}`}
+      ref={editorRootRef}
+    >
+      {/* Left column — vertical thumbnails. Hidden for single-page docs
+          so the grid collapses to two columns. */}
+      {totalPages > 1 && (
+        <aside className="fse-thumbs-col">
+          <div className="fse-thumbs-label">
+            <FileText size={13} /> Pages
           </div>
-        )}
+          <div className="fse-thumbs-list">
+            {pageInfos.map(p => {
+              const isCurrent = currentPage === p.index;
+              const isSelected = selectedPages.includes(p.index);
+              return (
+                <div
+                  key={p.index}
+                  className={`fse-thumb${isCurrent ? ' fse-thumb-current' : ''}${isSelected && showThumbTicks ? ' fse-thumb-selected' : ''}`}
+                  onClick={() => setCurrentPage(p.index)}
+                >
+                  <div className="fse-thumb-img-wrap">
+                    {thumbnails[p.index] ? (
+                      <img src={thumbnails[p.index]} alt={`Page ${p.index}`} />
+                    ) : (
+                      <span className="fse-thumb-placeholder">Page {p.index}</span>
+                    )}
+                    {isSelected && showThumbTicks && (
+                      <span className="fse-thumb-tick" aria-hidden="true" title="Page has placed elements">✓</span>
+                    )}
+                  </div>
+                  <div className="fse-thumb-foot">
+                    <span className="fse-thumb-num">{p.index}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </aside>
+      )}
 
+      {/* Middle column — tools + document. The page area scrolls so
+          tall PDFs don't push the whole layout. */}
+      <div className="fse-main">
         <div className="fse-topbar">
           <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
             {TOOLS.map(t => (
@@ -1257,6 +1456,7 @@ export default function FillSignEditor({ file, onDone }: Props) {
               <canvas ref={canvasRef} />
               <div className="fse-page-overlay">
                 {visibleElements.map(el => el.type === 'signature' ? renderSignature(el) : renderTextOrDate(el))}
+                {renderFontSizeBar()}
                 {renderEditPopup()}
               </div>
               <span className="fse-page-label">Page {currentPage} of {totalPages}</span>
@@ -1265,16 +1465,38 @@ export default function FillSignEditor({ file, onDone }: Props) {
         </div>
       </div>
 
+      {/* Right column — placed elements + Download. Collapsible to a
+          40 px-wide rail on narrow viewports; only the count badge and
+          the expand toggle remain visible when collapsed. */}
       <aside className="fse-sidebar">
-        {/* Tip — prominent header banner instead of footnote text. */}
-        <div className="fse-tip-card" role="note">
-          <Lightbulb size={18} strokeWidth={2.2} />
-          <span>Click text to edit, drag to move, drag corners to resize signatures.</span>
+        <div className="fse-sidebar-head">
+          {!sidebarCollapsed && (
+            <span className="fse-sidebar-title">
+              Placed elements ({elements.length})
+            </span>
+          )}
+          <button
+            type="button"
+            className="fse-sidebar-toggle"
+            onClick={() => setSidebarCollapsed(c => !c)}
+            aria-label={sidebarCollapsed ? 'Expand panel' : 'Collapse panel'}
+            title={sidebarCollapsed ? 'Expand panel' : 'Collapse panel'}
+          >
+            {sidebarCollapsed
+              ? <ChevronLeft size={14} strokeWidth={2.4} />
+              : <ChevronRight size={14} strokeWidth={2.4} />}
+          </button>
         </div>
 
+        {sidebarCollapsed && elements.length > 0 && (
+          <span className="fse-sidebar-badge">{elements.length}</span>
+        )}
+
+        {!sidebarCollapsed && (
+        <div className="fse-sidebar-body">
         {/* Placed elements grouped by page. */}
         <div className="fse-sidebar-card">
-          <div className="fse-sidebar-title">
+          <div className="fse-sidebar-title fse-sidebar-card-title">
             <Check size={14} /> Placed elements ({elements.length})
           </div>
           {elements.length === 0 ? (
@@ -1369,6 +1591,8 @@ export default function FillSignEditor({ file, onDone }: Props) {
           {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
           <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
         </button>
+        </div>
+        )}
       </aside>
 
       <button
@@ -1445,29 +1669,13 @@ export default function FillSignEditor({ file, onDone }: Props) {
 
               {creatingSig.mode === 'type' && (
                 <div className="fse-sig-type">
-                  <div className="fse-sig-fonts" role="group" aria-label="Font">
-                    {SIG_FONTS.map(f => {
-                      const active = creatingSig.typedFont === f.value;
-                      return (
-                        <button
-                          key={f.value}
-                          type="button"
-                          className={`fse-sig-font${active ? ' active' : ''}`}
-                          style={{ fontFamily: f.value }}
-                          onClick={() => setCreatingSig(s => s ? { ...s, typedFont: f.value } : s)}
-                        >
-                          {f.name}
-                        </button>
-                      );
-                    })}
-                  </div>
                   <input
                     type="text"
                     className="fse-sig-name"
                     placeholder="Your full name"
                     value={creatingSig.typedName}
                     onChange={(e) => setCreatingSig(s => s ? { ...s, typedName: e.target.value } : s)}
-                    style={{ fontFamily: creatingSig.typedFont }}
+                    style={{ fontFamily: SIG_TYPED_FONT }}
                     autoFocus
                   />
                   {creatingSig.typedName.trim() && typedSigDataUrl && (
