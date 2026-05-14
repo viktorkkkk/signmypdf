@@ -16,6 +16,7 @@ import {
   PenLine,
   Pencil,
   Plus,
+  RotateCcw,
   Type as TypeIcon,
   Upload as UploadIcon,
   X,
@@ -160,9 +161,13 @@ interface EditingState {
 interface Props {
   file: File;
   onDone?: (blob: Blob) => void;
+  /** Optional — when provided, renders a "Change PDF" secondary
+   *  button in the tools-bar that calls this handler. The host shell
+   *  is expected to confirm the discard before unmounting us. */
+  onRequestNewPdf?: () => void;
 }
 
-export default function FillSignEditor({ file, onDone }: Props) {
+export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props) {
   const [tool, setTool] = useState<ToolId>('text');
   const [elements, setElements] = useState<FsElement[]>([]);
   const [pageInfos, setPageInfos] = useState<PageInfo[]>([]);
@@ -1436,6 +1441,24 @@ export default function FillSignEditor({ file, onDone }: Props) {
                 <span>{t.label}</span>
               </button>
             ))}
+            {onRequestNewPdf && (
+              <>
+                {/* Divider + Change PDF live inside the same .fse-toolbar
+                   flex so layout flows naturally. The divider uses
+                   margin-left: auto to consume free space and push the
+                   secondary action to the right edge. */}
+                <span className="fse-tool-divider" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="fse-tool-btn fse-tool-btn-secondary"
+                  onClick={onRequestNewPdf}
+                  title="Discard changes and load a different PDF"
+                >
+                  <RotateCcw size={14} strokeWidth={2} />
+                  <span>Change PDF</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
 

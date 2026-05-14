@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { CheckCircle2, FilePlus2, FileSignature, Loader2, Upload, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileSignature, Loader2, Upload, X } from 'lucide-react';
 import FillSignEditor from './FillSignEditor';
 import {
   cleanupOldEntries,
@@ -27,13 +27,25 @@ import {
  *     forced close still cleans up.
  *   - cleanupOldEntries on next editor mount catches anything else.
  */
+/** Toast feedback — single-slot. Replaces a previous boolean since
+ *  we now show both a success-after-download confirmation AND
+ *  error-style rejection messages (e.g. wrong file type). */
+type ToastState =
+  | {
+      kind: 'success';
+      title: string;
+      body: string;
+      cta?: { label: string; onClick: () => void };
+    }
+  | { kind: 'error'; title: string };
+
 function EditorPage() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
+  const [toast, setToast] = useState<ToastState | null>(null);
   const handoffIdRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -91,10 +103,29 @@ function EditorPage() {
     };
   }, []);
 
-  /** Empty-state file picker — same shape as the popup's drop zone. */
+  /** Reset to empty state — drops the loaded PDF, clears the handoff
+   *  IDB record, and brings back the dropzone. The FillSignEditor
+   *  unmounts (because we set file=null) so all of its internal state
+   *  — elements, savedSig, selection — disappears with it. */
+  const resetToEmpty = useCallback(async () => {
+    const id = handoffIdRef.current;
+    handoffIdRef.current = null;
+    if (id) {
+      try { await deletePdf(id); } catch { /* best-effort */ }
+    }
+    setFile(null);
+    setLoadError(null);
+    setShowResetConfirm(false);
+    setToast(null);
+  }, []);
+
+  /** Empty-state file picker — runs for both drop and click-to-choose.
+   *  Wrong file types raise an error toast (rather than blocking the
+   *  empty surface with inline text); load failures stay inline below
+   *  the dropzone so the user can read them without time pressure. */
   const handlePicked = useCallback(async (picked: File) => {
     if (picked.type !== 'application/pdf' && !picked.name.toLowerCase().endsWith('.pdf')) {
-      setLoadError('Please choose a PDF file.');
+      setToast({ kind: 'error', title: 'Only PDF files are supported' });
       return;
     }
     setLoadError(null);
@@ -111,28 +142,11 @@ function EditorPage() {
     }
   }, []);
 
-  /** Reset to empty state — drops the loaded PDF, clears the handoff
-   *  IDB record, and brings back the dropzone. The FillSignEditor
-   *  unmounts (because we set file=null) so all of its internal state
-   *  — elements, savedSig, selection — disappears with it. */
-  const resetToEmpty = useCallback(async () => {
-    const id = handoffIdRef.current;
-    handoffIdRef.current = null;
-    if (id) {
-      try { await deletePdf(id); } catch { /* best-effort */ }
-    }
-    setFile(null);
-    setLoadError(null);
-    setShowResetConfirm(false);
-    setToastOpen(false);
-  }, []);
-
-  /** Top-bar "New PDF" button. Confirms before discarding work when
-   *  the user has a PDF open. With no PDF loaded yet, it's a no-op. */
-  const handleNewPdfClick = useCallback(() => {
-    if (!file) return;
+  /** Tools-bar "Change PDF" entry. Always behind a confirmation modal
+   *  so an accidental click can't trash the user's placed elements. */
+  const handleRequestNewPdf = useCallback(() => {
     setShowResetConfirm(true);
-  }, [file]);
+  }, []);
 
   /** Signed-PDF callback from FillSignEditor. We Object-URL the Blob
    *  and hand it to chrome.downloads. The output filename inherits the
@@ -151,15 +165,20 @@ function EditorPage() {
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
       },
     );
-    setToastOpen(true);
-  }, [file?.name]);
+    setToast({
+      kind: 'success',
+      title: 'Signed PDF downloaded',
+      body: 'Check your Downloads folder',
+      cta: { label: 'Sign another PDF', onClick: resetToEmpty },
+    });
+  }, [file?.name, resetToEmpty]);
 
   // Toast auto-dismiss timer.
   useEffect(() => {
-    if (!toastOpen) return;
-    const t = setTimeout(() => setToastOpen(false), 7000);
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 7000);
     return () => clearTimeout(t);
-  }, [toastOpen]);
+  }, [toast]);
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -172,22 +191,9 @@ function EditorPage() {
     <div className="ext-root">
       <header className="ext-topbar">
         <div className="ext-topbar-inner">
-          <div className="ext-topbar-left">
-            <button
-              type="button"
-              className="ext-newpdf"
-              onClick={handleNewPdfClick}
-              disabled={!file}
-              aria-label="Load a new PDF"
-              title="Load a new PDF"
-            >
-              <FilePlus2 size={16} strokeWidth={2} />
-              <span>New PDF</span>
-            </button>
-            <div className="ext-brand">
-              <FileSignature size={20} strokeWidth={2.2} />
-              <span>Sign PDF</span>
-            </div>
+          <div className="ext-brand">
+            <FileSignature size={20} strokeWidth={2.2} />
+            <span>Sign PDF</span>
           </div>
           <span className="ext-tag">Free · No signup · Files stay private</span>
         </div>
@@ -202,30 +208,46 @@ function EditorPage() {
         )}
 
         {!loading && !file && (
-          <label
-            className={`ext-drop${dragOver ? ' ext-drop--over' : ''}`}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={onDrop}
-          >
-            <input
-              type="file"
-              accept="application/pdf,.pdf"
-              onChange={(e) => {
-                const picked = e.target.files?.[0];
-                e.target.value = '';
-                if (picked) handlePicked(picked);
-              }}
-            />
-            <Upload size={36} strokeWidth={1.6} />
-            <span className="ext-drop-title">Drop a PDF here</span>
-            <span className="ext-drop-hint">or click to choose · stays on your device</span>
-            {loadError && <span className="ext-drop-error" role="alert">{loadError}</span>}
-          </label>
+          <div className="ext-empty">
+            <h1 className="ext-empty-title">Sign any PDF in your browser</h1>
+            <p className="ext-empty-sub">Draw, type or upload your signature. No signup.</p>
+            <label
+              className={`ext-drop${dragOver ? ' ext-drop--over' : ''}`}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+            >
+              <input
+                type="file"
+                accept="application/pdf,.pdf"
+                onChange={(e) => {
+                  const picked = e.target.files?.[0];
+                  e.target.value = '';
+                  if (picked) handlePicked(picked);
+                }}
+              />
+              <Upload size={48} strokeWidth={1.6} className="ext-drop-icon" />
+              <span className="ext-drop-title">Drop a PDF here</span>
+              <span className="ext-drop-or">or</span>
+              {/* Span styled as a button — clicks bubble to the parent
+                 label, which natively triggers the file <input>. Using
+                 a real <button> inside <label> creates a confusing
+                 nested click target. */}
+              <span className="ext-drop-cta">Choose PDF file</span>
+            </label>
+            <p className="ext-drop-tagline">Files stay on your device · 30 seconds</p>
+            {loadError && (
+              <p className="ext-drop-error" role="alert">{loadError}</p>
+            )}
+          </div>
         )}
 
         {!loading && file && (
-          <FillSignEditor file={file} onDone={onSignedDone} />
+          <FillSignEditor
+            file={file}
+            onDone={onSignedDone}
+            onRequestNewPdf={handleRequestNewPdf}
+          />
         )}
       </main>
 
@@ -267,26 +289,34 @@ function EditorPage() {
         </div>
       )}
 
-      {toastOpen && (
-        <div className="ext-toast" role="status" aria-live="polite">
+      {toast && (
+        <div
+          className={`ext-toast ext-toast-${toast.kind}`}
+          role={toast.kind === 'error' ? 'alert' : 'status'}
+          aria-live="polite"
+        >
           <div className="ext-toast-icon">
-            <CheckCircle2 size={20} strokeWidth={2.2} />
+            {toast.kind === 'success'
+              ? <CheckCircle2 size={20} strokeWidth={2.2} />
+              : <AlertCircle size={20} strokeWidth={2.2} />}
           </div>
           <div className="ext-toast-body">
-            <strong>Signed PDF downloaded</strong>
-            <span>Check your Downloads folder</span>
-            <button
-              type="button"
-              className="ext-toast-cta"
-              onClick={resetToEmpty}
-            >
-              Sign another PDF
-            </button>
+            <strong>{toast.title}</strong>
+            {toast.kind === 'success' && <span>{toast.body}</span>}
+            {toast.kind === 'success' && toast.cta && (
+              <button
+                type="button"
+                className="ext-toast-cta"
+                onClick={toast.cta.onClick}
+              >
+                {toast.cta.label}
+              </button>
+            )}
           </div>
           <button
             type="button"
             className="ext-toast-close"
-            onClick={() => setToastOpen(false)}
+            onClick={() => setToast(null)}
             aria-label="Dismiss"
           >
             <X size={14} strokeWidth={2.4} />

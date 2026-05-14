@@ -70,40 +70,6 @@ html, body {
   justify-content: space-between;
   gap: 16px;
 }
-.ext-topbar-left {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* "New PDF" — small ghost button left of the brand. Disabled when no
-   file is loaded so the empty state doesn't tease the user with a
-   non-action. */
-.ext-newpdf {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  color: var(--color-text);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
-}
-.ext-newpdf:hover:not(:disabled) {
-  background: var(--color-surface);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-.ext-newpdf:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 .ext-brand {
   display: inline-flex;
   align-items: center;
@@ -159,29 +125,54 @@ html, body {
 }
 @keyframes ext-spin { to { transform: rotate(360deg); } }
 
+/* Empty state — H1 + subtitle stack above a compact, brand-tinted
+   dropzone. Mirrors the /sign landing on signmypdf.io so the user
+   feels at home regardless of which surface they came in through. */
+.ext-empty {
+  max-width: 720px;
+  margin: 72px auto 0;
+  padding: 0 16px 32px;
+  text-align: center;
+}
+.ext-empty-title {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 12px;
+}
+.ext-empty-sub {
+  font-size: 16px;
+  color: var(--color-muted);
+  margin: 0 0 40px;
+}
+
 .ext-drop {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0;
+  width: 100%;
   max-width: 720px;
-  height: 480px;
-  margin: 24px auto;
-  padding: 24px;
-  background: var(--color-bg);
-  border: 2px dashed var(--color-border);
+  min-height: 300px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background: rgba(37, 99, 235, 0.04);
+  border: 2px dashed rgba(37, 99, 235, 0.4);
   border-radius: 16px;
-  color: var(--color-muted);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
 }
 .ext-drop:hover,
 .ext-drop--over {
+  background: rgba(37, 99, 235, 0.08);
   border-color: var(--color-primary);
-  background: #eff6ff;
-  color: var(--color-primary);
+}
+.ext-drop:active {
+  transform: scale(0.998);
 }
 .ext-drop input[type="file"] {
   position: absolute;
@@ -191,23 +182,58 @@ html, body {
   opacity: 0;
   cursor: inherit;
 }
+.ext-drop-icon {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
 .ext-drop-title {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text);
+  margin-bottom: 8px;
 }
-.ext-drop-hint {
+.ext-drop-or {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 12px;
+}
+/* Span styled as a button — clicks bubble to the parent <label> so
+   the native file input opens with no extra JS. Inner pointer-events:
+   none lets the label catch the click without a nested target swap. */
+.ext-drop-cta {
+  display: inline-block;
+  padding: 10px 24px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  pointer-events: none;
+  transition: background 0.15s ease;
+}
+.ext-drop:hover .ext-drop-cta,
+.ext-drop--over .ext-drop-cta {
+  background: var(--color-primary-hover);
+}
+.ext-drop-tagline {
+  margin: 16px 0 0;
   font-size: 13px;
   color: var(--color-muted);
+  text-align: center;
 }
+/* Inline error display for failures unrelated to file-type
+   (session expired, IDB load failure). File-type rejection raises
+   a toast instead so the empty surface stays composed. */
 .ext-drop-error {
-  margin-top: 12px;
-  padding: 8px 12px;
+  margin: 16px auto 0;
+  max-width: 480px;
+  padding: 10px 14px;
   background: #fef2f2;
   border: 1px solid #fecaca;
   border-radius: 8px;
   color: var(--color-danger);
   font-size: 13px;
+  text-align: center;
 }
 
 /* ── Three-column layout for the editor ─────────────────────────────
@@ -518,9 +544,13 @@ html, body {
 }
 .ext-toast-icon {
   flex-shrink: 0;
-  color: #4ade80;
   margin-top: 1px;
 }
+/* Per-kind icon tinting. Success uses the green-leaning brand
+   confirmation colour; errors use a softer red on the dark plate so
+   the surrounding white text still reads. */
+.ext-toast-success .ext-toast-icon { color: #4ade80; }
+.ext-toast-error   .ext-toast-icon { color: #fca5a5; }
 .ext-toast-body {
   flex: 1;
   display: flex;
