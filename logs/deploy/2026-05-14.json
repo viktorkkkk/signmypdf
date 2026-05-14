@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-14",
+  "timestamp": "2026-05-14T02:16:03Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "4379d24d69f116c6dd4e197d7037b67c1fc558e2",
+  "newSlugs": "electronic-signature-international-contracts fill-insurance-claim-form-pdf",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25837685525"
+}
