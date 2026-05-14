@@ -253,6 +253,23 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfRef = useRef<any>(null);
+  /** Live pdf.js `RenderTask` for the currently-painting page (or
+   *  null when no render is in flight). Used to cancel the previous
+   *  task before a new one starts so two render passes never write
+   *  to the same canvas concurrently — that race produces flipped /
+   *  mirrored output because each task issues its own setTransform
+   *  calls and the older task keeps drawing under the newer task's
+   *  transform after `canvas.width = …` resets the ctx state. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderTaskRef = useRef<any>(null);
+  /** True until the first time the rAF-rescale effect has run.
+   *  Lets us skip the redundant rescale that would otherwise fire
+   *  on mount when `loading` flips to false — the mount-effect has
+   *  already computed pageInfos at the correct width, so this rAF
+   *  would only re-trigger the canvas render and race with the
+   *  initial one. After the first skip, real collapse/expand
+   *  toggles fall through normally. */
+  const isInitialRescaleRef = useRef<boolean>(true);
 
   /** Build page-geometry records sized to fill the current container
    *  width. Shared between the initial PDF load and the ResizeObserver
@@ -377,14 +394,32 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
    *  ~150 ms behind the column snap — perceived as a flash of the
    *  old scale. Reading clientWidth on the next animation frame
    *  guarantees the grid track has resolved to its new width before
-   *  we measure. */
+   *  we measure.
+   *
+   *  Skips the very first run after mount: the PDF-load effect has
+   *  already computed pageInfos at the right width, so re-running
+   *  recompute now would only spawn a second render task and race
+   *  with the initial one. After this first skip, real toggles
+   *  fall through normally. */
   useEffect(() => {
     if (loading) return;
+    if (isInitialRescaleRef.current) {
+      isInitialRescaleRef.current = false;
+      return;
+    }
     const rafId = requestAnimationFrame(() => { void recomputeFromContainer(); });
     return () => cancelAnimationFrame(rafId);
   }, [sidebarCollapsed, loading, recomputeFromContainer]);
 
   // ── Render the active page ────────────────────────────────────────────
+  // Concurrency model: cancel the previous pdf.js RenderTask before
+  // starting a new one. Without this, every re-fire of this effect
+  // (page switch / pageInfos rescale) leaves the old task drawing
+  // to the same canvas while we reset its width — the old task's
+  // transform state gets clobbered mid-render and the output comes
+  // out mirrored / inverted. pdf.js raises RenderingCancelledException
+  // on the cancelled task's promise, which we swallow silently —
+  // it's expected control flow, not an error.
   useEffect(() => {
     if (loading || !pdfRef.current || !canvasRef.current) return;
     const info = pageInfos.find(p => p.index === currentPage);
@@ -393,22 +428,55 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     (async () => {
       try {
         const page = await pdfRef.current.getPage(currentPage);
+        if (cancelled) return;
         const viewport = page.getViewport({ scale: info.scale });
         const dpr = window.devicePixelRatio || 1;
         const canvas = canvasRef.current!;
+        // Cancel any in-flight render before resetting the canvas
+        // state. Resetting canvas.width clears the transform matrix,
+        // and a still-running task would issue subsequent draw calls
+        // under a stale transform — that's the flip / mirror bug.
+        if (renderTaskRef.current) {
+          try { renderTaskRef.current.cancel(); } catch { /* already done */ }
+          renderTaskRef.current = null;
+        }
         canvas.width = viewport.width * dpr;
         canvas.height = viewport.height * dpr;
         canvas.style.width = `${viewport.width}px`;
         canvas.style.height = `${viewport.height}px`;
         const ctx = canvas.getContext('2d')!;
         ctx.scale(dpr, dpr);
-        await page.render({ canvas, canvasContext: ctx, viewport }).promise;
+        const task = page.render({ canvas, canvasContext: ctx, viewport });
+        renderTaskRef.current = task;
+        try {
+          await task.promise;
+        } finally {
+          // Only clear the ref if this task is still the active one —
+          // a fresh re-fire may have already started a successor.
+          if (renderTaskRef.current === task) {
+            renderTaskRef.current = null;
+          }
+        }
         if (cancelled) return;
-      } catch (e) {
-        if (!cancelled) console.error('Render page:', e);
+      } catch (e: unknown) {
+        if (cancelled) return;
+        // pdf.js throws this when we call .cancel() on a running
+        // task. It's the expected control-flow signal, not an error.
+        const name = (e as { name?: string } | null)?.name;
+        if (name === 'RenderingCancelledException') return;
+        console.error('Render page:', e);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      // Effect cleanup (re-fire or unmount) cancels any pending
+      // render so the next effect run — or component unmount —
+      // doesn't leave a zombie task writing to the canvas.
+      if (renderTaskRef.current) {
+        try { renderTaskRef.current.cancel(); } catch { /* already done */ }
+        renderTaskRef.current = null;
+      }
+    };
   }, [currentPage, loading, pageInfos]);
 
   // Auto-scroll editor into view once.
