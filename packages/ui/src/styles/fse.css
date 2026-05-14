@@ -70,16 +70,36 @@
   border-color: var(--color-primary);
   color: #fff;
 }
+/* Tools-bar layout — explicit structure:
+     [tools-group]  [divider]  [flex-spacer]  [secondary]
+   The spacer is what actually pins the secondary button to the right
+   edge; margin-left:auto alone wasn't enough because the toolbar
+   was content-sized inside its parent. */
+.fse-tools-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fse-tool-divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 12px;
+  background: var(--color-border);
+  align-self: center;
+  flex-shrink: 0;
+}
+.fse-toolbar-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 /* Secondary tool button — neutral chrome used for non-primary actions
-   like "Change PDF". Pushed to the right edge of the toolbar via
-   margin-left: auto so the placement tools form a left-aligned group
-   and the secondary action hugs the opposite end. No visual divider —
-   the gap between them does the separating. */
+   like "Change PDF". Lands at the right edge thanks to the explicit
+   spacer above. */
 .fse-tool-btn-secondary {
-  margin-left: auto;
   border-color: var(--color-border);
   color: var(--color-muted);
   font-weight: 500;
+  flex-shrink: 0;
 }
 .fse-tool-btn-secondary:hover {
   background: var(--color-surface);

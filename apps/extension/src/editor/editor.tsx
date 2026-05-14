@@ -191,10 +191,28 @@ function EditorPage() {
     <div className="ext-root">
       <header className="ext-topbar">
         <div className="ext-topbar-inner">
-          <div className="ext-brand">
-            <FileSignature size={20} strokeWidth={2.2} />
-            <span>Sign PDF</span>
-          </div>
+          {/* Brand doubles as a "Change PDF" entry point when a file
+             is loaded — clicking the logo opens the same discard
+             confirmation modal as the tools-bar button. With no file
+             open it's a plain non-interactive label so the empty
+             state doesn't tease an action. */}
+          {file ? (
+            <button
+              type="button"
+              className="ext-brand ext-brand-clickable"
+              onClick={handleRequestNewPdf}
+              title="Discard changes and load a new PDF"
+              aria-label="Discard changes and load a new PDF"
+            >
+              <FileSignature size={20} strokeWidth={2.2} />
+              <span>Sign PDF</span>
+            </button>
+          ) : (
+            <div className="ext-brand">
+              <FileSignature size={20} strokeWidth={2.2} />
+              <span>Sign PDF</span>
+            </div>
+          )}
           <span className="ext-tag">Free · No signup · Files stay private</span>
         </div>
       </header>
