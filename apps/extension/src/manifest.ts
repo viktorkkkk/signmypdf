@@ -2,35 +2,34 @@ import { defineManifest } from '@crxjs/vite-plugin';
 import pkg from '../package.json' with { type: 'json' };
 
 /**
- * Chrome MV3 manifest, single source of truth.
+ * Chrome MV3 manifest — standalone signing extension.
  *
- * Permissions intentionally minimal — see ТЗ Этап 5:
- *   - No `<all_urls>` (red flag for store review)
- *   - No `tabs` (we use `activeTab` for context-menu URL access)
- *   - No `downloads` (signing/downloading happens on signmypdf.io)
+ * No network calls to signmypdf.io. All PDF processing happens inside
+ * the extension via PDF.js + pdf-lib (bundled local copies).
  *
- * `host_permissions` is scoped to signmypdf.io only so the content
- * script bridge can read `chrome.storage.local` from the page.
+ * Permissions are intentionally minimal:
+ *   - contextMenus  — right-click "Sign with Sign PDF" on PDF links
+ *   - downloads     — chrome.downloads.download for the signed PDF
+ *   - storage       — chrome.storage.session for popup → editor handoff
+ *                     fallback (IndexedDB is primary, session is fallback)
+ *
+ * NO `<all_urls>`, NO `tabs`, NO `activeTab`, NO host_permissions.
  */
 export default defineManifest({
   manifest_version: 3,
-  name: 'Sign PDF Free',
-  short_name: 'SignMyPDF',
+  name: 'Sign PDF — Signature & eSign Tool',
+  short_name: 'Sign PDF',
   version: pkg.version,
   description:
-    'Sign PDF files in your browser. Free, no signup, no watermark. Drag, drop, sign, download.',
+    'Sign PDF files in your browser. Free, no signup. Right-click any PDF link to sign. Files never leave your device.',
   icons: {
     16: 'icons/icon-16.png',
     32: 'icons/icon-32.png',
     48: 'icons/icon-48.png',
     128: 'icons/icon-128.png',
   },
-  // No `default_popup` — clicking the toolbar icon should open the
-  // signing tool directly in a new tab. The service worker's
-  // `chrome.action.onClicked` listener handles that, which only
-  // fires when the action has no popup. See service-worker.ts.
   action: {
-    default_title: 'Sign PDF Free',
+    default_popup: 'src/popup/popup.html',
     default_icon: {
       16: 'icons/icon-16.png',
       32: 'icons/icon-32.png',
@@ -38,23 +37,14 @@ export default defineManifest({
     },
   },
   background: {
-    service_worker: 'src/background/service-worker.ts',
+    service_worker: 'src/background.ts',
     type: 'module',
   },
-  content_scripts: [
+  permissions: ['contextMenus', 'downloads', 'storage'],
+  web_accessible_resources: [
     {
-      matches: [
-        'https://signmypdf.io/*',
-        'https://www.signmypdf.io/*',
-      ],
-      js: ['src/content/bridge.ts'],
-      run_at: 'document_idle',
+      resources: ['src/editor/editor.html', 'pdf.worker.min.mjs'],
+      matches: ['<all_urls>'],
     },
   ],
-  permissions: ['storage', 'contextMenus', 'activeTab'],
-  host_permissions: [
-    'https://signmypdf.io/*',
-    'https://www.signmypdf.io/*',
-  ],
-  homepage_url: 'https://signmypdf.io/chrome',
 });

@@ -1,0 +1,1246 @@
+/* ── <FillSignEditor> — unified Fill+Sign editor surface.
+      Sticky topbar (toolbar + Sign & Download), single-page PDF view
+      with page switcher, sticky sidebar element list, mobile FAB.
+      Used on /sign-nda only in Phase 1. ── */
+.fse {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  /* scrollIntoView lands the editor below the 68px sticky NavHeader. */
+  scroll-margin-top: 80px;
+}
+.fse-main {
+  min-width: 0;
+}
+.fse-spin {
+  animation: spin 0.8s linear infinite;
+  color: var(--color-primary);
+}
+
+/* Sticky topbar — toolbar (left) + Sign & Download (right). Lives just
+   under the 68px fixed NavHeader, so top: 80px clears it with a 12px
+   buffer. */
+/* Toolbar sits between the thumbnail strip and the PDF, so the tools
+   are always next to the surface they apply to. Not sticky — scrolls
+   naturally with the rest of the editor; the FAB / sidebar CTA owns
+   the always-visible Sign & Download. */
+.fse-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  margin-bottom: 14px;
+}
+.fse-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+.fse-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.fse-tool-btn:hover {
+  background: var(--color-surface);
+}
+.fse-tool-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Sign & Download — standalone block in the sidebar (sits between the
+   placed-elements card and the tip/watermark card). Mobile uses
+   .fse-fab instead. */
+.fse-sidebar-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.fse-sidebar-cta:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.fse-sidebar-cta:active:not(:disabled) {
+  transform: scale(0.99);
+}
+.fse-sidebar-cta:disabled {
+  background: #cbd5e1;
+  border-color: #cbd5e1;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Thumbnail strip — copied 1:1 from /sign's PDFViewer pattern. Pages
+   are clickable; ✓ tick marks pages that already hold a signature. */
+.fse-thumb-strip-wrap {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 12px 8px;
+  margin-bottom: 12px;
+}
+.fse-thumb-strip-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.fse-thumb-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px;
+  scrollbar-width: thin;
+}
+.fse-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: white;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.fse-thumb-current {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px #bfdbfe, 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+.fse-thumb-selected:not(.fse-thumb-current) {
+  border-color: #22c55e;
+}
+.fse-thumb-img-wrap {
+  position: relative;
+  height: 100px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fse-thumb-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.fse-thumb-placeholder {
+  color: #94a3b8;
+  font-size: 12px;
+}
+.fse-thumb-tick {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.fse-thumb-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: #f8fafc;
+}
+.fse-thumb-selected .fse-thumb-foot {
+  background: #f0fdf4;
+}
+.fse-thumb-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.fse-thumb-selected .fse-thumb-num {
+  color: #166534;
+}
+.fse-thumb-foot input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+.fse-thumb-strip-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+.fse-selected-summary {
+  margin-top: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #166534;
+}
+
+/* Page render area */
+.fse-page-area {
+  display: flex;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px;
+  min-height: 240px;
+  /* Allow horizontal scrolling on small screens if a page is wider than
+     the column — keeps the page intact rather than crushing it. */
+  overflow-x: auto;
+}
+.fse-pages-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 60px 20px;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+.fse-pages-error { color: var(--color-danger); }
+
+.fse-page {
+  position: relative;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+.fse-page canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.fse-page-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.fse-page-overlay > * { pointer-events: auto; }
+/* Crosshair when a placement-style tool is active. Signature is auto-
+   placed on Save in the modal, so it doesn't need a click-to-place
+   crosshair. */
+.fse-page.tool-text,
+.fse-page.tool-date {
+  cursor: crosshair;
+}
+
+/* Placed text / date elements ──────────────────────────────────────
+   Default state is COMPLETELY transparent — no border, no background,
+   no padding. The placed text reads as part of the underlying PDF.
+   Hover reveals a dashed grey border (via ::before pseudo so the
+   element's own box stays unaffected) plus three icons:
+     ⋮⋮ drag handle on the left, 📋 copy + ✕ delete on the right.
+   One click on the text (.fse-text-value) opens the inline editor
+   popup. */
+.fse-text-wrap {
+  position: absolute;
+  display: inline-block;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  /* `pre-wrap` so multi-line text values (Shift+Enter in the editor)
+     are rendered with their newlines preserved on the page surface. */
+  white-space: pre-wrap;
+  transform: translate(0, 0); /* establish stacking context for ::before */
+}
+.fse-text-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -3px -5px;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  pointer-events: none;
+  transition: border-color 0.12s;
+}
+.fse-text-wrap:hover::before {
+  border-color: #9ca3af;
+}
+.fse-text-wrap-dragging::before {
+  border-color: var(--color-primary);
+  border-style: solid;
+}
+.fse-text-wrap-dragging {
+  opacity: 0.7;
+}
+.fse-text-value {
+  display: inline-block;
+  cursor: pointer;
+  white-space: pre-wrap;
+}
+.fse-text-placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Drag handle: left of element, visible only on hover. */
+.fse-handle {
+  position: absolute;
+  left: -26px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+  color: var(--color-muted);
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.12s, background 0.12s, color 0.12s, border-color 0.12s;
+  z-index: 3;
+}
+.fse-handle:active { cursor: grabbing; }
+.fse-handle:hover {
+  background: var(--color-text);
+  color: white;
+  border-color: var(--color-text);
+}
+.fse-text-wrap:hover .fse-handle { opacity: 1; }
+.fse-text-wrap-dragging .fse-handle { opacity: 0; }
+
+/* Right-side action cluster (📋 copy, ✕ delete). */
+.fse-action {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+  color: var(--color-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s, background 0.12s, color 0.12s, border-color 0.12s, transform 0.12s;
+  z-index: 3;
+}
+.fse-text-wrap:hover .fse-action { opacity: 1; }
+.fse-text-wrap-dragging .fse-action { opacity: 0; }
+/* Action cluster, in visual order from element-edge outward (left → right):
+   ✏️ edit at -26  →  ⎘ duplicate at -52  →  ✕ delete at -78.
+   Edit + Duplicate share the same neutral chrome with a blue hover; Delete
+   is red-by-default so it reads as a destructive action at a glance. */
+.fse-action-edit { right: -26px; }
+.fse-action-edit:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.fse-action-dup { right: -52px; }
+.fse-action-dup:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.fse-action-del {
+  right: -78px;
+  background: var(--color-danger);
+  color: white;
+  border-color: var(--color-danger);
+}
+.fse-action-del:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Inline edit popup — absolute over the page, smart edge clamping.
+   Replaces the original element while editing (the wrap is hidden via
+   `editing?.id === el.id` returning null in renderTextOrDate). */
+/* Two-row layout: textarea on top, tool bar (size selector + Save/
+   Cancel) underneath. Gives the auto-growing textarea its full width
+   and keeps the toolbar anchored at the bottom regardless of how tall
+   the textarea grows. */
+.fse-popup {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: white;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+  z-index: 30;
+  pointer-events: auto;
+}
+.fse-popup-input {
+  width: 100%;
+  font: inherit;
+  font-family: inherit;
+  padding: 6px 10px;
+  border: none;
+  outline: none;
+  background: transparent;
+  min-height: 26px;
+  max-height: 240px;
+  line-height: 1.35;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.fse-popup-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 4px;
+  border-top: 1px solid var(--color-border);
+}
+/* Font-size selector — three pill buttons (S / M / L). The active
+   size is filled blue; inactive are neutral. */
+.fse-popup-sizes {
+  display: inline-flex;
+  gap: 2px;
+}
+.fse-popup-size {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.fse-popup-size:hover {
+  background: #f1f5f9;
+  color: var(--color-text);
+}
+.fse-popup-size.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+.fse-popup-size:nth-child(1) { font-size: 10px; }
+.fse-popup-size:nth-child(2) { font-size: 11px; }
+.fse-popup-size:nth-child(3) { font-size: 13px; }
+.fse-popup-actions {
+  display: inline-flex;
+  gap: 4px;
+}
+.fse-popup-confirm,
+.fse-popup-cancel {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.fse-popup-confirm {
+  background: #16a34a;
+  color: white;
+}
+.fse-popup-confirm:hover { background: #15803d; }
+.fse-popup-cancel {
+  background: var(--color-surface);
+  color: var(--color-muted);
+}
+.fse-popup-cancel:hover {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
+
+/* Signature element (image type) — fully transparent so only the
+   stroke shows on the PDF, matching the look-and-feel of placed
+   text/date elements. The selection outline is a separate dashed
+   border that only reveals on hover; resize handles reveal on hover
+   as well. No white plate behind the signature image. */
+.fse-element {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  padding: 0;
+  cursor: grab;
+  user-select: none;
+  white-space: nowrap;
+  transition: border-color 0.12s, opacity 0.12s;
+}
+.fse-element-image {
+  background: transparent;
+  overflow: visible;
+}
+.fse-element-image:hover {
+  border-color: var(--color-primary);
+}
+.fse-element-dragging {
+  border-style: solid;
+  border-color: var(--color-primary);
+  opacity: 0.7;
+  cursor: grabbing;
+}
+.fse-element-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+/* Top-right corner action cluster for signatures, in visual order from
+   left (further inside) → right (outside the corner): ✏️ edit at +43,
+   ⎘ duplicate at +17, ✕ delete at -9. All circular, hover-revealed,
+   colour-coded by intent (edit + duplicate primary blue, delete red). */
+.fse-element-x,
+.fse-element-dup,
+.fse-element-edit {
+  position: absolute;
+  top: -9px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.12s, transform 0.12s, background 0.12s;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+  z-index: 3;
+  padding: 0;
+}
+.fse-element-x    { right: -9px; background: var(--color-danger); }
+.fse-element-dup  { right: 17px; background: var(--color-primary); }
+.fse-element-edit { right: 43px; background: var(--color-primary); }
+.fse-element-image:hover .fse-element-x,
+.fse-element-image:hover .fse-element-dup,
+.fse-element-image:hover .fse-element-edit,
+.fse-element-image.fse-element-dragging .fse-element-x,
+.fse-element-image.fse-element-dragging .fse-element-dup,
+.fse-element-image.fse-element-dragging .fse-element-edit {
+  opacity: 1;
+  transform: scale(1);
+}
+.fse-element-x:hover {
+  background: #b91c1c;
+  transform: scale(1.05);
+}
+.fse-element-dup:hover,
+.fse-element-edit:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
+}
+
+/* Resize handles on signature corners */
+.fse-resize {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--color-primary);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.12s;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+  z-index: 2;
+}
+.fse-element-image:hover .fse-resize,
+.fse-element-image.fse-element-dragging .fse-resize {
+  opacity: 1;
+}
+.fse-resize-nw { top: -6px; left: -6px;  cursor: nwse-resize; }
+.fse-resize-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.fse-resize-sw { bottom: -6px; left: -6px;  cursor: nesw-resize; }
+.fse-resize-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
+/* Sidebar list — empty value placeholder */
+.fse-list-empty {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* Sidebar ─────────────────────────────────────────────────────────── */
+.fse-sidebar {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fse-sidebar-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+.fse-sidebar-card-info {
+  /* Tip + watermark warning — slightly smaller padding to look like a
+     secondary block under the standalone CTA. */
+  padding: 12px 14px;
+}
+.fse-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+.fse-sidebar-empty {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0 0 10px;
+  line-height: 1.55;
+}
+/* Tip-card — prominent banner at the top of the sidebar, replaces the
+   old greyed-out footnote. Gives the user one clear instruction line. */
+.fse-tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #1e3a8a;
+}
+.fse-tip-card svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  margin-top: 1px;
+}
+
+/* Placed-elements list, grouped by page. */
+.fse-list-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.fse-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fse-list-group-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 0 2px;
+}
+.fse-list-group-empty {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 4px 8px;
+}
+.fse-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+/* Compact one-row card (~52px tall): [type-icon] [value + Page N] [actions]. */
+.fse-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  min-height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.fse-list-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.fse-list-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+}
+.fse-list-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.fse-list-preview {
+  color: var(--color-text);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.fse-list-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fse-list-edit,
+.fse-list-dup,
+.fse-list-remove {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+}
+.fse-list-edit:hover,
+.fse-list-dup:hover {
+  background: #dbeafe;
+  color: var(--color-primary);
+}
+/* Delete defaults to a red glyph and only deepens on hover, so it
+   reads as destructive without the click-target jumping in size. */
+.fse-list-remove {
+  color: var(--color-danger);
+}
+.fse-list-remove:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.fse-sidebar-tip {
+  font-size: 11.5px;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+.fse-sidebar-tip span:first-child {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.fse-sidebar-plan {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed var(--color-warning);
+  border-radius: 8px;
+  background: #fffbeb;
+  font-size: 12px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+/* Modal ──────────────────────────────────────────────────────────── */
+.fse-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(2px);
+}
+.fse-modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 540px;
+  width: 100%;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+}
+.fse-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.fse-modal-head h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+.fse-modal-close {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+}
+.fse-modal-close:hover { color: var(--color-text); }
+
+/* Saved-signature chooser */
+.fse-sig-chooser {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.fse-sig-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.fse-sig-choice:hover {
+  border-color: var(--color-primary);
+  background: #f8faff;
+}
+.fse-sig-choice:active { transform: scale(0.99); }
+.fse-sig-choice-saved img {
+  max-width: 160px;
+  max-height: 60px;
+  object-fit: contain;
+}
+.fse-sig-choice-new {
+  color: var(--color-muted);
+}
+.fse-sig-choice-new:hover {
+  color: var(--color-primary);
+}
+
+/* Wide modal variant — used by the create-signature flow which now
+   carries Draw / Type tabs, a 380px-tall canvas, font picker for the
+   Type tab, an Apply-to-all toggle and Save / Cancel actions. */
+.fse-modal-card-wide {
+  max-width: 600px;
+}
+
+/* Draw / Type tabs at the top of the create-signature modal. */
+.fse-sig-tabs {
+  display: inline-flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 14px;
+}
+.fse-sig-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.fse-sig-tab:hover {
+  color: var(--color-text);
+}
+.fse-sig-tab.active {
+  background: white;
+  color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+/* Type-tab body — font picker + name input + preview. */
+.fse-sig-type {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fse-sig-fonts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fse-sig-font {
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: white;
+  color: var(--color-muted);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.fse-sig-font:hover {
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+.fse-sig-font.active {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.fse-sig-name {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 22px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.fse-sig-name:focus {
+  border-color: var(--color-primary);
+}
+.fse-sig-type-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+}
+.fse-sig-type-preview img {
+  max-width: 100%;
+  max-height: 60px;
+  object-fit: contain;
+}
+
+/* Upload tab — click-to-choose dropzone with a centered icon, title
+   line and hint line. After an image is chosen, the preview replaces
+   the icon stack and a small caption invites the user to swap it. */
+.fse-sig-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fse-sig-upload-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 160px;
+  padding: 24px 16px;
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--color-muted);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.fse-sig-upload-drop:hover {
+  border-color: var(--color-primary);
+  background: #f8faff;
+  color: var(--color-primary);
+}
+.fse-sig-upload-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.fse-sig-upload-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.fse-sig-upload-hint {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.fse-sig-upload-drop.has-image {
+  padding: 12px;
+  min-height: 0;
+}
+.fse-sig-upload-preview {
+  max-width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  display: block;
+}
+.fse-sig-upload-replace {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+/* Footer — apply-to-all on the left, Save / Cancel on the right. */
+.fse-sig-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+.fse-sig-applyall {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-weight: 500;
+}
+.fse-sig-applyall input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+.fse-sig-modal-actions {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.fse-sig-modal-cancel,
+.fse-sig-modal-save {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1.5px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+}
+.fse-sig-modal-cancel {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.fse-sig-modal-cancel:hover {
+  border-color: var(--color-muted);
+}
+.fse-sig-modal-save {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+.fse-sig-modal-save:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+.fse-sig-modal-save:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Mobile FAB — hidden on desktop, takes over the Sign & Download role on
+   small screens where the topbar CTA gets too cramped. */
+.fse-fab {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .fse {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+    gap: 16px;
+  }
+  .fse-topbar {
+    /* Drop sticky on mobile — otherwise the toolbar covers the page
+       switcher when scrolled. The FAB handles the always-visible CTA. */
+    position: static;
+    flex-wrap: nowrap;
+  }
+  .fse-toolbar {
+    flex-wrap: nowrap;
+  }
+  .fse-tool-btn {
+    flex: 1 1 calc(33.33% - 6px);
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  .fse-tool-btn span {
+    display: none;
+  }
+  .fse-tool-btn.active span,
+  .fse-tool-btn:focus-visible span {
+    display: inline;
+  }
+  /* Hide the sidebar CTA on mobile — replaced by .fse-fab */
+  .fse-sidebar-cta {
+    display: none;
+  }
+  /* Signature modal — wider on mobile so canvas + Type tab still fit. */
+  .fse-modal-card-wide {
+    max-width: 100%;
+    margin: 0 12px;
+  }
+  .fse-sig-modal-foot {
+    gap: 10px;
+  }
+  .fse-sig-modal-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+  .fse-sig-name {
+    font-size: 18px;
+  }
+  /* On mobile keep all action icons (handle/copy/del) visible permanently
+     — there's no hover state on touch devices. */
+  .fse-text-wrap .fse-handle,
+  .fse-text-wrap .fse-action {
+    opacity: 1;
+  }
+  .fse-thumb {
+    width: 64px;
+  }
+  .fse-thumb-img-wrap {
+    height: 80px;
+  }
+  .fse-sidebar {
+    position: static;
+  }
+  .fse-fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 18px;
+    left: 16px;
+    right: 16px;
+    z-index: 50;
+    padding: 14px 20px;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.35);
+  }
+  .fse-fab:disabled {
+    background: #cbd5e1;
+    cursor: default;
+    box-shadow: none;
+  }
+  /* Avoid the FAB overlapping the page area's last content. */
+  .fse-page-area {
+    padding-bottom: 24px;
+  }
+  .fse-main {
+    padding-bottom: 96px;
+  }
+  /* Resize handles always visible on touch devices, and enlarged
+     to a comfortable touch target (24×24 with adjusted offsets so
+     the hit area extends past the corner). */
+  .fse-element-image .fse-resize {
+    opacity: 1;
+    width: 24px;
+    height: 24px;
+  }
+  .fse-element-image .fse-resize-nw { top: -12px; left: -12px; }
+  .fse-element-image .fse-resize-ne { top: -12px; right: -12px; }
+  .fse-element-image .fse-resize-sw { bottom: -12px; left: -12px; }
+  .fse-element-image .fse-resize-se { bottom: -12px; right: -12px; }
+  .fse-element-x,
+  .fse-element-dup,
+  .fse-element-edit {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
