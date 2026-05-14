@@ -71,9 +71,12 @@
   color: #fff;
 }
 /* Secondary tool button — neutral chrome used for non-primary actions
-   like "Change PDF" so it doesn't visually compete with the primary
-   placement tools. */
+   like "Change PDF". Pushed to the right edge of the toolbar via
+   margin-left: auto so the placement tools form a left-aligned group
+   and the secondary action hugs the opposite end. No visual divider —
+   the gap between them does the separating. */
 .fse-tool-btn-secondary {
+  margin-left: auto;
   border-color: var(--color-border);
   color: var(--color-muted);
   font-weight: 500;
@@ -82,17 +85,6 @@
   background: var(--color-surface);
   border-color: var(--color-muted);
   color: var(--color-text);
-}
-/* Vertical 1 px rule that splits placement tools from secondary
-   actions inside the same toolbar flex. margin-left: auto consumes
-   the remaining horizontal space so subsequent items hug the right
-   edge. */
-.fse-tool-divider {
-  width: 1px;
-  height: 22px;
-  margin: 0 6px 0 auto;
-  background: var(--color-border);
-  align-self: center;
 }
 
 /* Sign & Download — standalone block in the sidebar (sits between the

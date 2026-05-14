@@ -124,7 +124,30 @@ const typeIconFor = (t: 'text' | 'date' | 'signature') => {
   return FileSignature;
 };
 
-interface PageInfo { index: number; width: number; height: number }
+/** Per-page geometry used by the renderer. `baseWidth` and `baseHeight`
+ *  are the intrinsic page dimensions at `scale = 1` (kept so a resize
+ *  can recompute scale without re-asking pdf.js). `width` and `height`
+ *  are the current scaled CSS px the canvas is rendered at. */
+interface PageInfo {
+  index: number;
+  baseWidth: number;
+  baseHeight: number;
+  scale: number;
+  width: number;
+  height: number;
+}
+/** Horizontal padding inside `.fse-page-area` that the page must
+ *  subtract from the container's `clientWidth` to find its render
+ *  width. Kept in sync with the CSS rule for `.fse-page-area`. */
+const PAGE_AREA_PADDING_PX = 32;
+/** Floor for the page render width — guards against transient
+ *  resize observations where the column is briefly 0 px (e.g. when
+ *  the right rail is mid-collapse). */
+const PAGE_MIN_WIDTH_PX = 320;
+/** Debounce window for rescale during continuous resize (window
+ *  drag). Internal toggles (collapse/expand) bypass this for
+ *  immediate feedback. */
+const RESIZE_DEBOUNCE_MS = 150;
 interface SavedSig { dataUrl: string; w: number; h: number }
 /** In-flight state of the signature-creation modal. Captures both
  *  Draw-tab and Type-tab fields so the user can flip between tabs
@@ -231,6 +254,33 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfRef = useRef<any>(null);
 
+  /** Build page-geometry records sized to fill the current container
+   *  width. Shared between the initial PDF load and the ResizeObserver
+   *  rescale path so the math stays in one place. The container width
+   *  is the column's `clientWidth` minus the page-area's own padding;
+   *  we floor at PAGE_MIN_WIDTH_PX to survive transient 0-px reads
+   *  during collapse animations. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const computePageInfos = useCallback(async (pdf: any, containerWidth: number): Promise<PageInfo[]> => {
+    const targetWidth = Math.max(PAGE_MIN_WIDTH_PX, containerWidth - PAGE_AREA_PADDING_PX);
+    const infos: PageInfo[] = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const p = await pdf.getPage(i);
+      const baseViewport = p.getViewport({ scale: 1 });
+      const scale = targetWidth / baseViewport.width;
+      const viewport = p.getViewport({ scale });
+      infos.push({
+        index: i,
+        baseWidth: baseViewport.width,
+        baseHeight: baseViewport.height,
+        scale,
+        width: viewport.width,
+        height: viewport.height,
+      });
+    }
+    return infos;
+  }, []);
+
   // ── PDF load + thumbnails ─────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
@@ -246,16 +296,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
 
         const containerEl = editorRootRef.current?.querySelector('.fse-page-area') as HTMLElement | null;
         const containerWidth = containerEl?.clientWidth ?? 700;
-        const targetWidth = Math.min(820, containerWidth);
-
-        const infos: PageInfo[] = [];
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const p = await pdf.getPage(i);
-          const baseViewport = p.getViewport({ scale: 1 });
-          const scale = targetWidth / baseViewport.width;
-          const viewport = p.getViewport({ scale });
-          infos.push({ index: i, width: viewport.width, height: viewport.height });
-        }
+        const infos = await computePageInfos(pdf, containerWidth);
         if (cancelled) return;
         setPageInfos(infos);
         setLoading(false);
@@ -282,7 +323,73 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       }
     })();
     return () => { cancelled = true; };
-  }, [file]);
+  }, [file, computePageInfos]);
+
+  /** Auto-rescale on container width change.
+   *
+   *  A ResizeObserver on `.fse-page-area` re-runs `computePageInfos`
+   *  whenever the centre column resizes — collapse/expand of the
+   *  right rail, window resize, or any future layout shift. Updates
+   *  are debounced (RESIZE_DEBOUNCE_MS) for continuous resizes so the
+   *  PDF re-render doesn't thrash mid-drag of a browser-window edge.
+   *
+   *  Skipped while the user is actively dragging an element — a
+   *  page resize mid-drag would change pageRect under the moving
+   *  pointer and the drag math would jump. The observer is still
+   *  attached; we just bail out of the recompute callback until the
+   *  drag finishes (next observation will fire then).
+   *
+   *  Placed elements survive the rescale automatically because their
+   *  x/y/w/h are stored as % of page, not absolute px. fontSize is
+   *  stored in PDF points and multiplied by scale at render time
+   *  (see renderTextOrDate / renderEditPopup) so the overlay font
+   *  visually tracks the page scale. */
+  useEffect(() => {
+    if (loading || !pdfRef.current || !editorRootRef.current) return;
+    const containerEl = editorRootRef.current.querySelector('.fse-page-area') as HTMLElement | null;
+    if (!containerEl) return;
+
+    let cancelled = false;
+    let debounceId: ReturnType<typeof setTimeout> | null = null;
+    let pendingWidth = containerEl.clientWidth;
+
+    const recompute = async () => {
+      if (cancelled) return;
+      if (draggingId) return; // Drag in flight — let the active gesture finish first.
+      const pdf = pdfRef.current;
+      if (!pdf) return;
+      const w = pendingWidth;
+      if (w <= 0) return;
+      try {
+        const next = await computePageInfos(pdf, w);
+        if (cancelled) return;
+        setPageInfos(prev => {
+          // No-op if dimensions match — saves a canvas re-render.
+          if (prev.length === next.length && prev.every((p, i) =>
+            p.width === next[i].width && p.height === next[i].height
+          )) return prev;
+          return next;
+        });
+      } catch (e) {
+        console.warn('[FillSignEditor] rescale failed:', e);
+      }
+    };
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        pendingWidth = entry.contentRect.width;
+      }
+      if (debounceId) clearTimeout(debounceId);
+      debounceId = setTimeout(recompute, RESIZE_DEBOUNCE_MS);
+    });
+    observer.observe(containerEl);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      if (debounceId) clearTimeout(debounceId);
+    };
+  }, [loading, draggingId, computePageInfos]);
 
   // ── Render the active page ────────────────────────────────────────────
   useEffect(() => {
@@ -293,9 +400,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     (async () => {
       try {
         const page = await pdfRef.current.getPage(currentPage);
-        const baseViewport = page.getViewport({ scale: 1 });
-        const scale = info.width / baseViewport.width;
-        const viewport = page.getViewport({ scale });
+        const viewport = page.getViewport({ scale: info.scale });
         const dpr = window.devicePixelRatio || 1;
         const canvas = canvasRef.current!;
         canvas.width = viewport.width * dpr;
@@ -1058,6 +1163,13 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     if (isEditing) return null; // popup replaces the element while editing
     const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}${isSelected ? ' fse-text-wrap-selected' : ''}`;
     const placeholder = el.type === 'date' ? 'date' : 'text';
+    // PDF-points → CSS px conversion. fontSize is stored in PDF points
+    // (semantic, scale-invariant). At any given page scale, 1 pt =
+    // `scale` CSS px on the rendered canvas, so we multiply for the
+    // overlay text to track the page as the user resizes the window
+    // or toggles the right panel.
+    const pageScale = currentInfo?.scale ?? 1;
+    const displayPx = el.fontSize * pageScale;
     return (
       <div
         key={el.id}
@@ -1069,7 +1181,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       >
         <span
           className="fse-text-value"
-          style={{ fontSize: `${el.fontSize}px`, color: el.color }}
+          style={{ fontSize: `${displayPx}px`, color: el.color }}
         >
           {el.value || <em className="fse-text-placeholder">{placeholder}</em>}
         </span>
@@ -1273,6 +1385,9 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     const dateInvalid = el.type === 'date'
       && editing.draftValue.length > 0
       && !isValidDate(editing.draftValue);
+    // Match the overlay's pt→px conversion so the field renders at
+    // the same visual size as the rendered placement underneath.
+    const popupDisplayPx = el.fontSize * (currentInfo.scale ?? 1);
     // Auto-grow the textarea to fit its content. Resets to auto first so
     // the scrollHeight reflects current rather than previous height.
     const autoResize = (node: HTMLTextAreaElement | null) => {
@@ -1314,7 +1429,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
             }}
             placeholder={placeholder}
             className={`fse-popup-input${dateInvalid ? ' fse-popup-input-invalid' : ''}`}
-            style={{ fontSize: `${el.fontSize}px` }}
+            style={{ fontSize: `${popupDisplayPx}px` }}
             maxLength={10}
           />
         ) : (
@@ -1346,7 +1461,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
             }}
             placeholder={placeholder}
             className="fse-popup-input"
-            style={{ fontSize: `${el.fontSize}px` }}
+            style={{ fontSize: `${popupDisplayPx}px` }}
           />
         )}
         <div className="fse-popup-bar">
@@ -1442,22 +1557,15 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
               </button>
             ))}
             {onRequestNewPdf && (
-              <>
-                {/* Divider + Change PDF live inside the same .fse-toolbar
-                   flex so layout flows naturally. The divider uses
-                   margin-left: auto to consume free space and push the
-                   secondary action to the right edge. */}
-                <span className="fse-tool-divider" aria-hidden="true" />
-                <button
-                  type="button"
-                  className="fse-tool-btn fse-tool-btn-secondary"
-                  onClick={onRequestNewPdf}
-                  title="Discard changes and load a different PDF"
-                >
-                  <RotateCcw size={14} strokeWidth={2} />
-                  <span>Change PDF</span>
-                </button>
-              </>
+              <button
+                type="button"
+                className="fse-tool-btn fse-tool-btn-secondary"
+                onClick={onRequestNewPdf}
+                title="Discard changes and load a different PDF"
+              >
+                <RotateCcw size={14} strokeWidth={2} />
+                <span>Change PDF</span>
+              </button>
             )}
           </div>
         </div>
@@ -1502,8 +1610,8 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
             type="button"
             className="fse-sidebar-toggle"
             onClick={() => setSidebarCollapsed(c => !c)}
-            aria-label={sidebarCollapsed ? 'Expand panel' : 'Collapse panel'}
-            title={sidebarCollapsed ? 'Expand panel' : 'Collapse panel'}
+            aria-label={sidebarCollapsed ? 'Show panel' : 'Hide panel'}
+            title={sidebarCollapsed ? 'Show panel' : 'Hide panel'}
           >
             {sidebarCollapsed
               ? <ChevronLeft size={14} strokeWidth={2.4} />
@@ -1517,13 +1625,11 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
 
         {!sidebarCollapsed && (
         <div className="fse-sidebar-body">
-        {/* Placed elements grouped by page. */}
+        {/* Placed elements grouped by page. The header lives in the
+           sidebar-head above; this card is just the list. */}
         <div className="fse-sidebar-card">
-          <div className="fse-sidebar-title fse-sidebar-card-title">
-            <Check size={14} /> Placed elements ({elements.length})
-          </div>
           {elements.length === 0 ? (
-            <p className="fse-sidebar-empty">Pick a tool below, then click on the PDF to place it.</p>
+            <p className="fse-sidebar-empty">Add text, date or signature to begin.</p>
           ) : (
             <div className="fse-list-groups">
               {pageInfos.map(p => {
@@ -1605,28 +1711,32 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
           )}
         </div>
 
-        <button
-          type="button"
-          className="fse-sidebar-cta"
-          disabled={!canDone}
-          onClick={handleDone}
-        >
-          {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
-          <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
-        </button>
+        {elements.length > 0 && (
+          <button
+            type="button"
+            className="fse-sidebar-cta"
+            disabled={!canDone}
+            onClick={handleDone}
+          >
+            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
+            <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
+          </button>
+        )}
         </div>
         )}
       </aside>
 
-      <button
-        type="button"
-        className="fse-fab"
-        disabled={!canDone}
-        onClick={handleDone}
-      >
-        {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
-        <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
-      </button>
+      {elements.length > 0 && (
+        <button
+          type="button"
+          className="fse-fab"
+          disabled={!canDone}
+          onClick={handleDone}
+        >
+          {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
+          <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
+        </button>
+      )}
 
       {sigModal === 'create' && creatingSig && (() => {
         const headTitle = editingSig

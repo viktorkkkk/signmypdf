@@ -263,9 +263,14 @@ html, body {
   grid-template-columns: 140px 1fr 40px;
 }
 
-/* Left column — vertical thumbnail strip. */
+/* Left column — vertical thumbnail strip. Sized by content (so a
+   2-page PDF doesn't paint an empty grey rail down to the footer)
+   with an upper bound at the row height so a 200-page PDF gets an
+   internal scroll instead of pushing the layout. */
 .fse-thumbs-col {
-  height: 100%;
+  align-self: start;
+  height: auto;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -327,11 +332,15 @@ html, body {
   align-items: flex-start;
 }
 
-/* Right column — internal scroll, sticky Download button at the
-   bottom of the body section so it never falls off-screen. */
+/* Right column — internal scroll for long element lists, but the
+   panel itself sizes to its content so an empty list doesn't paint
+   a tall grey rail. The max-height matches the grid row so the
+   panel never extends past the viewport. */
 .fse-three-col .fse-sidebar {
   position: static;
-  height: 100%;
+  align-self: start;
+  height: auto;
+  max-height: 100%;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 12px;
