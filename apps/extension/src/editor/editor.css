@@ -81,6 +81,29 @@ html, body {
 .ext-brand span {
   color: var(--color-text);
 }
+/* When a file is loaded the brand renders as a <button>. Neutralise
+   browser defaults so it looks identical to the <div> version, then
+   layer a subtle hover so it's clear the element is clickable. */
+button.ext-brand {
+  background: transparent;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+.ext-brand-clickable {
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 8px;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+.ext-brand-clickable:hover {
+  background: var(--color-surface);
+  opacity: 0.92;
+}
+.ext-brand-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
 
 .ext-tag {
   font-size: 13px;
@@ -322,8 +345,15 @@ html, body {
   flex-shrink: 0;
   margin-bottom: 0;
 }
+/* Toolbar must span the full topbar width so the right-edge spacer
+   can actually consume space. The base .fse-toolbar rule from
+   @signmypdf/ui sets flex-wrap: wrap and gap: 6px — neither is
+   appropriate once we have a flex spacer; override here. */
 .fse-three-col .fse-toolbar {
-  flex: 0 1 auto;
+  flex: 1 1 100%;
+  flex-wrap: nowrap;
+  width: 100%;
+  gap: 0;
 }
 .fse-three-col .fse-page-area {
   flex: 1;
@@ -403,6 +433,20 @@ html, body {
 }
 .fse-three-col .fse-sidebar-cta {
   flex-shrink: 0;
+}
+/* Disabled-state override for the three-column layout. The base
+   rule in @signmypdf/ui's fse.css uses a soft slate (#cbd5e1) that
+   is hard to distinguish from the active state. In the extension
+   we want unambiguously inert: neutral grey background, muted text,
+   not-allowed cursor, and pointer-events: none so the disabled
+   hover doesn't even glow. */
+.fse-three-col .fse-sidebar-cta:disabled {
+  background: var(--color-border);
+  border-color: var(--color-border);
+  color: var(--color-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
 }
 .fse-three-col .fse-fab {
   display: none !important;

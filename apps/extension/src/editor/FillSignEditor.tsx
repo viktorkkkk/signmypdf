@@ -325,71 +325,64 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     return () => { cancelled = true; };
   }, [file, computePageInfos]);
 
-  /** Auto-rescale on container width change.
-   *
-   *  A ResizeObserver on `.fse-page-area` re-runs `computePageInfos`
-   *  whenever the centre column resizes — collapse/expand of the
-   *  right rail, window resize, or any future layout shift. Updates
-   *  are debounced (RESIZE_DEBOUNCE_MS) for continuous resizes so the
-   *  PDF re-render doesn't thrash mid-drag of a browser-window edge.
-   *
-   *  Skipped while the user is actively dragging an element — a
-   *  page resize mid-drag would change pageRect under the moving
-   *  pointer and the drag math would jump. The observer is still
-   *  attached; we just bail out of the recompute callback until the
-   *  drag finishes (next observation will fire then).
-   *
-   *  Placed elements survive the rescale automatically because their
-   *  x/y/w/h are stored as % of page, not absolute px. fontSize is
-   *  stored in PDF points and multiplied by scale at render time
-   *  (see renderTextOrDate / renderEditPopup) so the overlay font
-   *  visually tracks the page scale. */
+  /** Imperative recompute, reused by both the debounced ResizeObserver
+   *  path (window edge drag) and the instant collapse/expand path
+   *  (user toggles the right rail). Bails out while a drag is in
+   *  flight so pageRect doesn't shift under the cursor mid-gesture. */
+  const recomputeFromContainer = useCallback(async () => {
+    if (draggingId) return;
+    const containerEl = editorRootRef.current?.querySelector('.fse-page-area') as HTMLElement | null;
+    if (!containerEl) return;
+    const pdf = pdfRef.current;
+    if (!pdf) return;
+    const w = containerEl.clientWidth;
+    if (w <= 0) return;
+    try {
+      const next = await computePageInfos(pdf, w);
+      setPageInfos(prev => {
+        // No-op if dimensions match — saves a canvas re-render.
+        if (prev.length === next.length && prev.every((p, i) =>
+          p.width === next[i].width && p.height === next[i].height
+        )) return prev;
+        return next;
+      });
+    } catch (e) {
+      console.warn('[FillSignEditor] rescale failed:', e);
+    }
+  }, [draggingId, computePageInfos]);
+
+  /** Debounced ResizeObserver — handles continuous resizes (window
+   *  edge drag) so the PDF only re-renders once the user stops
+   *  dragging. Placed elements survive the rescale automatically
+   *  because x/y/w/h are stored as % of page; fontSize × scale is
+   *  applied at render time so overlay text tracks the page. */
   useEffect(() => {
-    if (loading || !pdfRef.current || !editorRootRef.current) return;
+    if (loading || !editorRootRef.current) return;
     const containerEl = editorRootRef.current.querySelector('.fse-page-area') as HTMLElement | null;
     if (!containerEl) return;
-
-    let cancelled = false;
     let debounceId: ReturnType<typeof setTimeout> | null = null;
-    let pendingWidth = containerEl.clientWidth;
-
-    const recompute = async () => {
-      if (cancelled) return;
-      if (draggingId) return; // Drag in flight — let the active gesture finish first.
-      const pdf = pdfRef.current;
-      if (!pdf) return;
-      const w = pendingWidth;
-      if (w <= 0) return;
-      try {
-        const next = await computePageInfos(pdf, w);
-        if (cancelled) return;
-        setPageInfos(prev => {
-          // No-op if dimensions match — saves a canvas re-render.
-          if (prev.length === next.length && prev.every((p, i) =>
-            p.width === next[i].width && p.height === next[i].height
-          )) return prev;
-          return next;
-        });
-      } catch (e) {
-        console.warn('[FillSignEditor] rescale failed:', e);
-      }
-    };
-
-    const observer = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        pendingWidth = entry.contentRect.width;
-      }
+    const observer = new ResizeObserver(() => {
       if (debounceId) clearTimeout(debounceId);
-      debounceId = setTimeout(recompute, RESIZE_DEBOUNCE_MS);
+      debounceId = setTimeout(() => { void recomputeFromContainer(); }, RESIZE_DEBOUNCE_MS);
     });
     observer.observe(containerEl);
-
     return () => {
-      cancelled = true;
       observer.disconnect();
       if (debounceId) clearTimeout(debounceId);
     };
-  }, [loading, draggingId, computePageInfos]);
+  }, [loading, recomputeFromContainer]);
+
+  /** Instant rescale on right-rail toggle. ResizeObserver also fires
+   *  for the same width change, but its debounce makes the PDF lag
+   *  ~150 ms behind the column snap — perceived as a flash of the
+   *  old scale. Reading clientWidth on the next animation frame
+   *  guarantees the grid track has resolved to its new width before
+   *  we measure. */
+  useEffect(() => {
+    if (loading) return;
+    const rafId = requestAnimationFrame(() => { void recomputeFromContainer(); });
+    return () => cancelAnimationFrame(rafId);
+  }, [sidebarCollapsed, loading, recomputeFromContainer]);
 
   // ── Render the active page ────────────────────────────────────────────
   useEffect(() => {
@@ -1545,27 +1538,38 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       <div className="fse-main">
         <div className="fse-topbar">
           <div className="fse-toolbar" role="toolbar" aria-label="Editor tools">
-            {TOOLS.map(t => (
-              <button
-                key={t.id}
-                type="button"
-                className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
-                onClick={() => onToolClick(t.id)}
-              >
-                <t.Icon size={16} strokeWidth={2} />
-                <span>{t.label}</span>
-              </button>
-            ))}
+            <div className="fse-tools-group">
+              {TOOLS.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`fse-tool-btn${tool === t.id ? ' active' : ''}`}
+                  onClick={() => onToolClick(t.id)}
+                >
+                  <t.Icon size={16} strokeWidth={2} />
+                  <span>{t.label}</span>
+                </button>
+              ))}
+            </div>
             {onRequestNewPdf && (
-              <button
-                type="button"
-                className="fse-tool-btn fse-tool-btn-secondary"
-                onClick={onRequestNewPdf}
-                title="Discard changes and load a different PDF"
-              >
-                <RotateCcw size={14} strokeWidth={2} />
-                <span>Change PDF</span>
-              </button>
+              <>
+                {/* Visible 1-px vertical rule separating the placement
+                   tools from the secondary action. The spacer next to
+                   it consumes free horizontal space so Change PDF
+                   actually lands on the right edge regardless of how
+                   wide the toolbar is. */}
+                <span className="fse-tool-divider" aria-hidden="true" />
+                <div className="fse-toolbar-spacer" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="fse-tool-btn fse-tool-btn-secondary"
+                  onClick={onRequestNewPdf}
+                  title="Discard changes and load a different PDF"
+                >
+                  <RotateCcw size={14} strokeWidth={2} />
+                  <span>Change PDF</span>
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -1711,32 +1715,31 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
           )}
         </div>
 
-        {elements.length > 0 && (
-          <button
-            type="button"
-            className="fse-sidebar-cta"
-            disabled={!canDone}
-            onClick={handleDone}
-          >
-            {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
-            <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
-          </button>
-        )}
+        {/* Download is always present so the user knows it exists; it
+           just sits disabled until there's something to sign. The
+           empty-state hint above the button explains what to do. */}
+        <button
+          type="button"
+          className="fse-sidebar-cta"
+          disabled={!canDone}
+          onClick={handleDone}
+        >
+          {processing ? <Loader2 className="fse-spin" size={16} /> : <Download size={16} />}
+          <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
+        </button>
         </div>
         )}
       </aside>
 
-      {elements.length > 0 && (
-        <button
-          type="button"
-          className="fse-fab"
-          disabled={!canDone}
-          onClick={handleDone}
-        >
-          {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
-          <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
-        </button>
-      )}
+      <button
+        type="button"
+        className="fse-fab"
+        disabled={!canDone}
+        onClick={handleDone}
+      >
+        {processing ? <Loader2 className="fse-spin" size={18} /> : <Download size={18} />}
+        <span>{processing ? 'Generating…' : 'Download Signed PDF'}</span>
+      </button>
 
       {sigModal === 'create' && creatingSig && (() => {
         const headTitle = editingSig
