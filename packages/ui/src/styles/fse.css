@@ -317,6 +317,96 @@
 .fse-text-wrap-dragging {
   opacity: 0.7;
 }
+/* Selected state — drawn via the same ::before pseudo so the
+   element's own box stays unaffected. Solid blue ring (heavier than
+   the hover dashed grey) marks the active selection. */
+.fse-text-wrap-selected::before {
+  border-color: var(--color-primary);
+  border-style: solid;
+}
+.fse-element-selected {
+  border-color: var(--color-primary);
+  border-style: solid;
+}
+.fse-element-selected .fse-resize {
+  opacity: 1;
+}
+
+/* Floating font-size bar — appears above (or below) the currently
+   selected text/date element. Anchored absolutely to the page
+   overlay; the React render computes left/top against page pixels. */
+.fse-fontbar {
+  position: absolute;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--color-text);
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.28);
+  user-select: none;
+}
+.fse-fontbar::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}
+.fse-fontbar-above::after {
+  bottom: -6px;
+  border-top: 6px solid var(--color-text);
+}
+.fse-fontbar-below::after {
+  top: -6px;
+  border-bottom: 6px solid var(--color-text);
+}
+.fse-fontbar-size {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.fse-fontbar-size:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+.fse-fontbar-size option {
+  background: var(--color-text);
+  color: #fff;
+}
+.fse-fontbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.fse-fontbar-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+}
+.fse-fontbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .fse-text-value {
   display: inline-block;
   cursor: pointer;
@@ -441,6 +531,13 @@
   overflow: hidden;
   white-space: pre-wrap;
   word-break: break-word;
+}
+/* Date-input invalid state — the surrounding .fse-popup carries the
+   blue border on focus; when the value fails MM/DD/YYYY validation
+   we paint the inner input red as a soft hint without blocking save. */
+.fse-popup-input-invalid {
+  background: #fef2f2;
+  color: var(--color-danger);
 }
 .fse-popup-bar {
   display: flex;

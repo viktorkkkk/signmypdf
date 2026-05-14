@@ -2,15 +2,13 @@
  * Service worker — Sign PDF MV3.
  *
  * Responsibilities:
- *   1. Register the right-click "Sign with Sign PDF" context menu on
- *      links to .pdf URLs.
- *   2. Fetch the PDF for that link, stash it in IndexedDB, open the
- *      editor tab pointed at the stashed id.
- *   3. Accept the popup's `openEditor` message (the popup has already
- *      stashed the blob it picked up via drag-drop) and open the
- *      editor tab + record the tabId → handoff-id mapping so we can
- *      clean up on tab close.
- *   4. On tab close, delete the matching IDB record. The editor also
+ *   1. Open the editor in a new tab whenever the user clicks the
+ *      toolbar icon (no popup — the editor's empty-state dropzone
+ *      replaces it).
+ *   2. Register the right-click "Sign with Sign PDF" context menu on
+ *      links to .pdf URLs and, on click, fetch the PDF, stash it in
+ *      IndexedDB, and open the editor tab pointed at the stashed id.
+ *   3. On tab close, delete the matching IDB record. The editor also
  *      cleans up on beforeunload, but this catches catastrophic
  *      closes (browser crash, tab forced-killed).
  */
@@ -30,6 +28,14 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+/**
+ * Toolbar icon click — no popup, open the editor straight away.
+ * Empty-state dropzone in editor.tsx handles file pick from there.
+ */
+chrome.action.onClicked.addListener(async () => {
+  await chrome.tabs.create({ url: chrome.runtime.getURL('src/editor/editor.html') });
+});
+
 chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId !== SIGN_PDF_MENU_ID || !info.linkUrl) return;
   try {
@@ -45,28 +51,6 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     // there shows a dropzone they can drop a local file into.
     await chrome.tabs.create({ url: chrome.runtime.getURL('src/editor/editor.html') });
   }
-});
-
-/**
- * The popup writes the dropped PDF blob to IDB itself (no point
- * round-tripping a 30 MB Uint8Array through chrome.runtime messaging),
- * then asks the background to open the editor tab and record the tab
- * mapping. Keeping the tab-mapping logic in one place makes the
- * tabs.onRemoved cleanup symmetric across popup and context-menu paths.
- */
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-  if (msg?.type === 'openEditor' && typeof msg.id === 'string') {
-    (async () => {
-      try {
-        await openEditorWithMapping(msg.id);
-        sendResponse({ ok: true });
-      } catch (e) {
-        sendResponse({ ok: false, error: String(e) });
-      }
-    })();
-    return true; // async sendResponse
-  }
-  return false;
 });
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {

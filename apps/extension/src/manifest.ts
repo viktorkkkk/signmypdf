@@ -10,10 +10,15 @@ import pkg from '../package.json' with { type: 'json' };
  * Permissions are intentionally minimal:
  *   - contextMenus  — right-click "Sign with Sign PDF" on PDF links
  *   - downloads     — chrome.downloads.download for the signed PDF
- *   - storage       — chrome.storage.session for popup → editor handoff
- *                     fallback (IndexedDB is primary, session is fallback)
+ *   - storage       — chrome.storage.session for tabId → handoff-id
+ *                     map used by the tabs.onRemoved cleanup
  *
  * NO `<all_urls>`, NO `tabs`, NO `activeTab`, NO host_permissions.
+ *
+ * No popup: clicking the toolbar icon is handled by the
+ * `chrome.action.onClicked` listener in background.ts, which opens the
+ * editor tab directly. The editor's empty-state surface is the
+ * dropzone — there's no need for a separate popup UI.
  */
 export default defineManifest({
   manifest_version: 3,
@@ -29,7 +34,6 @@ export default defineManifest({
     128: 'icons/icon-128.png',
   },
   action: {
-    default_popup: 'src/popup/popup.html',
     default_icon: {
       16: 'icons/icon-16.png',
       32: 'icons/icon-32.png',

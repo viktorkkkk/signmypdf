@@ -53,14 +53,55 @@ html, body {
   position: sticky;
   top: 0;
   z-index: 20;
+  padding: 12px 0;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+}
+/* Inner wrapper carries the same max-width / horizontal padding as
+   the content area below so the top-bar edges align with the
+   three-column layout, not with the viewport. */
+.ext-topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 24px;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+}
+.ext-topbar-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* "New PDF" — small ghost button left of the brand. Disabled when no
+   file is loaded so the empty state doesn't tease the user with a
+   non-action. */
+.ext-newpdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.ext-newpdf:hover:not(:disabled) {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.ext-newpdf:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .ext-brand {
@@ -76,14 +117,15 @@ html, body {
 }
 
 .ext-tag {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-muted);
   font-weight: 500;
 }
 
 .ext-main {
   flex: 1;
-  padding: 24px 0;
+  padding: 16px 0;
+  min-height: 0;
 }
 
 .ext-foot {
@@ -168,9 +210,374 @@ html, body {
   font-size: 13px;
 }
 
+/* ── Three-column layout for the editor ─────────────────────────────
+   Overrides the 2-column .fse grid from @signmypdf/ui's fse.css when
+   the extension uses .fse-three-col. Left rail = page thumbnails,
+   middle = tools + document, right = placed-elements panel + Download.
+   Each column scrolls internally; the outer page stays at viewport
+   height so there's no double-scrollbar feel. */
+.fse.fse-three-col {
+  grid-template-columns: 140px 1fr 280px;
+  gap: 12px;
+  padding: 0 16px;
+  /* Pin to viewport minus the top-bar (53px) + main padding (32px) +
+     footer (44px) so each column's overflow:auto actually engages. */
+  height: calc(100vh - 130px);
+  min-height: 480px;
+  scroll-margin-top: 0;
+}
+/* Single-page PDFs hide the left rail; collapse the grid to two cols. */
+.fse.fse-three-col.fse-no-thumbs {
+  grid-template-columns: 1fr 280px;
+}
+.fse.fse-three-col.fse-no-thumbs.fse-sidebar-collapsed {
+  grid-template-columns: 1fr 40px;
+}
+.fse.fse-three-col.fse-sidebar-collapsed {
+  grid-template-columns: 140px 1fr 40px;
+}
+
+/* Left column — vertical thumbnail strip. */
+.fse-thumbs-col {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 0;
+}
+.fse-thumbs-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 4px;
+}
+.fse-thumbs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  padding: 4px 2px;
+  flex: 1;
+  min-height: 0;
+}
+.fse-thumbs-col .fse-thumb {
+  width: 100%;
+}
+.fse-thumbs-col .fse-thumb-img-wrap {
+  height: 130px;
+}
+
+/* Middle column — flex column with toolbar above doc; page-area
+   scrolls when the rendered PDF page is taller than the column. */
+.fse-three-col .fse-main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+.fse-three-col .fse-topbar {
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+.fse-three-col .fse-toolbar {
+  flex: 0 1 auto;
+}
+.fse-three-col .fse-page-area {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  align-items: flex-start;
+}
+
+/* Right column — internal scroll, sticky Download button at the
+   bottom of the body section so it never falls off-screen. */
+.fse-three-col .fse-sidebar {
+  position: static;
+  height: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  min-height: 0;
+}
+.fse-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+.fse-three-col .fse-sidebar .fse-sidebar-title {
+  margin: 0;
+  font-size: 11px;
+}
+.fse-sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.fse-sidebar-toggle:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.fse-sidebar-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.fse-three-col .fse-sidebar-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.fse-three-col .fse-list-groups {
+  max-height: none;
+  flex: 1;
+  min-height: 0;
+}
+.fse-three-col .fse-sidebar-cta {
+  flex-shrink: 0;
+}
+.fse-three-col .fse-fab {
+  display: none !important;
+}
+
+/* Collapsed right rail — show only the toggle + count badge. */
+.fse-sidebar-collapsed .fse-sidebar {
+  padding: 6px 4px;
+  align-items: center;
+}
+.fse-sidebar-collapsed .fse-sidebar-head {
+  flex-direction: column;
+  gap: 6px;
+}
+.fse-sidebar-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Mobile fallback (<= 768px) — vertical stack, scrolls the outer
+   page like a normal document. Internal scroll containers are
+   disabled so users can swipe through the whole layout. */
+@media (max-width: 768px) {
+  .fse.fse-three-col,
+  .fse.fse-three-col.fse-sidebar-collapsed,
+  .fse.fse-three-col.fse-no-thumbs,
+  .fse.fse-three-col.fse-no-thumbs.fse-sidebar-collapsed {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    padding: 0 12px;
+    gap: 12px;
+  }
+  .fse-thumbs-col {
+    max-height: 200px;
+  }
+  .fse-three-col .fse-sidebar {
+    height: auto;
+    max-height: 360px;
+  }
+  .fse-three-col .fse-page-area {
+    overflow: visible;
+  }
+  .fse-three-col .fse-main {
+    height: auto;
+  }
+}
+
+/* Confirmation modal — overlay + centred card. Reused by the New PDF
+   button to confirm discarding work. */
+.ext-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(2px);
+}
+.ext-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+}
+.ext-modal-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.ext-modal-card p {
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+.ext-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.ext-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.ext-btn-secondary {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.ext-btn-secondary:hover {
+  border-color: var(--color-muted);
+}
+.ext-btn-danger {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: white;
+}
+.ext-btn-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Success toast — bottom-right, slim card, auto-dismisses in 7s. */
+.ext-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 70;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 360px;
+  padding: 14px 16px;
+  background: var(--color-text);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.3);
+  animation: ext-toast-in 0.18s ease-out;
+}
+@keyframes ext-toast-in {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+.ext-toast-icon {
+  flex-shrink: 0;
+  color: #4ade80;
+  margin-top: 1px;
+}
+.ext-toast-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.4;
+}
+.ext-toast-body strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+.ext-toast-body span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.ext-toast-cta {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #93c5fd;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.ext-toast-cta:hover {
+  color: #bfdbfe;
+  text-decoration: underline;
+}
+.ext-toast-close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.12s, color 0.12s;
+}
+.ext-toast-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
 @media (max-width: 880px) {
   .ext-topbar {
-    padding: 10px 16px;
+    padding: 10px 0;
+  }
+  .ext-topbar-inner {
+    padding: 0 16px;
   }
   .ext-tag {
     display: none;
@@ -178,5 +585,10 @@ html, body {
   .ext-drop {
     height: 360px;
     margin: 16px;
+  }
+  .ext-toast {
+    right: 10px;
+    left: 10px;
+    max-width: none;
   }
 }
