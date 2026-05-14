@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./styles/signature.css": "./src/styles/signature.css"
+    "./styles/signature.css": "./src/styles/signature.css",
+    "./styles/fse.css": "./src/styles/fse.css"
   },
   "dependencies": {
     "@signmypdf/pdf-core": "workspace:*",
