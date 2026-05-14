@@ -105,6 +105,8 @@ const BLOG_SLUGS = [
   'forgot-my-pdf-password-options',
   'consultants-proposals-digital-signature',
   'real-estate-agents-protect-property-documents',
+  'electronic-signature-international-contracts',
+  'fill-insurance-claim-form-pdf',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
