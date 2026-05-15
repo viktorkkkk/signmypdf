@@ -9862,6 +9862,158 @@ For most commercial contracts, yes. SignMyPDF processes files in your browser �
 `,
   },
   {
+    slug: 'add-multiple-signatures-one-pdf',
+    title: 'Add Multiple Signatures to One PDF',
+    excerpt: 'Two people need to sign the same PDF? Add multiple signatures in minutes — no account, no locking after the first signer, files stay in your browser.',
+    date: '2026-05-16',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['multiple signatures pdf', 'add signatures to pdf', 'sign pdf multiple people', 'countersign pdf online', 'two signers one pdf', 'pdf co-sign free', 'sign pdf no account'],
+    metaTitle: 'Add Multiple Signatures to One PDF',
+    metaDescription: 'Two people need to sign the same PDF? Add multiple signatures in minutes — free, no account, no locking after the first signer.',
+    content: `
+Your business partner is abroad. Your client needs to countersign a contract before end of day. You email the PDF, they sign it and return it — now you need to add multiple signatures to one PDF, but the tool says the document is locked. Or adding your signature somehow erases theirs. Adding multiple signatures to one PDF should take minutes. It rarely does.
+
+[CTA]Add Multiple Signatures to a PDF — Free|No account, no locking after the first signer. Works on any device.|Sign PDF Now — Free
+
+## The real problem with multiple signers
+
+Most PDF tools treat "signed" as "done." Once one person signs, the software certifies or flattens the file, and the next person can't place their signature cleanly. You end up printing, signing by hand, scanning, and emailing back — exactly the paper trail you were trying to avoid.
+
+There's a cleaner way.
+
+## How to add multiple signatures to one PDF
+
+1. Signer 1 opens the PDF in SignMyPDF at /sign.
+2. Signer 1 places their signature and downloads the signed file.
+3. Signer 2 uploads that signed file to SignMyPDF.
+4. Signer 2 adds their signature in the right location.
+5. Download the final PDF — both signatures are preserved.
+
+[IMAGE: Two distinct signature fields visible on a PDF contract in the SignMyPDF editor, one from each signer]
+
+Each step takes under two minutes. No account required for either signer, no email verification, no software to install. Files are processed entirely in your browser and never leave your device.
+
+## Will the first signature disappear?
+
+Only if you use a tool that flattens or re-renders the PDF on download. SignMyPDF adds each new signature as a layer without touching anything already on the page. As long as Signer 2 uploads the file Signer 1 already signed, both signatures appear in the final output.
+
+If you regularly [sign contractor agreements online](/blog/sign-contractor-agreement-online) or handle back-and-forth countersignatures on service contracts, this two-step workflow keeps things clean and auditable without any paid "multi-signer workflow" subscription.
+
+## Why most tools make this harder than it needs to be
+
+- Desktop PDF software often certifies a document after the first signature, blocking all further edits
+- Online tools flatten the file on download, making a second signature field impossible to place cleanly
+- Some platforms require every signer to create an account before they can touch the document
+- Multi-signer workflows are gated behind expensive subscription tiers on most platforms
+- Round-trip email signing creates version confusion — it's easy to lose track of which file is final
+
+## Why SignMyPDF is different
+
+- No locking or certification after signing — each signer opens the current file and adds their mark
+- Free, no registration, no paywall at download. Neither signer needs an account
+- Signatures are placed as a transparent layer — no flattening, no re-render of existing content
+- Works on any device and any browser. No plugins, no extensions, nothing to install
+- Two free PDFs per day per person — enough for most individual signing needs without a credit card
+
+For situations where you need to [sign multiple pages of the same PDF](/blog/sign-multiple-pdf-pages) — a 10-page contract requiring initials on every page — the process is identical. Open the file, place signatures on each page, download once.
+
+## FAQ
+
+**Can both signers sign at the same time?**
+Not in the same session — each person works with their own copy in sequence. Signer 1 signs and downloads. Signer 2 uploads that result and adds theirs. Think of it as passing a physical document between offices, just without the courier.
+
+**Does this work if the PDF already has a designated signature field?**
+Yes. SignMyPDF handles both flat PDFs and files with interactive form fields. If the document already has a signature box, Signer 2 can place their signature inside it. If it doesn't, they can draw anywhere on the page.
+
+**Is a PDF with two electronic signatures legally binding?**
+In most jurisdictions, yes. Multiple electronic signatures carry the same legal weight as multiple handwritten ones. The ESIGN Act and equivalent laws in the EU and UK recognize multi-party electronic agreements. For regulated industries, confirm specifics with your compliance team.
+
+[CTA]Sign a PDF With Multiple Signers — Free|No account required for any signer. Instant download.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a Service Agreement Online Fast](/blog/sign-service-agreement-online)
+- [Sign a Contractor Agreement Online](/blog/sign-contractor-agreement-online)
+- [Sign Multiple Pages of a PDF](/blog/sign-multiple-pdf-pages)
+`,
+  },
+  {
+    slug: 'remove-password-from-pdf-you-own',
+    title: 'Remove a Password From a PDF You Own',
+    excerpt: 'Lost the password to your own PDF? Remove a PDF password you set — free, no account, no watermark, processed entirely in your browser.',
+    date: '2026-05-16',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['remove pdf password', 'unlock pdf online free', 'pdf password remover', 'remove password from pdf', 'unprotect pdf browser', 'pdf password free no watermark', 'unlock pdf no account'],
+    metaTitle: 'Remove a Password From a PDF You Own',
+    metaDescription: 'Lost the password to your own PDF? Remove a PDF password you set — free, no account, no watermark, files stay in your browser.',
+    content: `
+You password-protected a PDF months ago. Now you need to share it with a colleague — or edit it — but the password is gone, buried in old emails or simply forgotten. You own the document. You set the password. Removing a password from a PDF you own should take thirty seconds. Usually it doesn't, because the tools that can do it want $20 a month, add a watermark, or refuse to help without an account. You can remove a PDF password you set without any of that.
+
+[CTA]Remove a PDF Password — Free|Enter the current password, leave the new one blank, download. Done.|Protect PDF Now — Free
+
+## A quick reality check first
+
+"Remove a PDF password" means two different things depending on how the file was protected. A user password blocks the file from opening at all — you need the correct password to proceed. An owner password restricts editing, copying, or printing, but the file opens freely. If you have the user password (even if you had to dig it out of an old email), you can remove it. If the file won't open at all and you genuinely have no password, that's a different problem — see the [guide to forgotten PDF password options](/blog/forgot-my-pdf-password-options) for your options there.
+
+## How to remove a password from a PDF you own
+
+1. Go to SignMyPDF's Protect tool at /protect.
+2. Upload your password-protected PDF.
+3. Enter the current password when prompted.
+4. Leave the new password field blank.
+5. Download the unlocked file — no password required going forward.
+
+[IMAGE: SignMyPDF protect tool with the new-password field left blank before downloading, indicating the PDF will be saved without encryption]
+
+The file never leaves your browser. Everything is processed locally, which matters when the document contains financial records, legal agreements, or personal information you'd rather not upload to a third-party server.
+
+If you originally [password-protected the PDF without Adobe Acrobat](/blog/password-protect-pdf-without-adobe), SignMyPDF unlocks it the same way — same tool, process reversed.
+
+## Why most tools make this painful
+
+- Adobe Acrobat requires a Pro subscription to modify protection settings — removing a password on your own document costs roughly $20 per month
+- Many free online tools add watermarks to the unlocked output, making the result useless for professional use
+- Some tools claim to remove passwords but do an OCR pass and re-export the content as an image, destroying all selectable text
+- Free tiers commonly reject files larger than 5 MB and push you toward a paid plan
+- Most require account creation just to process a single document
+
+## Why SignMyPDF is different
+
+- Enter the current password, clear the new-password field, download — the whole process takes under a minute
+- Free, no registration, no paywall at download. You shouldn't need to pay to unlock your own file
+- Files processed in browser — your document never passes through a server. Privacy is built into how the tool works, not bolted on
+- No watermarks, no re-rendering, no OCR. You get the same PDF back with the encryption layer removed
+- No file size caps on the free tier
+
+## Is removing a password the same as cracking one?
+
+No. Removing a password you already know is the normal, intended use of PDF protection settings. You're re-exporting the document with a protection level of "none" instead of "password required." That's completely different from cracking an unknown password, which is neither what SignMyPDF does nor something you should attempt with a random online tool.
+
+If you protect sensitive documents regularly — and [your lawyer almost certainly asks you to](/blog/why-lawyer-asks-password-protect-pdf) — a clean workflow for both adding and removing passwords makes that habit sustainable long-term.
+
+## FAQ
+
+**What if I only have the owner password, not the user password?**
+If the file opens freely without a password, you have an owner-restricted PDF. Most PDF tools including SignMyPDF can strip owner restrictions once you enter the owner password. If the file won't open at all, you need the user password to proceed.
+
+**Will removing the password damage the PDF?**
+No. The document content — text, images, form fields, existing signatures — is untouched. Only the encryption layer is stripped. You get the same PDF back, just without the access restriction.
+
+**Can I set a new password after removing the old one?**
+Yes. After downloading the unlocked file, open the Protect tool again, upload the file, and set a new password. It's a two-step process that takes about two minutes total.
+
+[CTA]Remove Your PDF Password — Free|No account required. No watermark. Files stay in your browser.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password-Protect a PDF Without Adobe Acrobat](/blog/password-protect-pdf-without-adobe)
+- [What To Do If You Forgot Your PDF Password](/blog/forgot-my-pdf-password-options)
+- [Why Your Lawyer Asks You to Password Protect PDFs](/blog/why-lawyer-asks-password-protect-pdf)
+`,
+  },
+  {
     slug: 'fill-insurance-claim-form-pdf',
     title: 'Fill an Insurance Claim Form Online Free',
     excerpt: 'Got an insurance claim form you can\'t type into? Fill it out in your browser — works on flat scans and fillable PDFs. Free, no account, files stay on your device.',

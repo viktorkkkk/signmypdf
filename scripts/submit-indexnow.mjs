@@ -107,6 +107,8 @@ const BLOG_SLUGS = [
   'real-estate-agents-protect-property-documents',
   'electronic-signature-international-contracts',
   'fill-insurance-claim-form-pdf',
+  'add-multiple-signatures-one-pdf',
+  'remove-password-from-pdf-you-own',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
