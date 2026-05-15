@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ArrowUp,
   CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
-  CopyPlus,
+  Copy,
   Download,
   FileSignature,
   FileText,
@@ -23,7 +24,17 @@ import {
 } from 'lucide-react';
 import { SignatureCanvas } from '@signmypdf/ui';
 import { setupPdfjs } from '@signmypdf/pdf-core';
-import { applyFillSign, type FsElement } from './fillSignPdf';
+import { applyFillSign, FONT_FAMILY_CSS, type FsElement, type FsFontFamily } from './fillSignPdf';
+
+/** Font-family options shown as buttons in the floating font-bar.
+ *  Stored on the element as a short id so the embed path can map it
+ *  through the same FONT_FAMILY_CSS table the overlay uses. */
+const FONT_FAMILIES: { id: FsFontFamily; label: string }[] = [
+  { id: 'sans',  label: 'Aa' },
+  { id: 'serif', label: 'Aa' },
+  { id: 'mono',  label: 'Aa' },
+];
+const DEFAULT_FONT_FAMILY: FsFontFamily = 'sans';
 
 /** Drag threshold — mousedown + this many CSS px of movement before a
  *  click is treated as a drag instead of an "open editor" click. */
@@ -246,6 +257,14 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     return window.innerWidth < 1024;
   });
 
+  /** Empty-state hint: shows above the document while the user has
+   *  zero placed elements. After the first element is placed it
+   *  fades out and stays gone for the rest of the session, even if
+   *  the user later deletes every element. A fresh PDF (file prop
+   *  change) resets the flag so the hint shows again. */
+  const [hintShown, setHintShown] = useState<boolean>(true);
+  const [hintHiding, setHintHiding] = useState<boolean>(false);
+
   const [processing, setProcessing] = useState(false);
   const [autoScrolled, setAutoScrolled] = useState(false);
 
@@ -341,6 +360,29 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     })();
     return () => { cancelled = true; };
   }, [file, computePageInfos]);
+
+  /** Empty-state hint lifecycle.
+   *
+   *  - Reset on file change: when a new PDF is loaded, the previous
+   *    session is over, so the hint should show again.
+   *  - Trigger fade when the first element is placed: 200 ms CSS
+   *    transition while we keep the node in the DOM, then unmount it.
+   *  - Esc handler below also dismisses the hint (clearing selection
+   *    feels like "I know what I'm doing").
+   *
+   *  Once dismissed within a session it stays gone — deleting all
+   *  elements after the fact doesn't bring the hint back. */
+  useEffect(() => {
+    setHintShown(true);
+    setHintHiding(false);
+  }, [file]);
+  useEffect(() => {
+    if (elements.length === 0) return;
+    if (!hintShown || hintHiding) return;
+    setHintHiding(true);
+    const t = window.setTimeout(() => setHintShown(false), 220);
+    return () => window.clearTimeout(t);
+  }, [elements.length, hintShown, hintHiding]);
 
   /** Imperative recompute, reused by both the debounced ResizeObserver
    *  path (window edge drag) and the instant collapse/expand path
@@ -794,6 +836,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       addElement({
         id, type: 'text', page: currentPage, x: xPct, y: yPct,
         value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
+        fontFamily: DEFAULT_FONT_FAMILY,
       });
       // New text: open the editor immediately AND mark it selected so
       // when the user dismisses the editor (Enter / blur) the font-
@@ -811,6 +854,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       addElement({
         id, type: 'date', page: currentPage, x: xPct, y: yPct,
         value: today, fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
+        fontFamily: DEFAULT_FONT_FAMILY,
       });
       // No auto-edit: today's date is correct by default. The user
       // single-clicks the placed element to select / re-size, or
@@ -859,6 +903,28 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
   }, [editing, saveEdit]);
+
+  /** Esc — global escape hatch:
+   *    1. If an inline edit is open, cancel it (no save).
+   *    2. Otherwise, if anything is selected, deselect (closes the
+   *       floating font bar without affecting the placed element).
+   *  Edits take priority because cancelling them is more reversible
+   *  than losing a selection. */
+  useEffect(() => {
+    if (!editing && !selectedId) return;
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key !== 'Escape') return;
+      if (editing) {
+        ev.preventDefault();
+        cancelEdit();
+      } else if (selectedId) {
+        ev.preventDefault();
+        setSelectedId(null);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [editing, selectedId, cancelEdit]);
 
   // Open the editor for any placed element. Text/date opens the inline
   // popup; signature pops the SignatureCanvas modal in re-draw mode so
@@ -1231,6 +1297,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     // or toggles the right panel.
     const pageScale = currentInfo?.scale ?? 1;
     const displayPx = el.fontSize * pageScale;
+    const familyCss = FONT_FAMILY_CSS[el.fontFamily ?? DEFAULT_FONT_FAMILY];
     return (
       <div
         key={el.id}
@@ -1242,7 +1309,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       >
         <span
           className="fse-text-value"
-          style={{ fontSize: `${displayPx}px`, color: el.color }}
+          style={{ fontSize: `${displayPx}px`, color: el.color, fontFamily: familyCss }}
         >
           {el.value || <em className="fse-text-placeholder">{placeholder}</em>}
         </span>
@@ -1266,12 +1333,12 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
         </span>
         <span
           className="fse-action fse-action-dup"
-          aria-label="Duplicate"
-          title="Duplicate"
+          aria-label="Copy"
+          title="Copy"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
         >
-          <CopyPlus size={11} strokeWidth={2.2} />
+          <Copy size={11} strokeWidth={2.2} />
         </span>
         <span
           className="fse-action fse-action-del"
@@ -1316,10 +1383,10 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
           className="fse-element-dup"
           onMouseDown={(e) => e.stopPropagation()}
           onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
-          aria-label="Duplicate"
-          title="Duplicate"
+          aria-label="Copy"
+          title="Copy"
         >
-          <CopyPlus size={11} />
+          <Copy size={11} />
         </button>
         <button
           type="button"
@@ -1343,12 +1410,15 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     );
   };
 
-  /** Floating font-size bar — anchored above (or below, if no room)
-   *  the currently-selected text/date element. Carries a dropdown
-   *  with stock sizes plus −2pt / +2pt fine-tune buttons clamped to
-   *  the global font-size limits. Hidden while the element is being
-   *  edited or dragged so it doesn't fight for focus. */
-  const FONT_BAR_W = 168;
+  /** Floating font bar — anchored above (or below, if no room) the
+   *  currently-selected text/date element. Carries:
+   *    • three font-family buttons (sans / serif / mono)
+   *    • a stock-size dropdown
+   *    • −2 / +2 fine-tune buttons clamped to the global limits
+   *    • a close (×) button that deselects without affecting the element
+   *  Hidden while the element is being edited or dragged so it doesn't
+   *  fight for focus. */
+  const FONT_BAR_W = 304;
   const FONT_BAR_H = 36;
   const renderFontSizeBar = () => {
     if (!selectedId || !currentInfo) return null;
@@ -1363,8 +1433,6 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     const elTopPx = (el.y / 100) * pageH;
     const elLeftPx = (el.x / 100) * pageW;
     // Anchor above the element when there's room; below otherwise.
-    // 14px is the rough single-line height we assume for the element
-    // below-anchored case — close enough since the bar is small.
     const placeAbove = elTopPx > FONT_BAR_H + 8;
     const top = placeAbove
       ? Math.max(4, elTopPx - FONT_BAR_H - 6)
@@ -1378,6 +1446,10 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
       const clamped = Math.max(FONT_SIZE_MIN, Math.min(FONT_SIZE_MAX, size));
       updateElement(el.id, { fontSize: clamped } as Partial<FsElement>);
     };
+    const setFamily = (family: FsFontFamily) => {
+      updateElement(el.id, { fontFamily: family } as Partial<FsElement>);
+    };
+    const activeFamily = el.fontFamily ?? DEFAULT_FONT_FAMILY;
     const hasStandard = (FONT_SIZE_OPTIONS as readonly number[]).includes(el.fontSize);
     return (
       <div
@@ -1386,6 +1458,23 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
+        <div className="fse-fontbar-family" role="group" aria-label="Font family">
+          {FONT_FAMILIES.map(f => (
+            <button
+              key={f.id}
+              type="button"
+              className={`fse-fontbar-fbtn${activeFamily === f.id ? ' active' : ''}`}
+              style={{ fontFamily: FONT_FAMILY_CSS[f.id] }}
+              onClick={() => setFamily(f.id)}
+              aria-label={`Font: ${f.id}`}
+              title={`Font: ${f.id}`}
+              aria-pressed={activeFamily === f.id}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <span className="fse-fontbar-divider" aria-hidden="true" />
         <select
           className="fse-fontbar-size"
           value={el.fontSize}
@@ -1416,6 +1505,16 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
           disabled={el.fontSize >= FONT_SIZE_MAX}
         >
           <Plus size={12} strokeWidth={2.4} />
+        </button>
+        <span className="fse-fontbar-divider" aria-hidden="true" />
+        <button
+          type="button"
+          className="fse-fontbar-btn fse-fontbar-close"
+          onClick={() => setSelectedId(null)}
+          aria-label="Close selection"
+          title="Close (Esc)"
+        >
+          <X size={14} strokeWidth={2.4} />
         </button>
       </div>
     );
@@ -1449,6 +1548,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     // Match the overlay's pt→px conversion so the field renders at
     // the same visual size as the rendered placement underneath.
     const popupDisplayPx = el.fontSize * (currentInfo.scale ?? 1);
+    const popupFamilyCss = FONT_FAMILY_CSS[el.fontFamily ?? DEFAULT_FONT_FAMILY];
     // Auto-grow the textarea to fit its content. Resets to auto first so
     // the scrollHeight reflects current rather than previous height.
     const autoResize = (node: HTMLTextAreaElement | null) => {
@@ -1490,7 +1590,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
             }}
             placeholder={placeholder}
             className={`fse-popup-input${dateInvalid ? ' fse-popup-input-invalid' : ''}`}
-            style={{ fontSize: `${popupDisplayPx}px` }}
+            style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
             maxLength={10}
           />
         ) : (
@@ -1522,7 +1622,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
             }}
             placeholder={placeholder}
             className="fse-popup-input"
-            style={{ fontSize: `${popupDisplayPx}px` }}
+            style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
           />
         )}
         <div className="fse-popup-bar">
@@ -1662,6 +1762,15 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
                 {renderFontSizeBar()}
                 {renderEditPopup()}
               </div>
+              {hintShown && currentPage === 1 && elements.length === 0 && (
+                <div
+                  className={`fse-empty-hint${hintHiding ? ' fse-empty-hint-hiding' : ''}`}
+                  aria-hidden="true"
+                >
+                  <ArrowUp size={32} strokeWidth={1.6} />
+                  <span className="fse-empty-hint-text">Pick a tool above to start</span>
+                </div>
+              )}
               <span className="fse-page-label">Page {currentPage} of {totalPages}</span>
             </div>
           )}
@@ -1756,10 +1865,10 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
                                   type="button"
                                   className="fse-list-dup"
                                   onClick={(e) => { e.stopPropagation(); duplicateElement(el.id); }}
-                                  aria-label="Duplicate"
-                                  title="Duplicate"
+                                  aria-label="Copy"
+                                  title="Copy"
                                 >
-                                  <CopyPlus size={12} />
+                                  <Copy size={12} />
                                 </button>
                                 <button
                                   type="button"

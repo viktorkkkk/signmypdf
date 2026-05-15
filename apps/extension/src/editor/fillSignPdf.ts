@@ -6,6 +6,22 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 // page width/height. This matches the PDFViewer/PDFTextEditor convention
 // and the existing signPdf/fillPdf utilities so we can later unify them.
 
+/** Allowed font families on text / date elements. The on-screen
+ *  overlay maps these to CSS family stacks; the PDF embed renders
+ *  via canvas → PNG so the rasterised glyphs follow the same family
+ *  the user saw while editing. */
+export type FsFontFamily = 'sans' | 'serif' | 'mono';
+
+/** Maps the saved-on-element FsFontFamily to a real CSS font stack
+ *  for both <span>/<input>/<textarea> rendering and the canvas font
+ *  string used by renderTextToPng. Kept here so the embed path and
+ *  the live preview can't drift. */
+export const FONT_FAMILY_CSS: Record<FsFontFamily, string> = {
+  sans:  'Arial, Helvetica, sans-serif',
+  serif: '"Times New Roman", Times, serif',
+  mono:  '"Courier New", Courier, monospace',
+};
+
 export type FsElement =
   | {
       id: string;
@@ -15,6 +31,7 @@ export type FsElement =
       value: string;
       fontSize: number;        // PDF points
       color: string;           // CSS hex, e.g. '#000000'
+      fontFamily?: FsFontFamily; // defaults to 'sans' when omitted
     }
   | {
       id: string;
@@ -100,7 +117,8 @@ export async function applyFillSign(opts: FillSignOptions): Promise<Blob> {
     if (el.type === 'text' || el.type === 'date') {
       const value = (el.value || '').trim();
       if (!value) continue;
-      const { dataUrl, widthPts, heightPts } = renderTextToPng(value, el.fontSize, el.color || '#000000');
+      const familyCss = FONT_FAMILY_CSS[el.fontFamily ?? 'sans'];
+      const { dataUrl, widthPts, heightPts } = renderTextToPng(value, el.fontSize, el.color || '#000000', familyCss);
       const img = await embedDataUrl(pdfDoc, dataUrl);
       const pdfX = (el.x / 100) * pw;
       const topY = (el.y / 100) * ph;

@@ -305,6 +305,34 @@
   pointer-events: none;
 }
 .fse-page-overlay > * { pointer-events: auto; }
+
+/* Empty-state hint floats over the page when zero elements are placed.
+   pointer-events: none lets clicks pass through to .fse-page so the
+   active tool still works under the hint. CSS transition handles the
+   200 ms fade-out; React unmounts the node when the timer fires. */
+.fse-empty-hint {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  user-select: none;
+  color: var(--color-muted);
+  text-align: center;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+.fse-empty-hint-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+.fse-empty-hint-hiding {
+  opacity: 0;
+}
 /* Crosshair when a placement-style tool is active. Signature is auto-
    placed on Save in the modal, so it doesn't need a click-to-place
    crosshair. */
@@ -442,6 +470,51 @@
 .fse-fontbar-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Font-family chooser inside the floating font bar. Each button shows
+   "Aa" rendered in its own family so the user picks by appearance, not
+   by name. */
+.fse-fontbar-family {
+  display: inline-flex;
+  gap: 2px;
+}
+.fse-fontbar-fbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 26px;
+  padding: 0 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.fse-fontbar-fbtn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+.fse-fontbar-fbtn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Vertical 1-px rule separating the font-family group, the size
+   controls and the close button inside the floating font bar. */
+.fse-fontbar-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  margin: 0 6px;
+  background: rgba(255, 255, 255, 0.25);
+  align-self: center;
+  flex-shrink: 0;
 }
 .fse-text-value {
   display: inline-block;
