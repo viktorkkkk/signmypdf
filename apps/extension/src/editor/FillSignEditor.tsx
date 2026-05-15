@@ -42,11 +42,21 @@ const DRAG_THRESHOLD_PX = 5;
 
 type ToolId = 'text' | 'date' | 'signature';
 
+/** Tool button order. Signature is the headline action so it leads;
+ *  Text and Date follow as supporting form-fill tools. */
 const TOOLS: { id: ToolId; label: string; Icon: typeof TypeIcon }[] = [
+  { id: 'signature', label: 'Signature', Icon: FileSignature },
   { id: 'text',      label: 'Text',      Icon: TypeIcon },
   { id: 'date',      label: 'Date',      Icon: CalendarDays },
-  { id: 'signature', label: 'Signature', Icon: FileSignature },
 ];
+const DEFAULT_TOOL: ToolId = 'signature';
+/** Empty-state hint copy varies with the active tool so the call
+ *  to action matches what a click on the page will actually do. */
+const HINT_BY_TOOL: Record<ToolId, string> = {
+  signature: 'Click anywhere to place your signature',
+  text:      'Click anywhere to add text',
+  date:      'Click anywhere to add today’s date',
+};
 
 /** Default font size for new text/date elements (in PDF points).
  *  14pt is the sweet spot for typical form fields — large enough to
@@ -80,10 +90,16 @@ const ANTI_OVERLAP_OFFSET_PX = 20;
  *  woff2 (loaded via @font-face in editor.css). Industry convention
  *  is one handwriting style, so we don't offer alternates. */
 const SIG_TYPED_FONT = '"Dancing Script", cursive';
-const SIG_MIN_W_PX = 50;
-const SIG_MIN_H_PX = 20;
-const SIG_MAX_W_PX = 400;
-const SIG_MAX_H_PX = 150;
+/** Resize floor — both width and height must stay above 40 CSS px,
+ *  which is the smaller dimension of a readable signature. Aspect
+ *  ratio is preserved during resize so the proportional scaling
+ *  bumps both sides together. */
+const SIG_MIN_W_PX = 40;
+const SIG_MIN_H_PX = 40;
+/** Resize ceiling — 80 % of the rendered page width. The aspect-
+ *  preserving math derives height from there. */
+const SIG_MAX_W_PCT = 80;
+const SIG_MAX_H_PCT = 80;
 const POPUP_WIDTH_PX = 300;
 const POPUP_HEIGHT_PX = 44;
 
@@ -184,12 +200,18 @@ const UPLOAD_ACCEPT = 'image/png,image/jpeg';
  *  cause obvious lag both for the dataUrl encode and for the
  *  pdf-lib embedPng step. */
 const UPLOAD_MAX_BYTES = 10 * 1024 * 1024;
-/** Active inline-edit state. Tracks the original value so Esc / ✕ can
- *  revert; if the original was empty the element is removed instead. */
+/** Active inline-edit state for the unified element editor. The
+ *  element on the page is bound live to the editor's controls — every
+ *  keystroke and every font/size/family change applies immediately,
+ *  so changes are visible under the panel as the user types.
+ *  `originalElement` is the snapshot taken at edit-open so Cancel /
+ *  Esc can fully revert (font + size + family + value). `isNew` flags
+ *  freshly-placed elements so Cancel removes them instead of
+ *  reverting to an empty placeholder. */
 interface EditingState {
   id: string;
-  originalValue: string;
-  draftValue: string;
+  originalElement: FsElement;
+  isNew: boolean;
 }
 
 interface Props {
@@ -202,7 +224,7 @@ interface Props {
 }
 
 export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props) {
-  const [tool, setTool] = useState<ToolId>('text');
+  const [tool, setTool] = useState<ToolId>(DEFAULT_TOOL);
   const [elements, setElements] = useState<FsElement[]>([]);
   const [pageInfos, setPageInfos] = useState<PageInfo[]>([]);
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
@@ -375,6 +397,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
   useEffect(() => {
     setHintShown(true);
     setHintHiding(false);
+    setTool(DEFAULT_TOOL);
   }, [file]);
   useEffect(() => {
     if (elements.length === 0) return;
@@ -712,7 +735,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     setSigModal(null);
     setCreatingSig(null);
     setEditingSig(null);
-    setTool('text');
+    setTool(DEFAULT_TOOL);
   }, [currentPage, pageInfos]);
 
   /** "Use this signature" in the chooser modal — auto-place the saved
@@ -730,7 +753,7 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     setSigModal(null);
     setCreatingSig(null);
     if (editingSig) { setEditingSig(null); return; }
-    setTool('text');
+    setTool(DEFAULT_TOOL);
   };
 
   /** Fired by the SignatureCanvas on every stroke-end. We only stash
@@ -833,15 +856,16 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
 
     if (tool === 'text') {
       const id = newId();
-      addElement({
+      const newEl: FsElement = {
         id, type: 'text', page: currentPage, x: xPct, y: yPct,
         value: '', fontSize: DEFAULT_FONT, color: TEXT_DEFAULT_COLOR,
         fontFamily: DEFAULT_FONT_FAMILY,
-      });
-      // New text: open the editor immediately AND mark it selected so
-      // when the user dismisses the editor (Enter / blur) the font-
-      // size bar appears above the freshly-placed value.
-      setEditing({ id, originalValue: '', draftValue: '' });
+      };
+      addElement(newEl);
+      // Tool=Text + click → open the unified editor right away so the
+      // user can start typing without a separate gesture. Cancel /
+      // Esc on the empty new element removes it.
+      setEditing({ id, originalElement: newEl, isNew: true });
       setSelectedId(id);
       return;
     }
@@ -857,46 +881,68 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
         fontFamily: DEFAULT_FONT_FAMILY,
       });
       // No auto-edit: today's date is correct by default. The user
-      // single-clicks the placed element to select / re-size, or
-      // double-clicks to enter masked edit-mode.
+      // double-clicks the placed element (or the pencil) to override.
       return;
     }
 
-    // Signature tool no longer uses click-to-place — auto-placement
-    // happens when the user clicks Save in the create-signature modal
-    // (see placeSignature). A click on the page surface while
-    // tool === 'signature' is just a no-op now.
+    if (tool === 'signature') {
+      // Tool=Signature + click on the page opens the create / chooser
+      // modal — same gesture as clicking the toolbar button, so the
+      // "Click anywhere to place your signature" hint copy matches
+      // what actually happens. Final placement still uses the
+      // page-centre default in placeSignature.
+      if (savedSig) {
+        setSigModal('choose');
+      } else {
+        setCreatingSig(initCreatingSig());
+        setSigModal('create');
+      }
+      return;
+    }
   };
 
-  // ── Inline edit save / cancel ─────────────────────────────────────────
+  // ── Unified editor save / cancel ──────────────────────────────────────
+  // The element is live-bound to the editor controls (every keystroke
+  // and every font tweak applies immediately via updateElement). Save
+  // therefore only trims the value and drops empty new placements;
+  // Cancel restores the pre-edit snapshot in full, or removes the
+  // element entirely when it was created by this edit session.
   const saveEdit = useCallback(() => {
     if (!editing) return;
-    const draft = editing.draftValue.trim();
-    if (!draft) {
-      // Empty value on save → remove (no point in an empty placement).
-      removeElement(editing.id);
-    } else {
-      updateElement(editing.id, { value: draft } as Partial<FsElement>);
+    const el = elements.find(e => e.id === editing.id);
+    if (el && (el.type === 'text' || el.type === 'date')) {
+      const trimmed = (el.value || '').trim();
+      if (editing.isNew && !trimmed) {
+        removeElement(editing.id);
+      } else if (trimmed !== el.value) {
+        updateElement(editing.id, { value: trimmed } as Partial<FsElement>);
+      }
     }
     setEditing(null);
-  }, [editing, removeElement, updateElement]);
+  }, [editing, elements, removeElement, updateElement]);
 
   const cancelEdit = useCallback(() => {
     if (!editing) return;
-    if (editing.originalValue === '') {
-      // New placement that was never filled → remove.
+    if (editing.isNew) {
       removeElement(editing.id);
+    } else {
+      // Full revert from snapshot — font, size, family, value all
+      // restored to the values they had when the editor opened.
+      const snapshot = editing.originalElement;
+      setElements(prev => prev.map(e => e.id === editing.id ? snapshot : e));
     }
-    // else: element stays untouched (we never updated it on keystroke).
     setEditing(null);
   }, [editing, removeElement]);
 
-  // Click anywhere outside the popup commits the current draft.
+  // Click anywhere outside the editor commits the current draft.
+  // The new editor uses a different class (.fse-editor-pop) plus the
+  // legacy .fse-popup is gone, but we still bail on clicks landing on
+  // the editor or on the underlying text wrap (live preview area).
   useEffect(() => {
     if (!editing) return;
     const onDocClick = (ev: MouseEvent) => {
       const target = ev.target as HTMLElement | null;
-      if (target && target.closest('.fse-popup')) return;
+      if (target && target.closest('.fse-editor-pop')) return;
       if (target && target.closest('.fse-text-wrap')) return;
       saveEdit();
     };
@@ -926,13 +972,14 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [editing, selectedId, cancelEdit]);
 
-  // Open the editor for any placed element. Text/date opens the inline
-  // popup; signature pops the SignatureCanvas modal in re-draw mode so
-  // the user can replace the existing dataUrl without going through the
-  // place-on-click pendingSig workflow.
+  // Open the editor for any placed element. Text/date opens the unified
+  // editor with a snapshot for Cancel-revert; signature pops the
+  // SignatureCanvas modal in re-draw mode so the user can replace the
+  // existing dataUrl without going through the place-on-click flow.
   const openEditFor = (el: FsElement) => {
     if (el.type === 'text' || el.type === 'date') {
-      setEditing({ id: el.id, originalValue: el.value, draftValue: el.value });
+      setEditing({ id: el.id, originalElement: { ...el }, isNew: false });
+      setSelectedId(el.id);
       return;
     }
     if (el.type === 'signature') {
@@ -1070,8 +1117,8 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
 
     const minWpct = (SIG_MIN_W_PX / pageRect.width)  * 100;
     const minHpct = (SIG_MIN_H_PX / pageRect.height) * 100;
-    const maxWpct = (SIG_MAX_W_PX / pageRect.width)  * 100;
-    const maxHpct = (SIG_MAX_H_PX / pageRect.height) * 100;
+    const maxWpct = SIG_MAX_W_PCT;
+    const maxHpct = SIG_MAX_H_PCT;
 
     const startX = e.clientX, startY = e.clientY;
     const startW = el.w, startH = el.h;
@@ -1287,8 +1334,11 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     const isEditing = editing?.id === el.id;
     const isDragging = draggingId === el.id;
     const isSelected = selectedId === el.id;
-    if (isEditing) return null; // popup replaces the element while editing
-    const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}${isSelected ? ' fse-text-wrap-selected' : ''}`;
+    // Stay rendered while editing so the unified editor's controls
+    // can preview their effect under the panel — fontSize / family /
+    // value all flow through updateElement, and this element re-
+    // renders on every change.
+    const wrapClass = `fse-text-wrap${isDragging ? ' fse-text-wrap-dragging' : ''}${isSelected ? ' fse-text-wrap-selected' : ''}${isEditing ? ' fse-text-wrap-editing' : ''}`;
     const placeholder = el.type === 'date' ? 'date' : 'text';
     // PDF-points → CSS px conversion. fontSize is stored in PDF points
     // (semantic, scale-invariant). At any given page scale, 1 pt =
@@ -1398,50 +1448,69 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
         >
           <X size={11} />
         </button>
-        {(['nw', 'ne', 'sw', 'se'] as const).map(c => (
-          <span
-            key={c}
-            className={`fse-resize fse-resize-${c}`}
-            onMouseDown={(e) => onResizeMouseDown(e, el, c)}
-            aria-hidden="true"
-          />
-        ))}
+        {/* Single bottom-right resize handle (square, primary blue).
+           Matches the resize affordance on signmypdf.io/sign — one
+           grab point keeps the corner clutter low and the gesture
+           unambiguous. */}
+        <span
+          className="fse-resize fse-resize-se"
+          onMouseDown={(e) => onResizeMouseDown(e, el, 'se')}
+          aria-hidden="true"
+        />
       </div>
     );
   };
 
-  /** Floating font bar — anchored above (or below, if no room) the
-   *  currently-selected text/date element. Carries:
-   *    • three font-family buttons (sans / serif / mono)
-   *    • a stock-size dropdown
-   *    • −2 / +2 fine-tune buttons clamped to the global limits
-   *    • a close (×) button that deselects without affecting the element
-   *  Hidden while the element is being edited or dragged so it doesn't
-   *  fight for focus. */
-  const FONT_BAR_W = 304;
-  const FONT_BAR_H = 36;
-  const renderFontSizeBar = () => {
-    if (!selectedId || !currentInfo) return null;
-    const el = elements.find(e => e.id === selectedId);
+  /** Floating font bar was removed in v2.6.0 — font and size live in
+   *  the unified editor (renderElementEditor) so a single panel
+   *  handles every text / date tweak. Selection alone no longer
+   *  surfaces a separate floating bar. */
+
+  // Unified element editor — one panel above the element carrying
+  // the font family / size controls, the value input, and Done /
+  // Cancel actions. Replaces the old two-panel layout (font-bar +
+  // edit-popup) that used to appear in sequence.
+  const renderEditPopup = () => {
+    if (!editing || !currentInfo) return null;
+    const el = elements.find(e => e.id === editing.id);
     if (!el || el.page !== currentPage) return null;
     if (el.type !== 'text' && el.type !== 'date') return null;
-    if (editing?.id === el.id) return null;
-    if (draggingId === el.id) return null;
+
+    const POPUP_W = 380;
+    /** Vertical breathing room reserved when positioning above the
+     *  element. The editor's actual height varies with textarea
+     *  content; this is a safe upper bound for clamping math. */
+    const POPUP_H = 170;
 
     const pageW = currentInfo.width;
     const pageH = currentInfo.height;
-    const elTopPx = (el.y / 100) * pageH;
-    const elLeftPx = (el.x / 100) * pageW;
-    // Anchor above the element when there's room; below otherwise.
-    const placeAbove = elTopPx > FONT_BAR_H + 8;
+    const elPx = (el.x / 100) * pageW;
+    const elPy = (el.y / 100) * pageH;
+    const placeAbove = elPy > POPUP_H + 8;
     const top = placeAbove
-      ? Math.max(4, elTopPx - FONT_BAR_H - 6)
-      : elTopPx + 22;
-    const margin = 4;
-    let left = elLeftPx;
-    if (left + FONT_BAR_W > pageW - margin) {
-      left = Math.max(margin, pageW - FONT_BAR_W - margin);
+      ? Math.max(4, elPy - POPUP_H - 6)
+      : Math.min(pageH - 8, elPy + 28);
+    const margin = 8;
+    let left = elPx - 4;
+    if (left + POPUP_W > pageW - margin) {
+      left = Math.max(margin, pageW - POPUP_W - margin);
     }
+    if (left < margin) left = margin;
+
+    const placeholder = el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…';
+    const dateInvalid = el.type === 'date'
+      && (el.value || '').length > 0
+      && !isValidDate(el.value || '');
+    // Live preview — overlay element renders the same fontSize and
+    // family below. The input mirrors them for an in-place feel.
+    const popupDisplayPx = el.fontSize * (currentInfo.scale ?? 1);
+    const activeFamily: FsFontFamily = el.fontFamily ?? DEFAULT_FONT_FAMILY;
+    const popupFamilyCss = FONT_FAMILY_CSS[activeFamily];
+    const autoResize = (node: HTMLTextAreaElement | null) => {
+      if (!node) return;
+      node.style.height = 'auto';
+      node.style.height = `${node.scrollHeight}px`;
+    };
     const setSize = (size: number) => {
       const clamped = Math.max(FONT_SIZE_MIN, Math.min(FONT_SIZE_MAX, size));
       updateElement(el.id, { fontSize: clamped } as Partial<FsElement>);
@@ -1449,203 +1518,162 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
     const setFamily = (family: FsFontFamily) => {
       updateElement(el.id, { fontFamily: family } as Partial<FsElement>);
     };
-    const activeFamily = el.fontFamily ?? DEFAULT_FONT_FAMILY;
     const hasStandard = (FONT_SIZE_OPTIONS as readonly number[]).includes(el.fontSize);
+    const canSave = el.type === 'date'
+      ? !!(el.value || '').trim()
+      : !!(el.value || '').trim();
     return (
       <div
-        className={`fse-fontbar${placeAbove ? ' fse-fontbar-above' : ' fse-fontbar-below'}`}
-        style={{ left, top, width: FONT_BAR_W }}
+        className="fse-editor-pop"
+        style={{ left: `${left}px`, top: `${top}px`, width: POPUP_W }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="fse-fontbar-family" role="group" aria-label="Font family">
-          {FONT_FAMILIES.map(f => (
-            <button
-              key={f.id}
-              type="button"
-              className={`fse-fontbar-fbtn${activeFamily === f.id ? ' active' : ''}`}
-              style={{ fontFamily: FONT_FAMILY_CSS[f.id] }}
-              onClick={() => setFamily(f.id)}
-              aria-label={`Font: ${f.id}`}
-              title={`Font: ${f.id}`}
-              aria-pressed={activeFamily === f.id}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-        <span className="fse-fontbar-divider" aria-hidden="true" />
-        <select
-          className="fse-fontbar-size"
-          value={el.fontSize}
-          onChange={(e) => setSize(parseInt(e.target.value, 10))}
-          aria-label="Font size"
-        >
-          {!hasStandard && <option value={el.fontSize}>{el.fontSize}pt</option>}
-          {FONT_SIZE_OPTIONS.map(s => (
-            <option key={s} value={s}>{s}pt</option>
-          ))}
-        </select>
-        <button
-          type="button"
-          className="fse-fontbar-btn"
-          onClick={() => setSize(el.fontSize - FONT_SIZE_STEP)}
-          aria-label="Decrease font size"
-          title="Decrease font size"
-          disabled={el.fontSize <= FONT_SIZE_MIN}
-        >
-          <Minus size={12} strokeWidth={2.4} />
-        </button>
-        <button
-          type="button"
-          className="fse-fontbar-btn"
-          onClick={() => setSize(el.fontSize + FONT_SIZE_STEP)}
-          aria-label="Increase font size"
-          title="Increase font size"
-          disabled={el.fontSize >= FONT_SIZE_MAX}
-        >
-          <Plus size={12} strokeWidth={2.4} />
-        </button>
-        <span className="fse-fontbar-divider" aria-hidden="true" />
-        <button
-          type="button"
-          className="fse-fontbar-btn fse-fontbar-close"
-          onClick={() => setSelectedId(null)}
-          aria-label="Close selection"
-          title="Close (Esc)"
-        >
-          <X size={14} strokeWidth={2.4} />
-        </button>
-      </div>
-    );
-  };
-
-  // Inline-edit popup positioned over the page, with edge-aware clamping.
-  const renderEditPopup = () => {
-    if (!editing || !currentInfo) return null;
-    const el = elements.find(e => e.id === editing.id);
-    if (!el || el.page !== currentPage) return null;
-    if (el.type !== 'text' && el.type !== 'date') return null;
-
-    const pageW = currentInfo.width;
-    const pageH = currentInfo.height;
-    const elPx = (el.x / 100) * pageW;
-    const elPy = (el.y / 100) * pageH;
-    let left = elPx;
-    let top  = elPy;
-    const margin = 8;
-    if (left + POPUP_WIDTH_PX > pageW - margin) {
-      left = Math.max(margin, pageW - POPUP_WIDTH_PX - margin);
-    }
-    if (top + POPUP_HEIGHT_PX > pageH - margin) {
-      top = Math.max(margin, top - POPUP_HEIGHT_PX - 4);
-    }
-
-    const placeholder = el.type === 'date' ? 'MM/DD/YYYY' : 'Type text…';
-    const dateInvalid = el.type === 'date'
-      && editing.draftValue.length > 0
-      && !isValidDate(editing.draftValue);
-    // Match the overlay's pt→px conversion so the field renders at
-    // the same visual size as the rendered placement underneath.
-    const popupDisplayPx = el.fontSize * (currentInfo.scale ?? 1);
-    const popupFamilyCss = FONT_FAMILY_CSS[el.fontFamily ?? DEFAULT_FONT_FAMILY];
-    // Auto-grow the textarea to fit its content. Resets to auto first so
-    // the scrollHeight reflects current rather than previous height.
-    const autoResize = (node: HTMLTextAreaElement | null) => {
-      if (!node) return;
-      node.style.height = 'auto';
-      node.style.height = `${node.scrollHeight}px`;
-    };
-    return (
-      <div
-        className="fse-popup"
-        style={{ left: `${left}px`, top: `${top}px`, width: POPUP_WIDTH_PX }}
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {el.type === 'date' ? (
-          <input
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            ref={(node) => {
-              if (!node) return;
-              if (document.activeElement !== node) {
-                try { node.focus({ preventScroll: true }); }
-                catch { node.focus(); }
-                node.select();
-              }
-            }}
-            value={editing.draftValue}
-            onChange={(e) => {
-              setEditing({ ...editing, draftValue: applyDateMask(e.target.value) });
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                saveEdit();
-              } else if (e.key === 'Escape') {
-                cancelEdit();
-              }
-            }}
-            placeholder={placeholder}
-            className={`fse-popup-input${dateInvalid ? ' fse-popup-input-invalid' : ''}`}
-            style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
-            maxLength={10}
-          />
-        ) : (
-          <textarea
-            ref={(node) => {
-              if (!node) return;
-              if (document.activeElement !== node) {
-                try { node.focus({ preventScroll: true }); }
-                catch { node.focus(); }
-                node.select();
-              }
-              autoResize(node);
-            }}
-            rows={1}
-            value={editing.draftValue}
-            onChange={(e) => {
-              setEditing({ ...editing, draftValue: e.target.value });
-              autoResize(e.currentTarget);
-            }}
-            onKeyDown={(e) => {
-              // Enter saves, Shift+Enter inserts a newline (default
-              // textarea behavior), Esc cancels.
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                saveEdit();
-              } else if (e.key === 'Escape') {
-                cancelEdit();
-              }
-            }}
-            placeholder={placeholder}
-            className="fse-popup-input"
-            style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
-          />
-        )}
-        <div className="fse-popup-bar">
-          <div className="fse-popup-actions">
-            <button
-              type="button"
-              className="fse-popup-confirm"
-              onClick={saveEdit}
-              aria-label="Save"
-              title="Save"
-            >
-              <Check size={14} />
-            </button>
-            <button
-              type="button"
-              className="fse-popup-cancel"
-              onClick={cancelEdit}
-              aria-label="Cancel"
-              title="Cancel"
-            >
-              <X size={14} />
-            </button>
+        {/* Top row — font family + size controls. Both update the
+           element live via updateElement; the overlay underneath
+           reflects every change. */}
+        <div className="fse-editor-row fse-editor-row-top">
+          <div className="fse-editor-family" role="group" aria-label="Font family">
+            {FONT_FAMILIES.map(f => (
+              <button
+                key={f.id}
+                type="button"
+                className={`fse-editor-fbtn${activeFamily === f.id ? ' active' : ''}`}
+                style={{ fontFamily: FONT_FAMILY_CSS[f.id] }}
+                onClick={() => setFamily(f.id)}
+                aria-label={`Font: ${f.id}`}
+                title={`Font: ${f.id}`}
+                aria-pressed={activeFamily === f.id}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
+          <span className="fse-editor-divider" aria-hidden="true" />
+          <select
+            className="fse-editor-size"
+            value={el.fontSize}
+            onChange={(e) => setSize(parseInt(e.target.value, 10))}
+            aria-label="Font size"
+          >
+            {!hasStandard && <option value={el.fontSize}>{el.fontSize}pt</option>}
+            {FONT_SIZE_OPTIONS.map(s => (
+              <option key={s} value={s}>{s}pt</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="fse-editor-step"
+            onClick={() => setSize(el.fontSize - FONT_SIZE_STEP)}
+            aria-label="Decrease font size"
+            title="Decrease font size"
+            disabled={el.fontSize <= FONT_SIZE_MIN}
+          >
+            <Minus size={12} strokeWidth={2.4} />
+          </button>
+          <button
+            type="button"
+            className="fse-editor-step"
+            onClick={() => setSize(el.fontSize + FONT_SIZE_STEP)}
+            aria-label="Increase font size"
+            title="Increase font size"
+            disabled={el.fontSize >= FONT_SIZE_MAX}
+          >
+            <Plus size={12} strokeWidth={2.4} />
+          </button>
+        </div>
+
+        {/* Middle row — value input. For date a masked single-line
+           input; for text a self-growing textarea. Both live-bind
+           el.value so the overlay shows progress as the user types. */}
+        <div className="fse-editor-row fse-editor-row-input">
+          {el.type === 'date' ? (
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              ref={(node) => {
+                if (!node) return;
+                if (document.activeElement !== node) {
+                  try { node.focus({ preventScroll: true }); }
+                  catch { node.focus(); }
+                  node.select();
+                }
+              }}
+              value={el.value || ''}
+              onChange={(e) => {
+                updateElement(el.id, { value: applyDateMask(e.target.value) } as Partial<FsElement>);
+              }}
+              onKeyDown={(e) => {
+                // Date inputs use Ctrl/Cmd+Enter for save so a plain
+                // Enter doesn't fight with whatever a Russian / EN
+                // keyboard layout maps the key to under the hood.
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                  e.preventDefault();
+                  saveEdit();
+                } else if (e.key === 'Escape') {
+                  e.preventDefault();
+                  cancelEdit();
+                }
+              }}
+              placeholder={placeholder}
+              className={`fse-editor-input${dateInvalid ? ' fse-editor-input-invalid' : ''}`}
+              style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
+              maxLength={10}
+            />
+          ) : (
+            <textarea
+              ref={(node) => {
+                if (!node) return;
+                if (document.activeElement !== node) {
+                  try { node.focus({ preventScroll: true }); }
+                  catch { node.focus(); }
+                  node.select();
+                }
+                autoResize(node);
+              }}
+              rows={1}
+              value={el.value || ''}
+              onChange={(e) => {
+                updateElement(el.id, { value: e.target.value } as Partial<FsElement>);
+                autoResize(e.currentTarget);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  saveEdit();
+                } else if (e.key === 'Escape') {
+                  e.preventDefault();
+                  cancelEdit();
+                }
+              }}
+              placeholder={placeholder}
+              className="fse-editor-input fse-editor-input-multiline"
+              style={{ fontSize: `${popupDisplayPx}px`, fontFamily: popupFamilyCss }}
+            />
+          )}
+        </div>
+
+        {/* Bottom row — Cancel / Done. Done is primary; Cancel is
+           secondary and also bound to Esc via the global listener. */}
+        <div className="fse-editor-row fse-editor-row-actions">
+          <button
+            type="button"
+            className="fse-editor-btn fse-editor-cancel"
+            onClick={cancelEdit}
+          >
+            <X size={14} strokeWidth={2.4} />
+            <span>Cancel</span>
+          </button>
+          <button
+            type="button"
+            className="fse-editor-btn fse-editor-done"
+            onClick={saveEdit}
+            disabled={!canSave}
+          >
+            <Check size={14} strokeWidth={2.4} />
+            <span>Done</span>
+          </button>
         </div>
       </div>
     );
@@ -1759,7 +1787,6 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
               <canvas ref={canvasRef} />
               <div className="fse-page-overlay">
                 {visibleElements.map(el => el.type === 'signature' ? renderSignature(el) : renderTextOrDate(el))}
-                {renderFontSizeBar()}
                 {renderEditPopup()}
               </div>
               {hintShown && currentPage === 1 && elements.length === 0 && (
@@ -1767,8 +1794,8 @@ export default function FillSignEditor({ file, onDone, onRequestNewPdf }: Props)
                   className={`fse-empty-hint${hintHiding ? ' fse-empty-hint-hiding' : ''}`}
                   aria-hidden="true"
                 >
-                  <ArrowUp size={32} strokeWidth={1.6} />
-                  <span className="fse-empty-hint-text">Pick a tool above to start</span>
+                  <ArrowUp size={24} strokeWidth={1.8} />
+                  <span className="fse-empty-hint-text">{HINT_BY_TOOL[tool]}</span>
                 </div>
               )}
               <span className="fse-page-label">Page {currentPage} of {totalPages}</span>
