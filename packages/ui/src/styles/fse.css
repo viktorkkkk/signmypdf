@@ -307,12 +307,13 @@
 .fse-page-overlay > * { pointer-events: auto; }
 
 /* Empty-state hint floats over the page when zero elements are placed.
-   pointer-events: none lets clicks pass through to .fse-page so the
-   active tool still works under the hint. CSS transition handles the
-   200 ms fade-out; React unmounts the node when the timer fires. */
+   White plate with subtle shadow so it reads on light scans without
+   covering the document. pointer-events: none lets the active tool
+   still place under the hint. The 200 ms fade is purely CSS — React
+   unmounts the node after the timer. */
 .fse-empty-hint {
   position: absolute;
-  top: 26%;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -321,14 +322,25 @@
   gap: 8px;
   pointer-events: none;
   user-select: none;
-  color: var(--color-muted);
+  width: max-content;
+  max-width: 280px;
+  padding: 16px 24px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   text-align: center;
-  opacity: 0.85;
+  opacity: 1;
   transition: opacity 0.2s ease;
+}
+.fse-empty-hint svg {
+  color: #64748b;
 }
 .fse-empty-hint-text {
   font-size: 14px;
   font-weight: 500;
+  color: #475569;
+  line-height: 1.4;
 }
 .fse-empty-hint-hiding {
   opacity: 0;

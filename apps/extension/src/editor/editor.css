@@ -448,6 +448,204 @@ button.ext-brand {
   box-shadow: none;
   pointer-events: none;
 }
+
+/* Unified element editor — one panel above the selected text/date
+   element with font controls, the value input, and Done / Cancel.
+   Replaces the older two-panel UI (floating font bar + edit popup).
+   The panel uses a light surface so it reads against any PDF; rows
+   are stacked top-to-bottom: font row, input row, action row. */
+.fse-editor-pop {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  pointer-events: auto;
+}
+.fse-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fse-editor-row-top {
+  flex-wrap: nowrap;
+}
+.fse-editor-row-actions {
+  justify-content: flex-end;
+  gap: 8px;
+}
+.fse-editor-family {
+  display: inline-flex;
+  gap: 2px;
+}
+.fse-editor-fbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 28px;
+  padding: 0 6px;
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.fse-editor-fbtn:hover:not(.active) {
+  background: var(--color-surface);
+}
+.fse-editor-fbtn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+.fse-editor-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: var(--color-border);
+  align-self: center;
+  flex-shrink: 0;
+}
+.fse-editor-size {
+  appearance: none;
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  height: 28px;
+  padding: 0 6px;
+  cursor: pointer;
+}
+.fse-editor-size:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+  border-color: var(--color-primary);
+}
+.fse-editor-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.fse-editor-step:hover:not(:disabled) {
+  background: var(--color-surface);
+}
+.fse-editor-step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.fse-editor-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  font-family: inherit;
+  outline: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.35;
+  transition: border-color 0.12s, background 0.12s;
+}
+.fse-editor-input:focus {
+  border-color: var(--color-primary);
+}
+.fse-editor-input-multiline {
+  resize: none;
+  overflow: hidden;
+  min-height: 36px;
+  max-height: 260px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.fse-editor-input-invalid {
+  background: #fef2f2;
+  color: var(--color-danger);
+  border-color: #fecaca;
+}
+.fse-editor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background 0.12s, border-color 0.12s, color 0.12s, opacity 0.12s;
+}
+.fse-editor-cancel {
+  background: transparent;
+  color: var(--color-muted);
+  border-color: var(--color-border);
+}
+.fse-editor-cancel:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.fse-editor-done {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.fse-editor-done:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+.fse-editor-done:disabled {
+  background: var(--color-border);
+  border-color: var(--color-border);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* Signature affordance — dashed 2 px primary border on hover, drag
+   and selection. Matches the resize style on signmypdf.io/sign. */
+.fse-three-col .fse-element-image:hover,
+.fse-three-col .fse-element-image.fse-element-dragging,
+.fse-three-col .fse-element-image.fse-element-selected {
+  border-width: 2px;
+  border-style: dashed;
+  border-color: var(--color-primary);
+}
+
+/* Single bottom-right resize handle — square 14 px with rounded
+   corners. Replaces the four corner dots from the base rule. */
+.fse-three-col .fse-resize {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--color-primary);
+  border: 2px solid #fff;
+}
+.fse-three-col .fse-element-image .fse-resize-se {
+  bottom: -7px;
+  right: -7px;
+  cursor: nwse-resize;
+}
 .fse-three-col .fse-fab {
   display: none !important;
 }
