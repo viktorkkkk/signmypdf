@@ -109,6 +109,8 @@ const BLOG_SLUGS = [
   'fill-insurance-claim-form-pdf',
   'add-multiple-signatures-one-pdf',
   'remove-password-from-pdf-you-own',
+  'adobe-fill-sign-vs-signmypdf',
+  'what-happens-if-protected-pdf-leaks',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
