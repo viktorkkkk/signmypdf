@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-16",
+  "timestamp": "2026-05-16T02:20:29Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "6f73b97bef5e182d7923406a6d8041fdc8489610",
+  "newSlugs": "adobe-fill-sign-vs-signmypdf what-happens-if-protected-pdf-leaks",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/25950297810"
+}
