@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AlertCircle, CheckCircle2, FileSignature, Loader2, Upload, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, Upload, X } from 'lucide-react';
 import FillSignEditor from './FillSignEditor';
+
+// Brand mark — public/logo.png, resolved at runtime via the extension's
+// own origin. `chrome.runtime` exists in any extension context, so a
+// module-level call is safe.
+const LOGO_URL = chrome.runtime.getURL('logo.png');
 import {
   cleanupOldEntries,
   deletePdf,
@@ -204,12 +209,12 @@ function EditorPage() {
               title="Discard changes and load a new PDF"
               aria-label="Discard changes and load a new PDF"
             >
-              <FileSignature size={20} strokeWidth={2.2} />
+              <img src={LOGO_URL} alt="" className="ext-brand-logo" />
               <span>Sign PDF</span>
             </button>
           ) : (
             <div className="ext-brand">
-              <FileSignature size={20} strokeWidth={2.2} />
+              <img src={LOGO_URL} alt="" className="ext-brand-logo" />
               <span>Sign PDF</span>
             </div>
           )}

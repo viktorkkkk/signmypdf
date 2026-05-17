@@ -4,14 +4,14 @@ Standalone Chrome MV3 extension that signs PDFs entirely in the
 browser. No network calls at runtime, no signup, no watermark, no
 storage between sessions.
 
-## Status (2026-05-14)
+## Status (2026-05-17)
 
 Rewrite of the previous "shortcut" extension. The old extension opened
 `signmypdf.io/sign` in a new tab; this one carries the full editor
 inside the extension and never talks to signmypdf.io after install.
 
-Awaiting Chrome Web Store submission. Production icons need to replace
-the pen-on-blue placeholders in `public/icons/` before publication.
+Awaiting Chrome Web Store submission. Final brand icons shipped in
+v2.6.1 (replaced the pen-on-blue placeholders).
 
 ## Architecture in one paragraph
 
@@ -52,12 +52,12 @@ src/
     FillSignEditor.tsx   ← copy of apps/web's, cleaned for the extension
     fillSignPdf.ts       ← copy of apps/web's, used as-is
 public/
-  icons/icon-{16,32,48,128}.png   ← placeholder pen-on-blue
+  icons/icon-{16,32,48,128}.png   ← brand icons (shipped v2.6.1)
+  logo.png                        ← 512×512 brand logo used in the editor top-bar
   fonts/dancing-script.woff2      ← copied at postinstall time
   pdf.worker.min.mjs              ← copied at postinstall time
 scripts/
   copy-assets.mjs            ← runs in postinstall
-  make-placeholder-icons.mjs ← run by hand to refresh the placeholders
 PRIVACY.md
 ```
 
@@ -89,7 +89,7 @@ Then `chrome://extensions` → enable Developer Mode → *Load unpacked*
 
 ## Pre-submission checklist (Chrome Web Store)
 
-- [ ] Replace placeholder icons in `public/icons/` with finished art.
+- [x] Replace placeholder icons in `public/icons/` with finished art (v2.6.1).
 - [ ] 5 screenshots 1280×800 for the store listing.
 - [ ] Promo tile 440×280.
 - [ ] Final smoke-test of the production ZIP via *Load unpacked*.

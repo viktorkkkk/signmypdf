@@ -81,6 +81,13 @@ html, body {
 .ext-brand span {
   color: var(--color-text);
 }
+.ext-brand-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
 /* When a file is loaded the brand renders as a <button>. Neutralise
    browser defaults so it looks identical to the <div> version, then
    layer a subtle hover so it's clear the element is clickable. */
