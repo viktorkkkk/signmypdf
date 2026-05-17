@@ -6,7 +6,7 @@ session can resume without re-discovering them.
 
 ## 1. Project Overview
 
-- **Sign PDF Extension v2.6.2** — standalone Chrome MV3 extension.
+- **Sign PDF Extension v2.6.3** — standalone Chrome MV3 extension.
 - All PDF work runs locally in the browser; **no runtime network calls** to
   `signmypdf.io` or any other origin.
 - Lives inside the `signmypdf.io` monorepo at `apps/extension/`. The Next.js
@@ -66,7 +66,7 @@ session can resume without re-discovering them.
 | [apps/extension/src/editor/editor.css](src/editor/editor.css) | Host shell styles + 3-column layout + unified-editor + signature-resize overrides |
 | [packages/ui/src/styles/fse.css](../../packages/ui/src/styles/fse.css) | Shared FillSignEditor styles between `apps/web` and the extension. Pure move from `apps/web/app/globals.css` — never mutate selectors here without considering the web side |
 
-## 5. Current Feature State (v2.6.2)
+## 5. Current Feature State (v2.6.3)
 
 - **3 placement tools:** Signature (default), Text, Date. Sidebar actions:
   Copy, Delete.
@@ -198,6 +198,7 @@ grep -oE ".{30}signmypdf\\.io.{30}" apps/extension/dist/assets/*.js | head -5
 
 | Version | Date | Change |
 |---|---|---|
+| v2.6.3 | 2026-05-18 | Toolbar-icon refresh — same simplified red-square "Sign / PDF" mark, larger letterforms (fills more of the 16/32/48/128 px canvas). Detailed `public/logo.png` in the editor top-bar unchanged. Assets-only patch — same source pipeline (sips -z from Frame 58.png 1465×1441). |
 | v2.6.2 | 2026-05-17 | Toolbar-icon set replaced with the simplified red-square "Sign / PDF" mark — the detailed v2.6.1 brand was unreadable at 16×16 in the Chrome toolbar. Editor top-bar `.ext-brand-logo` enlarged 32 → 44 px (the v2.6.1 32 px size looked lost in the header). The detailed `public/logo.png` stays — it is only the in-editor lockup, not the toolbar icon. Tagline `Free · No signup · Files stay private` unchanged. Assets + CSS only — no behaviour, audit, or permissions changes. |
 | v2.6.1 | 2026-05-17 | Replaced placeholder pen-on-blue icons (16 / 32 / 48 / 128) with the final brand mark. New `public/logo.png` (512×512) wired into the editor top-bar via `<img>` + `chrome.runtime.getURL()`. Removed the obsolete `scripts/make-placeholder-icons.mjs` generator. Assets-only patch — no behaviour, audit, or permissions changes. |
 | v2.6.0 | 2026-05-14 | Baseline feature set documented in §5 above. |

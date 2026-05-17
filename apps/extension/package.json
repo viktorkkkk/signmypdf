@@ -1,6 +1,6 @@
 {
   "name": "sign-pdf-extension",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "private": true,
   "type": "module",
   "description": "Standalone Chrome MV3 extension — sign PDFs entirely in your browser. No network calls, no signup, no watermark.",
