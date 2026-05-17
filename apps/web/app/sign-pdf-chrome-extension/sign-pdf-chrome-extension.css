@@ -1,0 +1,509 @@
+/* ===========================================================================
+   /sign-pdf-chrome-extension — Chrome-extension landing.
+   Class prefix `spce-` so rules don't bleed into tool surfaces. All
+   tokens (--color-*) come from app/globals.css :root.
+   =========================================================================== */
+
+.spce-page {
+  display: block;
+  background: var(--color-bg);
+}
+
+.spce-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.spce-container-narrow {
+  max-width: 720px;
+}
+
+/* ── Landing-specific header (logo + "Free web tools →") ───────────────── */
+.spce-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.spce-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* 18 px vertical → 80 px logo + 18×2 padding + 1 px border = 117 px
+     total. Lands inside the 112–120 px target the brief specified. */
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.spce-header-brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.spce-header-exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.spce-header-exit:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+/* Section base */
+.spce-section {
+  padding: 80px 0;
+  background: var(--color-bg);
+}
+.spce-section-alt {
+  background: #fafafa;
+}
+.spce-h1 {
+  font-size: 60px;
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin: 0;
+}
+.spce-h2 {
+  font-size: 38px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0;
+}
+.spce-section-sub {
+  font-size: 18px;
+  color: var(--color-muted);
+  text-align: center;
+  margin: 12px auto 0;
+  max-width: 640px;
+}
+
+/* ── 1. Hero — split-screen ────────────────────────────────────────────── */
+.spce-hero {
+  padding: 48px 0 32px;
+  background: var(--color-bg);
+}
+.spce-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.spce-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.spce-hero-sub {
+  font-size: 20px;
+  color: var(--color-muted);
+  line-height: 1.5;
+  margin: 24px 0 0;
+  max-width: 480px;
+}
+.spce-hero-cta {
+  margin-top: 32px;
+}
+.spce-trust {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: 16px 0 0;
+}
+
+/* Right column — hero screenshot */
+.spce-hero-shot {
+  display: flex;
+  justify-content: center;
+}
+.spce-hero-shot-img {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
+  display: block;
+}
+
+/* Browser compat — thin centered line under the hero grid. */
+.spce-browsers-line {
+  margin: 40px auto 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+/* ── Primary CTA — "Install Chrome Extension" register ─────────────────── */
+.spce-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 40px;
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 21px;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1;
+  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.35);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.spce-cta:hover {
+  background: #1565c0;
+  box-shadow: 0 8px 24px rgba(26, 115, 232, 0.45);
+}
+.spce-cta:active {
+  transform: translateY(1px);
+}
+/* Icon slot — flex centring with line-height: 0 prevents the SVG's
+   inherited inline-baseline from shifting it relative to the text. */
+.spce-cta-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+.spce-cta-icon svg {
+  display: block;
+}
+/* Smaller variant kept for any inline CTA that lands later. */
+.spce-cta-md {
+  padding: 10px 22px;
+  font-size: 15px;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
+
+/* Generic screenshot frame (gallery + missing-asset placeholder). */
+.spce-shot {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+.spce-shot::after {
+  content: 'Screenshot';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+.spce-shot-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── 2. How it works ───────────────────────────────────────────────────── */
+.spce-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 56px;
+}
+.spce-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+}
+.spce-step-icon {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+.spce-step-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.spce-step-body {
+  font-size: 15px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 320px;
+}
+
+/* ── 3. Comparison ─────────────────────────────────────────────────────── */
+.spce-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 48px auto 0;
+  max-width: 880px;
+}
+.spce-compare-col {
+  border-radius: 12px;
+  padding: 32px;
+}
+.spce-compare-bad {
+  background: #fef2f2;
+  color: #991b1b;
+}
+.spce-compare-good {
+  background: #eff6ff;
+  color: #1e40af;
+}
+.spce-compare-head {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.92;
+}
+.spce-compare-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.spce-compare-col li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 1.45;
+}
+.spce-compare-col svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── 4. Features ───────────────────────────────────────────────────────── */
+.spce-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 56px;
+}
+.spce-feature {
+  display: flex;
+  flex-direction: column;
+}
+.spce-feature-icon {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+.spce-feature-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.spce-feature-body {
+  font-size: 14.5px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── 5. Screenshot gallery ─────────────────────────────────────────────── */
+.spce-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.spce-gallery-item {
+  margin: 0;
+}
+.spce-gallery-caption {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* ── 6. FAQ ────────────────────────────────────────────────────────────── */
+.spce-faq-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.spce-faq-item {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.spce-faq-item-open {
+  border-color: #cbd5e1;
+}
+.spce-faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.spce-faq-q:hover {
+  background: #f8fafc;
+}
+.spce-faq-chevron {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+.spce-faq-item-open .spce-faq-chevron {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+.spce-faq-a {
+  padding: 0 22px 22px;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* ── 7. Final CTA ──────────────────────────────────────────────────────── */
+.spce-final {
+  background: #eff6ff;
+  padding: 96px 0;
+}
+.spce-final-h2 {
+  font-size: 42px;
+  text-align: center;
+}
+.spce-final-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+/* ── 8. Cross-pollination ──────────────────────────────────────────────── */
+.spce-cross {
+  padding: 48px 0;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+}
+.spce-cross p {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 14.5px;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+.spce-cross a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.spce-cross a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .spce-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .spce-hero-text {
+    align-items: stretch;
+    text-align: center;
+  }
+  .spce-hero-text .spce-hero-sub,
+  .spce-hero-text .spce-trust {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .spce-hero-cta {
+    align-self: center;
+  }
+  .spce-hero-shot-img {
+    box-shadow: none;
+    border-radius: 12px;
+  }
+  .spce-steps,
+  .spce-features,
+  .spce-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .spce-compare {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .spce-section,
+  .spce-final {
+    padding: 56px 0;
+  }
+  .spce-hero {
+    padding: 32px 0 24px;
+  }
+  .spce-h1 {
+    font-size: 38px;
+    line-height: 1.1;
+  }
+  .spce-h2 {
+    font-size: 30px;
+  }
+  .spce-final-h2 {
+    font-size: 32px;
+  }
+  .spce-hero-sub {
+    font-size: 16px;
+  }
+  .spce-section-sub {
+    font-size: 16px;
+  }
+  .spce-cta {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  .spce-steps,
+  .spce-features,
+  .spce-gallery {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .spce-step {
+    padding: 16px;
+  }
+  .spce-compare-col {
+    padding: 24px;
+  }
+  .spce-header-exit span {
+    display: none;
+  }
+}
