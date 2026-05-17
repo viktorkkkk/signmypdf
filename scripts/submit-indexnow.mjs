@@ -111,6 +111,8 @@ const BLOG_SLUGS = [
   'remove-password-from-pdf-you-own',
   'adobe-fill-sign-vs-signmypdf',
   'what-happens-if-protected-pdf-leaks',
+  'sign-non-compete-agreement-online',
+  'photographers-digital-signatures',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

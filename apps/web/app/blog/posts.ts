@@ -10243,6 +10243,140 @@ Yes. Tools that use older RC4 encryption, or that don't specify the algorithm, p
 - [What to Do After Sending a Contract Unprotected](/blog/sent-confidential-contract-unprotected)
 `,
   },
+  {
+    slug: 'sign-non-compete-agreement-online',
+    title: 'Sign a Non-Compete Agreement Online',
+    excerpt: 'Your employer emailed a non-compete agreement PDF and you need to sign it today — no printer, no notary. Here is how to do it in your browser in minutes.',
+    date: '2026-05-18',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign non-compete agreement online', 'non-compete agreement pdf', 'electronic signature non-compete', 'sign employment contract pdf', 'sign pdf online free no registration', 'esign non-compete agreement', 'non-compete form free browser'],
+    metaTitle: 'Sign a Non-Compete Agreement Online',
+    metaDescription: 'Need to sign a non-compete agreement PDF before your start date? Do it in your browser — no account, no printer, no paywall before download.',
+    content: `
+Your new employer just emailed a non-compete agreement PDF. Sign it before your start date — which is 48 hours away. There's no printer in your apartment, the nearest print shop closes at 6 pm, and the HR contact goes unreachable after 5. Signing a non-compete agreement should take four minutes, not four trips across town.
+
+Non-compete agreements are standard employment documents. The signing itself is simple — one party, one signature. And an electronic signature on a PDF is legally valid under the ESIGN Act and most state UETA adoptions, just like a handwritten one. You don't need a printer, a notary, or a courier.
+
+[CTA]Sign Your Non-Compete Agreement|Free in your browser. No account, no printer required.|Sign PDF Now — Free
+
+## How to sign a non-compete agreement online
+
+1. Open SignMyPDF and upload the non-compete PDF.
+2. Click the signature line on the document.
+3. Draw or type your signature in the panel.
+4. Confirm the placement and review the document.
+5. Download the signed PDF and email it to HR.
+
+[IMAGE: A PDF non-compete agreement open in a browser window with a drawn signature placed on the signature line]
+
+## Why most signing tools slow you down
+
+- Dedicated e-signature platforms require you to create an account before you can even open the document — and sometimes the sender needs an account too
+- Some tools watermark the downloaded PDF or lock the final download behind a subscription, which is unacceptable for a legal document
+- Mobile signing flows often break halfway through or route to an upgrade screen at the last step
+- Uploading a legal employment agreement to an unfamiliar server feels unnecessarily risky when the document describes your future work restrictions
+- Multi-step confirmation screens add friction to a one-person, one-signature task that should take under five minutes
+
+## Why SignMyPDF works for this
+
+- Free, no registration, no paywall at download — open the PDF and download the signed version without creating an account
+- Your file is processed entirely in your browser and never sent to a server
+- Draw your signature, type it, or upload an image of your handwritten signature — whichever the situation calls for
+- Works on iPhone, Android, Mac, and Windows without installing anything
+- The signed PDF downloads in a standard format your employer's HR team will accept
+
+Employment contracts — including non-competes — follow the same legal framework as other business agreements when it comes to electronic signatures. If you want the detail, [electronic signatures on business contracts](/blog/electronic-signature-business-contracts) covers the ESIGN Act, UETA, and how courts have treated electronically signed employment documents.
+
+If you regularly sign similar agreements as a contractor or freelancer rather than as an employee, [signing a contractor agreement online](/blog/sign-contractor-agreement-online) walks through the same process for independent service providers.
+
+## Frequently asked questions
+
+**Is an electronic signature on a non-compete legally valid?**
+In most US states, yes. The ESIGN Act (2000) and UETA (adopted by the majority of states) make electronic signatures legally equivalent to handwritten ones on employment contracts. The enforceability of the non-compete's actual terms varies by state — California largely prohibits them, for instance — but the signature mechanism itself is not in question. If you have concerns about enforceability in your state, that is a question for an employment attorney, not a question about how you sign.
+
+**What if the non-compete PDF doesn't have a signature field?**
+You can still sign it. Upload the document to SignMyPDF, click anywhere on the page where the signature line appears, and place your signature directly on that spot. The tool works on any PDF — not just documents with pre-built interactive fields.
+
+**Do I need to send the original signed PDF or is a copy acceptable?**
+Send the signed PDF as a file attachment, not a screenshot or a photo. HR departments expect a signed PDF file because document integrity matters for employment records. Downloading and attaching the file from SignMyPDF produces exactly that.
+
+[CTA]Sign Your Non-Compete Agreement Now|No account. No watermark. Works on any PDF.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a Service Agreement Online Free](/blog/sign-service-agreement-online)
+- [PDF Signing Without Email Required](/blog/pdf-signing-no-email-required)
+- [Are Digital Signatures Admissible in Court?](/blog/digital-signatures-admissible-court)
+`,
+  },
+  {
+    slug: 'photographers-digital-signatures',
+    title: 'Digital Signatures for Photographers',
+    excerpt: 'Model releases and session agreements shouldn\'t require a printer. How photographers fill and sign client PDF contracts in minutes, free, without both parties needing an account.',
+    date: '2026-05-18',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['digital signatures for photographers', 'photographer client contracts pdf', 'model release sign online', 'photography session agreement pdf', 'freelance photographer pdf tools', 'fill sign pdf contracts free', 'photographer business documents online'],
+    metaTitle: 'Digital Signatures for Photographers',
+    metaDescription: 'Photographers: fill and sign model releases and session agreements in a browser — free, no account, works on any PDF contract without both parties needing an app.',
+    content: `
+A client books you for a portrait session. You email the session agreement PDF — their name, the usage terms, and signature lines for both parties. The reply: "How do I sign this? I don't have a printer." Photographer clients deal with digital signatures every time they book a session, but most haven't done it before. By the time you've walked one client through how to sign a PDF digitally, you've lost an hour you'd rather spend editing.
+
+Photographers handle digital signatures constantly — model releases, session agreements, licensing forms. Getting a client to sign shouldn't be more stressful than the shoot itself.
+
+[CTA]Fill and Sign Your Client Contracts|Free, browser-only. No account or app required.|Fill PDF Form Now — Free
+
+## How to fill and sign your photography contracts
+
+1. Open the Fill tool on SignMyPDF and upload your PDF.
+2. Click on blank areas and type in the client name, date, and session details.
+3. Place your own signature where the agreement requires it.
+4. Download the filled, signed PDF.
+5. Email it to the client so they can countersign their copy.
+
+[IMAGE: A photography session agreement PDF open in a browser with typed client details and a drawn signature placed on the photographer's signature line]
+
+## Why PDF contracts trip up photographers and clients
+
+- Standard email attachments prompt clients to open Adobe Acrobat, where they hit a sign-in wall or an upgrade prompt before they can do anything
+- Dedicated e-signature platforms require both the photographer and the client to have accounts — or charge per document sent
+- Printing, signing, scanning, and emailing back is a four-step process that kills booking momentum for clients who don't own a printer
+- Some free tools add a visible watermark to the finished contract, which looks unprofessional on a document you're sending to a paying client
+- Cloud-based workflows upload personal data to third-party servers — a concern when the agreement includes the client's full name and contact details
+
+## Why photographers use SignMyPDF
+
+- Free, no registration, no paywall at download — fill and sign client documents without creating an account
+- Works entirely in your browser: neither your file nor the client's details leave your device
+- Place text anywhere on the page — not just in pre-built form fields — so it works on any PDF template you already have
+- Handles flat scans and non-interactive PDFs, not just editable templates
+- Draw or type your signature once and apply it in seconds on any document in your session
+
+Other freelancers who manage client agreements regularly run into the same friction. [How consultants handle proposals and contracts digitally](/blog/consultants-proposals-digital-signature) covers a similar workflow for retainer documents and proposals in professional services.
+
+If the PDF you're working with is a flat scan rather than an editable form — a printed release someone photographed and re-saved — [filling a PDF form online for free](/blog/fill-pdf-form-online-free) explains how the fill tool works when there are no clickable fields on the page.
+
+## Frequently asked questions
+
+**Is an electronic signature on a model release legally valid?**
+Yes. In the US, the ESIGN Act and UETA make electronic signatures legally equivalent to handwritten ones for private contracts between consenting parties. A model release signed electronically is enforceable, provided both parties intended to sign and the document content is clear. Keep a copy of the signed PDF in your project records.
+
+**What types of documents do photographers typically sign this way?**
+Session agreements, model and property releases, licensing agreements, print release forms, and invoices where both parties confirm terms. Any document that currently requires a physical signature from you or your client can be handled as an electronic PDF signature without either of you needing an account.
+
+**Can I save my signature and reuse it across multiple client contracts?**
+Yes. SignMyPDF lets you reuse a signature during a session so you're not redrawing it for every document. Photographers who sign the same agreement template for each new booking can process multiple contracts without repeating the signature creation step each time.
+
+[CTA]Fill and Sign Your Photography Contracts|Free, no account, no watermark. Browser-only.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Remote Teams: Get Documents Signed Online](/blog/remote-teams-sign-documents)
+- [Fill an Insurance Claim Form Online Free](/blog/fill-insurance-claim-form-pdf)
+- [Fill a Bank Form PDF Online Free](/blog/fill-bank-form-pdf-online)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
