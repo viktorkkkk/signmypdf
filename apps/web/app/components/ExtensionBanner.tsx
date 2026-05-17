@@ -16,7 +16,7 @@ import ChromeIcon from './ChromeIcon';
  * `?from=extension` visitors (they already installed it).
  */
 
-const CHROME_LANDING = '/chrome';
+const CHROME_LANDING = '/sign-pdf-chrome-extension';
 
 function isMobile(): boolean {
   if (typeof window === 'undefined') return false;

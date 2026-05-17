@@ -7,6 +7,8 @@
    the Chrome extension can reuse them. All .fse-* selectors live there;
    the only change in this file is this import. */
 @import '@signmypdf/ui/styles/fse.css';
+/* /sign-pdf-chrome-extension landing — `.spce-*` class namespace. */
+@import './sign-pdf-chrome-extension/sign-pdf-chrome-extension.css';
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

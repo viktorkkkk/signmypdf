@@ -72,8 +72,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: `${baseUrl}/chrome`,
-      lastModified: lastModFor('/chrome'),
+      // Replaces /chrome (now 301-redirected via next.config.ts).
+      url: `${baseUrl}/sign-pdf-chrome-extension`,
+      lastModified: lastModFor('/sign-pdf-chrome-extension'),
       changeFrequency: 'monthly' as const,
       priority: 0.85,
     },
