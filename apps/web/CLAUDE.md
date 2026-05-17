@@ -1113,6 +1113,13 @@ app/                                  # apps/web/app/
   merge/page.tsx                     # /merge tool (live since 2026-05-02)
   compress/page.tsx                  # /compress tool (live since 2026-05-02)
   split/page.tsx                     # /split tool (live since 2026-05-02)
+  sign-pdf-chrome-extension/         # /sign-pdf-chrome-extension — Chrome extension landing
+    page.tsx                         #   server, 7 sections + JSON-LD (WebPage + SoftwareApplication + FAQPage)
+    layout.tsx                       #   SEO metadata (canonical, og:url, title, description)
+    LandingHeader.tsx                #   minimal header (logo only — no nav)
+    Faq.tsx                          #   client accordion (one-open-at-a-time)
+    sign-pdf-chrome-extension.css    #   all .spce-* rules (imported from globals.css)
+    CLAUDE.md                        #   operational context — read before editing this landing
   sign-nda/
     page.tsx                         # /sign-nda — server component, metadata, JSON-LD,
                                      #   5-step "How it works" flow, About NDAs, FAQ

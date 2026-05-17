@@ -78,11 +78,11 @@ PRs that landed Stage 5:
 
 Site changes that came in for the extension:
 
-- `/chrome` — landing page (hero with working dropzone + install CTA + screenshot placeholders + how-it-works + why list)
+- `/sign-pdf-chrome-extension` — SEO-optimised Chrome-extension landing (split-screen hero + Add-to-Chrome CTA + 3-step screenshot block + red/blue comparison + 6-feature grid + FAQ + cross-pollination). Replaced the original `/chrome` slug on 2026-05-17; `/chrome` now 308-redirects here via `apps/web/next.config.ts`. Per-landing CLAUDE.md lives at [apps/web/app/sign-pdf-chrome-extension/CLAUDE.md](apps/web/app/sign-pdf-chrome-extension/CLAUDE.md) — read before editing.
 - `/extension/privacy` — Chrome Web Store-required privacy policy, separate from the main `/privacy`
 - `/sign?from=extension` — minimal mode (no NavHeader/footer/banner/More-Tools/FAQ, slim sticky top bar with logo + `No signup` chip)
 - `<ExtensionBanner variant="card" />` — 150 px card pitched under the dropzone on `/sign` upload step, before the More Tools grid
-- All dropzones unified to **720 × 480** on `/sign`, `/sign?from=extension`, `/chrome`, `/fill`, `/protect`, `/merge`, `/split`, `/compress`
+- All dropzones unified to **720 × 480** on `/sign`, `/sign?from=extension`, `/fill`, `/protect`, `/merge`, `/split`, `/compress` (the original `/chrome` dropzone is gone — the new landing has no dropzone by design, since it competes with the Add-to-Chrome CTA)
 
 Pricing (unchanged from the rest of the site):
 
