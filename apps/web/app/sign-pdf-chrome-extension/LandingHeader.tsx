@@ -19,6 +19,10 @@ export default function LandingHeader() {
              default 40 px and are unaffected. */}
           <Logo height={80} />
         </Link>
+        {/* Quiet right-side trust line — mirrors the editor top-bar in
+           the extension. Plain text, no hover, hidden on narrow
+           viewports where the 80 px logo already fills the row. */}
+        <span className="spce-header-tagline">Free · No signup · Files stay private</span>
       </div>
     </header>
   );

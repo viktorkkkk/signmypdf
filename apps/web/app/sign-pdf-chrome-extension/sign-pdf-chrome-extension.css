@@ -39,6 +39,15 @@
   align-items: center;
   text-decoration: none;
 }
+.spce-header-tagline {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-muted);
+  line-height: 1.2;
+  /* Plain trust line, no hover affordance — middot bullets match the
+     editor top-bar inside the extension so users see the same
+     promise in both places. */
+}
 .spce-header-exit {
   display: inline-flex;
   align-items: center;
@@ -504,6 +513,11 @@
     padding: 24px;
   }
   .spce-header-exit span {
+    display: none;
+  }
+  /* Tagline crowds the 80 px logo on narrow viewports — drop it. The
+     editor inside the extension does the same with .ext-tag. */
+  .spce-header-tagline {
     display: none;
   }
 }
