@@ -195,66 +195,65 @@
   box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
-/* Generic screenshot frame (gallery + missing-asset placeholder). */
-.spce-shot {
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
-}
-.spce-shot::after {
-  content: 'Screenshot';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  pointer-events: none;
-}
-.spce-shot-img {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* ── 2. How it works ───────────────────────────────────────────────────── */
-.spce-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  margin-top: 56px;
-}
-.spce-step {
+/* ── 2. See how it works — zig-zag product showcase ────────────────────── */
+.spce-showcase {
   display: flex;
   flex-direction: column;
+  gap: 96px;
+  margin-top: 64px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.spce-showcase-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
   align-items: center;
-  text-align: center;
-  padding: 24px;
 }
-.spce-step-icon {
-  color: var(--color-primary);
-  margin-bottom: 16px;
+/* Zig-zag: every 2nd row flips so the screenshot lands on the left. The
+   text node is always first in the DOM (semantic reading order), the
+   screenshot second; the flip is purely visual via grid-area assignment. */
+.spce-showcase-row:nth-child(even) .spce-showcase-text {
+  grid-column: 2;
+  grid-row: 1;
 }
-.spce-step-title {
-  font-size: 19px;
+.spce-showcase-row:nth-child(even) .spce-showcase-shot {
+  grid-column: 1;
+  grid-row: 1;
+}
+.spce-showcase-text {
+  max-width: 480px;
+}
+.spce-showcase-title {
+  font-size: 34px;
+  line-height: 1.15;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--color-text);
-  margin: 0 0 8px;
-}
-.spce-step-body {
-  font-size: 15px;
-  color: var(--color-muted);
-  line-height: 1.55;
   margin: 0;
-  max-width: 320px;
+}
+.spce-showcase-body {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 16px 0 0;
+}
+.spce-showcase-shot {
+  display: flex;
+  justify-content: center;
+}
+.spce-showcase-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  display: block;
+  transition: box-shadow 0.2s ease;
+}
+.spce-showcase-img:hover {
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
 }
 
 /* ── 3. Comparison ─────────────────────────────────────────────────────── */
@@ -333,24 +332,7 @@
   margin: 0;
 }
 
-/* ── 5. Screenshot gallery ─────────────────────────────────────────────── */
-.spce-gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 48px;
-}
-.spce-gallery-item {
-  margin: 0;
-}
-.spce-gallery-caption {
-  margin: 14px 0 0;
-  font-size: 14px;
-  color: var(--color-muted);
-  text-align: center;
-}
-
-/* ── 6. FAQ ────────────────────────────────────────────────────────────── */
+/* ── 5. FAQ ────────────────────────────────────────────────────────────── */
 .spce-faq-list {
   margin-top: 48px;
   display: flex;
@@ -402,7 +384,7 @@
   line-height: 1.6;
 }
 
-/* ── 7. Final CTA ──────────────────────────────────────────────────────── */
+/* ── 6. Final CTA ──────────────────────────────────────────────────────── */
 .spce-final {
   background: #eff6ff;
   padding: 96px 0;
@@ -417,7 +399,7 @@
   margin-top: 32px;
 }
 
-/* ── 8. Cross-pollination ──────────────────────────────────────────────── */
+/* ── 7. Cross-pollination ──────────────────────────────────────────────── */
 .spce-cross {
   padding: 48px 0;
   background: var(--color-bg);
@@ -462,13 +444,38 @@
     box-shadow: none;
     border-radius: 12px;
   }
-  .spce-steps,
-  .spce-features,
-  .spce-gallery {
+  .spce-features {
     grid-template-columns: repeat(2, 1fr);
   }
   .spce-compare {
     grid-template-columns: 1fr;
+  }
+  /* Zig-zag collapses to a single column. Screenshot always renders
+     ABOVE the text on mobile (logical reading order: see → understand),
+     overriding the desktop nth-child(even) flip via row reordering. */
+  .spce-showcase {
+    gap: 56px;
+  }
+  .spce-showcase-row,
+  .spce-showcase-row:nth-child(even) .spce-showcase-text,
+  .spce-showcase-row:nth-child(even) .spce-showcase-shot {
+    grid-template-columns: 1fr;
+    grid-column: 1;
+    grid-row: auto;
+    gap: 24px;
+  }
+  .spce-showcase-row .spce-showcase-shot {
+    order: 1;
+  }
+  .spce-showcase-row .spce-showcase-text {
+    order: 2;
+    max-width: 100%;
+  }
+  .spce-showcase-title {
+    font-size: 26px;
+  }
+  .spce-showcase-body {
+    font-size: 16px;
   }
 }
 
@@ -500,14 +507,15 @@
     padding: 12px 24px;
     font-size: 16px;
   }
-  .spce-steps,
-  .spce-features,
-  .spce-gallery {
+  .spce-features {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  .spce-step {
-    padding: 16px;
+  .spce-showcase-title {
+    font-size: 24px;
+  }
+  .spce-showcase-body {
+    font-size: 15px;
   }
   .spce-compare-col {
     padding: 24px;

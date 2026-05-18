@@ -17,12 +17,17 @@ Captures the design rules, copy, and don't-touch zones for the landing.
 
 1. **HERO** — split-screen. Text left (H1 + subtitle + Add-to-Chrome
    CTA + trust line). Hero screenshot right.
-2. **See how it works** — 3 step screenshots with captions
-   (Drop / Sign / Download).
-3. **Why this extension is different** — comparison table, red column
+2. **See how it works** — zig-zag product showcase, 3 real screenshots
+   alternating text-left / shot-right / text-left. Steps:
+   1. Drop your PDF
+   2. Add your signature
+   3. Download in seconds
+3. **Everything you need** — 6 features in a 3×2 grid (Draw / Type /
+   Upload / Right-click / Text+Date / Local files). Sits before
+   comparison so the user sees what the product does before being
+   pitched against competitors.
+4. **Why this extension is different** — comparison table, red column
    (other tools) vs blue column (us).
-4. **Everything you need** — 6 features in a 3×2 grid (Draw / Type /
-   Upload / Right-click / Text+Date / Local files).
 5. **FAQ** — 5 questions in a controlled accordion (one open at a time).
 6. **Final CTA** — repeats the Add-to-Chrome button on a light-blue
    background.
@@ -114,7 +119,10 @@ apps/web/
         ├── editor-with-signature.png       # 1200×750 (PLACEHOLDER)
         ├── context-menu.png                # 1200×750 (PLACEHOLDER)
         ├── signature-modal.png             # 1200×750 (PLACEHOLDER)
-        └── og-image.png                    # 1200×630 (PLACEHOLDER)
+        ├── og-image.png                    # 1200×630 (PLACEHOLDER)
+    ├── 1-drop-pdf.png                  # 1107×650 (real)
+    ├── 2-add-signature.png             # 966×764 (real)
+    └── 3-download.png                  # 1107×583 (real)
 ```
 
 ## 7. SEO
@@ -134,9 +142,6 @@ apps/web/
 
 ## 8. Open backlog
 
-- Replace the three placeholder screenshots in
-  `public/chrome-extension/` (editor-with-signature, context-menu,
-  signature-modal) with real captures.
 - Publish the extension to the Chrome Web Store.
 - Once approved, swap the placeholder
   `CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/PLACEHOLDER'`
@@ -155,4 +160,4 @@ apps/web/
 | v1.2 | Split-screen HERO, new H1 `Sign PDF Free / Chrome Extension` |
 | v1.3 | Logo bumped to 80 px in landing header, removed "Free web tools" link, stronger hero-shot border + shadow |
 | v1.4 | Header padding 18 px → total header ≈ 117 px |
-| _next_ | Merge "How it works" + "See it in action" into a single 3-screenshot block |
+| v1.5 | Replaced weak 3-icon "How it works" + 3-placeholder "See it in action" with a single zig-zag "See how it works" showcase: 3 real screenshots (`1-drop-pdf.png` / `2-add-signature.png` / `3-download.png`) in alternating text-left / shot-right layout. Mobile collapses to single column with screenshot above text. Section order tightened: Features moved above Comparison so the product is shown in action → features → competitor framing, instead of being compared before the user has seen what it does. |

@@ -2,8 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   CheckCircle2,
-  Download,
-  FileText,
   Keyboard,
   Lock,
   MousePointerClick,
@@ -17,30 +15,36 @@ import ChromeIcon from '../components/ChromeIcon';
 import LandingHeader from './LandingHeader';
 import Faq from './Faq';
 import heroShot from '../../public/chrome-extension/hero-screenshot.png';
+import shotDropPdf from '../../public/chrome-extension/1-drop-pdf.png';
+import shotAddSignature from '../../public/chrome-extension/2-add-signature.png';
+import shotDownload from '../../public/chrome-extension/3-download.png';
 
 /** Chrome Web Store URL — placeholder until the listing is approved.
  *  Swap with the real product detail URL once the store ID is known. */
 const CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/PLACEHOLDER';
 
-const HOW_IT_WORKS = [
+const SHOWCASE_STEPS = [
   {
-    Icon: Download,
-    title: '1. Install in one click',
+    src: shotDropPdf,
+    alt: 'Sign PDF Chrome extension landing page with a drop-zone for uploading a PDF',
+    title: '1. Drop your PDF',
     body:
-      "Free from the Chrome Web Store. No signup, no permissions beyond what's needed.",
+      'Drag, drop, or right-click any PDF link in your browser. No upload, ever.',
   },
   {
-    Icon: FileText,
-    title: '2. Open any PDF',
+    src: shotAddSignature,
+    alt: 'Signature creation modal with Draw, Type and Upload tabs, showing a hand-drawn signature',
+    title: '2. Add your signature',
     body:
-      'In your browser, in Gmail, in Google Drive, or any website with a PDF link.',
+      'Draw it, type it, or upload an image. Works on any page of your document.',
   },
   {
-    Icon: CheckCircle2,
-    title: '3. Sign and download',
+    src: shotDownload,
+    alt: 'Sign PDF editor with a placed signature and the Download Signed PDF button highlighted',
+    title: '3. Download in seconds',
     body:
-      'Draw, type, or upload your signature. Download the signed PDF instantly.',
+      'Your signed PDF stays on your device. No tracking, no watermark, no signup.',
   },
 ];
 
@@ -74,24 +78,6 @@ const FEATURES = [
     Icon: Lock,
     title: 'Your files, your computer',
     body: 'No upload, no cloud storage, no third-party servers. Period.',
-  },
-];
-
-const SCREENSHOTS = [
-  {
-    src: '/chrome-extension/editor-with-signature.png',
-    alt: 'Sign PDF editor with a placed signature on a contract',
-    caption: 'Drop any PDF and sign in seconds',
-  },
-  {
-    src: '/chrome-extension/context-menu.png',
-    alt: 'Right-click context menu on a PDF link in Gmail',
-    caption: 'Right-click any PDF link to sign instantly',
-  },
-  {
-    src: '/chrome-extension/signature-modal.png',
-    alt: 'Signature creation modal with Draw, Type and Upload tabs',
-    caption: 'Draw, type, or upload your signature',
   },
 ];
 
@@ -186,32 +172,6 @@ function AddToChromeButton({ size = 'lg' }: { size?: 'lg' | 'md' }) {
   );
 }
 
-/** Image with a same-aspect-ratio placeholder underneath. */
-function ScreenshotFrame({
-  src,
-  alt,
-  width,
-  height,
-}: {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-}) {
-  return (
-    <div className="spce-shot" style={{ aspectRatio: `${width} / ${height}` }}>
-      <Image
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className="spce-shot-img"
-        sizes="(max-width: 768px) 100vw, 1200px"
-      />
-    </div>
-  );
-}
-
 export default function SignPdfChromeExtensionPage() {
   return (
     <>
@@ -256,25 +216,51 @@ export default function SignPdfChromeExtensionPage() {
              without crowding the hero. */}
         </section>
 
-        {/* ── 2. HOW IT WORKS ─────────────────────────────────────── */}
+        {/* ── 2. SEE HOW IT WORKS — zig-zag product showcase ─────── */}
         <section className="spce-section spce-section-alt">
           <div className="spce-container">
-            <h2 className="spce-h2">How it works</h2>
-            <p className="spce-section-sub">Three steps. No learning curve.</p>
-            <div className="spce-steps">
-              {HOW_IT_WORKS.map(({ Icon, title, body }) => (
-                <div key={title} className="spce-step">
-                  <Icon size={48} strokeWidth={1.6} className="spce-step-icon" />
-                  <h3 className="spce-step-title">{title}</h3>
-                  <p className="spce-step-body">{body}</p>
+            <h2 className="spce-h2">See how it works</h2>
+            <p className="spce-section-sub">Sign your PDF in 30 seconds.</p>
+            <div className="spce-showcase">
+              {SHOWCASE_STEPS.map(({ src, alt, title, body }) => (
+                <div key={title} className="spce-showcase-row">
+                  <div className="spce-showcase-text">
+                    <h3 className="spce-showcase-title">{title}</h3>
+                    <p className="spce-showcase-body">{body}</p>
+                  </div>
+                  <div className="spce-showcase-shot">
+                    <Image
+                      src={src}
+                      alt={alt}
+                      sizes="(max-width: 880px) 100vw, 600px"
+                      className="spce-showcase-img"
+                      placeholder="blur"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── 3. COMPARISON ───────────────────────────────────────── */}
+        {/* ── 3. FEATURES ─────────────────────────────────────────── */}
         <section className="spce-section">
+          <div className="spce-container">
+            <h2 className="spce-h2">Everything you need to sign a PDF</h2>
+            <div className="spce-features">
+              {FEATURES.map(({ Icon, title, body }) => (
+                <div key={title} className="spce-feature">
+                  <Icon size={32} strokeWidth={1.8} className="spce-feature-icon" />
+                  <h3 className="spce-feature-title">{title}</h3>
+                  <p className="spce-feature-body">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── 4. COMPARISON ───────────────────────────────────────── */}
+        <section className="spce-section spce-section-alt">
           <div className="spce-container">
             <h2 className="spce-h2">Why this extension is different</h2>
             <p className="spce-section-sub">
@@ -319,51 +305,15 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 4. FEATURES ─────────────────────────────────────────── */}
-        <section className="spce-section spce-section-alt">
-          <div className="spce-container">
-            <h2 className="spce-h2">Everything you need to sign a PDF</h2>
-            <div className="spce-features">
-              {FEATURES.map(({ Icon, title, body }) => (
-                <div key={title} className="spce-feature">
-                  <Icon size={32} strokeWidth={1.8} className="spce-feature-icon" />
-                  <h3 className="spce-feature-title">{title}</h3>
-                  <p className="spce-feature-body">{body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 5. SCREENSHOT GALLERY ───────────────────────────────── */}
+        {/* ── 5. FAQ ──────────────────────────────────────────────── */}
         <section className="spce-section">
-          <div className="spce-container">
-            <h2 className="spce-h2">See it in action</h2>
-            <p className="spce-section-sub">
-              Real screenshots from the extension.
-            </p>
-            <div className="spce-gallery">
-              {SCREENSHOTS.map(({ src, alt, caption }) => (
-                <figure key={src} className="spce-gallery-item">
-                  <ScreenshotFrame src={src} alt={alt} width={1200} height={750} />
-                  <figcaption className="spce-gallery-caption">
-                    {caption}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 6. FAQ ──────────────────────────────────────────────── */}
-        <section className="spce-section spce-section-alt">
           <div className="spce-container spce-container-narrow">
             <h2 className="spce-h2">Frequently asked questions</h2>
             <Faq items={FAQS} />
           </div>
         </section>
 
-        {/* ── 7. FINAL CTA ────────────────────────────────────────── */}
+        {/* ── 6. FINAL CTA ────────────────────────────────────────── */}
         <section className="spce-section spce-final">
           <div className="spce-container">
             <h2 className="spce-h2 spce-final-h2">
@@ -378,7 +328,7 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 8. CROSS-POLLINATION ────────────────────────────────── */}
+        {/* ── 7. CROSS-POLLINATION ────────────────────────────────── */}
         <section className="spce-cross">
           <div className="spce-container">
             <p>
