@@ -10377,6 +10377,180 @@ Yes. SignMyPDF lets you reuse a signature during a session so you're not redrawi
 - [Fill a Bank Form PDF Online Free](/blog/fill-bank-form-pdf-online)
 `,
   },
+  {
+    slug: 'electronic-signature-security',
+    title: 'Is Your Electronic Signature Legally Secure?',
+    excerpt: 'You signed a contract electronically and want to know if it actually holds up. Here is what electronic signature security really means — and why most free tools handle all three layers better than you think.',
+    date: '2026-05-19',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['electronic signature security', 'secure electronic signature', 'legal e-signature', 'electronic signature privacy', 'PDF signing security', 'ESIGN Act', 'tamper-proof PDF'],
+    metaTitle: 'Is Your Electronic Signature Legally Secure?',
+    metaDescription: 'Find out what makes an electronic signature legally secure — and why browser-based signing offers stronger privacy than most paid tools.',
+    content: `
+You just sent a signed NDA to a new client. Or you're about to email a contractor agreement to someone you've never met in person. Before you hit send, there's a quiet question: is this electronic signature actually secure? Can someone challenge it later?
+
+Electronic signature security has three layers — legal validity, tamper evidence, and file privacy. Most people only think about the first one. Here's what all three actually mean for the documents you sign today.
+
+[CTA]Sign Your Documents Securely|No account, no paywall. Files never leave your browser.|Sign PDF Now — Free
+
+## How electronic signing works in practice
+
+1. Draw or type your signature in the signing tool.
+2. Your signature is embedded directly into the PDF.
+3. Download the signed PDF to your device.
+4. Send the file to the other party via email or file share.
+5. Both parties keep a signed copy for their records.
+
+[IMAGE: A PDF contract open in a browser window with a drawn signature placed on the signature line and a download button visible]
+
+## The legal layer: what makes a signature binding
+
+Under the U.S. ESIGN Act and UETA, an electronic signature is legally equivalent to a handwritten one for the vast majority of contracts. Courts don't require a specific technology — they require evidence of intent to sign. If you applied your signature to a document and the other party relied on it, the agreement is binding in most US jurisdictions.
+
+That said, electronic signature security matters most for enforcement, not formation. A contract can be legally signed but hard to defend in a dispute if there's no record of which version each party saw. Keeping the exact signed PDF you sent — not just a printout — is the practical safeguard.
+
+## The tamper-evidence layer: can someone alter the document after signing?
+
+A basic PDF with an embedded signature image isn't cryptographically locked. In theory, someone could open the file in a PDF editor and make changes. In practice, altered documents show inconsistencies that are easy to detect in disputes: font rendering mismatches, metadata anomalies, signature boundaries that don't align with surrounding content.
+
+For high-trust use cases — court filings, mortgage closings, regulated healthcare documents — look for tools that embed a cryptographic seal, which breaks visibly if anyone modifies the file afterward. For everyday contracts, service agreements, and standard business paperwork, a signed PDF with a clear date is what courts and lawyers routinely accept.
+
+If your workflow touches regulated health data, [HIPAA-compliant electronic signature requirements](/blog/hipaa-electronic-signatures) covers the additional layer that covered entities need.
+
+## The privacy layer: where most free tools fall short
+
+Here's where electronic signature security gets overlooked entirely. Many signing tools — even "free" ones — upload your document to a server to process it. Your NDA, your employment agreement, your client contract sits on someone else's infrastructure, often under a data retention policy you never read.
+
+SignMyPDF processes everything in your browser. The PDF never travels to a server. There's no signup required, no paywall before download, and no file retention policy because there's no server involved. When you close the tab, the document is gone from our systems — because it was never there.
+
+That matters most for documents containing personal data you'd be uncomfortable forwarding unencrypted. Combining browser-based signing with a password-protected version before sending is the most complete workflow. See [what to do after sending a confidential document unprotected](/blog/sent-confidential-contract-unprotected) for the recovery scenario.
+
+## Why most tools handle this poorly
+
+- Cloud processing means your file leaves your device before you've even started signing
+- Forced account creation ties your signing history to a profile that can be subpoenaed or audited
+- Paywalls appear at the final download step, after you've already completed the work
+- Watermarks on signed documents make legally valid PDFs look unprofessional
+- Server-based tools often retain document metadata long after the file is "deleted"
+
+## Why SignMyPDF is different
+
+- 100% browser-based — files never reach our servers, ever
+- No account, no registration — nothing ties the signed document to your email
+- No paywall at download — get the signed PDF on first use, free
+- Works on any device — phone, tablet, desktop, no app required
+- No watermarks on signed documents regardless of plan
+
+## Frequently asked questions
+
+**Is a drawn signature more legally secure than a typed one?**
+No. Courts treat both equally under the ESIGN Act. The key factor is intent to sign, not what the signature looks like. A typed name is just as enforceable as a hand-drawn one — what matters is that both parties understood and agreed to the document.
+
+**Can someone challenge an electronic signature after the fact?**
+They can raise a challenge, but challenges focus on whether the signer had capacity and intent — not on the technology used. Keeping the exact signed PDF, along with the email chain confirming both parties reviewed it, makes a challenge very difficult to sustain.
+
+**Do I need a witness for electronically signed contracts?**
+For most business agreements, no. Certain documents — some deeds, powers of attorney, wills — require witnesses regardless of format. [State-by-state electronic signature requirements](/blog/electronic-signature-laws-by-state) covers which documents carry additional formality rules in your jurisdiction.
+
+[CTA]Sign Documents Securely — Free|Browser-only. No account. No paywall. Your files stay on your device.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a Non-Compete Agreement Online Free](/blog/sign-non-compete-agreement-online)
+- [Are Digital Signatures Admissible in Court?](/blog/digital-signatures-admissible-court)
+- [Electronic Signatures on Business Contracts](/blog/electronic-signature-business-contracts)
+`,
+  },
+  {
+    slug: 'is-password-protected-pdf-actually-secure',
+    title: 'Is Your Password-Protected PDF Secure?',
+    excerpt: 'You added a password before sending — but does that actually protect your document? The honest answer depends on three specific factors most people overlook.',
+    date: '2026-05-19',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protected PDF security', 'PDF password protection', 'AES-256 PDF encryption', 'how secure is PDF password', 'protect PDF online free', 'document encryption security', 'PDF security honest answer'],
+    metaTitle: 'Is Your Password-Protected PDF Secure?',
+    metaDescription: 'The honest answer about whether your password-protected PDF actually protects your documents — and the one mistake that makes strong encryption useless.',
+    content: `
+You sent a password-protected PDF to your accountant last month. Felt responsible. Maybe even a little tech-savvy. But a quiet question lingers: does that password actually do anything?
+
+It's a fair question. Password-protected PDFs are everywhere — tax returns, NDAs, client contracts, medical records. Most people add a password because it seems right, without knowing what it actually protects against. The honest answer: a password-protected PDF is genuinely secure, but only if you avoid three specific mistakes.
+
+[CTA]Protect Your PDF Right Now — Free|AES-256 encryption, no account, browser-only. Files never leave your device.|Protect PDF Now — Free
+
+## How PDF password protection works
+
+1. Upload your PDF to a protection tool.
+2. Set a password — the tool encrypts the file with AES-256.
+3. Download the protected PDF to your device.
+4. Send it to the recipient via email or shared link.
+5. The recipient enters the password to open it — without it, the file is unreadable data.
+
+[IMAGE: Password entry dialog on a protected PDF open on a laptop screen, with a lock icon and password prompt visible]
+
+## The encryption is strong — if you use it right
+
+Modern PDF encryption uses AES-256, the same standard that protects online banking and government systems. A password-protected PDF with a 12-character random password is computationally impractical to crack by brute force with current hardware. The math checks out.
+
+The problem isn't the encryption algorithm. It's almost always the password.
+
+## Three things that make PDF passwords fail
+
+**Weak passwords.** "contract2024", your company name, or your birthday aren't passwords — they're guesses waiting to happen. Password recovery tools scan through thousands of common patterns in seconds. A strong password is random, at least 12 characters, and mixes letters, numbers, and symbols with no dictionary words.
+
+**Sending the password in the same email as the PDF.** If you email the protected file and then email the password in your next message, anyone intercepting that thread has both. Send the password through a separate channel — text, phone call, or a messaging app.
+
+**Old encryption standards.** PDFs created with older software may use RC4 instead of AES-256. RC4 is significantly weaker and can be broken with widely available tools. Any modern protection tool defaults to AES-256, but if you're re-protecting an older document, verify which algorithm it uses.
+
+As explained in [what actually happens if a password-protected PDF gets leaked](/blog/what-happens-if-protected-pdf-leaks), the encryption holds as long as the password stays private — the file content stays protected even if the PDF reaches the wrong person.
+
+## The one mistake that defeats strong encryption
+
+You can have AES-256 encryption and still have an insecure document. It comes down entirely to password strength.
+
+Password recovery is a mature field. Recovery tools work by testing millions of weak passwords — dictionary words, common phrases, names, dates, keyboard patterns — not by breaking the encryption math directly. A file protected with "summer2024" will be cracked in minutes. A file protected with a random 14-character string won't be cracked in any practical timeframe.
+
+SignMyPDF's protect tool includes a built-in strong password generator. One click gives you a high-entropy password ready to copy into a password manager. Share it via text, and the encryption works exactly as designed.
+
+For the full context on why sending documents unprotected has real consequences, see [why your accountant won't accept unprotected tax documents](/blog/accountant-wont-accept-unprotected-tax-documents).
+
+## Why most tools make this unnecessarily complicated
+
+- Require an account before you can encrypt a PDF
+- Upload your file to a server — now the document lives somewhere else entirely
+- Reserve AES-256 for premium tiers and offer weaker encryption on free plans
+- Add watermarks to protected files on the free plan
+- Provide no password generator — you have to come up with a strong password yourself
+
+## Why SignMyPDF gets this right
+
+- AES-256 encryption by default, no premium tier required
+- Built-in strong password generator — one click, high-entropy, no guesswork
+- Fully browser-based — the PDF never reaches our servers
+- Free, no registration, no paywall at download
+- Set an open password and permissions separately — printing, copying, editing controlled independently
+
+## Frequently asked questions
+
+**Can a professional actually crack my PDF password?**
+With a strong, random password and AES-256 encryption, no. Password recovery tools work by testing weak passwords from dictionaries and pattern databases — they don't break the encryption math itself. A 12+ character random password isn't in any dictionary and can't be efficiently guessed.
+
+**Should I send the password in a separate email?**
+Better than the same message, but not ideal. Use a completely different channel — text the password, call the recipient, or send it via a messaging app. The goal is that intercepting the email thread alone doesn't hand someone both the file and the key to open it.
+
+**Does password protection also stop someone from printing or copying the document?**
+Only if you explicitly set permissions. Most protection tools let you apply a separate permissions layer — controlling printing, copying, and editing — independently of the open password. SignMyPDF lets you configure both when you protect a document, so you control what the recipient can actually do with the file.
+
+[CTA]Password-Protect Your PDF — Free|AES-256 encryption built in. No account, no watermark, browser-only.|Protect PDF Now — Free
+
+## Related tools
+
+- [Sent a Confidential Document Unprotected? Here's What to Do](/blog/sent-confidential-contract-unprotected)
+- [What Happens If a Password-Protected PDF Leaks?](/blog/what-happens-if-protected-pdf-leaks)
+- [Real Estate Agents: Protect Property Documents](/blog/real-estate-agents-protect-property-documents)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

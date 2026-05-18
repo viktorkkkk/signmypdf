@@ -113,6 +113,8 @@ const BLOG_SLUGS = [
   'what-happens-if-protected-pdf-leaks',
   'sign-non-compete-agreement-online',
   'photographers-digital-signatures',
+  'electronic-signature-security',
+  'is-password-protected-pdf-actually-secure',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
