@@ -5,16 +5,16 @@ import SiteFooter from '../../components/SiteFooter';
 export const metadata: Metadata = {
   // Root layout already appends " | SignMyPDF" — keep this title
   // bare so the SERP / browser tab reads
-  //   "Privacy Policy — Chrome Extension | SignMyPDF"
+  //   "Privacy Policy — Sign PDF Chrome Extension | SignMyPDF"
   // instead of the doubled "... | SignMyPDF | SignMyPDF".
-  title: 'Privacy Policy, Chrome Extension',
+  title: 'Privacy Policy — Sign PDF Chrome Extension',
   description:
-    'Privacy policy for the SignMyPDF Chrome extension. What data the extension collects, what it does not, and how the extension talks to signmypdf.io.',
+    "Privacy policy for the Sign PDF Chrome extension. We don't collect or store any of your data. All PDF processing happens in your browser.",
   alternates: { canonical: '/extension/privacy' },
   openGraph: {
-    title: 'Privacy Policy, SignMyPDF Chrome Extension',
+    title: 'Privacy Policy — Sign PDF Chrome Extension',
     description:
-      'What the SignMyPDF Chrome extension collects, what it does not, and how the extension talks to signmypdf.io.',
+      "Privacy policy for the Sign PDF Chrome extension. We don't collect or store any of your data. All PDF processing happens in your browser.",
     url: '/extension/privacy',
     siteName: 'SignMyPDF',
     type: 'website',
@@ -38,108 +38,114 @@ const h2Style: React.CSSProperties = { fontSize: 20, fontWeight: 600, color: '#1
 const pStyle: React.CSSProperties = { marginBottom: 16 };
 const ulStyle: React.CSSProperties = { paddingLeft: 24, marginBottom: 16 };
 const linkStyle: React.CSSProperties = { color: '#2563eb' };
+const olStyle: React.CSSProperties = { paddingLeft: 24, marginBottom: 16 };
+const hrStyle: React.CSSProperties = { margin: '40px 0 24px', border: 'none', borderTop: '1px solid #e2e8f0' };
+const sigStyle: React.CSSProperties = { fontSize: 14, color: '#64748b', lineHeight: 1.6 };
 
 export default function ExtensionPrivacyPage() {
   return (
     <>
       <NavHeader />
       <div style={wrapStyle}>
-        <h1 style={h1Style}>Privacy Policy, SignMyPDF Chrome Extension</h1>
-        <p style={dateStyle}>Last updated: 2026-05-11</p>
+        <h1 style={h1Style}>Privacy Policy — Sign PDF Chrome Extension</h1>
+        <p style={dateStyle}>Last updated: 2026-05-19</p>
 
+        <h2 style={h2Style}>Overview</h2>
         <p style={pStyle}>
-          This page describes how the <strong>SignMyPDF Chrome extension</strong> handles your data. It is
-          published by <strong>PIXELTIDE LLC</strong>, the company behind{' '}
-          <a href="https://www.signmypdf.io" style={linkStyle}>signmypdf.io</a>. For the full website privacy policy,
-          see <a href="/privacy" style={linkStyle}>signmypdf.io/privacy</a>.
+          Sign PDF is a Chrome browser extension that allows you to sign and fill PDF documents directly in your
+          browser. This Privacy Policy explains how we handle your data when you use Sign PDF.
         </p>
         <p style={pStyle}>
-          Company address: 833 Saint Vincent, Irvine, CA 92618, USA.
-          <br />
-          Contact: <a href="mailto:support@signmypdf.io" style={linkStyle}>support@signmypdf.io</a>.
+          <strong>Short version: We don&apos;t collect, store, or transmit any of your data. Everything stays on
+          your device.</strong>
         </p>
 
-        <h2 style={h2Style}>What the extension collects</h2>
-        <p style={pStyle}>The extension is designed to collect as little as possible:</p>
-        <ol style={ulStyle}>
-          <li>
-            <strong>PDF files you choose to sign</strong> — stored temporarily in your browser&apos;s local extension
-            storage (<code>chrome.storage.local</code>) and deleted within 60 seconds after transfer to{' '}
-            <a href="https://www.signmypdf.io/sign" style={linkStyle}>signmypdf.io/sign</a>, or when you close
-            the popup, whichever comes first.
-          </li>
-          <li>
-            <strong>Anonymous usage events</strong> — extension installed, popup opened, PDF dropped, context menu
-            used. Sent to Google Analytics 4 with a random per-install client ID. No personal data, no file
-            content, no URLs you visit.
-          </li>
-        </ol>
-
-        <h2 style={h2Style}>What the extension does NOT collect</h2>
+        <h2 style={h2Style}>Data we collect</h2>
+        <p style={pStyle}>
+          <strong>None.</strong>
+        </p>
+        <p style={pStyle}>
+          Sign PDF processes all PDF files entirely within your browser using JavaScript. The extension does not:
+        </p>
         <ul style={ulStyle}>
-          <li>We do not read PDFs from websites you visit.</li>
-          <li>We do not track your browsing history.</li>
-          <li>We do not collect personal information (name, email, address).</li>
-          <li>We do not sell, rent, or share any data with third parties.</li>
+          <li>Upload your PDF files to any server</li>
+          <li>Send your signatures to any server</li>
+          <li>Track your usage, clicks, or behavior</li>
+          <li>Collect analytics or telemetry data</li>
+          <li>Use cookies or local storage to track you</li>
+          <li>Share data with third parties</li>
         </ul>
+
+        <h2 style={h2Style}>How your files are processed</h2>
+        <p style={pStyle}>When you use Sign PDF:</p>
+        <ol style={olStyle}>
+          <li>You open a PDF in your browser</li>
+          <li>The extension reads the PDF locally on your device</li>
+          <li>You add signatures, text, or dates</li>
+          <li>The extension generates the signed PDF on your device</li>
+          <li>You download the signed file directly to your computer</li>
+        </ol>
+        <p style={pStyle}>At no point do your files leave your browser.</p>
 
         <h2 style={h2Style}>Permissions explained</h2>
-        <ul style={ulStyle}>
-          <li>
-            <strong>storage</strong> — to temporarily hold your PDF in extension storage before transfer to{' '}
-            <a href="https://www.signmypdf.io" style={linkStyle}>signmypdf.io</a>.
-          </li>
-          <li>
-            <strong>contextMenus</strong> — to show <em>Sign with SignMyPDF</em> when you right-click a PDF link.
-          </li>
-          <li>
-            <strong>activeTab</strong> — to read the URL of a PDF link you right-click on (only when you click the
-            menu item; we never read pages on our own).
-          </li>
-          <li>
-            <strong>host_permissions: signmypdf.io</strong> — so the content-script bridge can hand the PDF from
-            extension storage to the page when you arrive at <code>/sign</code>.
-          </li>
-        </ul>
         <p style={pStyle}>
-          We do not request <code>&lt;all_urls&gt;</code>, <code>tabs</code>, or <code>downloads</code> permissions.
-        </p>
-
-        <h2 style={h2Style}>What happens after the file reaches signmypdf.io</h2>
-        <p style={pStyle}>
-          Once a PDF is transferred to <a href="https://www.signmypdf.io/sign" style={linkStyle}>signmypdf.io/sign</a>:
+          Sign PDF requests the following Chrome permissions, used solely for the extension to function:
         </p>
         <ul style={ulStyle}>
           <li>
-            <strong>Free users:</strong> the PDF is processed entirely in your browser — signing, watermarking, and
-            downloading all happen client-side. The file is never sent to our servers.
+            <strong>contextMenus</strong> — Adds the &quot;Sign with Sign PDF&quot; option to right-click menus on
+            PDF links
           </li>
           <li>
-            <strong>Pro users:</strong> if you opt in to cross-device sync from the dashboard, signed files may be
-            encrypted in transit and at rest, retained for one year, and deletable on demand.
+            <strong>downloads</strong> — Saves your signed PDF file to your Downloads folder
+          </li>
+          <li>
+            <strong>storage</strong> — Stores your extension preferences (such as default signature style) locally
+            on your device
           </li>
         </ul>
         <p style={pStyle}>
-          The website&apos;s full data handling — analytics, payments, retention — is covered in the main{' '}
-          <a href="/privacy" style={linkStyle}>SignMyPDF Privacy Policy</a>.
+          None of these permissions access your other tabs, browsing history, or any data outside the extension
+          itself.
         </p>
 
-        <h2 style={h2Style}>Children</h2>
+        <h2 style={h2Style}>Third parties</h2>
         <p style={pStyle}>
-          The extension is not directed to children under 13. We do not knowingly collect data from children.
+          We do not use any third-party services, analytics tools, advertising networks, or tracking pixels within
+          the extension.
+        </p>
+
+        <h2 style={h2Style}>Data security</h2>
+        <p style={pStyle}>
+          Because we don&apos;t collect or store your data, there&apos;s nothing to leak or steal. Your documents are
+          as secure as your own computer.
+        </p>
+
+        <h2 style={h2Style}>Children&apos;s privacy</h2>
+        <p style={pStyle}>
+          Sign PDF is suitable for all ages. We do not knowingly collect any data from users of any age — because we
+          don&apos;t collect any data at all.
         </p>
 
         <h2 style={h2Style}>Changes to this policy</h2>
         <p style={pStyle}>
-          We will update the &quot;Last updated&quot; date above and, where required, post a notice on{' '}
-          <a href="https://www.signmypdf.io" style={linkStyle}>signmypdf.io</a> if we make material changes.
+          If we ever change how the extension works in a way that affects privacy, we&apos;ll update this page and
+          notify users through the extension itself.
         </p>
 
         <h2 style={h2Style}>Contact</h2>
         <p style={pStyle}>
-          For privacy questions or to exercise any data rights you may have under GDPR / CCPA / similar laws,
-          email <a href="mailto:support@signmypdf.io" style={linkStyle}>support@signmypdf.io</a>. We typically
-          respond within 24 hours.
+          Questions about this Privacy Policy? Email us at{' '}
+          <a href="mailto:support@signmypdf.io" style={linkStyle}>support@signmypdf.io</a>.
+        </p>
+
+        <hr style={hrStyle} />
+        <p style={sigStyle}>
+          SignMyPDF
+          <br />
+          Email: <a href="mailto:support@signmypdf.io" style={linkStyle}>support@signmypdf.io</a>
+          <br />
+          Website: <a href="https://www.signmypdf.io" style={linkStyle}>https://www.signmypdf.io</a>
         </p>
       </div>
       <SiteFooter />
