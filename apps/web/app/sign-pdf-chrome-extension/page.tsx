@@ -6,6 +6,8 @@ import {
   Lock,
   MousePointerClick,
   PenLine,
+  Pin,
+  ShieldCheck,
   Type as TypeIcon,
   Upload,
   XCircle,
@@ -78,6 +80,27 @@ const FEATURES = [
     Icon: Lock,
     title: 'Your files, your computer',
     body: 'No upload, no cloud storage, no third-party servers. Period.',
+  },
+];
+
+const INSTALL_STEPS = [
+  {
+    Icon: MousePointerClick,
+    title: '1. Click "Add to Chrome"',
+    body:
+      "Hit the blue button at the top of this page. You'll be redirected to the Chrome Web Store.",
+  },
+  {
+    Icon: ShieldCheck,
+    title: '2. Confirm installation',
+    body:
+      'Chrome will ask you to confirm. Click "Add extension" — it takes one second.',
+  },
+  {
+    Icon: Pin,
+    title: '3. Pin to your toolbar',
+    body:
+      'Open the extensions menu (puzzle icon) and click the pin next to Sign PDF for quick access.',
   },
 ];
 
@@ -305,7 +328,24 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 5. FAQ ──────────────────────────────────────────────── */}
+        {/* ── 5. HOW TO INSTALL ───────────────────────────────────── */}
+        <section className="spce-section spce-section-alt">
+          <div className="spce-container">
+            <h2 className="spce-h2">How to install</h2>
+            <p className="spce-section-sub">Install in less than 30 seconds.</p>
+            <div className="spce-install">
+              {INSTALL_STEPS.map(({ Icon, title, body }) => (
+                <div key={title} className="spce-install-card">
+                  <Icon size={48} strokeWidth={1.6} className="spce-install-icon" />
+                  <h3 className="spce-install-title">{title}</h3>
+                  <p className="spce-install-body">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── 6. FAQ ──────────────────────────────────────────────── */}
         <section className="spce-section">
           <div className="spce-container spce-container-narrow">
             <h2 className="spce-h2">Frequently asked questions</h2>
@@ -313,7 +353,7 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 6. FINAL CTA ────────────────────────────────────────── */}
+        {/* ── 7. FINAL CTA ────────────────────────────────────────── */}
         <section className="spce-section spce-final">
           <div className="spce-container">
             <h2 className="spce-h2 spce-final-h2">
@@ -328,7 +368,7 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 7. CROSS-POLLINATION ────────────────────────────────── */}
+        {/* ── 8. CROSS-POLLINATION ────────────────────────────────── */}
         <section className="spce-cross">
           <div className="spce-container">
             <p>

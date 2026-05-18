@@ -332,7 +332,42 @@
   margin: 0;
 }
 
-/* ── 5. FAQ ────────────────────────────────────────────────────────────── */
+/* ── 5. How to install ─────────────────────────────────────────────────── */
+.spce-install {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 56px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.spce-install-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 24px;
+}
+.spce-install-icon {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+.spce-install-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.spce-install-body {
+  font-size: 15px;
+  color: var(--color-muted);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 320px;
+}
+
+/* ── 6. FAQ ────────────────────────────────────────────────────────────── */
 .spce-faq-list {
   margin-top: 48px;
   display: flex;
@@ -384,7 +419,7 @@
   line-height: 1.6;
 }
 
-/* ── 6. Final CTA ──────────────────────────────────────────────────────── */
+/* ── 7. Final CTA ──────────────────────────────────────────────────────── */
 .spce-final {
   background: #eff6ff;
   padding: 96px 0;
@@ -399,7 +434,7 @@
   margin-top: 32px;
 }
 
-/* ── 7. Cross-pollination ──────────────────────────────────────────────── */
+/* ── 8. Cross-pollination ──────────────────────────────────────────────── */
 .spce-cross {
   padding: 48px 0;
   background: var(--color-bg);
@@ -446,6 +481,11 @@
   }
   .spce-features {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .spce-install {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 560px;
   }
   .spce-compare {
     grid-template-columns: 1fr;

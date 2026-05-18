@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import Logo from '../components/Logo';
+import Image from 'next/image';
+import logoExt from '../../public/chrome-extension/logo-extension.png';
 
 /**
  * Minimal header used only on /sign-pdf-chrome-extension. Logo only,
@@ -7,17 +8,30 @@ import Logo from '../components/Logo';
  * below, and cross-pollination to the other tools lives in the
  * dedicated section near the footer. Stripping the right-side exit
  * keeps the visual register as quiet as possible above the H1.
+ *
+ * Logo is the simplified "Sign / PDF" sub-brand (same asset that
+ * lives in the extension's editor top-bar) — NOT the full SignMyPDF
+ * mark from `<Logo />` on the rest of the site. The landing pitches
+ * the extension specifically, so the sub-brand reads as a tighter
+ * promise of what the user is about to install.
  */
+const ASPECT_RATIO = 1465 / 1441;
+
 export default function LandingHeader() {
+  const height = 80;
+  const width = Math.round(height * ASPECT_RATIO);
   return (
     <header className="spce-header">
       <div className="spce-header-inner">
-        <Link href="/" className="spce-header-brand" aria-label="SignMyPDF home">
-          {/* Big logo on the landing — height 80 puts the brand
-             mark at the same visual weight as the hero H1 line.
-             Other surfaces (NavHeader, SiteFooter) keep their
-             default 40 px and are unaffected. */}
-          <Logo height={80} />
+        <Link href="/" className="spce-header-brand" aria-label="Sign PDF home">
+          <Image
+            src={logoExt}
+            alt="Sign PDF"
+            width={width}
+            height={height}
+            priority
+            style={{ display: 'block' }}
+          />
         </Link>
         {/* Quiet right-side trust line — mirrors the editor top-bar in
            the extension. Plain text, no hover, hidden on narrow

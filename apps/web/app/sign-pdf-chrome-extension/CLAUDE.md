@@ -28,10 +28,14 @@ Captures the design rules, copy, and don't-touch zones for the landing.
    pitched against competitors.
 4. **Why this extension is different** — comparison table, red column
    (other tools) vs blue column (us).
-5. **FAQ** — 5 questions in a controlled accordion (one open at a time).
-6. **Final CTA** — repeats the Add-to-Chrome button on a light-blue
+5. **How to install** — 3 numbered cards explaining the Chrome Web
+   Store install flow (Click Add to Chrome → Confirm → Pin to toolbar).
+   Sits between Comparison and FAQ so a convinced user has the
+   step-by-step right when they're ready to act.
+6. **FAQ** — 5 questions in a controlled accordion (one open at a time).
+7. **Final CTA** — repeats the Add-to-Chrome button on a light-blue
    background.
-7. **Cross-pollination** — subtle paragraph linking to `/sign`,
+8. **Cross-pollination** — subtle paragraph linking to `/sign`,
    `/fill`, `/protect`, `/merge`, `/compress`, `/split`.
 
 ## 3. Approved copy (verbatim)
@@ -64,10 +68,15 @@ Captures the design rules, copy, and don't-touch zones for the landing.
 
 ## 4. Design rules
 
-- **Header:** SignMyPDF logo left only, right side empty. No nav, no
-  buttons.
-- **Logo height:** 80 px in the landing header (the shared `<Logo />`
-  component keeps its default 40 px everywhere else on the site).
+- **Header:** simplified "Sign PDF" sub-brand logo on the left, right
+  side empty. No nav, no buttons. The landing header does NOT use the
+  shared `<Logo />` component — it imports
+  `public/chrome-extension/logo-extension.png` directly via `<Image>`.
+  This keeps the main-site "Sign My PDF" mark untouched everywhere
+  else (NavHeader, SiteFooter, blog header, tool surfaces).
+- **Logo height:** 80 px in the landing header (the same height the
+  shared `<Logo />` defaulted to here before — preserved so the header
+  geometry doesn't shift).
 - **Header padding:** 18 px vertical → total header height ≈ 117 px
   (inside the 112–120 target band).
 - **HERO layout:** `grid-template-columns: 1fr 1fr; gap: 64px` on
@@ -122,7 +131,8 @@ apps/web/
         ├── og-image.png                    # 1200×630 (PLACEHOLDER)
     ├── 1-drop-pdf.png                  # 1107×650 (real)
     ├── 2-add-signature.png             # 966×764 (real)
-    └── 3-download.png                  # 1107×583 (real)
+    ├── 3-download.png                  # 1107×583 (real)
+    └── logo-extension.png              # 1465×1441 (sub-brand mark — landing header only)
 ```
 
 ## 7. SEO
@@ -161,3 +171,4 @@ apps/web/
 | v1.3 | Logo bumped to 80 px in landing header, removed "Free web tools" link, stronger hero-shot border + shadow |
 | v1.4 | Header padding 18 px → total header ≈ 117 px |
 | v1.5 | Replaced weak 3-icon "How it works" + 3-placeholder "See it in action" with a single zig-zag "See how it works" showcase: 3 real screenshots (`1-drop-pdf.png` / `2-add-signature.png` / `3-download.png`) in alternating text-left / shot-right layout. Mobile collapses to single column with screenshot above text. Section order tightened: Features moved above Comparison so the product is shown in action → features → competitor framing, instead of being compared before the user has seen what it does. |
+| v1.6 | (1) Landing-header logo swapped from the full "Sign My PDF" mark (shared `<Logo />`) to a simplified "Sign / PDF" sub-brand (`logo-extension.png` rendered directly via `<Image>`). The main-site logo is unchanged on every other surface — only this landing reads as a tighter, product-specific promise above the H1. (2) New "How to install" section inserted between Comparison and FAQ — 3 numbered cards (Click → Confirm → Pin) with lucide icons in primary blue. Reuses the existing alt-grey background (`.spce-section-alt` = `#fafafa`) for visual consistency with the other secondary sections. Mobile collapses to a single column at < 880 px. |
