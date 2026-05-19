@@ -128,7 +128,7 @@ apps/web/
         ├── 1-drop-pdf.png                  # 1011×701 (real — drop-PDF page w/ green "+" badge)
         ├── 2-add-signature.png             # 966×764 (real — Draw signature modal)
         ├── 3-download.png                  # 882×516 (real — placed signature + Download CTA)
-        ├── og-image.png                    # 1200×630 (PLACEHOLDER)
+        ├── og-image.png                    # 1200×630 (real — promo banner with Sign PDF mark + "Free Forever / No Signup")
         └── logo-extension.png              # 1465×1441 (sub-brand mark — landing header only)
 ```
 
@@ -153,7 +153,6 @@ apps/web/
 - Once approved, swap the placeholder
   `CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/PLACEHOLDER'`
   in `page.tsx` for the real listing URL (one line, one spot).
-- Generate proper OG image — currently a grey placeholder.
 - Chrome Web Store assets (1280×800 listing screenshots × 5, promo
   tile 440×280, marquee 1400×560) — tracked under
   `apps/extension/CLAUDE.md → Open backlog`.
@@ -170,3 +169,4 @@ apps/web/
 | v1.5 | Replaced weak 3-icon "How it works" + 3-placeholder "See it in action" with a single zig-zag "See how it works" showcase: 3 real screenshots (`1-drop-pdf.png` / `2-add-signature.png` / `3-download.png`) in alternating text-left / shot-right layout. Mobile collapses to single column with screenshot above text. Section order tightened: Features moved above Comparison so the product is shown in action → features → competitor framing, instead of being compared before the user has seen what it does. |
 | v1.6 | (1) Landing-header logo swapped from the full "Sign My PDF" mark (shared `<Logo />`) to a simplified "Sign / PDF" sub-brand (`logo-extension.png` rendered directly via `<Image>`). The main-site logo is unchanged on every other surface — only this landing reads as a tighter, product-specific promise above the H1. (2) New "How to install" section inserted between Comparison and FAQ — 3 numbered cards (Click → Confirm → Pin) with lucide icons in primary blue. Reuses the existing alt-grey background (`.spce-section-alt` = `#fafafa`) for visual consistency with the other secondary sections. Mobile collapses to a single column at < 880 px. |
 | v1.7 | Refreshed 3 screenshots: HERO (`hero-screenshot.png` → 876×622, "Draw / Type / Upload" modal with cursor on a prominent "Save & place" CTA — visually anchors the install promise), showcase block 1 (`1-drop-pdf.png` → 1011×701, drop-zone page with a green "+" badge on the PDF icon to telegraph the "add a file" gesture), showcase block 3 (`3-download.png` → 882×516, editor with placed signature + cursor on the Download CTA). Block 2 (`2-add-signature.png`) intentionally untouched — it already shows the same modal as the HERO and would have duplicated content. |
+| v1.8 | Replaced the grey-placeholder `og-image.png` with the real 1200×630 promo banner (Sign / PDF file mark on the left, "Sign PDF / Free Forever / No Signup" headline on the right, dashed arrow to a signed signature card). Wired in `layout.tsx` `og:image` + `twitter:image` since v1 — Facebook / LinkedIn / Twitter previews now render the branded card instead of the grey filler. |
