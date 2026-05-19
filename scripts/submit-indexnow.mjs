@@ -115,6 +115,8 @@ const BLOG_SLUGS = [
   'photographers-digital-signatures',
   'electronic-signature-security',
   'is-password-protected-pdf-actually-secure',
+  'fill-medical-history-form-pdf',
+  'password-protect-pdf-free-online-no-software',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

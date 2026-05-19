@@ -10551,6 +10551,153 @@ Only if you explicitly set permissions. Most protection tools let you apply a se
 - [Real Estate Agents: Protect Property Documents](/blog/real-estate-agents-protect-property-documents)
 `,
   },
+  {
+    slug: 'fill-medical-history-form-pdf',
+    title: 'Fill Out Medical History PDF in Minutes',
+    excerpt: "New doctor's intake form won't let you type? Fill any medical history PDF free — no account, no software, no printing required.",
+    date: '2026-05-20',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill PDF', 'medical history form', 'medical history PDF', 'fill PDF online free', 'PDF form filler', 'healthcare PDF', 'no registration'],
+    metaTitle: 'Fill Out Medical History PDF in Minutes',
+    metaDescription: 'Fill a medical history form PDF online free. Works on locked PDFs. No account, no software. Your file stays in your browser.',
+    content: `Your new doctor's office emails a medical history form PDF to fill before your appointment. You open it and the fields won't respond — the form is locked. Trying to fill a medical history form PDF by hand means printing, handwriting every entry, and scanning the result back in. That is a 20-minute detour for a 3-minute task. Insurance intake PDFs are worse: long forms covering current medications, past surgeries, family medical history, and emergency contacts — all with dozens of fields and no way to type into them on screen. The document looks fillable. It just is not.
+
+[CTA]Fill any medical history PDF — free|Type directly into locked fields. No account, no software, no printer.|Fill PDF Form Now — Free
+
+## How to Fill a Medical History Form PDF Online
+
+1. Open signmypdf.io/fill and upload your PDF.
+2. Click any blank area on the form to place a text field.
+3. Type your details — name, date of birth, current medications, medical history.
+4. Check boxes, add entries for allergies and conditions, place a signature if the form requires one.
+5. Download your completed form. No account, no watermark.
+
+Your file is processed entirely inside your browser. Nothing is sent to a server, and the file is cleared from browser memory when you close the tab.
+
+[IMAGE: Medical history PDF open in SignMyPDF's fill tool, with typed text visible in multiple fields]
+
+## Why Most PDF Fill Tools Fall Short
+
+Broken form fields are the root cause. Medical PDFs are often created from Word documents or design software and exported without interactive fields. Adobe Reader opens the file but finds no form fields to activate — so clicking does nothing.
+
+The fix most people reach for first is Adobe Acrobat. It can edit PDFs, but that feature is locked behind Acrobat Standard or Pro. Paying for a subscription to fill one intake form makes no sense.
+
+The next workaround is printing, filling by hand, and scanning back in. It works, but the scan often comes out blurry or skewed, and handwriting an entire medical history takes real time.
+
+Online tools that can handle locked PDFs often require account registration before letting you download the result. That is extra friction when you have a morning appointment and 10 minutes to spare. Some also upload your file to a remote server — a real concern when the document contains diagnoses, medications, and personal health details you would rather keep private.
+
+## Why SignMyPDF Works for Medical Forms
+
+The fill tool overlays typed text directly on the PDF, bypassing form-field restrictions entirely. Locked or unlocked, the form accepts input the same way.
+
+Free, no registration, no paywall at download. The free tier covers 2 PDFs per day — enough for most one-off intake forms without a subscription.
+
+Files are processed in your browser, not on a server. Your medical history stays on your device. Once you close the tab, the file is cleared from browser memory. That matters for documents containing sensitive health information.
+
+Works on desktop and mobile without installing anything. If the form also needs a signature, you can draw or type one and place it on the page in the same session.
+
+If you regularly handle [government health forms](/blog/fill-government-forms-online-free) or [insurance claim PDFs](/blog/fill-insurance-claim-form-pdf), the same tool covers both without switching apps. For health PDFs that also need a signature, the [medical release form guide](/blog/fill-medical-release-form-online) walks through the full flow.
+
+[IMAGE: Side-by-side: empty locked medical history PDF on the left, completed filled version on the right]
+
+## FAQ
+
+**What if the medical history PDF says 'this document does not allow changes'?**
+That restriction applies to form-field editing, not to text overlay. SignMyPDF writes typed text directly on top of the page surface rather than modifying existing form field values, so PDF-level field restrictions do not apply.
+
+**Is it safe to fill a medical history PDF in a browser tool?**
+With SignMyPDF, yes. Your file is processed entirely client-side inside your browser tab — there is no server upload. Your health information, including diagnoses, medications, and family medical history, never leaves your device.
+
+**Do I need to create an account to download the filled form?**
+No. Upload, fill, download. No email, no password, no account. The free tier covers 2 PDFs per day.
+
+[CTA]Fill your medical history form now — free|Works on locked PDFs. Browser-only. No sign-up needed.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Form Online — Free](/fill)
+- [Sign PDF Online — Free](/sign)
+- [Password Protect PDF — Free](/protect)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-free-online-no-software',
+    title: 'Password Protect PDF Free, No Software',
+    excerpt: 'Need to password protect a PDF but have no software installed? Do it free in your browser — AES-256 encryption, no account, no watermark.',
+    date: '2026-05-20',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect PDF', 'protect PDF free', 'PDF password online', 'PDF security', 'free PDF tool', 'no software PDF', 'AES-256 encryption'],
+    metaTitle: 'Password Protect PDF Free, No Software',
+    metaDescription: 'Password protect a PDF free online without software. AES-256 encryption, no account, no watermark. Your file stays in your browser.',
+    content: `You need to password protect a PDF and send it out today. Adobe Acrobat requires a paid subscription. The popular free browser tools either cap you after a handful of documents, add a watermark to the output, or require you to create an account before you can download the result. Password protecting a PDF free online without installing software sounds straightforward — and it is, as long as you use a tool that does not add a hidden catch at the last step. No software download, no account sign-up, no watermark on the finished file.
+
+[CTA]Password protect your PDF right now|AES-256 encryption. No account. No software. Free.|Protect PDF Now — Free
+
+## How to Password Protect a PDF Free Online
+
+1. Go to signmypdf.io/protect and upload your PDF.
+2. Type a strong password and confirm it.
+3. Click Protect — AES-256 encryption is applied instantly.
+4. Download your password-protected PDF. No account needed.
+
+The whole process takes under a minute. Your file is processed in your browser and never sent to a server.
+
+[IMAGE: SignMyPDF protect tool showing a PDF uploaded with the password field filled in, ready to encrypt]
+
+## Why Free PDF Password Tools Fall Short
+
+Most browser-based tools that offer free PDF protection fail in at least one of these ways:
+
+**Watermarks on free downloads.** Some tools add a watermark to the protected PDF output unless you upgrade. The document is technically encrypted, but every page carries a visible stamp.
+
+**Account requirements.** Most tools require you to sign up before downloading the protected file. That means another password to manage and another inbox receiving marketing email.
+
+**Daily or weekly limits.** Free tiers typically cap you at a few files per day or per week. Fine for occasional use, genuinely frustrating if you protect documents regularly.
+
+**Server uploads.** Most online PDF tools upload your file to a remote server for processing. That is a real concern when the document contains financial, legal, or personal information you would rather keep private.
+
+**Desktop software requirements.** Older guides recommend using LibreOffice or PDF24 Desktop. Both are fine, but they require a download, an installation, and setup time — overkill for a task you need done in the next five minutes.
+
+## Why SignMyPDF Is Different
+
+**AES-256 encryption.** The same standard used by banks and legal firms. The password is applied before the file reaches your download button.
+
+**Free, no registration, no paywall at download.** The free tier covers 2 PDFs per day with no subscription and no credit card.
+
+**Files processed in browser.** Encryption happens client-side, inside your browser tab. Your file never reaches an external server and is cleared from browser memory when you close the tab. That is the privacy model for every tool on the platform.
+
+**Works on any device.** Mac, Windows, iPhone, Android, Chromebook — open a browser and go. No app, no software install.
+
+**Immediate download.** The protected file is ready in seconds. No queue, no email link, no waiting.
+
+AES-256 encryption applied client-side is not a shortcut version of real protection. It is the same cryptographic standard that desktop tools charge for. The browser is simply a different delivery mechanism, not a weaker one.
+
+If you are protecting a PDF because you need to share a confidential document, the [sent-confidential-contract guide](/blog/sent-confidential-contract-unprotected) covers the full risk picture. For a comparison of browser tools against paid desktop software, the [Adobe vs free PDF protection breakdown](/blog/adobe-vs-free-pdf-protection) has the detail.
+
+[IMAGE: Download screen showing a completed password-protected PDF with no watermark visible]
+
+## FAQ
+
+**What encryption does SignMyPDF use for PDF passwords?**
+AES-256 — the current industry standard for PDF security. The same level used in Adobe Acrobat and accepted by banks, courts, and enterprise document workflows.
+
+**Is it safe to password protect a PDF in a browser without software?**
+Yes, when the tool processes files client-side. SignMyPDF applies AES-256 encryption entirely inside your browser tab. Your file never reaches an external server — it stays on your device from upload to download. Once you close the tab, it is cleared from browser memory.
+
+**Will the password work when the recipient opens the file?**
+Yes. PDFs protected with AES-256 open in any standard reader — Adobe Acrobat, Preview on Mac, Chrome's built-in PDF viewer, and mobile PDF apps on iOS and Android. The recipient is prompted for the password before the document displays.
+
+[CTA]Protect your PDF now — free, in your browser|AES-256 encryption, no account, no watermark.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect PDF — Free](/protect)
+- [Sign PDF Online — Free](/sign)
+- [Fill PDF Form Online — Free](/fill)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
