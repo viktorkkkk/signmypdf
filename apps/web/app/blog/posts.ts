@@ -10698,6 +10698,156 @@ Yes. PDFs protected with AES-256 open in any standard reader — Adobe Acrobat, 
 - [Fill PDF Form Online — Free](/fill)
 `,
   },
+  {
+    slug: 'why-pdf-not-downloading-after-sign',
+    title: 'PDF Not Downloading After Signing — Fix',
+    excerpt: 'Signed your PDF but the download failed? These are the most common causes and exactly how to fix each one — no reinstalling, no new software.',
+    date: '2026-05-21',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['PDF not downloading', 'signed PDF download error', 'PDF download fix', 'PDF signing troubleshooting', 'sign PDF free', 'PDF download failed', 'browser download issues'],
+    metaTitle: 'PDF Not Downloading After Signing — Fix',
+    metaDescription: 'Signed your PDF but the download failed? Find the most common causes — browser blockers, server timeouts, storage limits — and how to fix each.',
+    content: `You clicked "Download" after signing your PDF and nothing happened. Or the file appeared in your Downloads folder but opens as a blank page. Maybe your browser showed a "failed — network error" under the filename. You did everything right — drew your signature, placed it on the document, hit the button — and the download step is what stopped you.
+
+This is one of the most frustrating points in the signing process because the work is done. The hold-up is almost never the signature itself. It is usually the browser, the PDF tool, or a local permission setting you can fix in under a minute.
+
+[CTA]Sign your PDF — free, with direct download|Browser-based. No server timeouts. Download is immediate.|Sign PDF Now — Free
+
+## How to Fix a PDF That Won't Download After Signing
+
+1. Look for a blocked-download notice in your browser address bar and click "Allow."
+2. Try a different browser — if it downloads there, the issue is a setting in your usual one.
+3. Clear your browser cache and try signing again from the beginning.
+4. Check your device storage — a nearly-full drive or cloud folder cap blocks some downloads silently.
+5. Temporarily pause antivirus real-time scanning and retry the download.
+
+If none of those work, the most reliable fix is switching to a signing tool that processes files in the browser rather than on a server. Client-side tools generate the signed PDF locally, so there is no server connection that can time out or drop mid-transfer.
+
+[IMAGE: Browser address bar showing a blocked-download notification after a PDF signing attempt]
+
+## Why PDF Downloads Fail After Signing
+
+**Server-side processing.** Many signing tools upload your file, process it remotely, and serve it back via a download link. If the server times out or drops the connection during signing, the link points to an empty or corrupted file. The download button still appears — there is just nothing valid behind it.
+
+**Pop-up blockers.** Some tools open the signed PDF in a new browser tab and expect you to "Save As" from there. Pop-up blockers catch this as an unwanted new window and cancel it without showing an error.
+
+**Session expiry.** Tools that require account sign-in can expire your session while you are signing. When you go to download, the tool redirects you to the login page instead of the file.
+
+**Storage or disk limits.** On iOS, iCloud storage caps block downloads to iCloud Drive without a clear message. On desktop, a nearly-full drive occasionally prevents the browser from writing the file.
+
+**Antivirus interference.** Some antivirus programs scan PDF downloads in real time and quarantine files that match a heuristic — even legitimate signed PDFs disappear from Downloads immediately after arriving.
+
+## Why SignMyPDF Downloads Reliably
+
+**Files processed in browser.** The signed PDF is generated locally inside your browser tab. There is no server upload, no remote processing, and no download link that can expire. The file is ready before the download button is clicked.
+
+**Direct download — no pop-up.** The download uses a standard browser save trigger, not a new tab or redirect. Pop-up blockers do not intercept it.
+
+**No account required.** Free, no registration, no paywall at download. Because there is no login session, there is nothing to expire between signing and downloading.
+
+**Works on any modern browser.** Chrome, Firefox, Safari, Edge — the same direct-download behaviour on all of them. If you have had a [signed PDF that looks visually different after downloading](/blog/signed-pdf-looks-different-fix) or a [signature that disappeared after saving the file](/blog/signature-disappears-pdf-fix), those are separate rendering issues — this guide covers the download not starting at all.
+
+[IMAGE: SignMyPDF showing a completed signed PDF with a direct save prompt — no intermediate steps]
+
+## FAQ
+
+**Why does my signed PDF download but open as a blank page?**
+The file was corrupted during the download or during server-side processing. Try signing again with a tool that processes the file in the browser — when no server is involved, the output PDF is complete before the download starts and there is no risk of corruption from a dropped connection.
+
+**Can a full iCloud or Google Drive cause the download to fail?**
+Yes. If your browser's download destination is set to a cloud folder and that folder is at its storage limit, the file either fails to save or creates a zero-byte placeholder. Download to local storage first, then move the file manually.
+
+**Is it safe to sign the document again if the first download failed?**
+Yes. If you have not sent the failed download to anyone, the original unsigned document is still valid. Sign again using a fresh browser tab, verify the file opens correctly before you send it, and discard the corrupted download.
+
+[CTA]Sign your PDF again — free, direct download|Browser-based signing. No server, no timeouts, no lost files.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDF Online — Free](/sign)
+- [Fill PDF Form Online — Free](/fill)
+- [Password Protect PDF — Free](/protect)
+`,
+  },
+  {
+    slug: 'fill-pdf-on-iphone-no-app',
+    title: 'Fill a PDF on iPhone Without an App',
+    excerpt: 'Need to fill a PDF on your iPhone and skip the apps? Do it free in Safari — tap, type, download. No account, no subscription.',
+    date: '2026-05-21',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill PDF on iPhone', 'fill PDF without app', 'iPhone PDF form', 'fill PDF free', 'PDF form filler', 'mobile PDF fill', 'fill PDF online'],
+    metaTitle: 'Fill a PDF on iPhone Without an App',
+    metaDescription: 'Fill any PDF on iPhone free in Safari. No app download, no account, no subscription. Works on locked PDFs too.',
+    content: `You receive a PDF on your iPhone — a rental application, a bank form, a new-patient intake sheet — and it needs to be filled out today. Tapping the file opens a preview in the Files app or Safari. The blank fields are visible. Tapping them does nothing.
+
+The standard suggestion is to download a PDF editing app. The App Store has dozens of them. Most offer a trial that expires after a few days, and almost all lock the ability to save your completed form behind a monthly subscription. You want to fill one document, not commit to a recurring charge.
+
+Apple's own tools do not help here. The Files app opens PDFs for reading. Apple Books reads them too. Mail shows attachments in a read-only preview. None of them let you type into a form and download the result. You can fill a PDF on iPhone without an app — you just need a browser that handles it.
+
+[CTA]Fill any PDF on iPhone — free|Works in Safari. No app, no account, no subscription required.|Fill PDF Form Now — Free
+
+## How to Fill a PDF on iPhone Without an App
+
+1. Open Safari on your iPhone and go to signmypdf.io/fill.
+2. Tap "Upload PDF" and choose your file from Files, Mail, or Messages.
+3. Tap anywhere on the PDF to place a text field over a blank area.
+4. Type your information. Pinch to zoom if the form text is small.
+5. Tap Download to save the filled PDF to your Files app — no account needed.
+
+Your file is processed entirely inside your browser. Nothing is uploaded to a server, and the document is cleared from browser memory when you close Safari.
+
+[IMAGE: SignMyPDF fill tool open in Safari on an iPhone, with a PDF form on screen and typed text visible in a placed field]
+
+## Why Most iPhone PDF Fill Options Fall Short
+
+**App subscriptions block saving.** Most iOS PDF editors — PDF Expert, Foxit PDF, and similar — let you open and annotate for free, but saving a completed form requires a paid subscription. You can type into the fields but cannot get the result without paying.
+
+**Adobe Acrobat Reader on iOS** handles interactive form fields without a subscription. But if the PDF does not have interactive fields — just blank lines on a page — Adobe Reader treats it as read-only. Interactive fields or nothing.
+
+**Web tools that break on mobile.** Many browser-based PDF fillers are designed for desktop screens. On a small screen the layout breaks, buttons overflow, and placing text fields accurately is difficult or impossible.
+
+**Account required before download.** Some free tools let you fill but ask you to create an account before releasing the finished file. That is extra friction when you have a form due in the next 20 minutes.
+
+**Printing as the last resort.** The fallback most people reach is: print, fill by hand, scan. A 15-minute workaround for a 3-minute task — and scanned handwriting is harder to read than typed text.
+
+## Why SignMyPDF Works on iPhone
+
+**Opens in Safari — no app download.** The fill tool is built for mobile screens. Tap to place a text field, pinch to zoom, tap again to type. The interface adjusts to your screen size automatically.
+
+**Free, no registration, no paywall at download.** Upload, fill, download. The free tier covers 2 PDFs per day with no subscription and no credit card.
+
+**Files processed in your browser.** Your document stays on your iPhone from upload to download. Nothing is sent to a server. When you close Safari, the file is cleared from browser memory — relevant for forms with personal or financial details.
+
+**Works on locked PDFs.** Most iOS apps fail when a PDF has no interactive form fields. SignMyPDF overlays typed text directly on the page surface, bypassing field restrictions. Locked or interactive, the form accepts your input the same way.
+
+**Add a signature in the same session.** If the form also needs a signature, draw or type one and place it on the page before downloading — no second app needed.
+
+Whether you are filling a [bank form on your phone](/blog/fill-bank-form-pdf-online), a [job application PDF](/blog/fill-job-application-pdf-online), or any other form that refuses typing in a standard viewer, the fill tool handles it in Safari without switching apps. For forms that seem completely unresponsive — where no input at all is accepted — the [guide to PDF form fields not working](/blog/pdf-form-fields-not-working-fix) explains the root cause and what to try next.
+
+[IMAGE: Filled PDF ready to download on an iPhone, showing completed form fields with typed text]
+
+## FAQ
+
+**Does this work on older iPhones?**
+Yes. The tool runs in Safari and works on any iPhone with a reasonably current version of Safari. No specific hardware requirement and no download needed.
+
+**What if I need to fill and sign the PDF?**
+After placing your text fields, use the signature tool in the same session. Draw or type your name, place it on the page, then download. Both the typed text and the signature are embedded in one file.
+
+**Will the filled PDF look correct when the recipient opens it?**
+Yes. The typed text is embedded into the PDF with precise positioning relative to the original page layout. What you see in Safari is what the recipient opens on any device or PDF reader.
+
+[CTA]Fill your PDF on iPhone — free now|Browser-only. No app. No account. Tap, type, download.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Form Online — Free](/fill)
+- [Sign PDF Online — Free](/sign)
+- [Password Protect PDF — Free](/protect)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

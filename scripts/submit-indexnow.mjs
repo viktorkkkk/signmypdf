@@ -117,6 +117,8 @@ const BLOG_SLUGS = [
   'is-password-protected-pdf-actually-secure',
   'fill-medical-history-form-pdf',
   'password-protect-pdf-free-online-no-software',
+  'why-pdf-not-downloading-after-sign',
+  'fill-pdf-on-iphone-no-app',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
