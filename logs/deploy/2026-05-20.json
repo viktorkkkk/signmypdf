@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-20",
+  "timestamp": "2026-05-20T02:16:53Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "088645736ba719eec2a2017eafc992e7990987e5",
+  "newSlugs": "why-pdf-not-downloading-after-sign fill-pdf-on-iphone-no-app",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26137151103"
+}
