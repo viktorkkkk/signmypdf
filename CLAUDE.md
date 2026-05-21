@@ -7,7 +7,7 @@ pnpm workspaces. Two-app architecture (web + extension, both live), three shared
 ```
 apps/
   web/              ← Next.js 16 site, production at signmypdf.io
-  extension/        ← Chrome MV3 extension, built, awaiting Chrome Web Store submission
+  extension/        ← Chrome MV3 extension, published 2026-05-21 (https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj)
 packages/
   pdf-core/         ← signPdfInBrowser, addWatermarkToBlob, setupPdfjs, types (live)
   ui/               ← SignatureCanvas, PdfSignViewer, signature.css + 2-col /sign layout (live)
@@ -37,7 +37,7 @@ logs/               ← deploy / SEO health logs, written by GH Actions
 ## Deployment
 
 - **`apps/web`** → Vercel project `signmypdf` (`prj_vINyT8bno6KjwutaPoX05rZaXQNI`), root directory set to `apps/web` in Vercel dashboard. Production at `signmypdf.io` / `www.signmypdf.io`. Auto-deploy on push-to-main via [.github/workflows/deploy-on-blog-push.yml](.github/workflows/deploy-on-blog-push.yml) (only when `apps/web/app/blog/posts.ts` changes) + manual `vercel deploy --prod` from repo root.
-- **`apps/extension`** → built locally via `pnpm --filter @signmypdf/extension package`, distributed through the Chrome Web Store. Pre-built test bundle hosted as a GitHub Release asset: [`ext-test-1`](https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1). See [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md) for the full close-out.
+- **`apps/extension`** → built locally via `pnpm --filter @signmypdf/extension package`, distributed through the Chrome Web Store at [chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj](https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj) (live since 2026-05-21). Pre-built test bundle still hosted as a GitHub Release asset: [`ext-test-1`](https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1) for reviewer-style sideload tests. See [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md) for the full close-out.
 - Production branch: `main`. Pre-commit hook ([.husky/pre-commit](.husky/pre-commit)) regenerates `apps/web/app/lastmod.generated.json` so per-page sitemap freshness ships in the same commit as the page change.
 
 ## Common commands
@@ -52,9 +52,9 @@ pnpm lint           # → pnpm --filter web lint
 
 For `apps/web`-specific commands and ops (Vercel deploy CLI, blog publication trigger, SEO indexing scripts), see [apps/web/CLAUDE.md → ## How to Deploy](apps/web/CLAUDE.md).
 
-## Stage 5 — Chrome Extension (COMPLETED 2026-05-12)
+## Stage 5 — Chrome Extension (COMPLETED 2026-05-12, PUBLISHED 2026-05-21)
 
-- **Status:** shipped to production (web side), awaiting Chrome Web Store submission (Trader verification in review on Google's side).
+- **Status:** **published to Chrome Web Store on 2026-05-21** — [Sign PDF on the store](https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj). Trader verification approved. Listing live, install button on `/sign-pdf-chrome-extension` resolves to the real product page.
 - **Extension name:** `Sign PDF Free` (publisher *SignMyPDF*).
 - **Type:** thin extension — no popup, no built-in editor. The toolbar action and context menu both open `signmypdf.io/sign?from=extension` in a new tab; signing happens on the site.
 - **Behavior:**
@@ -97,16 +97,8 @@ Business context (for future sessions that need it):
 - Domain — `signmypdf.io` (apex 307-redirects to `www.signmypdf.io`)
 - Support email — `support@signmypdf.io`
 - Chrome Web Store developer account — `viktor.kolektionok@gmail.com`
-- Trader verification — awaiting Google review
-
-Before Chrome Web Store submission:
-
-- [ ] Production icons 16 / 32 / 48 / 128 (replace placeholders in `apps/extension/public/icons/`)
-- [ ] 5 screenshots 1280×800 for the Web Store listing
-- [ ] Promo tile 440×280
-- [ ] Real screenshots inside `<ChromeLandingClient />` (replace placeholders in the *How the extension works* section)
-- [ ] Final smoke-test of the production ZIP
-- [ ] Submit for review (2–5 day moderation window)
+- Trader verification — **approved** (listing went live 2026-05-21)
+- Chrome Web Store product ID — `aiaokhplbmbiijmegjbnghmaacnkkfbj`
 
 Full close-out write-up: [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md).
 
@@ -124,7 +116,7 @@ Stable communication preferences captured here so future Claude Code sessions ca
 
 These bubble up to the monorepo level because they affect cross-cutting decisions or are at the top of the priority queue. Full detail in [apps/web/CLAUDE.md](apps/web/CLAUDE.md).
 
-- **✅ Stage 5 — Chrome extension shipped 2026-05-12.** PRs #17, #18, #19, #20 all in main. Production deploy live on `www.signmypdf.io`. Pre-built test ZIP at the [`ext-test-1` GitHub Release](https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1). Awaiting Chrome Web Store submission (production icons + screenshots + Trader verification on Google's side). See the *Stage 5* section above and [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md).
+- **✅ Stage 5 — Chrome extension shipped 2026-05-12, PUBLISHED on Chrome Web Store 2026-05-21.** PRs #17, #18, #19, #20 all in main. Production deploy live on `www.signmypdf.io`. Store listing: [chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj](https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj). Pre-built test ZIP still at the [`ext-test-1` GitHub Release](https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1) for reviewer-style sideload tests. See the *Stage 5* section above and [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md).
 - **✅ `/sign` 2-col layout + save-signature UX shipped 2026-05-08.** [PR #12](https://github.com/viktorkkkk/signmypdf/pull/12) (`feat(sign): 2-col grid layout on /sign for ≥1024px`, squashed as `34f0589`) lifted the page-level grid into `packages/ui/src/styles/signature.css` (`.sign-layout-grid` + `.sign-side-col` mobile→`display: contents` + grid-areas on desktop) so the planned Chrome popup inherits it from day one. [PR #13](https://github.com/viktorkkkk/signmypdf/pull/13) (`53b0c4d`) added the 3-signature free limit, the "Save for future use" / "Pro: unlimited saves" caption under the Save button, and a 3 s undo toast on delete. Production deploy `dpl_6MRAYntaQeiA48Gc4a4kosWtd2RU` aliased to `www.signmypdf.io`.
 - **`/sign-nda` Phase 1 done, Phase 2/3 pending.** Saved-signature persistence currently scoped to `/sign-nda` only; planned to lift into shared `/sign` flow once the extension ships. Detail: `apps/web/CLAUDE.md → ## Pending decisions → Phase 2/3`.
 - **Hub→tool handoff bug ✅ FIXED.** Was: `/` → tab → file pick → `/sign|fill|protect` showed dropzone-twice. Resolved by `008695f`'s `t.oncomplete` resolve in `txStore`; the May 7 "still broken" reports were stale browser-cache. Don't undo `008695f`. Full archaeology: `apps/web/CLAUDE.md → ## ✅ FIXED (was KNOWN BROKEN May 6-7 2026)`.

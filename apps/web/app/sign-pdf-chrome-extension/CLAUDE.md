@@ -149,13 +149,17 @@ apps/web/
 
 ## 8. Open backlog
 
-- Publish the extension to the Chrome Web Store.
-- Once approved, swap the placeholder
-  `CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/PLACEHOLDER'`
-  in `page.tsx` for the real listing URL (one line, one spot).
 - Chrome Web Store assets (1280×800 listing screenshots × 5, promo
   tile 440×280, marquee 1400×560) — tracked under
   `apps/extension/CLAUDE.md → Open backlog`.
+
+## 8a. Chrome Web Store listing (live since 2026-05-21)
+
+- **Store URL:** https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj
+- Wired as `CHROME_STORE_URL` in `page.tsx` — both "Add to Chrome"
+  buttons (Hero + Final CTA) and the SoftwareApplication JSON-LD's
+  `installUrl` resolve to the same constant. Change once, propagates
+  everywhere. **Do not hardcode the URL in a second spot.**
 
 ## 9. Change log
 
@@ -170,3 +174,4 @@ apps/web/
 | v1.6 | (1) Landing-header logo swapped from the full "Sign My PDF" mark (shared `<Logo />`) to a simplified "Sign / PDF" sub-brand (`logo-extension.png` rendered directly via `<Image>`). The main-site logo is unchanged on every other surface — only this landing reads as a tighter, product-specific promise above the H1. (2) New "How to install" section inserted between Comparison and FAQ — 3 numbered cards (Click → Confirm → Pin) with lucide icons in primary blue. Reuses the existing alt-grey background (`.spce-section-alt` = `#fafafa`) for visual consistency with the other secondary sections. Mobile collapses to a single column at < 880 px. |
 | v1.7 | Refreshed 3 screenshots: HERO (`hero-screenshot.png` → 876×622, "Draw / Type / Upload" modal with cursor on a prominent "Save & place" CTA — visually anchors the install promise), showcase block 1 (`1-drop-pdf.png` → 1011×701, drop-zone page with a green "+" badge on the PDF icon to telegraph the "add a file" gesture), showcase block 3 (`3-download.png` → 882×516, editor with placed signature + cursor on the Download CTA). Block 2 (`2-add-signature.png`) intentionally untouched — it already shows the same modal as the HERO and would have duplicated content. |
 | v1.8 | Replaced the grey-placeholder `og-image.png` with the real 1200×630 promo banner (Sign / PDF file mark on the left, "Sign PDF / Free Forever / No Signup" headline on the right, dashed arrow to a signed signature card). Wired in `layout.tsx` `og:image` + `twitter:image` since v1 — Facebook / LinkedIn / Twitter previews now render the branded card instead of the grey filler. |
+| v1.9 | Chrome Web Store listing went live 2026-05-21. `CHROME_STORE_URL` in `page.tsx` swapped from `/detail/PLACEHOLDER` to `/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj` (single constant — both "Add to Chrome" CTAs and the new SoftwareApplication JSON-LD `installUrl` resolve through it). Removed the "swap the placeholder" item from §8 Open backlog. |

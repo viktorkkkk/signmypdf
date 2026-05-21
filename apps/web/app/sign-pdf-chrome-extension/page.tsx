@@ -21,10 +21,12 @@ import shotDropPdf from '../../public/chrome-extension/1-drop-pdf.png';
 import shotAddSignature from '../../public/chrome-extension/2-add-signature.png';
 import shotDownload from '../../public/chrome-extension/3-download.png';
 
-/** Chrome Web Store URL — placeholder until the listing is approved.
- *  Swap with the real product detail URL once the store ID is known. */
+/** Chrome Web Store product detail URL for Sign PDF.
+ *  Listing went live 2026-05-21. Short canonical form (no slug) — Google
+ *  redirects to the slug-prefixed URL on hit, so we keep the bare ID
+ *  here to avoid breakage on any future store-side slug rename. */
 const CHROME_STORE_URL =
-  'https://chromewebstore.google.com/detail/PLACEHOLDER';
+  'https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj';
 
 const SHOWCASE_STEPS = [
   {
@@ -151,6 +153,7 @@ const jsonLd = {
       applicationCategory: 'BrowserApplication',
       operatingSystem: 'Chrome, Edge, Brave, Opera, Arc',
       url: PAGE_URL,
+      installUrl: CHROME_STORE_URL,
       offers: {
         '@type': 'Offer',
         price: '0',
