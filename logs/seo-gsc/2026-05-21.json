@@ -1,0 +1,154 @@
+{
+  "date": "2026-05-21",
+  "timestamp": "2026-05-21T06:41:25.374Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-05-21T06:30:58.934Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "110",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 575,
+    "clicks28d": 2,
+    "avgPosition28d": 26.30086956521739,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 1,
+        "clicks": 1,
+        "position": 12
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+        "impressions": 60,
+        "clicks": 1,
+        "position": 64.7
+      },
+      {
+        "url": "https://signmypdf.io/",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 14.8
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 4
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 47,
+        "clicks": 0,
+        "position": 30.3
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-w9-form-online-free",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 7
+      },
+      {
+        "url": "https://signmypdf.io/blog/freelancers-sign-contracts-free",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 11.8
+      },
+      {
+        "url": "https://signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 8,
+        "clicks": 0,
+        "position": 17.1
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 7,
+        "clicks": 0,
+        "position": 9.1
+      },
+      {
+        "url": "https://signmypdf.io/fill",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 51
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 3
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 40.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 19.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 15,
+        "clicks": 0,
+        "position": 40.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+        "impressions": 36,
+        "clicks": 0,
+        "position": 57.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 13
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+        "impressions": 15,
+        "clicks": 0,
+        "position": 37.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 39
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 22.3
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
