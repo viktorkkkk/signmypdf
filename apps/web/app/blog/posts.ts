@@ -10848,6 +10848,152 @@ Yes. The typed text is embedded into the PDF with precise positioning relative t
 - [Password Protect PDF — Free](/protect)
 `,
   },
+  {
+    slug: 'sign-school-permission-slip-online',
+    title: 'Sign a School Permission Slip Online',
+    excerpt: 'No printer at work when the field trip form is due? Sign a school permission slip online free in under two minutes — no account, works on any phone.',
+    date: '2026-05-22',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign permission slip online', 'school permission slip', 'sign PDF without printing', 'sign PDF on phone', 'sign PDF free', 'electronic signature school', 'sign document online'],
+    metaTitle: 'Sign a School Permission Slip Online',
+    metaDescription: 'No printer? Sign a school permission slip online free in under two minutes. Works on your phone. No account required.',
+    content: `The school emailed a permission slip as a PDF. The field trip is Friday. You need to sign it and return it by tomorrow morning — but your printer is at home and you're at work. Even if you had the printer, you'd still need to scan the signed page afterward. Fifteen minutes of effort for a signature that takes ten seconds to write.
+
+If you've tried to sign a school permission slip on your phone before, you've hit the usual wall: PDF apps lock saving behind a subscription, Adobe Reader shows the form read-only when it has no interactive fields, and school portals — if they exist — rarely support digital signatures.
+
+You can sign a school permission slip online in under two minutes. Free, no account, no printer.
+
+[CTA]Sign the permission slip now — free|No account. Works on phone and desktop. Done in under two minutes.|Sign PDF Now — Free
+
+## How to Sign a Permission Slip Online
+
+1. Open signmypdf.io/sign on your phone or computer.
+2. Upload the permission slip from your email or files app.
+3. Draw or type your signature using the signature tool.
+4. Drag the signature onto the signature line.
+5. Download the signed PDF and email it back to the school.
+
+Your signature is embedded directly into the file. The school receives a real signed PDF, not a photo or a screenshot.
+
+[IMAGE: A school permission slip PDF open in SignMyPDF with a drawn signature placed on the signature line, shown on a phone screen]
+
+## Why This Takes Longer Than It Should
+
+**Printing is still the assumed fallback.** Most guides for signing school forms end with "print, sign, scan." That works fine at home on a weekend. It doesn't work when you're at a desk job or running between meetings.
+
+**Mobile PDF apps require subscriptions to save.** Apps like PDF Expert, iAnnotate, and Foxit PDF let you view and annotate for free but lock saving or sharing a signed document behind a monthly plan. You're stopped mid-task.
+
+**Adobe Reader works on interactive forms, not flat PDFs.** If the permission slip has clickable signature fields, Reader handles it free. If it's a flat PDF with a printed signature line — which most school-issued forms are — Reader shows it read-only. There's no way to sign without Acrobat Pro.
+
+**Some web tools break on phones.** Signing tools built for desktop often fail on small screens: unresponsive canvases, buttons that overlap, or touch input that doesn't register on the signature pad.
+
+## Why SignMyPDF Works for This
+
+**Free, no registration, no paywall at download.** Upload, sign, download. No email address, no credit card, no subscription screen before the file is released.
+
+**Touch-optimized signature canvas.** Draw your signature with your finger on any touchscreen. The canvas responds the same way to a finger as it does to a mouse — no stylus or special hardware needed.
+
+**Files processed in your browser.** The permission slip never leaves your device. Nothing is sent to a server, which matters when the form contains a child's name, date of birth, or health information.
+
+**Works on flat PDFs and interactive forms.** Whether the school's form has clickable signature fields or just a printed line at the bottom, you can place a signature on it either way.
+
+**Multi-page PDFs download in full.** If the slip is two pages — the permission form on one side, a policy notice on the other — both pages are in the downloaded file with your signature on the correct page.
+
+If the form also has text fields to fill in — child's name, grade, emergency contact — you can [fill in those fields first](/fill) and then add your signature, all in a single browser session without switching tools.
+
+For other forms that schools send home as PDFs — like a [medical release form](/blog/sign-medical-release-form-online) — the same process works. Upload, sign, download, email back. If you regularly return signed documents by email and want to understand when electronic signatures are accepted, [signing without printing or email registration](/blog/pdf-signing-no-email-required) covers the specifics for school and legal contexts.
+
+## FAQ
+
+**Will the school accept an electronically signed permission slip?**
+Most schools that send forms as PDFs accept them back as signed PDFs. If your school requires original ink signatures, they'll say so explicitly — the majority don't.
+
+**Can I sign on my phone?**
+Yes. The signing canvas is fully touch-responsive. Draw your signature with your finger, drag it into position over the signature line, and tap download.
+
+**What if the form has blank text fields I also need to fill in?**
+Go to signmypdf.io/fill first to type in those fields, then switch to the signature tool. You can fill and sign in a single session without downloading an intermediate copy.
+
+[CTA]Sign the permission slip — free, no account|No printer. No scanner. Back in 90 seconds.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDF Online — Free](/sign)
+- [Fill PDF Form Online — Free](/fill)
+- [Password Protect PDF — Free](/protect)
+`,
+  },
+  {
+    slug: 'protected-pdf-keeps-asking-password',
+    title: 'Protected PDF Keeps Asking for Password',
+    excerpt: 'Your protected PDF keeps prompting for the password even after it opens correctly. Here is what is causing it and the fastest fix.',
+    date: '2026-05-22',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['protected PDF password prompt', 'PDF keeps asking password', 'PDF password fix', 'password protected PDF issue', 'PDF encryption troubleshooting', 'PDF reader password', 'password protect PDF free'],
+    metaTitle: 'Protected PDF Keeps Asking for Password',
+    metaDescription: 'Protected PDF keeps prompting for the password on every open? Here is why it happens and how to fix it in under five minutes.',
+    content: `You protected a PDF and sent it to a colleague. They entered the password, the file opened — and then every time they closed and reopened it, the reader asked for the password again. Or it prompted a second time mid-session while scrolling through the document.
+
+The protected PDF is not broken and the password is not wrong. A PDF that keeps asking for the password is almost always a reader-side behavior: how the recipient's PDF viewer handles session caching, not a flaw in the file's encryption.
+
+Understanding the cause takes the guesswork out of fixing it.
+
+[CTA]Protect your PDF — free, standard encryption|No repeated prompts. Works across readers. No account needed.|Protect PDF Now — Free
+
+## How to Diagnose and Fix the Repeated Prompt
+
+1. Ask the recipient which app they use to open the PDF.
+2. Have them try the same file in Chrome's built-in PDF viewer.
+3. If the prompting stops in Chrome, the issue is the original reader's settings.
+4. If it persists in Chrome too, re-protect the file with a different tool.
+5. Test the replacement file in two readers before resending.
+
+Most cases resolve at step 2 or 3. Chrome, Firefox, and Edge all cache the password for the current session automatically — no settings changes required.
+
+[IMAGE: Chrome's PDF viewer opening a protected PDF with no repeated prompt, compared with an older reader asking for the password again on the second page]
+
+## Why a Protected PDF Keeps Prompting
+
+**The reader does not cache the password between sessions.** PDF viewers are supposed to store the decryption key in memory for the current session so the file does not re-prompt on each open or page navigation. Some older readers — and corporate document management systems — do not do this by default. The recipient would need to find and enable session caching in the reader's preferences, if that option exists.
+
+**The file uses non-standard encryption headers.** Some free online PDF protectors generate encryption output that is technically valid but unusual enough that certain readers re-validate the credential on every render cycle. The result is a repeated prompt even when the password is correct. This overlaps with the same issue that causes a [protected PDF that will not open on some devices](/blog/protected-pdf-wont-open-some-devices) — the reader's parser is being cautious about headers it does not recognize.
+
+**Both an open password and a permissions password are active.** PDFs can carry two distinct passwords: a user password to open the file, and an owner password to control printing, copying, and editing. A reader that checks both on each interaction may re-prompt if the session cache stores only one credential. This is uncommon in modern readers but appears in older Acrobat versions and some legal document platforms.
+
+**Special characters in the password.** On older operating systems, some readers have encoding issues with passwords containing characters outside standard ASCII. The credential appears to validate on first open but gets re-processed differently on the next load. Re-protecting with a plain alphanumeric password is a quick way to rule this out.
+
+## How to Prevent It Next Time
+
+**Use a tool that produces standard AES encryption.** Free, no registration, no paywall at download — you can protect a PDF at signmypdf.io/protect using AES-128 per the PDF specification, which every modern reader handles without repeated prompts.
+
+**Test before sending.** Open the protected file in Chrome, Firefox, and one other reader. If none of them re-prompt, the recipient's experience should be the same. One minute of testing prevents a back-and-forth support call.
+
+**Stick to alphanumeric passwords for frequently-accessed documents.** Special characters are fine for security, but if the file is opened dozens of times by different people on different systems, a simpler password reduces the chance of encoding edge cases.
+
+**Re-protect if the issue persists.** If the file was protected with a tool that generated non-standard headers, protect a fresh copy using a standard tool and resend. For a deeper look at what the encryption is actually doing, [is your password-protected PDF actually secure](/blog/is-password-protected-pdf-actually-secure) gives an honest breakdown of what AES-128 protects against.
+
+## FAQ
+
+**Why does the PDF open fine for me but prompt the recipient repeatedly?**
+Your reader — likely Chrome or a recent version of Acrobat — caches the password session automatically. Their reader does not. Tell them to try opening the file directly in Chrome or Firefox, both of which handle this transparently.
+
+**Can I remove the password and re-protect the file?**
+Yes, if you have the original unprotected version. Re-apply protection with a standard tool and test first. If you only have the protected copy and need to remove the password, you will need the password itself — [options when you have forgotten your PDF password](/blog/forgot-my-pdf-password-options) covers what is realistic.
+
+**Does this happen with all PDF protection tools?**
+No. Tools that produce standard encryption headers are handled consistently by modern readers. The repeated-prompt problem is most common with niche or older tools that generate slightly non-standard encryption metadata.
+
+[CTA]Protect your PDF the right way — free|Standard AES encryption. No registration. No repeated prompts.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect PDF — Free](/protect)
+- [Sign PDF Online — Free](/sign)
+- [Fill PDF Form Online — Free](/fill)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

@@ -119,6 +119,8 @@ const BLOG_SLUGS = [
   'password-protect-pdf-free-online-no-software',
   'why-pdf-not-downloading-after-sign',
   'fill-pdf-on-iphone-no-app',
+  'sign-school-permission-slip-online',
+  'protected-pdf-keeps-asking-password',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
