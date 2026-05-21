@@ -6,8 +6,6 @@ import {
   Lock,
   MousePointerClick,
   PenLine,
-  Pin,
-  ShieldCheck,
   Type as TypeIcon,
   Upload,
   XCircle,
@@ -20,6 +18,9 @@ import heroShot from '../../public/chrome-extension/hero-screenshot.png';
 import shotDropPdf from '../../public/chrome-extension/1-drop-pdf.png';
 import shotAddSignature from '../../public/chrome-extension/2-add-signature.png';
 import shotDownload from '../../public/chrome-extension/3-download.png';
+import shotInstall1 from '../../public/chrome-extension/install-1-add-to-chrome.png';
+import shotInstall2 from '../../public/chrome-extension/install-2-confirm.png';
+import shotInstall3 from '../../public/chrome-extension/install-3-pin.png';
 
 /** Chrome Web Store product detail URL for Sign PDF.
  *  Listing went live 2026-05-21. Short canonical form (no slug) — Google
@@ -87,19 +88,22 @@ const FEATURES = [
 
 const INSTALL_STEPS = [
   {
-    Icon: MousePointerClick,
+    src: shotInstall1,
+    alt: 'Click Add to Chrome button on Sign PDF extension page in Chrome Web Store',
     title: '1. Click "Add to Chrome"',
     body:
       "Hit the blue button at the top of this page. You'll be redirected to the Chrome Web Store.",
   },
   {
-    Icon: ShieldCheck,
+    src: shotInstall2,
+    alt: 'Confirm installation dialog asking to add Sign PDF Signature eSign Tool extension',
     title: '2. Confirm installation',
     body:
       'Chrome will ask you to confirm. Click "Add extension" — it takes one second.',
   },
   {
-    Icon: Pin,
+    src: shotInstall3,
+    alt: 'Pin Sign PDF extension to Chrome toolbar from extensions menu',
     title: '3. Pin to your toolbar',
     body:
       'Open the extensions menu (puzzle icon) and click the pin next to Sign PDF for quick access.',
@@ -337,9 +341,18 @@ export default function SignPdfChromeExtensionPage() {
             <h2 className="spce-h2">How to install</h2>
             <p className="spce-section-sub">Install in less than 30 seconds.</p>
             <div className="spce-install">
-              {INSTALL_STEPS.map(({ Icon, title, body }) => (
+              {INSTALL_STEPS.map(({ src, alt, title, body }) => (
                 <div key={title} className="spce-install-card">
-                  <Icon size={48} strokeWidth={1.6} className="spce-install-icon" />
+                  <div className="spce-install-shot">
+                    <Image
+                      src={src}
+                      alt={alt}
+                      sizes="(max-width: 880px) 100vw, 360px"
+                      className="spce-install-img"
+                      placeholder="blur"
+                      priority={false}
+                    />
+                  </div>
                   <h3 className="spce-install-title">{title}</h3>
                   <p className="spce-install-body">{body}</p>
                 </div>
