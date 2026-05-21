@@ -85,6 +85,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
+      url: `${baseUrl}/extension/support`,
+      lastModified: lastModFor('/extension/support'),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+    {
       url: `${baseUrl}/blog`,
       lastModified: lastModFor('/blog'),
       changeFrequency: 'daily' as const,
