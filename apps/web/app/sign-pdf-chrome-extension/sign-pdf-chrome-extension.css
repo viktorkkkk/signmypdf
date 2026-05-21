@@ -74,7 +74,14 @@
   background: #fafafa;
 }
 .spce-h1 {
-  font-size: 60px;
+  /* 52 px (was 60 px) — "Sign PDF Free Forever" is 21 chars at -0.02em
+     tracking + weight 700; at 60 px on a 1fr/1fr hero grid (≈ 544 px
+     left column at 1200 max container) it wraps onto 3 lines. 52 px
+     keeps the intended 2-line layout ("Sign PDF Free Forever" /
+     "Chrome Extension") on every desktop width down to the 880 px
+     stack breakpoint. Below 880 px the hero collapses to one column
+     and the H1 has the full container width again. */
+  font-size: 52px;
   line-height: 1.05;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -527,8 +534,14 @@
   .spce-hero {
     padding: 32px 0 24px;
   }
+  /* H1 must fit in two visual lines on iPhone-min widths
+     ("Sign PDF Free Forever" / "Chrome Extension"). The longer line is
+     21 characters at -0.02em tracking and font-weight 700 — at any
+     size > 30 px it wraps onto a 3rd row on 375 px viewports, which
+     fractures the headline rhythm. 30 px keeps both lines intact down
+     to 360 px viewport without making the headline feel cramped. */
   .spce-h1 {
-    font-size: 38px;
+    font-size: 30px;
     line-height: 1.1;
   }
   .spce-h2 {

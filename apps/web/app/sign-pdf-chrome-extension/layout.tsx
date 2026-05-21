@@ -12,9 +12,9 @@ import type { Metadata } from 'next';
  * policy in apps/web/CLAUDE.md.
  */
 export const metadata: Metadata = {
-  title: 'Sign PDF in Chrome — Free Chrome Extension',
+  title: 'Sign PDF Free Forever in Chrome — Chrome Extension',
   description:
-    'Sign PDF files directly in Chrome. Free, no signup, files stay on your device. Works with Gmail, Drive, and any website.',
+    'Sign PDF files directly in Chrome. Free forever, no signup, files stay on your device. Works with Gmail, Drive, and any website.',
   keywords: [
     'sign pdf chrome extension',
     'sign pdf in chrome',
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     canonical: '/sign-pdf-chrome-extension',
   },
   openGraph: {
-    title: 'Sign PDF in Chrome — Free Chrome Extension',
+    title: 'Sign PDF Free Forever in Chrome — Chrome Extension',
     description:
-      'Sign any PDF directly in your browser. Files stay on your device.',
+      'Sign any PDF directly in your browser. Free forever. Files stay on your device.',
     url: '/sign-pdf-chrome-extension',
     siteName: 'SignMyPDF',
     type: 'website',
@@ -40,14 +40,14 @@ export const metadata: Metadata = {
         url: '/chrome-extension/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Sign PDF in Chrome — free extension by SignMyPDF',
+        alt: 'Sign PDF Free Forever — Chrome extension by SignMyPDF',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sign PDF in Chrome — Free Chrome Extension',
-    description: 'Sign any PDF directly in your browser.',
+    title: 'Sign PDF Free Forever in Chrome — Chrome Extension',
+    description: 'Sign any PDF directly in your browser. Free forever.',
     images: ['/chrome-extension/og-image.png'],
   },
 };

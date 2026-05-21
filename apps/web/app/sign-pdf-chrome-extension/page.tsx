@@ -110,7 +110,7 @@ const FAQS = [
   {
     q: 'Is it really free?',
     a:
-      'Yes — sign unlimited PDFs, no signup, no credit card, no paywall. The core signing functionality is free forever. We may add optional Pro features in the future, but never gate the basics.',
+      'Yes — Sign PDF will remain free forever. Sign unlimited PDFs, no signup, no credit card, no paywall. Even if we add optional Pro features in the future, signing PDFs will always be free.',
   },
   {
     q: 'Is it safe to use?',
@@ -142,9 +142,9 @@ const jsonLd = {
       '@type': 'WebPage',
       '@id': `${PAGE_URL}#webpage`,
       url: PAGE_URL,
-      name: 'Sign PDF in Chrome — Free Chrome Extension',
+      name: 'Sign PDF Free Forever in Chrome — Chrome Extension',
       description:
-        'Sign PDF files directly in Chrome. Free, no signup, files stay on your device.',
+        'Sign PDF files directly in Chrome. Free forever, no signup, files stay on your device.',
       inLanguage: 'en',
     },
     {
@@ -213,18 +213,18 @@ export default function SignPdfChromeExtensionPage() {
           <div className="spce-container spce-hero-grid">
             <div className="spce-hero-text">
               <h1 className="spce-h1">
-                Sign PDF Free
+                Sign PDF Free Forever
                 <br />
                 Chrome Extension
               </h1>
               <p className="spce-hero-sub">
-                Sign and fill any PDF in your browser for free. No signup,
-                no upload — your files stay private.
+                Sign and fill any PDF in your browser. Forever free.
+                No upload — your files stay private.
               </p>
               <div className="spce-hero-cta">
                 <AddToChromeButton size="lg" />
               </div>
-              <p className="spce-trust">Free · No signup · No watermark</p>
+              <p className="spce-trust">Free Forever · No signup · No watermark</p>
             </div>
             <div className="spce-hero-shot">
               <Image
