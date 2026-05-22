@@ -4366,3 +4366,90 @@ body.nda-editor-mode .nda-hero-inner {
   .ext-card-icon { width: 64px; height: 64px; }
 }
 
+
+/* ────────────────────────────────────────────────────────────────
+   Blog end-of-article Chrome-extension CTA banner.
+   Rendered between the article body and Related Articles on
+   Sign / Fill blog posts (gate in BlogPostContent.tsx). Whole card
+   is one <Link href="/sign-pdf-chrome-extension"> — see
+   apps/web/app/components/BlogChromeExtensionBanner.tsx.
+   ──────────────────────────────────────────────────────────────── */
+.blog-ext-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 36px;
+  align-items: center;
+  margin: 56px 0 24px;
+  padding: 32px 36px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.blog-ext-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.12);
+  border-color: #bfdbfe;
+}
+.blog-ext-cta-text { min-width: 0; }
+.blog-ext-cta-title {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+.blog-ext-cta-sub {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #475569;
+}
+.blog-ext-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 22px;
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(26, 115, 232, 0.32);
+}
+.blog-ext-cta:hover .blog-ext-cta-btn {
+  background: #1565c0;
+}
+.blog-ext-cta-trust {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+.blog-ext-cta-shot { min-width: 0; }
+.blog-ext-cta-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
+}
+@media (max-width: 768px) {
+  .blog-ext-cta {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+    margin: 40px 0 16px;
+  }
+  /* Screenshot above text on mobile (visual hook → context) */
+  .blog-ext-cta-shot { order: 1; }
+  .blog-ext-cta-text { order: 2; }
+  .blog-ext-cta-title { font-size: 22px; }
+  .blog-ext-cta-sub { font-size: 15px; }
+  .blog-ext-cta-btn { padding: 11px 20px; font-size: 15px; }
+}
