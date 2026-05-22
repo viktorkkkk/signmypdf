@@ -29,7 +29,7 @@ import { BlogPost } from '../posts';
 import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
-import BlogChromeExtensionBanner from '../../components/BlogChromeExtensionBanner';
+import ChromeExtensionBanner from '../../components/ChromeExtensionBanner';
 
 // ─── Tool category per article ──────────────────────────────────
 // Each article is routed to the tool that best matches its topic. This
@@ -685,7 +685,7 @@ export default function BlogPostContent({ post, allPosts }: BlogPostContentProps
 
           {/* End-of-article Chrome-extension CTA. Sign + Fill only —
               not relevant on Protect/Merge/Compress/Split topics. */}
-          {tool !== 'protect' && <BlogChromeExtensionBanner />}
+          {tool !== 'protect' && <ChromeExtensionBanner />}
 
           {/* Related Articles */}
           <RelatedArticles currentSlug={post.slug} allPosts={allPosts} />

@@ -4,23 +4,29 @@ import ChromeIcon from './ChromeIcon';
 import heroShot from '../../public/chrome-extension/hero-screenshot.png';
 
 /**
- * End-of-article CTA banner that nudges Sign/Fill blog readers
- * toward the Chrome extension landing.
+ * Reusable CTA card that nudges users toward installing the
+ * Sign PDF Chrome extension. Used:
+ *  - At the end of Sign / Fill blog posts
+ *    (apps/web/app/blog/[slug]/BlogPostContent.tsx)
+ *  - Below the upload dropzone on /sign in full mode
+ *    (apps/web/app/sign/page.tsx)
  *
- * Renders only on Sign and Fill articles (see `BlogPostContent.tsx`
- * for the gate — Protect / Merge / Compress / Split articles never
- * see it). The whole card is one `<Link>` to /sign-pdf-chrome-extension
- * (deliberately NOT to the Web Store — the landing page acts as a
- * filter + warmer pitch before the final install click). The visible
- * "Add to Chrome" pill is a styled `<span>` to keep the link nesting
- * valid HTML.
+ * The whole card is one `<Link>` to /sign-pdf-chrome-extension
+ * (deliberately NOT to the Web Store — the landing acts as a filter
+ * + warmer pitch before the final install click). The visible
+ * "Add to Chrome" pill is a styled `<span>` to keep the link
+ * nesting valid HTML.
  *
- * Server-rendered. No `use client`. No mobile-only hiding (unlike the
- * /sign `<ExtensionBanner />` which is hidden on mobile because the
- * extension is desktop-only — for blog we still want the mobile
- * reader to remember the extension when they sit down at a laptop).
+ * Server-rendered. No `use client`. No mobile-only hiding — the
+ * surrounding screens decide whether to render the banner; this
+ * component itself is layout-only.
+ *
+ * CSS lives under the `.blog-ext-cta-*` namespace in globals.css
+ * (kept that name to avoid migrating existing rules — the namespace
+ * is no longer blog-only, but the class names are an
+ * implementation detail).
  */
-export default function BlogChromeExtensionBanner() {
+export default function ChromeExtensionBanner() {
   return (
     <Link
       href="/sign-pdf-chrome-extension"

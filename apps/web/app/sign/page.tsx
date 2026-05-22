@@ -30,6 +30,7 @@ import FileHistory, { saveToHistory } from '../components/FileHistory';
 import PaywallModal from '../components/PaywallModal';
 import ToolDescription from '../components/ToolDescription';
 import ExtensionBanner from '../components/ExtensionBanner';
+import ChromeExtensionBanner from '../components/ChromeExtensionBanner';
 import { signPdfInBrowser } from '@signmypdf/pdf-core';
 import {
   SUBSCRIPTION_KEY,
@@ -842,10 +843,16 @@ export default function Home() {
       )}
 
       {/* Install-extension card — below the dropzone, before the
-          More Tools grid. PR 4 replaces the sticky-top banner with
-          this larger, content-anchored card. */}
+          More Tools grid. Now uses the richer two-column
+          ChromeExtensionBanner (hero screenshot + 60/40 layout +
+          "Free Forever" trust line) — same component the blog uses
+          at the end of Sign / Fill articles. The `step === 'upload'
+          && !isMinimalMode` gate still hides it on the done step
+          and for ?from=extension visitors (who already installed). */}
       {step === 'upload' && !isMinimalMode && (
-        <ExtensionBanner variant="card" />
+        <div className="container">
+          <ChromeExtensionBanner />
+        </div>
       )}
 
       {/* More PDF Tools — only on upload step, full mode only */}
