@@ -17,20 +17,36 @@ import heroShot from '../../public/chrome-extension/hero-screenshot.png';
  * "Add to Chrome" pill is a styled `<span>` to keep the link
  * nesting valid HTML.
  *
- * Server-rendered. No `use client`. No mobile-only hiding — the
- * surrounding screens decide whether to render the banner; this
- * component itself is layout-only.
+ * The card itself shows `cursor: default` and has no hover effects
+ * — only the inner "Add to Chrome" pill telegraphs interactivity
+ * (pointer cursor + darker bg). Clicks anywhere on the card still
+ * navigate, but visually the card reads as an informational block
+ * with one explicit call to action.
  *
- * CSS lives under the `.blog-ext-cta-*` namespace in globals.css
- * (kept that name to avoid migrating existing rules — the namespace
- * is no longer blog-only, but the class names are an
- * implementation detail).
+ * Variants:
+ *  - `gradient` (default) — light blue → light violet card, used in
+ *    blog posts where the surrounding article body is plain white
+ *    and the card needs visual lift.
+ *  - `plain` — pure white card with a thin grey border, used on
+ *    /sign where the page background is light grey and a tinted
+ *    card would either clash with the dropzone above or blend into
+ *    the page chrome.
+ *
+ * Server-rendered. CSS lives under the `.blog-ext-cta-*` namespace
+ * in globals.css.
  */
-export default function ChromeExtensionBanner() {
+interface Props {
+  variant?: 'gradient' | 'plain';
+}
+
+export default function ChromeExtensionBanner({ variant = 'gradient' }: Props) {
+  const className =
+    variant === 'plain' ? 'blog-ext-cta blog-ext-cta--plain' : 'blog-ext-cta';
+
   return (
     <Link
       href="/sign-pdf-chrome-extension"
-      className="blog-ext-cta"
+      className={className}
       aria-label="Get the free Sign PDF Chrome extension"
     >
       <div className="blog-ext-cta-text">

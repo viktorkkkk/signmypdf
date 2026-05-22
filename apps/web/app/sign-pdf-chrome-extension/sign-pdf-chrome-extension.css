@@ -435,28 +435,19 @@
   line-height: 1.6;
 }
 
-/* ── 8. Final CTA ──────────────────────────────────────────────────────── */
-.spce-final {
-  background: #eff6ff;
-  padding: 96px 0;
-}
-.spce-final-h2 {
-  font-size: 42px;
-  text-align: center;
-}
+/* ── 7. Post-install CTA ───────────────────────────────────────────────── */
+/* Section 6 (Ready to sign your first PDF?) reuses .spce-h2 and
+   .spce-section-sub from above. The old Final-CTA section was
+   retired 2026-05-22 (the post-install CTA + Hero proved to be
+   enough; the duplicate at the bottom was just noise). The
+   .spce-final-cta flex-centring helper survives because it's the
+   simplest way to centre the Add-to-Chrome button under the H2
+   subtitle. Below it sits the small muted help link. */
 .spce-final-cta {
   display: flex;
   justify-content: center;
   margin-top: 32px;
 }
-
-/* ── 7. Mid-page CTA ───────────────────────────────────────────────────── */
-/* Section 7 (Ready to sign your first PDF?) reuses .spce-h2,
-   .spce-section-sub, .spce-final-cta from above. Only this small
-   muted "Got questions?" link is unique to it — the Final CTA in
-   section 8 doesn't carry the help link because the visitor either
-   clicks Add-to-Chrome or scrolls into the cross-pollination
-   paragraph anyway. */
 .spce-cta-help {
   margin: 20px 0 0;
   text-align: center;
@@ -472,7 +463,7 @@
   text-decoration: underline;
 }
 
-/* ── 9. Cross-pollination ──────────────────────────────────────────────── */
+/* ── 8. Cross-pollination ──────────────────────────────────────────────── */
 .spce-cross {
   padding: 48px 0;
   background: var(--color-bg);

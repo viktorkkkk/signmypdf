@@ -4386,12 +4386,21 @@ body.nda-editor-mode .nda-hero-inner {
   border-radius: 16px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  /* The whole card is wrapped in an <a>, but visually it reads as
+     an informational block — only the inner "Add to Chrome" pill
+     signals interactivity. Clicks anywhere still navigate (safety
+     net), but the cursor stays default everywhere except on the
+     pill. No hover transform/shadow/border on the card itself. */
+  cursor: default;
 }
-.blog-ext-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.12);
-  border-color: #bfdbfe;
+/* "Plain" variant — pure white background with neutral grey border.
+   Used on /sign where the page bg is light grey and a tinted card
+   would either clash with the dropzone above or blend into the
+   page chrome. Default `gradient` is still used in blog posts. */
+.blog-ext-cta--plain {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 .blog-ext-cta-text { min-width: 0; }
 .blog-ext-cta-title {
@@ -4421,9 +4430,16 @@ body.nda-editor-mode .nda-hero-inner {
   font-weight: 600;
   line-height: 1;
   box-shadow: 0 6px 18px rgba(26, 115, 232, 0.32);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
-.blog-ext-cta:hover .blog-ext-cta-btn {
+.blog-ext-cta:hover .blog-ext-cta-btn,
+.blog-ext-cta:focus-visible .blog-ext-cta-btn {
   background: #1565c0;
+  box-shadow: 0 8px 22px rgba(26, 115, 232, 0.42);
+}
+.blog-ext-cta:active .blog-ext-cta-btn {
+  transform: translateY(1px);
 }
 .blog-ext-cta-trust {
   margin: 14px 0 0;

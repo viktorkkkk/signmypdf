@@ -361,14 +361,13 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 6. MID-PAGE CTA — post-install primer ───────────────── */}
-        {/* Less aggressive than the Final CTA at the end of the page:
-            white background (not the blue `spce-final` plate),
-            standard 80 px section padding (vs Final's 96 px), and the
-            base `spce-h2` size (vs the +4 px `spce-final-h2`). Gives
-            convinced readers an install button right after the
-            step-by-step instructions, without doubling up on the
-            visual register the Final CTA owns. */}
+        {/* ── 6. POST-INSTALL CTA — page-ending install button ─────
+            Sits right after the step-by-step install instructions
+            and is the page's single install pitch below the hero
+            (the Final CTA after FAQ was retired 2026-05-22; one
+            mid-page CTA + the hero button proved enough). White
+            background, base `spce-h2` (38 px), standard 80 px
+            section padding — informational register, not aggressive. */}
         <section className="spce-section">
           <div className="spce-container">
             <h2 className="spce-h2">Ready to sign your first PDF?</h2>
@@ -392,22 +391,7 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 8. FINAL CTA ────────────────────────────────────────── */}
-        <section className="spce-section spce-final">
-          <div className="spce-container">
-            <h2 className="spce-h2 spce-final-h2">
-              Sign your first PDF in 30 seconds
-            </h2>
-            <p className="spce-section-sub">
-              Free forever · No signup needed
-            </p>
-            <div className="spce-final-cta">
-              <AddToChromeButton size="lg" />
-            </div>
-          </div>
-        </section>
-
-        {/* ── 9. CROSS-POLLINATION ────────────────────────────────── */}
+        {/* ── 8. CROSS-POLLINATION ────────────────────────────────── */}
         <section className="spce-cross">
           <div className="spce-container">
             <p>
