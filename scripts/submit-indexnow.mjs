@@ -1,8 +1,28 @@
 /**
- * IndexNow bulk submission — submits all signmypdf.io URLs to Bing
- * Key file: https://signmypdf.io/8e0aa4aa055ef1d076ab294fd8edb9ba.txt
- * Run: node scripts/submit-indexnow.mjs
+ * IndexNow bulk submission — submits signmypdf.io URLs to Bing
+ * (and the shared IndexNow API endpoint, which fans out to Yandex /
+ * Seznam / other participants).
+ *
+ * Key file: https://www.signmypdf.io/8e0aa4aa055ef1d076ab294fd8edb9ba.txt
+ *
+ * Usage:
+ *   node scripts/submit-indexnow.mjs                 — submit every static
+ *                                                       URL + every slug
+ *                                                       in apps/web/app/blog/posts.ts
+ *   node scripts/submit-indexnow.mjs slug1 slug2     — submit only those
+ *                                                       blog slugs (still
+ *                                                       includes statics)
+ *
+ * Static URLs are listed below. Blog slugs are read live from
+ * `apps/web/app/blog/posts.ts` so newly-published articles are picked up
+ * automatically (mirrors `scripts/index-pages.mjs` for Google). Until
+ * 2026-05-22 this script carried a hand-maintained `BLOG_SLUGS` array,
+ * which silently fell behind every time the daily blog trigger added a
+ * new slug — that gap was the root cause of Bing's "not all recent blog
+ * pages submitted via IndexNow" warning.
  */
+
+import { readFileSync } from 'fs';
 
 // Canonical host is www. apex (signmypdf.io) 307-redirects to www, so
 // IndexNow submissions on apex make Bing follow a redirect for every URL.
@@ -12,6 +32,9 @@ const HOST = 'www.signmypdf.io';
 const KEY  = '8e0aa4aa055ef1d076ab294fd8edb9ba';
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
+// Static public pages on the site. Keep this list in sync with
+// `apps/web/app/sitemap.ts` STATIC_URLS — the sitemap is the SEO
+// canonical source of truth, this list is the IndexNow shadow of it.
 const STATIC_URLS = [
   `https://${HOST}/`,
   `https://${HOST}/sign`,
@@ -21,112 +44,27 @@ const STATIC_URLS = [
   `https://${HOST}/compress`,
   `https://${HOST}/split`,
   `https://${HOST}/sign-nda`,
+  `https://${HOST}/sign-pdf-chrome-extension`,
+  `https://${HOST}/extension/privacy`,
+  `https://${HOST}/extension/support`,
   `https://${HOST}/blog`,
   `https://${HOST}/privacy`,
   `https://${HOST}/terms`,
 ];
 
-const BLOG_SLUGS = [
-  'how-to-sign-pdf-online',
-  'sign-pdf-free-without-registration',
-  'how-to-add-signature-to-pdf',
-  'sign-pdf-on-iphone-free',
-  'sign-pdf-on-mac',
-  'sign-pdf-android-free',
-  'sign-pdf-windows-free',
-  'sign-pdf-without-adobe',
-  'sign-pdf-no-watermark',
-  'sign-pdf-fast-secure',
-  'how-to-sign-lease-agreement-online',
-  'how-to-sign-nda-online',
-  'docusign-alternative-free',
-  'fill-pdf-form-online-free',
-  'signmypdf-vs-docusign-freelancers',
-  'real-estate-agents-sign-documents',
-  'fill-w9-form-online-free',
-  'electronic-signature-legal-rental',
-  'sign-nda-online-without-printing',
-  'pdf-wont-let-me-type-fix',
-  'ilovepdf-vs-signmypdf',
-  'fill-irs-form-online-free',
-  'freelancers-sign-contracts-free',
-  'electronic-signature-laws-by-state',
-  'sign-employment-offer-letter-online',
-  'cant-sign-pdf-iphone-fix',
-  'adobe-acrobat-vs-signmypdf',
-  'sign-pdf-on-chromebook-free',
-  'sign-pdf-from-google-drive-free',
-  'fill-rental-application-pdf-free',
-  'small-business-document-signing',
-  'eidas-regulation-eu-signatures',
-  'sign-medical-release-form-online',
-  'fill-medical-release-form-online',
-  'eidas-fill-pdf-eu',
-  'pdf-form-fields-not-working-fix',
-  'sign-insurance-documents-online',
-  'hellosign-alternatives-free',
-  'hr-teams-collect-signatures',
-  'esign-act-explained',
-  'fill-job-application-pdf-online',
-  'sign-pdf-no-editing-allowed',
-  'remote-teams-sign-documents',
-  'digital-signatures-admissible-court',
-  'sent-confidential-contract-unprotected',
-  'password-protect-pdf-without-adobe',
-  'protected-pdf-wont-open-some-devices',
-  'pdf-signing-no-email-required',
-  'electronic-signature-business-contracts',
-  'freelancers-protect-client-contracts',
-  'property-managers-tenant-signatures',
-  'adobe-vs-free-pdf-protection',
-  'fill-visa-application-form-pdf',
-  'password-protect-pdf-on-mac',
-  'pdf-read-only-add-text-fix',
-  'docusign-free-plan-vs-signmypdf',
-  'sign-contractor-agreement-online',
-  'password-protect-pdf-on-windows-11',
-  'accountants-tax-documents-signature',
-  'why-lawyer-asks-password-protect-pdf',
-  'hipaa-electronic-signatures',
-  'fill-bank-form-pdf-online',
-  'sign-multiple-pdf-pages',
-  'accountant-wont-accept-unprotected-tax-documents',
-  'zoho-sign-vs-signmypdf',
-  'password-pdf-vs-encrypted-email',
-  'sign-car-purchase-agreement-online',
-  'law-firms-free-pdf-tools',
-  'electronic-signature-real-estate-legal',
-  'zip-password-vs-pdf-password',
-  'fill-college-application-pdf',
-  'password-protect-pdf-on-iphone',
-  'signed-pdf-looks-different-fix',
-  'signnow-free-alternative',
-  'sign-service-agreement-online',
-  'forgot-my-pdf-password-options',
-  'consultants-proposals-digital-signature',
-  'real-estate-agents-protect-property-documents',
-  'electronic-signature-international-contracts',
-  'fill-insurance-claim-form-pdf',
-  'add-multiple-signatures-one-pdf',
-  'remove-password-from-pdf-you-own',
-  'adobe-fill-sign-vs-signmypdf',
-  'what-happens-if-protected-pdf-leaks',
-  'sign-non-compete-agreement-online',
-  'photographers-digital-signatures',
-  'electronic-signature-security',
-  'is-password-protected-pdf-actually-secure',
-  'fill-medical-history-form-pdf',
-  'password-protect-pdf-free-online-no-software',
-  'why-pdf-not-downloading-after-sign',
-  'fill-pdf-on-iphone-no-app',
-  'sign-school-permission-slip-online',
-  'protected-pdf-keeps-asking-password',
-  'dochub-free-alternative',
-  'medical-practices-hipaa-pdf-sharing',
-];
+// Read all slugs dynamically from posts.ts so this script never falls
+// behind the actual published set.
+function getAllSlugsFromPosts() {
+  const content = readFileSync('./apps/web/app/blog/posts.ts', 'utf8');
+  const matches = [...content.matchAll(/slug:\s*['"]([^'"]+)['"]/g)];
+  return matches
+    .map(m => m[1])
+    .filter(s => s !== 'string'); // filter out the type declaration in BlogPost
+}
 
-const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);
-
+const cliSlugs = process.argv.slice(2);
+const slugs = cliSlugs.length > 0 ? cliSlugs : getAllSlugsFromPosts();
+const BLOG_URLS = slugs.map(slug => `https://${HOST}/blog/${slug}`);
 const ALL_URLS = [...STATIC_URLS, ...BLOG_URLS];
 
 async function submitIndexNow(engine, endpoint) {
@@ -147,25 +85,41 @@ async function submitIndexNow(engine, endpoint) {
 
   if (res.ok || res.status === 200 || res.status === 202) {
     console.log(`✅ ${engine}: ${res.status} — accepted`);
+    return { engine, ok: true, status: res.status };
   } else {
     const text = await res.text().catch(() => '');
     console.error(`❌ ${engine}: ${res.status} — ${text}`);
+    return { engine, ok: false, status: res.status, body: text };
   }
 }
 
 async function main() {
   console.log('IndexNow bulk submission');
-  console.log(`Host: ${HOST}`);
-  console.log(`Key:  ${KEY}`);
-  console.log(`URLs: ${ALL_URLS.length} total\n`);
+  console.log(`Host:    ${HOST}`);
+  console.log(`Key:     ${KEY}`);
+  console.log(`Source:  ${cliSlugs.length > 0
+    ? `${cliSlugs.length} slug(s) from CLI args`
+    : `${slugs.length} slugs live from posts.ts`}`);
+  console.log(`URLs:    ${ALL_URLS.length} total (${STATIC_URLS.length} static + ${BLOG_URLS.length} blog)\n`);
   ALL_URLS.forEach(u => console.log('  ' + u));
 
-  // Submit to all major IndexNow endpoints (they share the data)
-  await submitIndexNow('Bing',        'https://www.bing.com/indexnow');
-  await submitIndexNow('IndexNow API','https://api.indexnow.org/indexnow');
+  // Submit to both endpoints — they share data but each acks separately,
+  // so submitting to both is the standard way to get fastest pick-up.
+  const results = await Promise.all([
+    submitIndexNow('Bing',         'https://www.bing.com/indexnow'),
+    submitIndexNow('IndexNow API', 'https://api.indexnow.org/indexnow'),
+  ]);
 
+  const allOk = results.every(r => r.ok);
   console.log('\nDone. Bing typically processes within 1–4 hours.');
   console.log(`Verify: https://www.bing.com/webmasters/about?siteUrl=https://${HOST}/`);
+
+  if (!allOk) {
+    process.exitCode = 1;
+  }
 }
 
-main().catch(console.error);
+main().catch(e => {
+  console.error('Fatal:', e);
+  process.exit(1);
+});
