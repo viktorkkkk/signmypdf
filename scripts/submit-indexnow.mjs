@@ -121,6 +121,8 @@ const BLOG_SLUGS = [
   'fill-pdf-on-iphone-no-app',
   'sign-school-permission-slip-online',
   'protected-pdf-keeps-asking-password',
+  'dochub-free-alternative',
+  'medical-practices-hipaa-pdf-sharing',
 ];
 
 const BLOG_URLS = BLOG_SLUGS.map(slug => `https://${HOST}/blog/${slug}`);

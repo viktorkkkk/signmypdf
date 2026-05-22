@@ -10994,6 +10994,153 @@ No. Tools that produce standard encryption headers are handled consistently by m
 - [Fill PDF Form Online — Free](/fill)
 `,
   },
+  {
+    slug: 'dochub-free-alternative',
+    title: 'DocHub Free Alternative for Filling PDFs',
+    excerpt: 'DocHub\'s free plan limits how many PDFs you can export each month. Here\'s a free alternative that lets you fill any PDF form with no paywall at download.',
+    date: '2026-05-23',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill PDF form free', 'DocHub alternative', 'DocHub free plan', 'fill PDF online free', 'PDF form filler', 'no account PDF tool', 'DocHub vs SignMyPDF'],
+    metaTitle: 'DocHub Free Alternative for Filling PDFs',
+    metaDescription: 'Need a DocHub free alternative? Fill any PDF form online at SignMyPDF — no account, no paywall at download, files stay in your browser.',
+    content: `You uploaded your PDF to DocHub. You filled in every field. You clicked Export. Then DocHub told you that you'd hit your monthly limit and needed to upgrade.
+
+That's how most people discover DocHub's free plan cap — at the worst possible moment, when the form is already done and you just need the file. For a one-time task, paying a monthly subscription to get past a paywall feels unreasonable.
+
+If you need to fill PDF forms free without document limits, there's a simpler path.
+
+[CTA]Fill any PDF form — no account, no paywall|Free for standard use. Files processed in your browser. Download without upgrading.|Fill PDF Form Now — Free
+
+## How to fill a PDF form for free
+
+1. Open [signmypdf.io/fill](/fill).
+2. Upload your PDF by dragging it in or clicking to browse.
+3. Click any field and type your text.
+4. Add a signature or date if the form requires one.
+5. Download the completed PDF instantly.
+
+Free, no registration required, no watermark, no paywall at download. Up to 2 PDFs per day on the free plan.
+
+[IMAGE: The SignMyPDF fill tool showing a PDF with form fields being typed into, with a text cursor visible inside a field]
+
+## Why DocHub frustrates people
+
+- **Monthly export cap.** DocHub's free plan limits how many completed documents you can download each month. You hit the cap when you're least expecting it.
+- **Account required from the start.** You can't try the editor without creating an account first — email, password, verify email. That's three steps before you've seen a single feature.
+- **Paywall at the download step.** You spend time filling the form, only to discover you can't retrieve the file without upgrading. The work is done; the output is locked.
+- **Signature tools gated.** Adding a signature to a form — a requirement on many PDFs — isn't available on DocHub's free tier. It requires a paid plan.
+- **Constant upsell pressure.** Every step near the final stage of completing a form surfaces an upgrade prompt.
+
+## Why SignMyPDF is different
+
+- **Truly free, no signup needed.** Fill a form, sign it, and download it — start to finish — without creating an account or entering payment details. Free, no registration, no paywall at download.
+- **Files are processed in your browser.** Your PDF never leaves your device. That matters when forms contain personal information, tax data, or anything you wouldn't want uploaded to a third-party server. For more on why this matters, see [how Adobe Fill & Sign compares on privacy](/blog/adobe-fill-sign-vs-signmypdf).
+- **Text fields, checkboxes, signatures, and dates.** Everything a standard PDF form needs, without switching tools.
+- **No watermark on the downloaded file.** The result looks exactly like the original — just completed.
+- **Works on any device in a browser.** Desktop, iPad, or Android — no app to install.
+
+This is especially relevant when you're filling [government forms or official documents](/blog/fill-government-forms-online-free) — uploading a tax form or benefits application to a server you don't control adds unnecessary risk.
+
+| Feature | DocHub Free | SignMyPDF Free |
+|---|---|---|
+| Fill text fields | Yes (limited exports) | Yes (2 PDFs/day) |
+| Requires account | Yes | No |
+| Signature tool | Paid only | Free |
+| Download without paywall | Limited | Yes |
+| Files stay in browser | No | Yes |
+
+DocHub's paid tier pricing changes periodically — check their website for current rates. SignMyPDF's paid plan is $9/month (or $7.50/month billed annually) and removes the daily limit.
+
+## FAQ
+
+**Does SignMyPDF work if the PDF doesn't have interactive form fields?**
+Yes. If the form was scanned or saved as a flat image without clickable fields, you can still place text boxes anywhere on the page. The download looks identical to a properly filled form.
+
+**Is DocHub actually free for occasional use?**
+DocHub has a free tier, but it caps the number of documents you can export each month. If you're handling several forms in a short period — end of a lease, new-job paperwork, tax season — you'll likely hit the limit and see a prompt to upgrade.
+
+**What happens to my file on SignMyPDF after I finish?**
+Everything runs in your browser. Nothing is sent to any server. When you close the tab, the file is gone — no records stored on our end.
+
+[CTA]Fill your PDF form — free, in your browser|No account. No monthly limits for standard use. No watermark at download.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Forms Online — Free](/fill)
+- [Fill a W-9 Form Online Free](/blog/fill-w9-form-online-free)
+- [Fill Government Forms Online Free](/blog/fill-government-forms-online-free)
+`,
+  },
+  {
+    slug: 'medical-practices-hipaa-pdf-sharing',
+    title: 'HIPAA PDF Sharing for Medical Practices',
+    excerpt: 'Medical practices often share patient forms over email without realizing the risks. Here\'s what HIPAA actually says about PDF sharing — and the quickest safeguard you can add.',
+    date: '2026-05-23',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['HIPAA PDF sharing', 'medical PDF security', 'password protect medical records', 'HIPAA document security', 'protect PDF medical', 'HIPAA compliance PDF', 'secure PDF sharing'],
+    metaTitle: 'HIPAA PDF Sharing for Medical Practices',
+    metaDescription: 'Medical practices that email patient forms need to protect PDFs. Learn what HIPAA requires for PDF sharing and how to password-protect forms for free.',
+    content: `Your practice emailed a patient intake form last week. Name, date of birth, insurance policy number — all inside an unprotected PDF. Under HIPAA, that counts as transmitting protected health information over plain email.
+
+HIPAA PDF sharing carries a real obligation. The Security Rule requires covered entities to apply "reasonable safeguards" to PHI in transit — and an unprotected PDF attachment in a standard email doesn't meet that bar if the message is intercepted, misrouted, or forwarded to the wrong person.
+
+Password-protecting the PDF before you send it is the simplest safeguard you can apply. It takes under a minute. It's free.
+
+[CTA]Password-protect your medical PDF — free|AES-128 encryption. Files processed in browser. No account needed.|Protect PDF Now — Free
+
+## How to protect a medical PDF before sending
+
+1. Go to [signmypdf.io/protect](/protect).
+2. Upload the form — intake document, referral letter, or records request.
+3. Set a strong password (12+ characters, mix of letters and numbers).
+4. Download the protected PDF.
+5. Send the password to the recipient through a separate channel — a text message, not the same email.
+
+Free, no registration, no paywall at download. Works in any modern browser; no software installation required.
+
+[IMAGE: A patient intake PDF being uploaded to the SignMyPDF protect tool, with the password entry field visible before the download step]
+
+## Why common sharing methods are not enough
+
+- **Plain email.** Email is not encrypted end-to-end by default. An unprotected PDF in a standard email can be read by anyone who intercepts it, gains inbox access, or receives an accidental forward.
+- **Fax.** Fax output lands in a shared machine at the front desk. Anyone walking past can read what printed.
+- **Uncontrolled cloud links.** A Google Drive or Dropbox link without access restrictions can be forwarded by the recipient without your knowledge.
+- **Your patient portal doesn't cover everything.** Referrals, insurance submissions, specialist handoffs, and lab communications often happen outside the portal — those exchanges have no platform-level controls unless you add them yourself.
+- **"It's just a form."** Intake forms, medical history PDFs, and authorization letters frequently contain enough PHI to trigger a reportable breach if disclosed incorrectly.
+
+## Why this approach fits a medical workflow
+
+- **AES-128 encryption at download.** The protected PDF requires the password to open — it can't be dragged into a viewer and bypassed without the credential.
+- **Files processed in your browser, not on a server.** Patient data is never uploaded to SignMyPDF. Encryption happens locally on your device, removing one potential exposure point from the chain. Free, no registration, no paywall at download.
+- **No account and no stored records.** Nothing is retained after you close the tab. There's nothing to breach on our end.
+- **Free for occasional use.** Two protected PDFs per day covers most small-practice workflows. The paid plan removes the daily limit for higher-volume needs.
+
+For medical authorizations that also require a patient signature before sharing, [HIPAA-compliant electronic signature requirements](/blog/hipaa-electronic-signatures) covers what the rules say specifically about signing. For referral letters and intake forms that need to be signed and then sent, [how to sign a medical release form online](/blog/sign-medical-release-form-online) covers the signing side of the workflow.
+
+[IMAGE: A password-protected PDF displaying the password entry prompt in Chrome's PDF viewer before the document content appears]
+
+## FAQ
+
+**Does password-protecting a PDF make my practice HIPAA-compliant?**
+Not by itself — HIPAA compliance is a practice-wide obligation covering administrative, physical, and technical safeguards. But applying a password to a PDF before emailing PHI is a recognized technical safeguard under the HIPAA Security Rule (45 CFR § 164.312). It reduces exposure if an email is misrouted, intercepted, or accidentally forwarded.
+
+**What password should I use for a patient document?**
+At least 12 characters, combining letters, numbers, and symbols. Avoid using the patient's name or date of birth as the password — those are the first things someone would try if they already have the document. Share the password through a different channel than the email you used to send the PDF — a brief phone call or text message is standard practice.
+
+**Can the recipient remove the password protection?**
+A recipient with the correct password could use a third-party tool to remove it from a file they legitimately opened. For routine forms and referrals, PDF password protection is a proportionate safeguard — it addresses the realistic risks of email interception and accidental forwarding. For records requiring stricter access control, a secure patient portal with access logging provides stronger protection that PDF passwords alone don't.
+
+[CTA]Protect your medical PDFs before sending — free|AES-128 encryption. No account. Files stay in your browser.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect PDF — Free](/protect)
+- [Password Protect PDF Without Adobe](/blog/password-protect-pdf-without-adobe)
+- [HIPAA Electronic Signature Requirements](/blog/hipaa-electronic-signatures)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

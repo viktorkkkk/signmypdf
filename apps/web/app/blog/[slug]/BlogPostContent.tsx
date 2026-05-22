@@ -63,6 +63,8 @@ const FILL_SLUGS = new Set([
   // Persona / use-case slugs whose name doesn't match the fill-* heuristic
   'property-managers-tenant-signatures',
   'law-firms-free-pdf-tools',
+  // Comparison slugs whose name doesn't start with fill-
+  'dochub-free-alternative',
 ]);
 
 // Slugs for articles about password protection / encryption.
