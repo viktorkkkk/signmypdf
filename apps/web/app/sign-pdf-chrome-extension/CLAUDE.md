@@ -32,10 +32,16 @@ Captures the design rules, copy, and don't-touch zones for the landing.
    Store install flow (Click Add to Chrome → Confirm → Pin to toolbar).
    Sits between Comparison and FAQ so a convinced user has the
    step-by-step right when they're ready to act.
-6. **FAQ** — 5 questions in a controlled accordion (one open at a time).
-7. **Final CTA** — repeats the Add-to-Chrome button on a light-blue
+6. **Mid-page CTA** — "Ready to sign your first PDF?" with another
+   Add-to-Chrome button right after the install instructions. Less
+   aggressive than the Final CTA in section 8 (white background, no
+   `spce-final` blue plate, base H2 size). Carries a small muted
+   "Got questions? See our support page" link to `/extension/support`
+   — the only place on the page where support gets a direct mention.
+7. **FAQ** — 5 questions in a controlled accordion (one open at a time).
+8. **Final CTA** — repeats the Add-to-Chrome button on a light-blue
    background.
-8. **Cross-pollination** — subtle paragraph linking to `/sign`,
+9. **Cross-pollination** — subtle paragraph linking to `/sign`,
    `/fill`, `/protect`, `/merge`, `/compress`, `/split`.
 
 ## 3. Approved copy (verbatim)
@@ -175,3 +181,4 @@ apps/web/
 | v1.7 | Refreshed 3 screenshots: HERO (`hero-screenshot.png` → 876×622, "Draw / Type / Upload" modal with cursor on a prominent "Save & place" CTA — visually anchors the install promise), showcase block 1 (`1-drop-pdf.png` → 1011×701, drop-zone page with a green "+" badge on the PDF icon to telegraph the "add a file" gesture), showcase block 3 (`3-download.png` → 882×516, editor with placed signature + cursor on the Download CTA). Block 2 (`2-add-signature.png`) intentionally untouched — it already shows the same modal as the HERO and would have duplicated content. |
 | v1.8 | Replaced the grey-placeholder `og-image.png` with the real 1200×630 promo banner (Sign / PDF file mark on the left, "Sign PDF / Free Forever / No Signup" headline on the right, dashed arrow to a signed signature card). Wired in `layout.tsx` `og:image` + `twitter:image` since v1 — Facebook / LinkedIn / Twitter previews now render the branded card instead of the grey filler. |
 | v1.9 | Chrome Web Store listing went live 2026-05-21. `CHROME_STORE_URL` in `page.tsx` swapped from `/detail/PLACEHOLDER` to `/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj` (single constant — both "Add to Chrome" CTAs and the new SoftwareApplication JSON-LD `installUrl` resolve through it). Removed the "swap the placeholder" item from §8 Open backlog. |
+| v2.0 | New mid-page CTA section inserted between How to install and FAQ — "Ready to sign your first PDF?" + Add-to-Chrome button + small "Got questions? See our support page" link to `/extension/support`. Background is plain white (`spce-section`, no `-alt`); H2 stays at the base 38 px (no `spce-final-h2` bump); padding stays at the standard 80 px (vs the Final CTA's 96 px) — softer register so it doesn't compete with section 8. FAQ flipped to `spce-section-alt` grey to preserve alternation (Install alt → mid-CTA white → FAQ alt → Final blue). |

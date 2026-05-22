@@ -435,7 +435,7 @@
   line-height: 1.6;
 }
 
-/* ── 7. Final CTA ──────────────────────────────────────────────────────── */
+/* ── 8. Final CTA ──────────────────────────────────────────────────────── */
 .spce-final {
   background: #eff6ff;
   padding: 96px 0;
@@ -450,7 +450,29 @@
   margin-top: 32px;
 }
 
-/* ── 8. Cross-pollination ──────────────────────────────────────────────── */
+/* ── 7. Mid-page CTA ───────────────────────────────────────────────────── */
+/* Section 7 (Ready to sign your first PDF?) reuses .spce-h2,
+   .spce-section-sub, .spce-final-cta from above. Only this small
+   muted "Got questions?" link is unique to it — the Final CTA in
+   section 8 doesn't carry the help link because the visitor either
+   clicks Add-to-Chrome or scrolls into the cross-pollination
+   paragraph anyway. */
+.spce-cta-help {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+.spce-cta-help a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.spce-cta-help a:hover {
+  text-decoration: underline;
+}
+
+/* ── 9. Cross-pollination ──────────────────────────────────────────────── */
 .spce-cross {
   padding: 48px 0;
   background: var(--color-bg);

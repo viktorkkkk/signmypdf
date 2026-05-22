@@ -361,15 +361,38 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 6. FAQ ──────────────────────────────────────────────── */}
+        {/* ── 6. MID-PAGE CTA — post-install primer ───────────────── */}
+        {/* Less aggressive than the Final CTA at the end of the page:
+            white background (not the blue `spce-final` plate),
+            standard 80 px section padding (vs Final's 96 px), and the
+            base `spce-h2` size (vs the +4 px `spce-final-h2`). Gives
+            convinced readers an install button right after the
+            step-by-step instructions, without doubling up on the
+            visual register the Final CTA owns. */}
         <section className="spce-section">
+          <div className="spce-container">
+            <h2 className="spce-h2">Ready to sign your first PDF?</h2>
+            <p className="spce-section-sub">
+              Free Forever · No signup needed · Files stay private
+            </p>
+            <div className="spce-final-cta">
+              <AddToChromeButton size="lg" />
+            </div>
+            <p className="spce-cta-help">
+              Got questions? <Link href="/extension/support">See our support page</Link>.
+            </p>
+          </div>
+        </section>
+
+        {/* ── 7. FAQ ──────────────────────────────────────────────── */}
+        <section className="spce-section spce-section-alt">
           <div className="spce-container spce-container-narrow">
             <h2 className="spce-h2">Frequently asked questions</h2>
             <Faq items={FAQS} />
           </div>
         </section>
 
-        {/* ── 7. FINAL CTA ────────────────────────────────────────── */}
+        {/* ── 8. FINAL CTA ────────────────────────────────────────── */}
         <section className="spce-section spce-final">
           <div className="spce-container">
             <h2 className="spce-h2 spce-final-h2">
@@ -384,7 +407,7 @@ export default function SignPdfChromeExtensionPage() {
           </div>
         </section>
 
-        {/* ── 8. CROSS-POLLINATION ────────────────────────────────── */}
+        {/* ── 9. CROSS-POLLINATION ────────────────────────────────── */}
         <section className="spce-cross">
           <div className="spce-container">
             <p>
