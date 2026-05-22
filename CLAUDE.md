@@ -81,7 +81,7 @@ Site changes that came in for the extension:
 - `/sign-pdf-chrome-extension` — SEO-optimised Chrome-extension landing (split-screen hero + Add-to-Chrome CTA + 3-step screenshot block + red/blue comparison + 6-feature grid + FAQ + cross-pollination). Replaced the original `/chrome` slug on 2026-05-17; `/chrome` now 308-redirects here via `apps/web/next.config.ts`. Per-landing CLAUDE.md lives at [apps/web/app/sign-pdf-chrome-extension/CLAUDE.md](apps/web/app/sign-pdf-chrome-extension/CLAUDE.md) — read before editing.
 - `/extension/privacy` — Chrome Web Store-required privacy policy, separate from the main `/privacy`
 - `/sign?from=extension` — minimal mode (no NavHeader/footer/banner/More-Tools/FAQ, slim sticky top bar with logo + `No signup` chip)
-- `<ExtensionBanner variant="card" />` — 150 px card pitched under the dropzone on `/sign` upload step, before the More Tools grid
+- `<ChromeExtensionBanner />` (since 2026-05-22, [apps/web/app/components/ChromeExtensionBanner.tsx](apps/web/app/components/ChromeExtensionBanner.tsx)) — two-column install card with hero screenshot + "Add to Chrome" pill. Replaces the older `<ExtensionBanner variant="card" />`. Single style across every host page (white card / neutral grey border / soft shadow). Rendered below the upload dropzone on `/sign` AND at the end of every Sign / Fill blog article (gate is `tool !== 'protect'` in `BlogPostContent.tsx`). Whole card is one `<Link href="/sign-pdf-chrome-extension">` — clicks anywhere navigate, but only the inner button shows a pointer cursor + hover effect. The legacy `<ExtensionBanner variant="post-success" />` inline nudge on the done step is still in place; the card variant is retired.
 - All dropzones unified to **720 × 480** on `/sign`, `/sign?from=extension`, `/fill`, `/protect`, `/merge`, `/split`, `/compress` (the original `/chrome` dropzone is gone — the new landing has no dropzone by design, since it competes with the Add-to-Chrome CTA)
 
 Pricing (unchanged from the rest of the site):
@@ -97,7 +97,7 @@ Business context (for future sessions that need it):
 - Domain — `signmypdf.io` (apex 307-redirects to `www.signmypdf.io`)
 - Support email — `support@signmypdf.io`
 - Chrome Web Store developer account — `viktor.kolektionok@gmail.com`
-- Trader verification — **approved** (listing went live 2026-05-21)
+- Trader status — **Non-trader** (publisher shows *SignMyPDF* / PIXELTIDE LLC). Google approved the submission without trader verification because Sign PDF is free with no in-extension transactions; the LLC carries the responsibility for the published product, not the transaction-flow paperwork.
 - Chrome Web Store product ID — `aiaokhplbmbiijmegjbnghmaacnkkfbj`
 
 Full close-out write-up: [docs/STAGE_5_SUMMARY.md](docs/STAGE_5_SUMMARY.md).

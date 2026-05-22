@@ -228,6 +228,178 @@ Files touched in the failed batch:
 
 ---
 
+## Recently Shipped (2026-05-22): extension launch + landing polish + IndexNow fix
+
+Headline: the Chrome extension is **live in the Chrome Web Store** and the
+landing now leans hard into the **Free Forever** angle. Two-week sprint of
+positioning + plumbing work that bundles a dozen smaller commits.
+
+### Chrome extension — published 2026-05-21
+
+- **Store listing:** [chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj](https://chromewebstore.google.com/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj).
+- **Shipped version:** v2.6.3 (see `apps/extension/CLAUDE.md → Change Log` —
+  toolbar icons + lockup polish; the editor itself stayed at v2.6.0 feature
+  parity).
+- **Trader status:** **Non-trader** (publisher field shows *PIXELTIDE LLC*).
+  Google approved the submission without trader verification because Sign PDF
+  is free with no in-extension transactions — the LLC carries the responsibility
+  for the published product, not the transaction-flow paperwork.
+- Pre-built test ZIP at the [`ext-test-1` GitHub Release](https://github.com/viktorkkkk/signmypdf/releases/tag/ext-test-1) stays available for reviewer-style sideloads.
+
+### Landing `/sign-pdf-chrome-extension` — repositioned around "Free Forever"
+
+Series of polish commits between 2026-05-21 and 2026-05-22; see
+`apps/web/app/sign-pdf-chrome-extension/CLAUDE.md → Change Log` for v1.5
+through v2.2.
+
+- `a1e8d51` — `CHROME_STORE_URL` swapped from `/detail/PLACEHOLDER` to
+  `/detail/aiaokhplbmbiijmegjbnghmaacnkkfbj`. Single constant resolves
+  both Add-to-Chrome CTAs **and** the SoftwareApplication JSON-LD
+  `installUrl`. Removed the "swap the placeholder" item from §8 Open
+  backlog.
+- `acb4902` — **Free Forever positioning** applied everywhere a visitor
+  reads on this page: Hero H1 (now "Sign PDF Free Forever / Chrome
+  Extension"), subtitle, trust strip, FAQ "Is it really free?" answer,
+  page title, meta description, OG / Twitter title + description, and
+  JSON-LD `WebPage.name` + `description`. Hero H1 font dropped
+  60 → 52 px on desktop and 38 → 30 px on mobile to keep the longer
+  string in two lines.
+- `dfbaa1b` — Real `og-image.png` (1200×630 promo banner: "Sign PDF /
+  Free Forever / No Signup" + signed-signature card). Wired in
+  `layout.tsx` `og:image` + `twitter:image` since v1, so Facebook /
+  LinkedIn / Twitter previews flip to the branded card automatically.
+- Install screenshots block: 3 abstract lucide icons (Pointer / Shield /
+  Pin) replaced with 3 real captures (`install-1-add-to-chrome.png`,
+  `install-2-confirm.png`, `install-3-pin.png`) — Add-to-Chrome button,
+  Chrome's confirm dialog, the toolbar pin menu. Each ships with a red
+  arrow pointing at the specific control.
+- **Section order finalised**: Hero → See how it works → Features → Why
+  this extension is different (comparison) → How to install →
+  Post-install CTA (`Ready to sign your first PDF?` + Add-to-Chrome
+  button + small "Got questions? → /extension/support" link) → FAQ →
+  Cross-pollination paragraph. **Final CTA at the bottom was retired
+  2026-05-22** — the post-install CTA + hero proved enough; the
+  duplicate at the bottom was just visual noise.
+
+### `<ChromeExtensionBanner />` — single source of truth across the site
+
+- Created in `apps/web/app/components/ChromeExtensionBanner.tsx` — server
+  component, no props. Two-column card (60/40), hero screenshot on the
+  right, "Add to Chrome" pill on the left. Whole card is one
+  `<Link href="/sign-pdf-chrome-extension">` (deliberately NOT the
+  Web Store — the landing acts as a filter + warmer pitch before the
+  final install click).
+- **Surfaces:** end of every Sign / Fill blog article (gate is
+  `tool !== 'protect'` in `BlogPostContent.tsx`), and below the upload
+  dropzone on `/sign` in full mode (existing `step === 'upload' &&
+  !isMinimalMode` guard keeps the banner off the done-step and away
+  from `?from=extension` visitors who already installed).
+- **Hover behaviour:** card itself has no hover effects (`cursor: default`,
+  no transform / shadow / border change). Only the inner "Add to Chrome"
+  pill telegraphs interactivity (pointer cursor + darker bg + soft
+  shadow lift). Clicks anywhere on the card still navigate — safety net
+  intact.
+- **Single visual style** as of v2.2 of the landing change log
+  (`b0a5599`): pure white card, neutral grey `1 px solid #e5e7eb` border,
+  soft `0 4px 14px rgba(15,23,42,0.05)` shadow. No `variant` prop, no
+  conditional styling. Mobile collapses to single column at 768 px with
+  screenshot above the text (visual hook → context).
+- Replaces the older `<ExtensionBanner variant="card" />` on `/sign`.
+  The `<ExtensionBanner variant="post-success" />` inline nudge on the
+  done step is untouched — different surface, simpler markup.
+
+### Sitemap + IndexNow
+
+- `9c9e74f` — Added `/extension/support` to `apps/web/app/sitemap.ts`
+  (it had been live since 2026-05-19 but was missing from the sitemap →
+  GSC URL Inspection reported "URL is unknown to Google"). All three
+  extension URLs (`/sign-pdf-chrome-extension`, `/extension/privacy`,
+  `/extension/support`) submitted via both Google Indexing API and
+  IndexNow on the same day.
+- `b37dcf5` — **Fix:** `scripts/submit-indexnow.mjs` was carrying a
+  hand-maintained `BLOG_SLUGS` array of 96 entries that fell behind
+  every time the daily trigger added a new slug. As of today 7 published
+  slugs were missing from the Bing submission set (`password-protect-pdf-online-free`
+  — the launch article for `/protect`! — `sign-construction-contract-online`,
+  `fill-government-forms-online-free`, `signature-disappears-pdf-fix`,
+  `pandadoc-free-alternative`, `smallpdf-vs-signmypdf`,
+  `sign-divorce-papers-online`). Script now reads slugs **live** from
+  `apps/web/app/blog/posts.ts` on every run (mirrors `index-pages.mjs`
+  for Google). The workflow's `Submit to IndexNow` step needs no change
+  — calling the script with no args now submits the full current set.
+  Backfill was run manually on 2026-05-22; Bing + IndexNow API both
+  returned 200 for 117 URLs. See "### Bing Webmaster / IndexNow" below
+  for the operational detail.
+
+### SEO + analytics — 2026-05-22 snapshot
+
+Numbers below are from GSC + GA Data API, pulled today. Use these as the
+post-launch benchmark; rerun `scripts/seo-gsc-check.mjs` to compare in two
+weeks.
+
+- **GSC (28 days, `sc-domain:signmypdf.io`):**
+  - Impressions: **538** (vs 212 on 2026-05-07 → **+154 %**)
+  - Avg position: **29** (vs 61.5 on 2026-05-07 → climb of ~32 places)
+  - Clicks: still trending up but small absolute numbers; report the
+    full count in the next snapshot once it's meaningful.
+- **GA4 (30 days, real users — excluding the Thailand dev-test traffic):**
+  - **73 unique users**
+  - **102 PDFs processed** end-to-end (sign + fill + protect combined) —
+    first month with a non-trivial real-user conversion volume.
+- **Bing Webmaster Tools** still surfaces two recommendations:
+  1. "Not all recent blog pages submitted via IndexNow" — **fixed today**
+     (`b37dcf5`). Backfill submitted on the same day; the warning should
+     clear within Bing's 1-4 h processing window plus a recrawl cycle.
+  2. "0 inbound backlinks from authoritative domains" — **the real
+     remaining bottleneck**. Bing won't allocate crawl budget or surface
+     us in non-trivial SERPs without external trust signals. Tracked
+     under `### 3b. Backlink campaign` below.
+
+### Backlink campaign — restarted 2026-05-22
+
+See `### 3b. Backlink campaign` below for the updated status table.
+Headline change today: **AlternativeTo profile submitted** with Twitter
+`@signmypdf` + the new Facebook business page "Sign My PDF in seconds";
+listing competes against 51 alternatives (Adobe Sign, DocuSign, Smallpdf,
+iLovePDF, etc.). Awaiting AlternativeTo moderation (24-48 h SLA). Next
+catalogues queued: G2, Capterra, GetApp.
+
+### Decisions taken 2026-05-22
+
+- **Monetisation pricing — revised**. Pro tier will be **$4.99 / month
+  or $39.99 / year** (down from $9 / $7.50). Trigger to flip is **30 k
+  weekly active users on the extension** — until then the funnel volume
+  is too low to A/B-test pricing meaningfully. Free Forever stays the
+  positioning for sign + fill; Pro features (saved signatures /
+  download history / batch flows) are the only paid surface.
+- **No Google Ads — ever**. Conflicts with the privacy-first positioning
+  the product is built on. Replaces the earlier "defer AdSense" decision
+  with a hard "no". Revenue path is purely Pro subscriptions + maybe
+  one-off team licenses later. **Do not revisit this.**
+- **Blog cadence — drop from 2 / day to 1 / day** (3-5 articles per
+  week). Reasons: at 2 / day we're now seeing internal-cannibalisation
+  smell in GSC (multiple slugs ranking for the same keyword without one
+  taking off), and natural article length has been creeping up past the
+  600-1200 hard bounds. Trigger prompt update is a separate task — the
+  current v3.2 trigger is unchanged; this paragraph is the source of
+  truth for the new cadence until the trigger is updated to match.
+
+### Metrics to track going forward
+
+| Source | Metric | Where to read |
+|---|---|---|
+| Chrome Web Store | Installs, weekly users | [Developer Dashboard](https://chrome.google.com/webstore/devconsole/) |
+| GSC | Impressions, clicks, avg position, indexed pages | `scripts/seo-gsc-check.mjs` + GSC UI |
+| GA4 | `pdf_signed` funnel, banner CTR to `/sign-pdf-chrome-extension` | GA Data API (property 532300049) |
+
+The two newest GA4 events to watch are `extension_banner_clicked` (fires
+from the deprecated `<ExtensionBanner />` post-success variant — still
+active on `/sign` done step) and any future events we wire on the new
+`<ChromeExtensionBanner />` card (currently no analytics by design — the
+card is a `<Link>`, not an `onClick` handler).
+
+---
+
 ## Recently Shipped (May 7-8 2026): Stage 4 monorepo extraction
 
 **Stage 4 closed.** Two PRs landed back-to-back over 24h that promote `packages/pdf-core` and `packages/ui` from placeholders to working workspace packages. `packages/auth` stays placeholder (extension MVP is free, deferred per audit §5.3).
@@ -425,10 +597,11 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ## Pending decisions
 
-- **Premium pricing** — $9/mo monthly, $7.50/mo annual ($90/yr). Kept as-is. A/B test deferred 1-2 months until enough conversion volume to read a result.
+- **Premium pricing — REVISED 2026-05-22.** New target: **$4.99 / month** or **$39.99 / year**. Down from the previously documented $9 / mo + $7.50 / mo annual. The implementation in `app/components/PaywallModal.tsx` + the `Monetization Model (current)` section above still describes the OLD pricing because it's what's literally in code — the new numbers only flip live once **30 k weekly active users on the extension** has been hit, which is the agreed trigger. Until then the old prices stay rendered; do not silently change strings ahead of that milestone. When the flip happens, also update `## Monetization Model (current)` here and the blog FAQ default in `BlogPostContent.tsx`. "Free Forever" stays the positioning for sign + fill — paid surface is only Pro features (saved signatures / history / batch flows).
 - **Trial-with-credit-card / hybrid Free+Trial flow** — explicitly rejected. Straight free-then-subscription only. The reasoning ("we don't want auto-renew traps") is part of the v3 prompt's USP.
 - **New tools (PDF↔Word, PDF→JPG)** — queued as the next major build-out, but gated on GSC traffic data showing the Sign/Fill/Protect/Merge/Compress/Split base is establishing. Don't start before GSC confirms organic traffic to existing tools is ramping. Note: Merge / Compress / Split are LIVE in prod (sitemap entries since 2026-05-02) — only conversion tools (PDF↔Word, PDF→JPG) remain in the planned queue.
-- **AdSense** — defer until organic traffic is non-trivial (target: 2-4 weeks after the Apr 25 canonical fix takes hold). Premature ads kill UX before there's traffic worth monetizing.
+- **Google Ads / AdSense — RULED OUT 2026-05-22.** Permanently off the table; replaces the earlier "defer AdSense" stance with a hard "no". Reason: directly conflicts with the privacy-first positioning the whole product is built on (no upload, files stay on your device, no tracking). Revenue path is purely Pro subscriptions + maybe one-off team licenses later. **Do not revisit this** without an explicit decision reversal from the user — don't re-add an "AdSense backlog" entry in any future session.
+- **Blog cadence — REVISED 2026-05-22 (2 / day → 1 / day, 3-5 per week).** Reason: at 2 / day GSC is starting to show internal cannibalisation (multiple slugs ranking for the same keyword without one taking off) and average article length has been creeping past the 600-1200 hard bounds. The cadence change is decided but the **daily trigger prompt is not yet updated** to match — that's a separate ticket. Until the trigger ships the new version, manually skip one of the two slots on cycle days where both queues are still populated (forward-walk algorithm in trigger v3.2 handles this safely already). Also queued for the same trigger-prompt update: keyword-cannibalisation pre-check before publishing, and tighter length guardrails.
 - **`[IMAGE: ...]` placeholders in blog content** — the parser-skip path is in `BlogPostContent.tsx` already (placeholders silently disappear today). Actual image generation / substitution not implemented. TODO when there's content-team bandwidth.
 - **Schema-markup auto-emission in `BlogPostContent.tsx`** — TODO. Article + FAQPage for troubleshooting articles, HowTo for use-case, Article + Review for comparison. Currently only the homepage emits SoftwareApplication + FAQPage; per-article schema is not in HTML yet.
 - ~~**`SignatureCanvas.tsx` ESLint debt**~~ — **CLEARED in PR #10 (May 8 2026)**. The 5 problems (3 forward-reference errors + 2 missing-deps warnings) are gone. The component now uses useCallback ordering, refs for color/width inside initCanvas, and an `onSaveRef` pattern for stable handler identity across parent re-renders. File lives at `packages/ui/src/SignatureCanvas.tsx`.
@@ -468,7 +641,7 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 ## SEO Indexing Status
 
-**Last updated: 2026-05-07.** If you change anything indexing-related, update this section so the next session has accurate ground truth. Fresh GSC snapshot: see `### GSC snapshot 2026-05-07 (12 days post canonical-fix)` below.
+**Last updated: 2026-05-22.** If you change anything indexing-related, update this section so the next session has accurate ground truth. Latest GSC snapshot: see `### GSC snapshot 2026-05-22 (extension launch + Free Forever positioning)` below; the 2026-05-07 baseline snapshot is kept underneath for trend tracking.
 
 ### Google Search Console
 
@@ -529,6 +702,67 @@ After step 3 the Indexing API began returning `403` because GSC ownership is on 
 - Apr 25 evening: per-page metadata fix shipped (this commit); URLs re-submitted again so Google picks up the new metadata. Daily RemoteTrigger (`trig_01Mw8wt1nCK3jpDA7ymfp4g2`, 02:00 UTC) continues to submit each new article on publish.
 - Bing: IndexNow ping fires on each new article + bulk submit available via `submit-indexnow.mjs`.
 - Monitoring window: GSC indexing data lags 2-4 days, so first proof of recovery expected Apr 27-29.
+
+### GSC snapshot 2026-05-22 (extension launch + Free Forever positioning)
+
+Two weeks after the 2026-05-07 baseline. The Chrome extension shipped on
+2026-05-21 and the landing was rebranded around "Free Forever" on
+2026-05-21/22 — this snapshot is the first post-launch reading.
+
+**Page Indexing (`sc-domain:signmypdf.io`):**
+- Continues to look healthy. "Discovered — not indexed" still 0 (the
+  signal that Google isn't sitting on a backlog), "Page with redirect"
+  bucket continues to shrink as apex history fades. Indexed-count is in
+  the expected mid-teens band predicted by the 2026-05-07 snapshot.
+
+**Search Performance (28d):**
+- **Impressions: 538** (vs 212 on 2026-05-07 → **+154 %** in 15 days)
+- **Avg position: 29** (vs 61.5 on 2026-05-07 → climbed ~32 places)
+- Clicks: still small in absolute terms but trending up; report the
+  exact number in the next snapshot once it stabilises.
+- The position-29 average means we've moved off page 6-7 into roughly
+  page 3 territory. Page 1 (positions 1-10) is the next jump that
+  unlocks meaningful CTR. Best individual page positions to watch:
+  `/blog/signmypdf-vs-docusign-freelancers` (was 7.2 on the apex
+  variant in May, now on www-canonical via the canonical-fix
+  consolidation), `/blog/ilovepdf-vs-signmypdf` (was 9.3), and the
+  brand-new `/sign-pdf-chrome-extension` landing which Google has
+  indexed since 2026-05-17 (URL-Inspection PASS).
+
+**GA4 (30d, real users — Thailand dev-test excluded):**
+- **73 unique users** (vs ~96 on the 2026-05-07 snapshot, which had a
+  larger window). The interesting number is end-to-end conversion:
+- **102 PDFs processed** total across sign + fill + protect — first
+  month with a real-user volume that's worth A/B-testing against.
+
+**Sitemap state:**
+- `https://www.signmypdf.io/sitemap.xml` carries **108 URLs** (was 82 on
+  the 2026-05-07 snapshot). Growth = new blog articles + 3 extension
+  URLs (`/sign-pdf-chrome-extension`, `/extension/privacy`,
+  `/extension/support`). All three extension URLs submitted via Google
+  Indexing API + IndexNow on 2026-05-21/22.
+
+**Bing Webmaster Tools:**
+- Two recommendations are visible today:
+  1. ~~"Not all recent blog pages submitted via IndexNow"~~ — **fixed
+     2026-05-22** in `b37dcf5`. `scripts/submit-indexnow.mjs` now reads
+     slugs live from `posts.ts`; backfill of the 7 missed slugs has
+     been submitted; the warning should clear within 1-4 h + a recrawl
+     cycle. Bing's UI lag means the badge may stick for ~1 week before
+     it visibly clears.
+  2. **"0 inbound backlinks from authoritative domains"** — still the
+     real remaining bottleneck. Tracked under `### 3b. Backlink campaign`
+     below, where the 2026-05-22 status table now shows AlternativeTo
+     submitted and G2 / Capterra / GetApp queued.
+
+**What to do next:**
+- Re-check this snapshot in 2 weeks (~2026-06-05). Expected:
+  impressions 800-1200, avg position 20-25 if backlinks land, indexed
+  count 18-22 as the extension URLs and the recent blog articles all
+  settle in.
+- If avg position is flat or worse at the next check, the bottleneck
+  is backlinks, not on-page SEO. Push harder on the campaign queue and
+  don't touch published content.
 
 ### GSC snapshot 2026-05-07 (12 days post canonical-fix)
 
@@ -772,20 +1006,26 @@ See dedicated **SEO Indexing Status** section above for full state. Open follow-
 - Monitor GSC "Pages → Indexed" weekly to confirm the canonical fix is producing the expected indexation curve.
 - Monitor Bing "Search Performance → Pages" weekly. Baseline 2026-05-05: 1 impression on `/blog/how-to-add-signature-to-pdf` at position 2.00. Track impression growth as backlink campaign progresses.
 
-### 3b. Backlink campaign (started 2026-05-05)
-**Diagnosis**: Bing reports 0 backlinks (`link:signmypdf.io` → 0 results) — the real bottleneck for SERP visibility. Goal for May 2026: get 5-10 quality dofollow backlinks to break out of the cold-domain bin.
+### 3b. Backlink campaign (started 2026-05-05, restarted 2026-05-22)
+**Diagnosis**: Bing reports 0 backlinks (`link:signmypdf.io` → 0 results) — the real bottleneck for SERP visibility. Goal: get 5-10 quality dofollow backlinks to break out of the cold-domain bin.
 
-Status:
-- ✅ LinkedIn company page created, all 6 tool links use `https://www.signmypdf.io/...` (www, canonical). LinkedIn = Microsoft property → strongest possible Bing trust signal.
-- ⚠️ Facebook page "Sign My PDF in seconds" created with 6 tool links pointing to www. **Caveat**: FB external links are nofollow; signal is weak unless paired with 2-3 real content posts (still pending). 0 followers, no posts yet — looks like a dead listing right now.
-- ⏳ AlternativeTo.net — Google signup is currently disabled; need to register via email or alternate provider, then submit signmypdf.io as alternative to DocuSign / Adobe Acrobat / HelloSign / SmallPDF.
-- ⏳ Reddit thread mentioning signmypdf.io in r/freelance / r/smallbusiness / r/personalfinance. **High-priority** because Bing already ranks `/blog/how-to-add-signature-to-pdf` at position 2 for `how to add signature to pdf for free reddit` — a Reddit thread would directly reinforce that exact intent match.
-- ⏳ Quora — answer 2-3 questions on "free PDF signing tool" with natural mention.
-- ⏳ G2 + Capterra free company listings.
-- ⏳ ProductHunt "Coming Soon" page (not the full launch yet — that needs gallery assets per `### 2. Product Hunt launch prep`).
-- ⏳ SaaSHub + BetaList submissions.
+**Status as of 2026-05-22:**
 
-When measuring: re-run `link:signmypdf.io` in Bing weekly. Expectation: 1-3 results within 2 weeks of LinkedIn + AlternativeTo going live; 5-10 within 4-6 weeks.
+| Source | Status | Notes |
+|---|---|---|
+| LinkedIn company page | ✅ live | All 6 tool links + extension URL on www. LinkedIn = Microsoft property → strongest possible Bing trust signal. |
+| Facebook business page "Sign My PDF in seconds" | ⚠️ live, weak | External links are nofollow; needs 2-3 content posts to feel alive. Linked from AlternativeTo profile. |
+| Twitter `@signmypdf` | ✅ live | Linked from AlternativeTo profile and OG cards. |
+| AlternativeTo.net | 🆕 submitted 2026-05-22 | Profile lists SignMyPDF as alternative to **51 competitors** (Adobe Sign, DocuSign, Smallpdf, iLovePDF, HelloSign, etc.). Awaiting moderation (24-48 h SLA). |
+| G2 free company listing | ⏳ queued | Next after AlternativeTo lands. |
+| Capterra free listing | ⏳ queued | Same. |
+| GetApp listing | ⏳ queued | Capterra sibling — usually approved as a pair. |
+| Reddit thread (r/freelance / r/smallbusiness / r/personalfinance) | ⏳ pending | High-priority: Bing already ranks `/blog/how-to-add-signature-to-pdf` at position 2 for `how to add signature to pdf for free reddit` — a Reddit thread would directly reinforce that exact intent match. |
+| Quora answers | ⏳ pending | 2-3 questions on "free PDF signing tool" with natural mention. |
+| Product Hunt full launch | ⏳ blocked | Needs gallery assets per `### 2. Product Hunt launch prep`. |
+| SaaSHub + BetaList | ⏳ queued | Lower-priority listings. |
+
+**Trigger for re-checking the link-graph:** run `link:signmypdf.io` in Bing weekly. Expectation: 1-3 results within 2 weeks of AlternativeTo going live, 5-10 within 4-6 weeks (now that the Chrome extension is publicly live, organic mentions on Chrome-extension review sites should also start landing without our submission effort).
 
 ### 4. Payment Integration (Paddle)
 - PIXELTIDE LLC is the legal entity for Paddle
