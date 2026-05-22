@@ -851,10 +851,7 @@ export default function Home() {
           and for ?from=extension visitors (who already installed). */}
       {step === 'upload' && !isMinimalMode && (
         <div className="container">
-          {/* `plain` variant: pure white card on the light-grey page
-              background — the default gradient would clash with the
-              dropzone tinted plate just above. */}
-          <ChromeExtensionBanner variant="plain" />
+          <ChromeExtensionBanner />
         </div>
       )}
 

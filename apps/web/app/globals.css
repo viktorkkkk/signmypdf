@@ -4381,9 +4381,16 @@ body.nda-editor-mode .nda-hero-inner {
   align-items: center;
   margin: 56px 0 24px;
   padding: 32px 36px;
-  background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
-  border: 1px solid #dbeafe;
+  /* Single visual style across every host page (white /sign body,
+     plain blog article body, anywhere else): pure white card with
+     a neutral grey border + soft drop shadow. The card looks the
+     same regardless of the page background so the install pitch
+     never blends in. Mirrors the /sign variant that proved to work
+     when the v2.1 gradient sometimes sank into tinted backgrounds. */
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
   text-decoration: none;
   color: inherit;
   /* The whole card is wrapped in an <a>, but visually it reads as
@@ -4392,15 +4399,6 @@ body.nda-editor-mode .nda-hero-inner {
      net), but the cursor stays default everywhere except on the
      pill. No hover transform/shadow/border on the card itself. */
   cursor: default;
-}
-/* "Plain" variant — pure white background with neutral grey border.
-   Used on /sign where the page bg is light grey and a tinted card
-   would either clash with the dropzone above or blend into the
-   page chrome. Default `gradient` is still used in blog posts. */
-.blog-ext-cta--plain {
-  background: #ffffff;
-  border-color: #e5e7eb;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 .blog-ext-cta-text { min-width: 0; }
 .blog-ext-cta-title {

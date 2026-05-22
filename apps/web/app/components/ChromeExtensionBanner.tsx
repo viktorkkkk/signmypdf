@@ -23,30 +23,20 @@ import heroShot from '../../public/chrome-extension/hero-screenshot.png';
  * navigate, but visually the card reads as an informational block
  * with one explicit call to action.
  *
- * Variants:
- *  - `gradient` (default) — light blue → light violet card, used in
- *    blog posts where the surrounding article body is plain white
- *    and the card needs visual lift.
- *  - `plain` — pure white card with a thin grey border, used on
- *    /sign where the page background is light grey and a tinted
- *    card would either clash with the dropzone above or blend into
- *    the page chrome.
+ * Single visual style: pure white card, neutral grey border, soft
+ * shadow. Renders the same on every host page regardless of the
+ * surrounding page background (grey /sign chrome, white blog body,
+ * whatever else). All paddings / colours / typography are baked
+ * into the `.blog-ext-cta-*` namespace in globals.css.
  *
- * Server-rendered. CSS lives under the `.blog-ext-cta-*` namespace
- * in globals.css.
+ * Server-rendered. No props — single source of truth for the
+ * extension-install card across the whole site.
  */
-interface Props {
-  variant?: 'gradient' | 'plain';
-}
-
-export default function ChromeExtensionBanner({ variant = 'gradient' }: Props) {
-  const className =
-    variant === 'plain' ? 'blog-ext-cta blog-ext-cta--plain' : 'blog-ext-cta';
-
+export default function ChromeExtensionBanner() {
   return (
     <Link
       href="/sign-pdf-chrome-extension"
-      className={className}
+      className="blog-ext-cta"
       aria-label="Get the free Sign PDF Chrome extension"
     >
       <div className="blog-ext-cta-text">
