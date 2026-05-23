@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-23",
+  "timestamp": "2026-05-23T02:10:36Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "8acc3d2feb2a034e6bc0bcb1e9b602aeaf3bd852",
+  "newSlugs": "fix-typo-on-signed-pdf pdf-form-wont-let-me-type",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26320706168"
+}
