@@ -11141,6 +11141,150 @@ A recipient with the correct password could use a third-party tool to remove it 
 - [HIPAA Electronic Signature Requirements](/blog/hipaa-electronic-signatures)
 `,
   },
+  {
+    slug: 'fix-typo-on-signed-pdf',
+    title: 'Fix a Typo on a Signed PDF',
+    excerpt: 'Spotted a typo after signing a PDF? Here\'s how to correct it fast — without losing your signature or starting from scratch.',
+    date: '2026-05-24',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fix typo signed PDF', 'correct signed PDF', 'edit signed PDF', 're-sign PDF', 'typo in signed document', 'signed PDF error fix', 'PDF signing'],
+    metaTitle: 'Fix a Typo on a Signed PDF',
+    metaDescription: 'Spotted a typo after signing a PDF? Correct the original and re-sign in minutes — free, no account needed, works in any browser.',
+    content: `You signed the PDF, downloaded it, and then spotted the typo. Wrong date. Misspelled name. Missing apartment number. Trying to fix a typo on a signed PDF is harder than it looks — most editors lock the file the moment a signature is applied.
+
+There's a straightforward fix. If you need to correct a typo on a signed PDF, the cleanest path is to go back to the original unsigned file, make the correction, and re-sign it. The whole process takes under five minutes.
+
+[CTA]Re-sign your corrected PDF — free|No account. No software. Works in your browser.|Sign PDF Now — Free
+
+Most people try opening the signed PDF in their usual viewer or editor first. That usually fails — the signature has locked the fields, or the file is set to read-only for editing. The right approach is to work with the pre-signature version of the document: correct it there, then re-sign with a clean copy.
+
+## How to fix a typo on a signed PDF
+
+1. Find the original unsigned version of the file.
+2. Correct the typo using your original tool or a PDF filler.
+3. Go to [signmypdf.io/sign](/sign).
+4. Upload the corrected file and place your signature.
+5. Download the corrected, signed PDF.
+
+Free, no registration, no paywall at download. Your signature is recreated from scratch on the clean file — no patching required.
+
+[IMAGE: A corrected unsigned PDF being uploaded to SignMyPDF, with a signature being placed before the final download]
+
+## Why most approaches don't work
+
+- **Editing the signed file directly.** Most PDF viewers and editors lock form fields after a signature is applied. Trying to change the text triggers a warning or fails silently — the file treats edits as tampering.
+- **Using Adobe Acrobat's "Edit PDF" mode.** Even Acrobat warns that editing a signed document may invalidate the signature. For certified or restricted PDFs, the file is set to read-only after signing — Acrobat won't let you through regardless of subscription level.
+- **Printing, correcting by hand, and scanning.** This works in a pinch, but the output is a rasterized scan — blurry, oversized, and unprofessional compared to a clean typed PDF.
+- **Asking the other party to overlook it.** For informal documents, maybe. For a lease, NDA, or employment agreement, a wrong name, wrong date, or missing field can carry legal weight.
+
+## Why re-signing with SignMyPDF works
+
+- **Clean slate approach.** You sign the corrected version, not a patched version of the broken one. The signed output is a proper PDF, not an edited scan.
+- **Your signature is recreated from your input** — draw, type, or upload your style — in under a minute. Nothing carries over from the error document.
+- **Your signature style stays consistent.** When you re-sign a corrected document, you recreate the same signature you used before — so the final result matches your original intent, just on a corrected file.
+- **Free, no registration, no paywall at download.** Two PDFs per day on the free plan, no watermark, no account required.
+- **Works in the browser on any device.** Upload the corrected file on your phone, tablet, or laptop — no software to install.
+
+If the PDF you need to correct was locked or read-only even before you signed it, [how to add text to a read-only PDF](/blog/pdf-read-only-add-text-fix) covers the step that comes before re-signing. For signed PDFs that look visually off after downloading — fonts shifted, layout changed — [fixing a PDF that looks different after signing](/blog/signed-pdf-looks-different-fix) covers the most common causes.
+
+[IMAGE: A signed PDF displayed in the browser showing the corrected name and date, ready to share]
+
+## FAQ
+
+**Can I edit a PDF after I've already signed it?**
+Most PDF tools block editing on signed documents to protect the integrity of the signature. The practical workaround is to edit the original unsigned file and re-sign it — that gives you a clean, properly signed document without fighting locked fields.
+
+**Does re-signing legally count as a new signature?**
+It depends on context. For most everyday agreements — service contracts, lease addenda, consent forms — re-signing a corrected version is fine. For documents that were witnessed or notarized, check with the relevant party before re-signing. Some agreements require formal amendment procedures rather than a fresh signature on a corrected copy.
+
+**What if I don't have the original unsigned file anymore?**
+If the PDF uses flat text (not locked form fields), you may be able to use the [fill PDF tool](/fill) to type a correction on top of the error area, then re-sign. It's not as clean as editing the original, but it works for straightforward text corrections in plain areas.
+
+[CTA]Correct your PDF and re-sign — free|No account. No watermark. Works in the browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDF Online — Free](/sign)
+- [Add Text to a Read-Only PDF](/blog/pdf-read-only-add-text-fix)
+- [Signed PDF Looks Different — Fix It](/blog/signed-pdf-looks-different-fix)
+`,
+  },
+  {
+    slug: 'pdf-form-wont-let-me-type',
+    title: 'PDF Form Won\'t Let You Type? Fix It',
+    excerpt: 'Click a field on a PDF form and nothing happens? Here\'s why PDF forms block typing — and how to fill any locked or scanned form for free.',
+    date: '2026-05-24',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['PDF form won\'t let me type', 'can\'t type in PDF form', 'locked PDF form fix', 'fill locked PDF', 'PDF form not working', 'fill PDF online free', 'read-only PDF form'],
+    metaTitle: 'PDF Form Won\'t Let You Type? Fix It',
+    metaDescription: 'Can\'t type in a PDF form? Locked fields, scanned forms, and read-only PDFs all have fixes. Fill any PDF free — no account, no software.',
+    content: `You click the field on the form. Nothing happens. Or the cursor appears but your keystrokes don't register. Or the entire form is grayed out. If your PDF form won't let you type, the cause is usually one of four things — and each has a specific fix.
+
+Most forms that won't let you type aren't broken. They're locked in a particular way, and the workaround is simpler than it sounds.
+
+[CTA]Fill any PDF form — free, in your browser|Works on locked, scanned, and read-only forms. No account needed.|Fill PDF Form Now — Free
+
+Before the fix, it helps to know which kind of "locked" you're dealing with:
+
+## Why PDF forms block typing
+
+- **The form is a scanned image.** Scanned PDFs are pictures of forms, not interactive documents. There are no fields to click into — just pixels arranged to look like a form.
+- **Form fields are set to read-only.** Some PDFs have real interactive fields, but the creator locked them — common in government forms, bank documents, and HR paperwork where the issuer doesn't want the structure changed.
+- **The PDF has an editing restriction.** A restriction password can block typing even when the fields appear clickable. You'll see the field highlight on hover but nothing happens on click.
+- **Your viewer doesn't support form fields.** Some browser-embedded PDF viewers strip interactivity from the file. The same PDF often works fine when downloaded and opened in a dedicated viewer.
+
+## How to fill a PDF that won't let you type
+
+1. Download the PDF to your device — don't open it in the browser tab.
+2. Go to [signmypdf.io/fill](/fill).
+3. Upload the file.
+4. Use the text tool to place text directly on the locked area.
+5. Download the completed PDF.
+
+Free, no registration, no paywall at download. This text-overlay approach bypasses the form field entirely — it works on scanned forms, read-only PDFs, and flat image files alike.
+
+[IMAGE: A locked government form open in SignMyPDF's fill tool, with typed text appearing directly over the grayed-out form field]
+
+## Why most tools struggle with locked forms
+
+- **Adobe Reader** shows the form but blocks typing when fields are restricted. The full Acrobat subscription adds PDF editing, but it's expensive and unnecessary for a single form.
+- **Browser PDF viewers** (Chrome, Safari, Edge) often drop form interactivity entirely. A PDF with fields that work in Acrobat can appear completely flat in your browser tab.
+- **Standard PDF editors** handle interactive forms well but fail on scanned or flat PDFs — they return an error or open in view-only mode with no text tool available.
+- **Printing and filling by hand** works in a pinch, but you're left with a handwritten scan. For bank or government forms, most recipients expect a typed document.
+
+## Why SignMyPDF works where others don't
+
+- **Text overlay, not field editing.** Instead of trying to write into a locked field, SignMyPDF places a text element at the exact coordinates you choose. The output looks identical to a typed form — clean and professional.
+- **Works on scanned and image-only PDFs.** If the form is just an image, you can still type on top of it. Mobile users can do the same — [filling a PDF on iPhone without an app](/blog/fill-pdf-on-iphone-no-app) covers the same steps on mobile.
+- **Files processed in your browser.** Your form data never leaves your device. Free, no registration, no paywall at download.
+- **No installation required.** Upload, type, download — done in under two minutes on any modern browser.
+
+For bank forms that commonly run into this issue, [how to fill a bank form PDF online](/blog/fill-bank-form-pdf-online) walks through a common real-world example step by step.
+
+[IMAGE: The completed PDF downloaded with typed text neatly placed over each locked form field]
+
+## FAQ
+
+**Can I fill a scanned PDF that has no clickable fields?**
+Yes. A scanned PDF is an image file — there are no form fields to interact with. But you can place text on top of the image using a text overlay tool. SignMyPDF's fill tool does this for free. The typed text appears correctly positioned when you print or share the filled form.
+
+**Why can I see the form fields but can't click them?**
+The fields are either set to read-only by the document creator, or your PDF viewer isn't rendering their interactivity. Either way, the text overlay approach bypasses the field completely and lets you type wherever you need on the page.
+
+**Will it be obvious the form was filled this way?**
+No, not to a reader. The typed text looks the same as if it were entered into an interactive field. For most standard forms — bank documents, HR paperwork, government applications — a text overlay fill is functionally identical to a native-field fill.
+
+[CTA]Fill your locked PDF form — free|Works on scanned, read-only, and restricted PDF forms. No account.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Forms Online — Free](/fill)
+- [Fill a Bank Form PDF Online](/blog/fill-bank-form-pdf-online)
+- [Fill a PDF on iPhone Without an App](/blog/fill-pdf-on-iphone-no-app)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
