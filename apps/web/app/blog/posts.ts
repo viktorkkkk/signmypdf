@@ -11285,6 +11285,158 @@ No, not to a reader. The typed text looks the same as if it were entered into an
 - [Fill a PDF on iPhone Without an App](/blog/fill-pdf-on-iphone-no-app)
 `,
   },
+  {
+    slug: 'sign-authorization-letter-online',
+    title: 'Sign an Authorization Letter Online — Free',
+    excerpt: 'Authorization letters need a signature fast. Here\'s how to sign any PDF authorization letter online — no printer, no account, done in two minutes.',
+    date: '2026-05-25',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign authorization letter online', 'authorization letter PDF', 'sign letter online free', 'electronic signature authorization letter', 'sign PDF no printer', 'online PDF signature free', 'sign document online'],
+    metaTitle: 'Sign an Authorization Letter Online — Free',
+    metaDescription: 'Sign any authorization letter online — free, no account, no printer needed. Upload the PDF, add your signature, download in two minutes.',
+    content: `Your landlord sends over a permission form. Your employer emails an authorization to release records. A vendor asks you to authorize a payment before they can start the job. These letters require a signature — and usually, a deadline.
+
+Signing an authorization letter online takes under two minutes. No printer. No scanner. No sign-up. Just the PDF, a browser, and your name.
+
+[CTA]Sign your authorization letter — free|No account, no printer, no watermark. Done in two minutes.|Sign PDF Now — Free
+
+## How to sign an authorization letter online
+
+1. Download the PDF to your device if it's in an email.
+2. Go to [signmypdf.io/sign](/sign).
+3. Upload the authorization letter.
+4. Draw, type, or upload your signature.
+5. Download the signed PDF and send it.
+
+Free, no registration, no paywall at download. Your authorization letter is processed in your browser — the document never uploads to a server.
+
+If the letter runs to multiple pages, [signing multiple PDF pages in one session](/blog/sign-multiple-pdf-pages) covers how to place your signature across all of them at once.
+
+[IMAGE: An authorization letter open in SignMyPDF's editor, with a handwritten signature placed on the designated line at the bottom of the page]
+
+## Why signing authorization letters creates friction
+
+Authorization letters come up in inconvenient moments. HR emails one when you're working remotely and your home printer is out of ink. A bank sends one before you've set up a scanner at a new address. A vendor sends a two-page form with a 4 PM deadline.
+
+Most signing tools are built around subscription workflows — not around a single letter you need sent five minutes ago. Here's what makes them frustrating:
+
+- **Mandatory accounts.** The tool redirects you to a sign-up screen before you can upload. You create an account you'll use once, just to sign a letter you needed sent right away.
+- **Download paywalls.** Some tools let you place your signature on the letter but won't release the file without a subscription. The signed letter exists — you just can't access it without paying.
+- **Watermarks on free downloads.** A "TRIAL" or "UNSIGNED" banner across your signed authorization letter makes the document look invalid. Some institutions won't accept watermarked signatures.
+- **Phone incompatibility.** Many desktop PDF editors don't work on mobile. If the email came to your phone, you either switch devices or forward it and come back later.
+- **Email capture.** Some "free" tools ask for your email before releasing the download. You're handing your contact information to a marketing list just to sign one letter.
+
+## Why SignMyPDF is different
+
+- **No account, ever.** Open the browser, upload the letter, sign it, download it. There's no registration gate anywhere in the flow.
+- **No watermark on free exports.** The first two PDFs per day export cleanly, with no branding added. For recurring document workflows like [contractor agreements](/blog/sign-contractor-agreement-online), you can save your signature so you're not drawing it fresh every time.
+- **Three ways to add your signature.** Draw with a mouse or fingertip, type your name in a handwritten font style, or upload a photo of your physical signature. Whichever matches the formality the letter requires.
+- **Works on mobile.** The same tool that runs on a desktop browser works on iPhone, Android, and tablets — no app to install, no file forwarding required.
+- **Files processed in your browser.** The authorization letter content stays on your device. Nothing goes to a server, which matters if the letter contains account numbers, personal details, or medical information.
+
+[IMAGE: The completed signed authorization letter downloaded and ready to attach to a reply email]
+
+## FAQ
+
+**Is an electronic signature legally valid on an authorization letter?**
+In the US, the ESIGN Act and UETA give electronic signatures the same legal weight as handwritten signatures for most documents, including authorization letters. The signed PDF acts as the binding record. A few specific institutions — some government agencies, certain financial forms — have their own requirements, so check with the issuing party before sending.
+
+**What if the authorization letter is a scanned image inside a PDF?**
+That's not a problem. A scanned PDF is just an image file — there are no interactive form fields to click. SignMyPDF places your signature on top of the image at whatever position you choose. The finished file looks identical to a natively-signed PDF.
+
+**How long does it take to sign an authorization letter online?**
+Typically under two minutes from upload to download. The only variable is how long it takes to draw or type your signature the way you want it. Most people complete the full flow in under two minutes on the first try.
+
+[CTA]Sign your authorization letter now — free|No account, no watermark, works on any device.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDF Online — Free](/sign)
+- [Sign a Contractor Agreement Online](/blog/sign-contractor-agreement-online)
+- [Sign Multiple PDF Pages at Once](/blog/sign-multiple-pdf-pages)
+`,
+  },
+  {
+    slug: 'biggest-mistake-protecting-pdfs',
+    title: 'Biggest Mistake When Protecting PDFs',
+    excerpt: 'Most people password-protect a PDF and send the password in the same email. Here\'s why that defeats the protection — and what to do instead.',
+    date: '2026-05-25',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['protect PDF mistake', 'password protect PDF', 'PDF password security', 'PDF encryption free', 'protect PDF online free', 'PDF password sharing', 'secure PDF online'],
+    metaTitle: 'Biggest Mistake When Protecting PDFs',
+    metaDescription: 'The most common mistake when protecting PDFs — and how to avoid it. Password-protect any PDF free, no account, no server upload.',
+    content: `You password-protect a PDF, feel good about it, then write the password in the same email. The client can open it. So can anyone else who gets into that inbox. The protection you added becomes useless the moment the key and the lock travel together.
+
+It's the most common mistake people make when protecting PDFs — and it happens because no one explains the actual purpose of a PDF password.
+
+[CTA]Protect your PDF the right way — free|AES-128 encryption, no registration, no file stored on any server.|Protect PDF Now — Free
+
+## Why the same-email mistake is so easy to make
+
+When you protect a PDF and email it, the natural next step is: the recipient needs the password. So you type the password in the email body, or the subject line, or a follow-up message. Every tool behaves the same way — it protects the file and leaves the password distribution entirely up to you.
+
+But the password is supposed to travel through a different channel. A text message. A phone call. A separate messaging app. Something that doesn't arrive alongside the PDF.
+
+Most people protect PDFs without understanding this because the tools skip the explanation entirely. They offer "add a password," you add one, and it feels done.
+
+## How to protect a PDF and share the password safely
+
+1. Go to [signmypdf.io/protect](/protect).
+2. Upload the PDF.
+3. Set a strong password you haven't used elsewhere.
+4. Download the protected file.
+5. Email the PDF — then send the password by text or call.
+
+Free, no registration, no paywall at download. The PDF is encrypted with AES-128 and your file never leaves your browser.
+
+[IMAGE: A PDF being protected in SignMyPDF's protect tool, with a strong password field and AES-128 encryption indicator visible]
+
+## Three more mistakes that quietly undermine protection
+
+Beyond the same-email problem, a few other patterns make the protection you added essentially worthless:
+
+- **Reusing a password across documents.** If one recipient shares the password or their inbox is compromised, every protected PDF you've ever sent with that password is now open. Use a different password per document or per recipient.
+- **Using an obvious password.** The recipient's name, the company name, today's date, or "1234" are the first guesses anyone tries. A short password with no special characters can be brute-forced in minutes with freely available tools. [Whether a protected PDF can actually be hacked](/blog/is-password-protected-pdf-actually-secure) depends almost entirely on the strength of the password, not the encryption algorithm.
+- **Protecting the PDF but emailing an unprotected copy too.** If you also attach "the original for reference," the password-protected version adds nothing. Anyone reading the email thread has the unprotected file right there.
+
+## Why most PDF protection tools add friction instead of helping
+
+- **Paywalled encryption.** Many tools offer only basic print restrictions for free, while real AES-level password protection sits behind a subscription. You're not trying to restrict printing — you're trying to stop unauthorized access.
+- **Uploads to third-party servers.** Tax documents, NDAs, and client contracts shouldn't travel through a cloud service you don't control. If the service is breached, your files go with it.
+- **Registration required just to protect one document.** Creating an account adds friction and creates another data point somewhere you didn't intend.
+- **No transparency about encryption strength.** Many tools just say "password protected" without specifying AES-128 or AES-256. If you don't know how the file is encrypted, you can't assess the actual risk.
+
+## Why SignMyPDF is different
+
+- **AES-128 encryption, no account.** The same encryption standard used in financial and legal documents, applied directly in your browser. No registration to get there.
+- **Files processed locally.** Your PDF never uploads to a server. Encryption happens client-side, so a breach of any third-party infrastructure can't touch your documents. If you've [sent a confidential contract unprotected](/blog/sent-confidential-contract-unprotected) before, this is the opposite approach.
+- **Free, no paywall at download.** The protected PDF downloads immediately, no subscription required. The first two per day are completely free.
+- **Permission controls included.** Restrict printing, copying, or editing separately from the open password. Some documents need to be read but not copied or extracted.
+
+[IMAGE: A successfully protected PDF ready for download, with its encryption settings confirmed]
+
+## FAQ
+
+**What's the safest way to share a PDF password?**
+Send it through a channel separate from the PDF. Email the document, then text the password. Or call. If you must use email, send the password in a separate message at a different time — it's not perfect, but it significantly reduces the window where both pieces are visible together in one inbox.
+
+**Does a PDF password actually stop a determined attacker?**
+It depends on password strength. AES-128 encryption is mathematically solid — the algorithm itself isn't the weak point. A short, guessable password, however, can be broken quickly with freely available tools. Passwords of 12 or more characters with mixed case and symbols make brute-force attacks impractical on standard hardware.
+
+**Can I protect a PDF without installing any software?**
+Yes. SignMyPDF's protect tool runs entirely in your browser. Upload, set a password, download. Nothing to install, no account required, and the file never leaves your device.
+
+[CTA]Protect your next PDF the right way — free|AES-128 encryption, browser-only, no registration.|Protect PDF Now — Free
+
+## Related tools
+
+- [Protect PDF Online — Free](/protect)
+- [Is Your Password-Protected PDF Actually Secure?](/blog/is-password-protected-pdf-actually-secure)
+- [I Sent a Confidential Contract Unprotected](/blog/sent-confidential-contract-unprotected)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
