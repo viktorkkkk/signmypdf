@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-25",
+  "timestamp": "2026-05-25T02:18:30Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "c4639e24966e10db9f6495ecde37d97049858c0f",
+  "newSlugs": "just-email-it-isnt-enough-for-sensitive-documents smallpdf-vs-ilovepdf-vs-signmypdf-protection",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26379793985"
+}
