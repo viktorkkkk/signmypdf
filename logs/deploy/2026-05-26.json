@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-26",
+  "timestamp": "2026-05-26T02:13:49Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "259a42f8415a488bc1fb6d71a2b6d64d65e18979",
+  "newSlugs": "sign-partnership-agreement-online fill-dmv-form-pdf-online",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26428369854"
+}
