@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-27",
+  "timestamp": "2026-05-27T02:17:34Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "8b6a17861f0f3025e31e8cadf38983e80eb44af5",
+  "newSlugs": "pdf-signature-field-not-clickable-fix can-protected-pdf-be-hacked",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26486730123"
+}
