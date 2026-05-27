@@ -11736,6 +11736,157 @@ Yes. After filling the form fields, you can add a signature directly in the same
 - [Fill a Visa Application Form PDF Online](/blog/fill-visa-application-form-pdf)
 `,
   },
+  {
+    slug: 'pdf-signature-field-not-clickable-fix',
+    title: 'PDF Signature Field Not Clickable — Fix',
+    excerpt: 'Click the signature field and nothing happens? Here\'s why PDF signature fields go inert — and how to sign the document in under a minute.',
+    date: '2026-05-28',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['pdf signature field not clickable', 'signature field not working', 'sign pdf free', 'pdf form field fix', 'electronic signature', 'pdf troubleshooting', 'sign pdf online'],
+    metaTitle: 'PDF Signature Field Not Clickable — Fix',
+    metaDescription: 'PDF signature field not responding to clicks? Here\'s the fix — sign any PDF free in 30 seconds, no install, no account.',
+    content: `You open the PDF, find the signature field, click it — and nothing happens. The cursor flickers into a hand pointer, maybe blinks, but no signing dialog opens. You try again. You refresh. You re-download the file. The PDF signature field is completely inert.
+
+It's one of the stranger PDF problems because nothing looks broken. The field is clearly labelled. The layout looks right. But clicking it does exactly nothing.
+
+[CTA]Sign your PDF — no software, no account|Works on any device. Free, no watermark.|Sign PDF Now — Free
+
+## Why PDF signature fields stop responding
+
+Two things cause this. The first is document permissions: whoever created the PDF may have locked interactive elements — including signature fields — using edit restrictions. Standard viewers like Adobe Reader and Chrome's built-in PDF viewer honour those restrictions and silently block input. They don't explain why.
+
+The second cause is export artifacts. PDFs converted from Word, Google Docs, or LibreOffice often contain visual "signature boxes" — rectangles drawn on the page — with no real interactive form field underneath. They look like signature fields. They aren't. They're just shapes.
+
+Either way, you don't need the field to be functional to get the document signed.
+
+[IMAGE: A PDF open in a browser with a highlighted but unresponsive signature box, with an arrow pointing to SignMyPDF's signature toolbar instead]
+
+## How to sign the PDF anyway — 5 steps
+
+1. Go to signmypdf.io/sign and upload your PDF.
+2. Click the signature button in the toolbar.
+3. Draw, type, or upload your signature.
+4. Drag it over the field area — or anywhere on the page.
+5. Click Download. The signed PDF saves instantly.
+
+SignMyPDF places your signature as a visual layer directly on the page. It doesn't interact with the document's form fields at all, so locked fields, broken fields, and fake visual boxes make no difference. Your signature goes where you put it.
+
+If the document is also refusing to accept typed text, the root cause is usually the same permissions issue. Our guide on [handling read-only and locked PDFs](/blog/pdf-read-only-add-text-fix) walks through that specific fix.
+
+## Why most tools make this harder than it needs to be
+
+- **Adobe Reader enforces document permissions.** If the creator locked the file, Reader won't let you sign in the field — and won't explain why.
+- **Browser PDF viewers are equally strict.** They display the field visually but won't activate it when restrictions are in place.
+- **Word and Docs conversions frequently produce fake fields.** The rectangle is there; the interactive layer isn't.
+- **Some tools silently fail.** They let you go through the signing steps, then produce a file where the signature doesn't appear in the final output.
+- **Paid plans gate the fix.** Several tools require an active subscription before they'll handle restricted or unusual PDFs.
+
+## Why SignMyPDF handles this differently
+
+- Signatures are page overlays, not tied to form fields. Locked or non-existent fields become irrelevant.
+- No install, no plugin, no account required. Open the browser, upload, sign, download.
+- All processing happens in your browser — the file never reaches a server. Your documents stay private.
+- Free, no registration, no paywall at download.
+- Works on iPhone, Android, Mac, Windows, and Chromebook.
+
+After downloading, open the signed PDF to confirm the signature appears where you placed it. On rare occasions the rendered position differs slightly from the preview — if that happens, [fixing a signed PDF that looks wrong](/blog/signed-pdf-looks-different-fix) covers the most common causes.
+
+## FAQ
+
+**Why does the signature field look active but not respond?**
+The field likely has user restrictions set by whoever created the document. Most PDF viewers honour those restrictions without explaining them. SignMyPDF bypasses this entirely by placing your signature as a page image layer, independent of the form field structure.
+
+**Is signing outside the official signature box legally valid?**
+Yes. A signature's legal validity comes from the signature itself — the mark, name, or initials — not from whether it sits inside a pre-built box. Placing your signature in the correct area of the page carries the same legal weight.
+
+**Does this work on mobile?**
+Yes. SignMyPDF runs entirely in the browser and works on any modern mobile browser. No app download required on iPhone, Android, or any other device.
+
+[CTA]Sign your PDF free — no account needed|No software. Works on any device in any browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Signature Disappears After Signing? Fix It](/blog/signature-disappears-pdf-fix)
+- [Signed PDF Looks Wrong — How to Fix It](/blog/signed-pdf-looks-different-fix)
+- [Fix a Typo on a Signed PDF](/blog/fix-typo-on-signed-pdf)
+`,
+  },
+  {
+    slug: 'can-protected-pdf-be-hacked',
+    title: 'Can a Password-Protected PDF Be Hacked?',
+    excerpt: 'Short answer: it depends on the encryption. Here\'s what actually makes a password-protected PDF secure — and what leaves it wide open.',
+    date: '2026-05-28',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf', 'pdf encryption', 'pdf security', 'aes-256 pdf', 'protect pdf free', 'pdf password hacked', 'pdf protection'],
+    metaTitle: 'Can a Password-Protected PDF Be Hacked?',
+    metaDescription: 'Can a password-protected PDF be cracked? It depends on the encryption type. Learn what AES-256 means for your files — protect free.',
+    content: `You password-protect a PDF before emailing it to a client. Seconds later, the doubt creeps in: what if someone with cracking software intercepts this? Can a password-protected PDF actually be broken into? And if it can, what does the password even accomplish?
+
+It's a fair question. PDF password cracking tools exist and are freely available. Whether they work on your file depends entirely on which encryption standard was used — and most people have no idea which one their tool picked.
+
+[CTA]Protect your PDF with AES-256 — free|No account. Encrypted in your browser. Files never leave your device.|Protect PDF Now — Free
+
+## Not all PDF encryption is the same
+
+Older PDF standards used 40-bit and 128-bit RC4 encryption. Both were broken years ago. Free tools can crack RC4-protected PDFs in minutes by running through known key patterns. If your PDF was protected with an older application, the password may be providing almost no real protection.
+
+Modern PDFs use AES-128 or AES-256 encryption. AES-256 is the same standard used by banks, government agencies, and classified communications systems. A brute-force attack against AES-256 with a strong password is computationally infeasible with current technology — the math simply doesn't work in an attacker's favour. The password itself becomes the limiting factor, not the encryption algorithm.
+
+This is the key distinction: strong encryption with a weak password is still vulnerable. Strong encryption with a strong password — 12 or more characters, mixed types — is not practically breakable.
+
+## How to protect a PDF with AES-256 — 4 steps
+
+1. Go to signmypdf.io/protect and upload your PDF.
+2. Enter a strong password: 12 or more characters, using letters, numbers, and symbols.
+3. Click Protect. AES-256 encryption is applied automatically.
+4. Download the file and send the password through a separate channel.
+
+That last step matters as much as the encryption itself. Sending the file and the password in the same email means anyone who intercepts the message has everything. Use SMS, a phone call, or a separate messaging app to share the password.
+
+If you've ever wondered [what actually happens when a protected PDF ends up in the wrong hands](/blog/what-happens-if-protected-pdf-leaks), that context clarifies exactly what the protection covers — and what it doesn't.
+
+[IMAGE: SignMyPDF protect tool showing a password field being filled in, with an AES-256 encryption label visible on the result screen]
+
+## Why most tools create a false sense of security
+
+- **Some free tools still use RC4** — the cracked standard — without telling you. They call the output "protected" but the protection is cosmetic.
+- **Server-side tools process your file on their machines.** Your confidential document travels across the internet before it's encrypted, creating an exposure window before the protection even applies.
+- **Most tools don't disclose their encryption standard.** If you can't find what algorithm a tool uses, that's a warning sign.
+- **Weak passwords undermine strong encryption.** Any tool that lets you set a one-word password without warning is doing you a disservice — dictionary attacks on weak passwords succeed regardless of encryption quality.
+- **Corporate email filters** in healthcare and finance environments sometimes strip PDF passwords before delivery, silently removing the protection you applied.
+
+## Why SignMyPDF is different
+
+- Uses AES-256 encryption. It's stated plainly, not buried in fine print.
+- All processing happens in your browser. The file is encrypted on your device before any output is produced — it never reaches SignMyPDF's servers.
+- Free, no registration, no paywall at download.
+- Works on any device: Mac, Windows, iPhone, Android, Chromebook.
+- No subscription required for encryption. AES-256 is included on every protect.
+
+If you've already sent a confidential file without a password, [there are immediate steps you can take](/blog/sent-confidential-contract-unprotected) to limit exposure and prevent it from happening again.
+
+## FAQ
+
+**Can someone crack a password-protected PDF?**
+With AES-256 and a strong password, no — not with any technology available today. What attackers target is weak passwords: names, birthdates, dictionary words. The encryption standard and the password strength together determine your real security level.
+
+**What if I used a weak password on a file I already sent?**
+If you still have access to the recipient and the original file, resend a version re-protected with a stronger password and ask them to discard the old copy. For critical documents, notify all parties promptly.
+
+**Should I send the password in the same email as the protected file?**
+No. Always use a different channel — SMS, phone, or a separate messaging platform. Sending both in the same email eliminates the protection if the email is intercepted or the account is compromised.
+
+[CTA]Protect your PDF with AES-256 — free|Encrypted in your browser. No account, no upload to servers.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password PDF vs. Encrypted Email: Which Is Safer?](/blog/password-pdf-vs-encrypted-email)
+- [Is Your Password-Protected PDF Actually Secure?](/blog/is-password-protected-pdf-actually-secure)
+- [Forgot Your PDF Password? Here Are Your Options](/blog/forgot-my-pdf-password-options)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
