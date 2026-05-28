@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-28",
+  "timestamp": "2026-05-28T02:22:23Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "6d27223c3e9068cb6a6f489e3d7851db69abc187",
+  "newSlugs": "fill-pdf-on-android-free dropbox-password-links-vs-protected-pdfs",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26550705224"
+}
