@@ -11887,6 +11887,149 @@ No. Always use a different channel — SMS, phone, or a separate messaging platf
 - [Forgot Your PDF Password? Here Are Your Options](/blog/forgot-my-pdf-password-options)
 `,
   },
+  {
+    slug: 'fill-pdf-on-android-free',
+    title: 'Fill PDF Forms on Android — Free',
+    excerpt: 'You don\'t need an app to fill a PDF on Android. Any modern browser works — free, no account, no install required.',
+    date: '2026-05-29',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill pdf android', 'fill pdf form', 'android pdf fill', 'fill pdf free', 'pdf form android', 'mobile pdf', 'no app pdf fill'],
+    metaTitle: 'Fill PDF Forms on Android — Free',
+    metaDescription: 'Fill a PDF form on Android using just your browser — no app, no account, no paywall. Works in Chrome, Firefox, and Samsung Internet.',
+    content: `Someone sends you a PDF on your Android phone and you need to fill it out and return it fast — a rental application, a consent form, a W-9. You search the Play Store for a way to fill PDF forms on Android, and every result either demands an account, starts a trial, or holds your filled file behind a paywall when you finally tap "Save."
+
+There's a simpler approach. Any modern Android browser — Chrome, Firefox, Samsung Internet — can handle filling a PDF form without any install. Visit signmypdf.io/fill, upload the PDF, place text boxes wherever you need them, and download the finished file. Free, no registration, no paywall at the end.
+
+[CTA]Fill your PDF on Android — no install needed|Works in Chrome, Firefox, and Samsung Internet. Free, no watermark.|Fill PDF Form Now — Free
+
+## How to fill a PDF on Android — 5 steps
+
+1. Open Chrome on your Android phone and visit signmypdf.io/fill.
+2. Tap the upload area and select your PDF.
+3. Tap anywhere on the page to place a text box.
+4. Type your information, then drag the box into position.
+5. Tap Download — the filled PDF saves straight to your phone.
+
+You can add a signature in the same session if the document needs one. Most single-page forms take under two minutes to complete.
+
+## Why Android PDF apps make this harder than it needs to be
+
+- **Registration required before you can do anything.** Most Android apps lock even basic filling behind a login wall. You create an account, confirm your email, and then discover the download still costs money.
+- **Subscriptions triggered at the download step.** The filling workflow looks free until you tap "Download" — that's when the subscription prompt appears. Your work is done; the file is just being held back.
+- **iOS-centric tools that behave oddly on Android.** Many browser-based PDF fillers are built and tested for iPhone. On Android they render text at the wrong size, misalign boxes, or produce garbled output in the final file.
+- **App permissions that make no sense for a form.** Native Android PDF apps often request access to contacts, camera, and location — none of which are needed to type an address into a rental application.
+- **File size limits that reject real-world PDFs.** Government forms with embedded images and multi-page applications routinely hit the size caps free mobile tools impose.
+
+## Why SignMyPDF works on Android
+
+- Runs in your browser — Chrome, Firefox, Samsung Internet — no install, no extra permissions.
+- Free, no registration, no paywall at download. The download button does exactly what it says.
+- Files processed in browser. Your PDF never leaves your device or reaches a server.
+- Text boxes go anywhere on the page, not just inside pre-built form fields. Drag to reposition, tap to edit.
+- Consistent output — what you see on screen is what appears in the downloaded file.
+
+Android's built-in PDF viewer lets you read a form but won't let you fill it. Chrome's built-in viewer has the same limitation. SignMyPDF closes that gap in a browser tab, without any install or account required. For the desktop version of the same workflow, [filling PDF forms online for free](/blog/fill-pdf-form-online-free) covers what's possible on Mac, Windows, and Chromebook.
+
+[IMAGE: SignMyPDF fill tool open in Chrome on an Android phone, with a text box placed over a form field on a rental application PDF]
+
+## FAQ
+
+**Does this work on older Android phones?**
+Yes. Any Android device running Chrome or Firefox from the last five years handles it without issue. The tool runs on standard browser APIs that have been stable for years, so there's no practical minimum Android version.
+
+**Can I fill a form and add a signature in the same session?**
+Yes. After uploading, tap the Signature button in the toolbar to draw or type your signature, then place it wherever the document requires it. You download one finished file — no need to make two passes or merge separate PDFs afterward.
+
+**What if the PDF's built-in form fields won't let me type in them?**
+SignMyPDF places text overlays directly on the page rather than interacting with the existing field structure. If the built-in fields are restricted or broken, text boxes placed on top of them produce the same visual result. The [guide on unresponsive PDF form fields](/blog/pdf-form-fields-not-working-fix) explains why fields lock up and what your options are.
+
+[CTA]Fill your PDF on Android — free|No account. No install. Works in any modern Android browser.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Forms on iPhone Without an App](/blog/fill-pdf-on-iphone-no-app)
+- [Fill a Bank Form PDF Online — Free](/blog/fill-bank-form-pdf-online)
+- [Fill Government Forms Online — Free](/blog/fill-government-forms-online-free)
+`,
+  },
+  {
+    slug: 'dropbox-password-links-vs-protected-pdfs',
+    title: 'Dropbox Link Passwords vs PDF Passwords',
+    excerpt: 'A Dropbox link password controls who can download your file. A PDF password protects the document itself — everywhere it goes. Here\'s the real difference.',
+    date: '2026-05-29',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['dropbox pdf password', 'password protect pdf', 'pdf encryption', 'protect pdf free', 'dropbox link password', 'secure pdf sharing', 'aes-256 pdf'],
+    metaTitle: 'Dropbox Link Passwords vs PDF Passwords',
+    metaDescription: 'Dropbox link passwords protect access to the file, not the file itself. PDF passwords travel with the document — protect free with AES-256.',
+    content: `You share a PDF via Dropbox and set a password on the link. It feels secure — the recipient has to enter the Dropbox link password before they can access anything. The gap becomes clear once they download the file: at that point, the password is irrelevant. The PDF lands on their device completely unprotected. They can share it, forward it, or leave it on a shared computer without any barrier.
+
+A Dropbox password link secures access while the file lives on Dropbox. A password-protected PDF secures the document itself, wherever it goes. These two methods protect different things, and confusing them is one of the more common mistakes people make when sharing sensitive documents.
+
+[CTA]Protect your PDF — AES-256 encryption, free|No account. Encrypted in your browser. Files never leave your device.|Protect PDF Now — Free
+
+## What each method actually protects
+
+The distinction is simpler than it sounds. A Dropbox password sits between the person and the Dropbox download page. Once they're past that checkpoint and the file is on their device, the Dropbox protection is gone. A PDF password is embedded inside the file — every time anyone tries to open the document, on any device, anywhere, the password prompt appears.
+
+| Feature | Dropbox link password | Password-protected PDF |
+|---|---|---|
+| What's locked | The Dropbox download page | The file itself |
+| Protection after download | None | Remains encrypted |
+| Works offline | No | Yes |
+| Available on free plan | No — paid plans only | Yes — free tools available |
+| Works on all devices | Only via Dropbox | Yes, anywhere |
+
+## How to password-protect a PDF — 4 steps
+
+1. Go to signmypdf.io/protect and upload your PDF.
+2. Enter a strong password — 12 or more characters.
+3. Click Protect. AES-256 encryption is applied automatically.
+4. Download the encrypted file and share the password separately.
+
+Never send the file and the password in the same message — use SMS, a phone call, or a different app. If you want to understand why transmission security and file security need to work together, [why "just email it" isn't enough for sensitive documents](/blog/just-email-it-isnt-enough-for-sensitive-documents) covers the full picture.
+
+[IMAGE: Side-by-side comparison of a Dropbox share dialog with a password toggle next to SignMyPDF's protect screen showing AES-256 encryption applied to a PDF]
+
+## Why Dropbox link passwords fall short for sensitive documents
+
+- Once the file is downloaded, the link password is gone. Any device that has the file has full, unrestricted access to its contents.
+- Link passwords require the recipient to go through Dropbox's interface. If the link expires or Dropbox is unavailable, the document becomes inaccessible.
+- Password links are a paid feature — not available on Dropbox's free tier. You're paying for a layer of protection that disappears the moment the file is downloaded.
+- You can't revoke access from a file already downloaded. If the recipient saves it to three devices, no Dropbox setting changes that.
+- The file itself gives no indication its contents are protected. Anyone who opens the downloaded PDF sees everything without a prompt.
+
+## Why PDF password protection is different
+
+- AES-256 encryption is applied to the file itself — the same standard used by banks and government agencies.
+- Free, no registration, no paywall at download.
+- Files processed in browser — the PDF is encrypted on your device before any output is produced. It never reaches a server.
+- Protected files work anywhere — Mac, Windows, iPhone, Android, Chromebook — regardless of which cloud storage or email service you use.
+- No subscription required. AES-256 protection is available on every file, every time.
+
+For context on what these encryption standards mean in practice, [is your password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure) explains the difference between strong and weak encryption, and why password length matters as much as the algorithm.
+
+## FAQ
+
+**Can I use both a Dropbox link password and a PDF password on the same file?**
+Yes, and for highly sensitive documents that's actually the stronger approach. The link password controls who can download; the PDF password protects the file once it's on their device. They operate at different layers and don't interfere with each other.
+
+**Is PDF password protection enough for contracts and financial documents?**
+For most business purposes, yes. AES-256 encryption is the accepted standard for protecting confidential documents during sharing. For strictly regulated contexts — healthcare under HIPAA or financial services under specific compliance rules — your compliance officer can confirm whether additional controls apply.
+
+**What if I need to revoke access to a file I've already sent?**
+You can't revoke a file that's already been downloaded, regardless of which method you used. For situations where access needs to be time-limited or revocable, a document management platform with access logging is the right tool. For standard confidential sharing, a strong PDF password with AES-256 is the practical standard.
+
+[CTA]Protect your PDF free — encrypted in your browser|No account. AES-256 encryption. Files never leave your device.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password PDF vs. Encrypted Email: Which Is Safer?](/blog/password-pdf-vs-encrypted-email)
+- [ZIP Password vs PDF Password: Which Is Harder to Crack?](/blog/zip-password-vs-pdf-password)
+- [What Happens If a Protected PDF Gets Leaked?](/blog/what-happens-if-protected-pdf-leaks)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
