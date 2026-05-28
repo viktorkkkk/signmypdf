@@ -1,0 +1,154 @@
+{
+  "date": "2026-05-28",
+  "timestamp": "2026-05-28T06:41:55.289Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-05-26T07:22:03.794Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 791,
+    "clicks28d": 2,
+    "avgPosition28d": 26.43236409608091,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 3,
+        "clicks": 1,
+        "position": 8.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+        "impressions": 38,
+        "clicks": 1,
+        "position": 63.2
+      },
+      {
+        "url": "https://signmypdf.io/",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 79
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 1
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 62,
+        "clicks": 0,
+        "position": 33.1
+      },
+      {
+        "url": "https://signmypdf.io/blog/freelancers-sign-contracts-free",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 18.5
+      },
+      {
+        "url": "https://signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 19.3
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 19.4
+      },
+      {
+        "url": "https://signmypdf.io/fill",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 88
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 3
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 31
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 69.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 8,
+        "clicks": 0,
+        "position": 15.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 12,
+        "clicks": 0,
+        "position": 45.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+        "impressions": 33,
+        "clicks": 0,
+        "position": 55.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 13
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+        "impressions": 14,
+        "clicks": 0,
+        "position": 41.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 40.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 22.3
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
