@@ -12030,6 +12030,144 @@ You can't revoke a file that's already been downloaded, regardless of which meth
 - [What Happens If a Protected PDF Gets Leaked?](/blog/what-happens-if-protected-pdf-leaks)
 `,
   },
+  {
+    slug: 'pdf-signature-invalid-error-fix',
+    title: 'PDF Signature Invalid Error — Fix It Free',
+    excerpt: 'Your PDF signature shows invalid in Adobe Acrobat — even though you signed it yourself. The fix has nothing to do with whether your signature is real.',
+    date: '2026-05-30',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['pdf signature invalid', 'signature cannot be verified', 'pdf signature error fix', 'adobe acrobat signature invalid', 'electronic signature', 'sign pdf online free', 'signature validity unknown'],
+    metaTitle: 'PDF Signature Invalid Error — Fix It Free',
+    metaDescription: 'PDF signature shows invalid in Adobe Acrobat — here is what the certificate error means and the fastest fix for any PDF viewer.',
+    content: `You sign a PDF and send it. The recipient opens it in Adobe Acrobat and sees a yellow warning: "Signature's validity is unknown." Or a red X: "Invalid signature." Your PDF signature shows invalid even though you signed it yourself. Nothing was tampered with. Nobody forged the document.
+
+The "invalid" error has nothing to do with whether your signature is real. It is a certificate trust problem specific to Adobe Acrobat — and understanding that distinction resolves the confusion quickly.
+
+[CTA]Sign your PDF — opens cleanly in every viewer|No certificate warnings. No account required. Free.|Sign PDF Now — Free
+
+## Why does a PDF signature show invalid?
+
+PDF signatures come in two forms. The first is an image overlay — a drawn or typed name placed visually on the page. The second is a cryptographic certificate signature, where a digital certificate is embedded in the file and Adobe Acrobat checks whether it trusts the issuing certificate authority.
+
+Adobe trusts only a curated list of certificate authorities. If the platform you used to sign the PDF has its own certificate authority, Adobe will not recognize it automatically. The "invalid" and "validity unknown" warnings come from that mismatch — not from tampering or forgery.
+
+[IMAGE: Adobe Acrobat showing a yellow warning banner reading "Signature's validity is unknown" on a signed PDF document]
+
+## How to fix a PDF signature that shows invalid
+
+1. Ask the recipient to open the PDF in a different viewer — Preview on Mac, a browser PDF viewer, or a mobile PDF app typically skip these certificate warnings.
+2. In Adobe Acrobat: Edit > Preferences > Signatures > Verification > update the trust settings to include the signing platform's certificate authority.
+3. Request a re-signed copy using a platform whose certificate authority Adobe already trusts — DigiCert, GlobalSign, or Entrust.
+4. Use a tool that creates image-based signatures rather than certificate-based ones. No embedded certificate means no trust warning, in any viewer.
+
+Step 4 is the permanent fix for most people. An image-based signature is visually identical and carries the same legal weight under ESIGN and UETA. The "invalid" warning is a technical artifact of how Adobe validates certificates, not a legal judgment on the signature itself. For a full explanation of what makes an electronic signature legally binding, [electronic signature security explained](/blog/electronic-signature-security) covers the standards plainly.
+
+## Why certificate-based PDF signatures cause problems
+
+- Adobe Acrobat maintains a curated trust list. Signatures from smaller or platform-specific certificate authorities trigger the warning on every fresh installation.
+- Most recipients cannot navigate Preferences > Trust settings without IT help. To them, "invalid" means the signature is fake.
+- Certificate chains break when a signing platform rotates or revokes its certificate. Legitimate signatures from months ago suddenly show "invalid" with no change to the document content.
+- Mobile PDF viewers often ignore certificate validation data entirely, producing inconsistent results: valid on desktop, no indication on a phone.
+- Different PDF viewers validate differently. A file that shows "valid" in one application can show "invalid" in another using the same PDF specification.
+
+## Why SignMyPDF avoids the certificate warning entirely
+
+- Signatures are image overlays — no embedded certificate, no trust chain, nothing for Adobe to validate or reject.
+- The signed PDF opens cleanly in Adobe Acrobat, macOS Preview, Android PDF readers, iOS PDF viewers, and every browser-based viewer. No yellow triangles, no red Xs.
+- Free, no registration, no paywall at download. Files processed in browser — your PDF is never uploaded to a server.
+- Nothing expires, nothing gets revoked, and nothing fails a trust check six months from now.
+
+If the signature placement also looks unexpected — wrong position or different size than you placed it — [why your signed PDF can look different from the original](/blog/signed-pdf-looks-different-fix) covers the rendering issues that often accompany certificate signature problems.
+
+## FAQ
+
+**Is a PDF with an "invalid signature" warning legally binding?**
+Usually yes. The warning means Adobe cannot verify the certificate trust chain — it does not mean the signature is fake or the document was tampered with. Under ESIGN and UETA, electronic signatures are legally binding regardless of whether a PDF viewer shows a green checkmark. Courts and regulators evaluate intent and consent, not whether Adobe validated a particular certificate. For high-stakes or disputed documents, confirm requirements with the other party or their counsel.
+
+**Can I re-sign a PDF to remove the "invalid" warning?**
+The cleanest fix is to sign a fresh copy using a tool that creates image-based signatures. The overlay approach produces no trust warnings in any viewer. Keep the original certificate-signed version if the document history matters and provide the image-signed copy to the recipient.
+
+**Why does it show valid on my computer but invalid for the recipient?**
+Your device already trusts the signing platform's certificate — you used the platform before and your trust store was updated at that point. The recipient's device has never interacted with that certificate authority. Different trust stores produce different validation results for the exact same file.
+
+[CTA]Sign your PDF — no certificate errors|Free, no account. Opens cleanly in Adobe, Preview, and every mobile viewer.|Sign PDF Now — Free
+
+## Related tools
+
+- [Why Your Signed PDF Looks Different](/blog/signed-pdf-looks-different-fix)
+- [Electronic Signature Security Explained](/blog/electronic-signature-security)
+- [Sign PDF Without Adobe](/blog/sign-pdf-without-adobe)
+`,
+  },
+  {
+    slug: 'fill-affidavit-pdf-online',
+    title: 'Fill an Affidavit PDF Online — Free',
+    excerpt: 'Need to fill an affidavit PDF and sign it without printing? Two minutes in a browser — no account, no paywall, files stay in your browser.',
+    date: '2026-05-30',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill affidavit online', 'sign affidavit pdf', 'affidavit form online free', 'fill legal document online', 'fill pdf form online', 'electronic signature affidavit', 'sign legal document online free'],
+    metaTitle: 'Fill an Affidavit PDF Online — Free',
+    metaDescription: 'Fill and sign an affidavit PDF online free — no printer, no account, no software. Files processed in your browser, never uploaded.',
+    content: `Your notary cancels and the affidavit has to be filed by end of day. Or the court uses an e-filing system that does not accept paper. Or you are working remotely with no printer nearby. Either way, you need to fill an affidavit PDF online and sign it — without printing, without buying software, without handing your personal details to an unfamiliar service.
+
+Most tools make this two-minute task take twenty. Here is the faster way.
+
+[CTA]Fill your affidavit PDF — no account required|Text boxes, signature, and download in one session. Free, no watermark.|Fill PDF Form Now — Free
+
+## How to fill an affidavit PDF online — 5 steps
+
+1. Go to signmypdf.io/fill and upload the affidavit PDF.
+2. Click anywhere on the page to place a text box.
+3. Type your information and drag the box to the correct position.
+4. Switch to the Signature tool and add your signature where the form requires it.
+5. Download the completed affidavit — it saves directly to your device.
+
+You can adjust font size, reposition text boxes, and place your signature on multiple pages before downloading. Affidavits with several required signature lines can be handled in a single session. Free, no registration, no paywall at download.
+
+Notarization requirements vary by document type and jurisdiction — filling and signing digitally does not change whether notarization is required, it just removes the need to print first. If a notary is needed, download the filled PDF and bring it to your appointment, or use a remote online notarization service.
+
+[IMAGE: An affidavit PDF open in SignMyPDF's fill editor, with a text box placed over the Deponent name field and a drawn signature above the signature line]
+
+## Why most tools make affidavit filling harder than it should be
+
+- **Account required before you can open the form.** Legal deadlines do not wait for email confirmation links. Most free PDF tools block you with a signup wall before you can view the document.
+- **No signature option in the same workflow.** Fill-only tools handle text but have no signature feature. You fill, download, open a second tool, sign, download again — two paywalls, two uploads.
+- **Paywall triggered at the download step.** You type in all your information, add your signature, and confirm everything looks right. Then you tap Download and a subscription screen appears. Your completed affidavit is held behind a payment wall.
+- **Files uploaded to a server.** Affidavits contain dates of birth, home addresses, and legal statements. Sending that data to an unfamiliar server is a real privacy concern for personal legal documents.
+- **Form field failures on court-issued templates.** Official affidavit PDFs often use restricted or non-standard form fields. Tools that rely on detecting internal PDF structure produce blank output on these documents.
+
+## Why SignMyPDF works for affidavits
+
+- Fill text AND sign in the same session — one upload, one download, no second tool required.
+- No account, no registration, no email confirmation before downloading. The tool opens immediately.
+- Files processed in browser. Your affidavit never reaches a server — important for documents with sensitive personal or legal content.
+- Free, no paywall at download. The download button does what it says.
+- Text overlays work on any PDF — scanned documents, court-issued templates, and forms with restricted or broken built-in fields.
+
+For other legal documents where the same approach applies, [filling a medical release form online free](/blog/fill-medical-release-form-online) walks through the same workflow with a consent-type PDF.
+
+## FAQ
+
+**Does an electronically filled affidavit have the same legal standing as a handwritten one?**
+In most US jurisdictions, yes — provided the affidavit meets any applicable notarization requirements. ESIGN and UETA make electronic signatures legally equivalent to handwritten ones on most documents. Filling and signing digitally does not change whether notarization is required; it removes the need to print. Some jurisdictions now accept remote online notarization, where the entire process happens over a video call. Check the specific court or state rules for your document type.
+
+**What if the affidavit has locked or unresponsive form fields?**
+SignMyPDF places text overlays directly on the page rather than interacting with the PDF's internal field structure. If built-in fields are locked, restricted, or simply absent, text boxes placed on top produce the same visual result. [Why PDF form fields stop working](/blog/pdf-form-fields-not-working-fix) covers the most common causes.
+
+**Can I fill an affidavit on my phone?**
+Yes. SignMyPDF works in any modern mobile browser — Chrome on Android, Safari on iPhone — without installing an app. Tap to place text boxes, type your information, and add a signature in the same session. The completed affidavit downloads straight to your phone. Most single-page affidavits take under three minutes on mobile.
+
+[CTA]Fill your affidavit PDF free|No account. Files stay in your browser. Free, no watermark.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a Medical Release Form Online — Free](/blog/fill-medical-release-form-online)
+- [Fill PDF Forms Online — Free](/blog/fill-pdf-form-online-free)
+- [PDF Form Fields Not Working? Here's the Fix](/blog/pdf-form-fields-not-working-fix)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
