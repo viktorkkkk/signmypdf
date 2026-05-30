@@ -12168,6 +12168,145 @@ Yes. SignMyPDF works in any modern mobile browser — Chrome on Android, Safari 
 - [PDF Form Fields Not Working? Here's the Fix](/blog/pdf-form-fields-not-working-fix)
 `,
   },
+  {
+    slug: 'sign-power-of-attorney-online',
+    title: 'Sign Power of Attorney Online Free',
+    excerpt: 'Need to sign a power of attorney PDF without printing? Upload, sign, and download in minutes. No account, no watermark — files stay in your browser.',
+    date: '2026-05-31',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign power of attorney online', 'power of attorney pdf sign', 'sign poa online free', 'electronic signature legal document', 'sign legal form online free', 'poa electronic signature', 'esign power of attorney'],
+    metaTitle: 'Sign Power of Attorney Online Free',
+    metaDescription: 'Sign a power of attorney PDF online free — no account, no watermarks, no printing. Files stay in your browser. Works on iPhone and Android.',
+    content: `Your parent is in the hospital and the bank won't release funds without a signed power of attorney. The document is a PDF. Your printer is broken, or you're two states away, or it's Sunday and offices are closed.
+
+Signing a power of attorney online is the obvious fix. But most PDF tools either demand a subscription, put a watermark on the finished file, or require an account before you can touch the document. None of that helps when the deadline is in two hours.
+
+Whether you're authorizing someone to manage finances, handle medical decisions, or close a property deal on your behalf — the signing step itself should take minutes. Here's how.
+
+[CTA]Sign your power of attorney PDF — no account needed|Free, no registration, no watermark. Files stay in your browser.|Sign PDF Now — Free
+
+## How to sign a power of attorney PDF online — 5 steps
+
+1. Open signmypdf.io/sign in any browser.
+2. Upload the power of attorney PDF.
+3. Click where the signature is required.
+4. Draw, type, or upload your signature.
+5. Download the signed file instantly.
+
+No account, no email, no paywall at the download step. The signed POA is ready to send the moment you save it.
+
+Powers of attorney often require more than one signature — a principal line, a witness line, or an attorney acknowledgment block. You can place separate signatures on each page in the same session without re-uploading the file. [Adding multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf) covers that flow step by step.
+
+[IMAGE: Power of attorney PDF open in SignMyPDF with a typed signature placed on the principal signature line and a second signature being placed on the witness line]
+
+## Why most PDF signing tools fail in this situation
+
+- **Account required before you can open anything.** Most free PDF signers make you verify an email address before the tool even loads. That's dead time when the document needs to be back within the hour.
+- **Watermarks stamped on the final file.** The signed POA downloads with the tool's logo across it. Banks and attorneys reject watermarked legal documents — you end up starting over.
+- **Paywall triggered after you finish.** You sign the document, preview it, confirm everything looks right — then a subscription prompt blocks the download. You find out it was a demo only after doing all the work.
+- **Desktop-only interfaces.** If you're at the hospital with your phone, a tool that won't work in mobile Safari or Chrome on Android is useless.
+- **File uploaded to an external server.** Powers of attorney contain home addresses, dates of birth, financial information, and legal authorization language. Sending that to an unknown server is a real privacy risk.
+
+## Why SignMyPDF works here
+
+- Free, no registration, no paywall at download. The entire signing flow is accessible without an account.
+- Files processed in browser — your PDF never reaches a server, which matters for a document this sensitive.
+- Works on any device. iPhone, Android, laptop, tablet — same experience in every browser.
+- Multiple signature placements in one session. Principal signature, witness line, additional blocks — all placed in a single upload.
+- Signed file opens cleanly everywhere. No certificate warnings in Adobe, Preview, or any email client. [Why PDF signatures sometimes show "invalid" errors](/blog/pdf-signature-invalid-error-fix) explains the difference between image-based and certificate-based signing.
+
+Other legal documents — divorce papers, non-compete agreements, service contracts — often come with the same time pressure. The workflow is identical for any PDF that needs a signature before a hard deadline.
+
+## FAQ
+
+**Is an electronically signed power of attorney legally valid?**
+In most US states, yes. The federal ESIGN Act and state UETA laws treat electronic signatures as legally equivalent to handwritten ones on most private documents, including POAs. Some states require notarization for durable or healthcare POAs regardless of signature method — confirm the specific requirements for your POA type with the receiving institution before sending.
+
+**Do I still need a notary if I sign electronically?**
+It depends on the state and the type of POA. A general power of attorney often doesn't require notarization. A durable or healthcare POA frequently does — some states also require two witnesses in addition to a notary. If notarization is required, download the signed PDF and take it to a notary in person, or use a remote online notarization service. [Whether digital signatures hold up in court](/blog/digital-signatures-admissible-court) is worth reading if the POA may be contested.
+
+**Can I sign a POA on my phone?**
+Yes. SignMyPDF works in any mobile browser — Safari on iPhone, Chrome on Android — without an app. Upload the PDF, place your signature, and download the signed file. A single-page power of attorney takes under three minutes on mobile.
+
+[CTA]Sign your power of attorney PDF — no account|Free, no registration, no watermark. Files stay in your browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign Divorce Papers Online — Free](/blog/sign-divorce-papers-online)
+- [Electronic Signatures for Real Estate Documents](/blog/electronic-signature-real-estate-legal)
+- [Add Multiple Signatures to One PDF](/blog/add-multiple-signatures-one-pdf)
+`,
+  },
+  {
+    slug: 'hr-pdf-resume-protection',
+    title: 'Why HR Teams Password-Protect Resumes',
+    excerpt: 'HR departments share candidate PDFs constantly. Here\'s why password-protecting those files matters — and how to do it free in under 90 seconds, no account needed.',
+    date: '2026-05-31',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf', 'hr pdf protection', 'protect resume pdf', 'password protect hr documents', 'confidential pdf protection', 'pdf password free online', 'protect candidate data'],
+    metaTitle: 'Why HR Teams Password-Protect Resumes',
+    metaDescription: 'Why HR teams password-protect resume PDFs before sharing — and how to do it free in your browser, no account, no software needed.',
+    content: `You forward a candidate shortlist to three hiring managers. Each file is a PDF with names, contact details, salary expectations, and sometimes a home address. None of the PDFs are password-protected. By the time you check your sent folder, that file is already in six inboxes — and there's nothing stopping it from being forwarded, printed, and left on a desk.
+
+HR teams share candidate and employee data constantly: resumes, offer letters, performance reviews, compensation figures. Most of it goes out as plain, unprotected PDFs. Password-protecting a resume PDF takes about 90 seconds. Most teams skip it because nobody made the habit explicit.
+
+Here's why that matters — and how to fix it without buying software or creating an account.
+
+[CTA]Password-protect your HR PDFs — no account needed|Free, browser-only. No watermarks on the protected file.|Protect PDF Now — Free
+
+## How to password-protect a resume PDF — 4 steps
+
+1. Go to signmypdf.io/protect and upload the PDF.
+2. Enter a password for the document.
+3. Click Protect and wait a few seconds.
+4. Download the encrypted file and send the password separately.
+
+The password should travel separately from the file — a text message, a phone call, or a different email. That way, if the PDF ends up in the wrong inbox, it's unreadable without the key. [Why just emailing a sensitive document isn't enough](/blog/just-email-it-isnt-enough-for-sensitive-documents) covers the broader case for separating file and credential.
+
+Free, no registration, no paywall at download. AES-128 encryption is applied automatically — the same standard used for secure web connections.
+
+[IMAGE: SignMyPDF protect tool with a resume PDF uploaded and a password field being filled in before clicking Protect]
+
+## Why most PDF protection tools create friction in HR workflows
+
+- **Account required just to add a password.** Most online PDF protectors make you create an account before you can touch the document. That's another set of credentials to manage — and a barrier if you want to hand the task off.
+- **Watermark added to the protected file.** The encrypted PDF comes back stamped with the tool's logo. You now have a protected file that also carries someone else's branding — not how you want to present candidate materials to a hiring director.
+- **Low daily limits.** Free tiers capped at two or three files break down during active hiring cycles when you're sharing dozens of PDFs a week.
+- **Candidate data uploaded to an external server.** Resumes contain names, addresses, employment history, and contact details — personal data under GDPR and CCPA. Uploading that to a third-party server creates compliance exposure.
+- **No permission controls.** Some tools let you set a password but don't let you restrict printing or copying. The file is "protected" but can still be copied and redistributed freely.
+
+## Why SignMyPDF works for HR teams
+
+- Free, no registration, no paywall at download. Every protected file downloads immediately without an account.
+- Files processed in browser — candidate and employee data never reaches a server, which matters for privacy compliance.
+- No watermarks on the output. The protected PDF carries only the content you put in.
+- AES-128 encryption with optional permission controls. Block printing, copying, or annotation on sensitive documents.
+- Works on any device. HR coordinators sharing files from their phones get the same result as desktop users.
+
+The same logic applies beyond hiring. Offer letters contain compensation figures. Performance reviews carry personal evaluations. Exit interview records are sensitive by design. [The most common mistake when protecting PDFs](/blog/biggest-mistake-protecting-pdfs) is worth reading before you build the habit — it covers the errors that make encryption meaningless even when you do the technical step correctly.
+
+## FAQ
+
+**What HR documents should be password-protected?**
+Any PDF with personally identifiable information that leaves your HR system: resumes, offer letters, salary bands, performance reviews, severance agreements, and exit records. A practical baseline is to protect any document that combines a person's name with financial, contact, or evaluative data.
+
+**What password should I use for HR PDFs?**
+Use a short phrase you can share via a separate channel — phone call, text, or a different email thread. Never send the password in the same message as the protected file. That defeats the point of encryption entirely. Keep it memorable enough to relay verbally but not predictable from the document contents (avoid using the candidate's name or the role title).
+
+**Does password-protecting a PDF satisfy GDPR or CCPA requirements?**
+It counts as a technical access control, but it's not a complete compliance solution. Both GDPR and CCPA require broader policies: documented data handling, access controls at the system level, and retention limits. Treat PDF encryption as one layer in a larger approach — a reasonable first step, not a substitute for the full compliance program.
+
+[CTA]Protect your HR PDFs in seconds — free|Browser-only. No account. No watermarks on the protected file.|Protect PDF Now — Free
+
+## Related tools
+
+- [Freelancers: Protect Client Contracts Before Sending](/blog/freelancers-protect-client-contracts)
+- [Real Estate Agents: Protecting Property Documents](/blog/real-estate-agents-protect-property-documents)
+- [Medical Practices: HIPAA PDF Sharing](/blog/medical-practices-hipaa-pdf-sharing)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
