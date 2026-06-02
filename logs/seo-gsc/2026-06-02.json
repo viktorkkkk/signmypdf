@@ -1,0 +1,154 @@
+{
+  "date": "2026-06-02",
+  "timestamp": "2026-06-02T07:15:18.460Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-05-31T22:00:59.514Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 1302,
+    "clicks28d": 3,
+    "avgPosition28d": 25.05837173579109,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 5,
+        "clicks": 1,
+        "position": 8.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 546,
+        "clicks": 1,
+        "position": 9.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+        "impressions": 49,
+        "clicks": 1,
+        "position": 62.7
+      },
+      {
+        "url": "https://signmypdf.io/",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 79
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 13
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 62,
+        "clicks": 0,
+        "position": 34.1
+      },
+      {
+        "url": "https://signmypdf.io/blog/ilovepdf-vs-signmypdf",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 49
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 21.5
+      },
+      {
+        "url": "https://signmypdf.io/fill",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 88
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 8
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 17.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 49
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 19,
+        "clicks": 0,
+        "position": 22.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 8,
+        "clicks": 0,
+        "position": 36.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 33,
+        "clicks": 0,
+        "position": 29.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 15.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 17,
+        "clicks": 0,
+        "position": 39.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 9,
+        "clicks": 0,
+        "position": 47.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 6.5
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
