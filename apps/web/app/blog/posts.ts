@@ -12584,6 +12584,166 @@ SignMyPDF processes your PDF entirely in your browser. Your personal information
 - [Fill a Job Application PDF Online](/blog/fill-job-application-pdf-online)
 `,
   },
+  {
+    slug: 'electronic-signature-vs-wet-signature',
+    title: 'E-Signature vs Wet Signature: Which Is Legal?',
+    excerpt: 'E-signatures are legally binding under ESIGN and eIDAS for most everyday contracts. Compare e-signatures vs wet signatures and sign your PDF free — no account, no paywall at download.',
+    date: '2026-06-03',
+    author: 'SignMyPDF Team',
+    readTime: '4 min read',
+    tags: ['e-signature vs wet signature', 'electronic signature legal', 'wet signature', 'is e-signature valid', 'ESIGN act', 'sign PDF online free', 'e-signature legality'],
+    metaTitle: 'E-Signature vs Wet Signature: Which Is Legal?',
+    metaDescription: 'Electronic signatures are legally binding in the US and EU. Compare e-signatures vs wet signatures, understand when each applies, and sign your PDF free.',
+    content: `Your landlord sent the lease. Your accountant needs a signed form back by morning. Somewhere in the process, someone told you that only a "wet signature" — ink on paper — is legally binding. That advice is outdated by about 25 years.
+
+Electronic signatures and wet signatures carry the same legal weight for the vast majority of everyday documents in the US, EU, and most countries worldwide. The confusion between them costs people hours of unnecessary printing, scanning, and running to the office printer.
+
+[CTA]Sign your PDF electronically — no printing required.|Free, no registration, no paywall at download.|Sign PDF Now — Free
+
+## The legal picture: what the laws actually say
+
+In the US, the Electronic Signatures in Global and National Commerce Act (ESIGN, 2000) gave electronic signatures the same legal standing as handwritten signatures for most contracts. The EU's eIDAS regulation covers the same ground for European transactions. Most other countries have enacted equivalent legislation.
+
+The narrow exceptions are genuinely rare: wills, certain adoptions, specific real estate instruments depending on jurisdiction, and court documents that explicitly require ink. Everyday documents — leases, NDAs, employment offers, service contracts, freelance agreements, vendor contracts — are fully covered.
+
+If you want to understand exactly which documents are covered where you live, the breakdown of [electronic signature laws by state](/blog/electronic-signature-laws-by-state) covers the details.
+
+[IMAGE: Side-by-side comparison of a paper signature and an electronic signature on a PDF, showing both are legally equivalent]
+
+## E-signature vs wet signature: a practical comparison
+
+| | **E-signature** | **Wet signature** |
+|---|---|---|
+| Legal status (US) | Equivalent under ESIGN | Traditional standard |
+| Time to complete | Under 2 minutes | 10-20 minutes (print/sign/scan) |
+| Valid on leases | Yes | Yes |
+| Valid on NDAs | Yes | Yes |
+| Valid on freelance contracts | Yes | Yes |
+| Required for wills | Varies by state | Usually yes |
+| Required for court filings | Depends on court | Sometimes required |
+
+## How to sign a PDF without printing
+
+1. Upload your PDF — drag it onto the editor or click to browse.
+2. Draw or type your signature directly in the tool.
+3. Place it on the correct signature field or page.
+4. Review the document before downloading.
+5. Download and send — no printing, no scanning, no delay.
+
+The signed PDF you download is indistinguishable from one signed with pen — same format, same file structure, fully compatible with every PDF reader the other party uses.
+
+## Why most e-signature tools still create friction
+
+- **Account required before anything works.** Many tools make you register just to see the interface. For a one-off document, that's three extra minutes before you even start.
+- **Paywall at the download step.** You build your signature, place it carefully, then discover the tool wants a monthly subscription to hand over the file.
+- **Watermarks on the output.** A promotional stamp across your signed contract is unprofessional and usually unacceptable to the recipient.
+- **Designed for routing, not self-signing.** Some platforms expect you to send the document through their system — not sign your own copy and download it.
+- **File uploads to third-party servers.** Anything sensitive shouldn't be stored on a stranger's server just to get a signature applied.
+
+## Why SignMyPDF handles this differently
+
+- **Free, no registration, no paywall at download.** Sign your document and download it immediately without creating an account.
+- **Files processed entirely in your browser.** Your PDF never leaves your device — no server-side storage, no data exposure.
+- **Draw, type, or upload your signature.** Works with any signature style.
+- **Works on any device.** Phone, tablet, or laptop — open signmypdf.io/sign in any browser.
+- **No watermarks on free downloads.** The signed PDF is clean and professional.
+
+For contracts where the legal standing of your e-signature is particularly important — financial agreements, employment documents, NDAs — it helps to understand [when electronic signatures hold up as evidence](/blog/digital-signatures-admissible-court). For standard business and personal contracts, they do.
+
+## FAQ
+
+**Are there documents where I still need a wet signature?**
+Yes, but the list is narrow. Wills typically require wet signatures, though some states have enacted e-will legislation. Certain court filings, some real estate closings, and any situation where the other party explicitly requires ink all still call for wet signatures. For everything else — leases, employment contracts, service agreements, freelance work — e-signatures are fully valid.
+
+**Does the type of e-signature matter legally?**
+Under ESIGN, a typed name, a drawn signature, and a digitized image of a handwritten signature are all valid electronic signatures when the signer intends them as their signature. The format matters less than the intent. What matters more is that both parties understand they're signing electronically.
+
+**How do I prove an e-signature is mine if there's a dispute?**
+For most everyday transactions, you'll rarely face this question. If you do, the evidence chain is the email trail, timestamps, and any correspondence around the signing. More formal e-signature platforms add audit trails and IP logging — useful for high-stakes contracts where additional documentation helps. For a lease or service agreement, the surrounding email exchange is usually sufficient context.
+
+[CTA]Sign your PDF online in under two minutes — free.|No account, no watermark. Electronic signatures with legal weight.|Sign PDF Now — Free
+
+## Related tools
+
+- [Are Electronic Signatures Admissible in Court?](/blog/digital-signatures-admissible-court)
+- [Electronic Signature Laws by State](/blog/electronic-signature-laws-by-state)
+- [Sign a PDF Without Email Registration](/blog/pdf-signing-no-email-required)
+`,
+  },
+  {
+    slug: 'financial-advisors-protect-client-statements',
+    title: 'Financial Advisors: Protect Client Statements',
+    excerpt: 'Financial advisors should password-protect client statements before emailing. Free, browser-only encryption — files never leave your device, no account required.',
+    date: '2026-06-03',
+    author: 'SignMyPDF Team',
+    readTime: '4 min read',
+    tags: ['protect client PDF', 'financial advisor PDF security', 'password protect financial documents', 'secure client statements', 'client data protection', 'PDF encryption financial', 'NPI safeguard PDF'],
+    metaTitle: 'Financial Advisors: Protect Client Statements',
+    metaDescription: 'Financial advisors: password-protect client statements before emailing. Free, browser-only encryption, no account. Meets basic NPI safeguard expectations.',
+    content: `You just attached a client's quarterly portfolio summary and hit send. The PDF has their account balances, asset allocation, and personal details — sitting as an unprotected email attachment that anyone with access to that inbox could open without a password.
+
+Most financial advisors know they should be protecting client documents. The friction is that applying a password to every PDF takes extra steps, and most tools either cost money or upload the file to a third-party server. So it doesn't happen consistently, and unprotected statements go out as the default.
+
+[CTA]Password protect your client statements in seconds.|Free, no account, browser-only — no file upload to any server.|Protect PDF Now — Free
+
+## Why password protection matters for financial advisors
+
+Client-facing documents — portfolio reviews, account statements, performance reports, fee disclosures — contain nonpublic personal information (NPI). Regulatory frameworks like SEC guidelines and FINRA rules don't prescribe a specific encryption method for email attachments, but they do require reasonable safeguards for client data in transit.
+
+Password-protecting a PDF before emailing it is the simplest and most widely understood way to demonstrate that safeguard. It removes the "file opened on a shared or lost device" failure mode and signals to clients that you handle their information with care.
+
+One more thing: always share the password over the phone or by text — never in the same email as the document.
+
+[IMAGE: A PDF being password protected in a browser before being sent to a client, with a secure password entry screen visible]
+
+## How to protect a client statement PDF
+
+1. Upload the statement — drag it onto SignMyPDF or click to browse your files.
+2. Enter a password — something your client can remember, shared separately by phone.
+3. Set permissions — restrict copying and printing if the document contains proprietary analysis.
+4. Download the protected file immediately.
+5. Email it. Call or text the password.
+
+The process takes under a minute. Do it consistently and it becomes automatic.
+
+## Why most PDF protection tools fail advisors
+
+- **Adobe Acrobat is overkill for one step.** The paid license, the 4 GB desktop install, the update prompts — most advisors already have Acrobat for reading but aren't set up to use it efficiently for password protection.
+- **File uploads to third-party servers.** Several free online tools upload your PDF to a remote server to apply the password. For documents containing NPI, that's a data-handling concern you'd rather avoid.
+- **Account walls and subscriptions.** Tools that require you to log in before protecting a file slow down a process that needs to be frictionless to happen every time.
+- **Watermarks on free-tier output.** A branding stamp across a quarterly performance report undermines the professional relationship you've built with your client.
+- **No permission controls.** Some basic protection tools add only a password — no option to restrict copying or printing, which matters for proprietary projections and research.
+
+## Why SignMyPDF works for this workflow
+
+- **Free, no registration, no paywall at download.** Protect any PDF and download it immediately without an account.
+- **Files processed entirely in your browser.** The client statement never leaves your device. There's no upload to any external server, which matters when you're handling nonpublic financial information.
+- **AES-128 encryption.** The standard supported by the PDF specification's security handler — effectively unbreakable under current computing conditions.
+- **Permission controls included.** Restrict copying and printing in the same step as setting the password.
+- **Under 60 seconds.** Low enough friction that it actually happens on every send, not just when you remember.
+
+For context on how similar principles apply in regulated healthcare environments, see [how medical practices handle HIPAA-compliant PDF sharing](/blog/medical-practices-hipaa-pdf-sharing). The core requirement is the same: browser-side encryption with no third-party server involved. If you want to evaluate whether PDF password protection is genuinely strong enough for your use case, [the honest assessment of password-protected PDF security](/blog/is-password-protected-pdf-actually-secure) gives you the technical picture without overselling.
+
+## FAQ
+
+**Do I need a unique password for each client's statement?**
+Best practice is yes — per-client passwords mean one exposed credential can't open multiple clients' files. In practice, many advisors use a standing per-client password communicated once over the phone and refreshed periodically. The most important rule: the password never travels in the same email as the document.
+
+**Does PDF password protection satisfy SEC or FINRA data-safeguard requirements?**
+Neither regulator mandates a specific encryption method for email attachments. What's required is "reasonable safeguards" for client NPI. Password-protecting a PDF before sending it over email is widely accepted as a baseline reasonable safeguard. For documents with particularly sensitive data — full account numbers, Social Security numbers — a secure client portal may be more appropriate than email regardless of encryption.
+
+**What happens if a client forgets the password?**
+You send a new protected version with a new password, communicated by phone or text. There's no recovery mechanism for a forgotten password on an AES-encrypted PDF — that's intentional, because the same property that locks out a forgetful client also locks out an unauthorized one. Keep a note of per-client passwords in your practice management system.
+
+[CTA]Protect your next client statement before you send it.|Browser-only encryption, no account, no server upload, free.|Protect PDF Now — Free
+
+## Related tools
+
+- [Is Your Password-Protected PDF Actually Secure?](/blog/is-password-protected-pdf-actually-secure)
+- [Medical Practices: HIPAA Considerations for PDF Sharing](/blog/medical-practices-hipaa-pdf-sharing)
+- [Password PDF vs Encrypted Email](/blog/password-pdf-vs-encrypted-email)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
