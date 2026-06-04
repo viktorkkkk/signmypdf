@@ -12889,6 +12889,140 @@ Yes. AES-128 is part of the PDF specification and is supported by every major PD
 - [Password PDF vs Encrypted Email](/blog/password-pdf-vs-encrypted-email)
 `,
   },
+  {
+    slug: 'sign-lease-renewal-online',
+    title: 'Sign a Lease Renewal Without Printing',
+    excerpt: 'Your landlord sent a lease renewal PDF with a 48-hour deadline. No printer, no account needed — sign it online in minutes, free, in your browser.',
+    date: '2026-06-05',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign lease renewal online', 'e-sign lease renewal', 'sign PDF without printing', 'sign lease agreement online', 'electronic signature lease', 'lease renewal PDF', 'digital signature tenant'],
+    metaTitle: 'Sign a Lease Renewal Without Printing',
+    metaDescription: 'Sign a lease renewal PDF online in minutes — no account, no printer, no paywall. Files never leave your browser. Free.',
+    content: `Your landlord emailed a lease renewal PDF with a 48-hour deadline. You don't own a printer. The nearest print shop is twenty minutes away, and every e-sign tool you've tried so far is asking for an account before it lets you download anything.
+
+Signing a lease renewal online takes about five minutes when you use a tool that stays out of the way. SignMyPDF lets you sign a lease renewal PDF in your browser — free, no account, nothing uploaded to a remote server.
+
+[CTA]Sign your lease renewal PDF right now — no account, no printer.|Files stay on your device. Works on any browser.|Sign PDF Now — Free
+
+## How to sign a lease renewal PDF online
+
+1. Go to [SignMyPDF](/sign) and upload your lease renewal.
+2. Draw or type your signature in the signature panel on the right.
+3. Click the spot on the PDF where you want the signature placed.
+4. Confirm the placement, then click Sign PDF.
+5. Download the signed file and email it to your landlord.
+
+No registration. No watermark. No surprises at the last step.
+
+[IMAGE: The SignMyPDF editor open on a lease renewal PDF, with a handwritten signature dragged into position on the signature line near the bottom of the document]
+
+## Why most online signing tools frustrate tenants
+
+- **You can't download without an account.** The most common trap: you create your signature, position it carefully, hit download — and land on a registration page. The file is held until you create an account.
+- **Free tiers run out fast.** Several tools advertise "free" but cap it at one or two documents per month. If you try to sign a lease renewal at the wrong time, you're already at the limit.
+- **Built for businesses, not recipients.** Most e-sign platforms are designed for someone sending a document out for others to sign. If you're the one receiving a PDF and need to sign it yourself, the workflow fights you.
+- **Privacy concerns with server uploads.** A lease PDF typically contains your full name, current address, income information, and employer details. Sending that to a third-party server just to place a signature is a bigger exposure than the task warrants.
+- **Watermarks you didn't ask for.** Some tools add promotional watermarks to your signed PDF without making this obvious until after you've done all the work.
+
+## Why SignMyPDF works for one-off lease signings
+
+- **Free, no registration, no paywall at download.** Upload, sign, download — no email address required, no account, no subscription prompt.
+- **All processing happens in your browser.** Your lease PDF — and everything in it — never leaves your device. Signing runs locally using PDF-lib.
+- **Works on phone or laptop.** Open a browser on whatever's in front of you. No software to install.
+- **Two free signings per day without a watermark.** A lease renewal is usually a once-a-year task, so the free tier is exactly what you need.
+
+A note on legality: electronic signatures on residential lease renewals are legally valid in the US under the ESIGN Act (2000). Most landlords routinely accept them. For the full context on what makes an electronic signature binding on a rental agreement, [electronic signature legality for rental documents](/blog/electronic-signature-legal-rental) covers the specifics. If you want the broader legal framework, [the ESIGN Act explained for everyday signers](/blog/esign-act-explained) is a useful reference.
+
+If the lease also has text fields to fill — a move-in date, unit number, or tenant name — use the [Fill PDF tool](/fill) to complete those first, then open the downloaded file in the Sign tool.
+
+## FAQ
+
+**Is an electronic signature on a lease renewal legally binding?**
+In the US, yes. The ESIGN Act (2000) and UETA (adopted in 47 states) give electronic signatures on residential leases the same legal standing as handwritten ones. A handful of narrow exceptions exist — some eviction notices and certain government-issued tenancy forms — but lease renewals are uniformly covered.
+
+**Will the landlord see which tool I used?**
+No. They'll see a handwritten-style or typed signature on the page — identical in appearance to a scanned wet signature. There's no watermark or metadata indicating the tool used.
+
+**What if the PDF won't let me place a signature?**
+Some lease PDFs are locked to prevent editing. If clicking the page does nothing, the PDF may be read-only or flattened. The [guide to signing a read-only PDF](/blog/sign-pdf-no-editing-allowed) walks through the most reliable workaround for flat or protected files.
+
+[CTA]Sign your lease renewal in minutes — free, browser-only, no account.|Works on phone or laptop. No watermarks, no surprises.|Sign PDF Now — Free
+
+## Related tools
+
+- [How to Sign a Lease Agreement Online](/blog/how-to-sign-lease-agreement-online)
+- [Electronic Signature Legality for Rentals](/blog/electronic-signature-legal-rental)
+- [Sign a PDF Without Registering Anywhere](/blog/sign-pdf-free-without-registration)
+`,
+  },
+  {
+    slug: 'fill-1099-form-online',
+    title: 'Fill Out a 1099 Form Online Free',
+    excerpt: 'Got a blank 1099 PDF to fill out? Type directly on any field in your browser — flat or interactive — free, no account, no software needed.',
+    date: '2026-06-05',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill 1099 form online', 'fill out 1099 PDF', '1099 form online free', '1099-NEC fill PDF', 'tax form PDF filler', 'PDF form filler free', '1099 MISC fill online'],
+    metaTitle: 'Fill Out a 1099 Form Online Free',
+    metaDescription: 'Fill out a blank 1099 PDF online — no account, no software, no server upload. Works on flat and interactive forms. Free.',
+    content: `Your client sent you a blank 1099-NEC as a PDF attachment. You need to fill it out with their payment details and return it before the week is out. You don't have Adobe Acrobat, the IRS PDF has fields that the browser won't respond to, and the last online fill tool you tried wanted a login before it would let you download anything.
+
+Filling out a 1099 form online doesn't need to mean software or a subscription. SignMyPDF lets you fill a 1099 PDF directly in your browser — type over any field, flat or interactive — free, no account needed.
+
+[CTA]Fill your 1099 PDF right now — no account, no software.|Works on 1099-NEC, 1099-MISC, and all other variants. Download immediately.|Fill PDF Form Now — Free
+
+## How to fill a 1099 form online
+
+1. Go to the [Fill PDF tool](/fill) and upload your 1099.
+2. Click any spot on the page to place a text box.
+3. Type the value — payer name, TIN, payment amount, or whatever the field requires.
+4. Drag each text box into the correct position.
+5. Download the completed PDF and send or print it.
+
+No account. No watermark. Nothing uploaded to a remote server.
+
+[IMAGE: SignMyPDF's fill tool open with a 1099-NEC PDF — text boxes positioned over the payer name, recipient TIN, and nonemployee compensation fields]
+
+## Why most PDF tools struggle with 1099 forms
+
+- **Flat-field PDFs break most form fillers.** Many 1099s sent between businesses or contractors are scanned or simplified flat PDFs — no interactive fields. Standard form-fill tools see nothing and offer no way to type anything.
+- **Adobe Acrobat is the default but costs money.** The IRS provides interactive 1099 PDFs, but Acrobat is expensive to license and over-engineered for a one-off fill task.
+- **Account wall before download.** Several popular online fill tools let you type on the form but require registration or a subscription before you can save the completed result.
+- **Privacy risk with TIN data.** 1099 forms contain taxpayer identification numbers, income figures, and payer and payee names. Sending that to a third-party processing server creates unnecessary exposure.
+- **Mobile doesn't work reliably.** Many fill tools are still desktop-only or render poorly on phones, which is a problem when the form lands in your inbox on the go.
+
+## Why SignMyPDF handles 1099 forms reliably
+
+- **Works on flat and interactive PDFs.** The fill tool overlays text boxes directly onto the page. It doesn't depend on the PDF having pre-built form fields — if you can see the box, you can fill it.
+- **Free, no registration, no paywall at download.** Complete the form and download it immediately — no account, no subscription, no surprise gate at the end.
+- **Files processed entirely in your browser.** TINs, payer names, income amounts — all of it stays on your device. There's no server-side processing.
+- **Works on any device.** Phone, tablet, or laptop. Any browser, no install.
+
+Note on 1099 variants: the most common types are 1099-NEC (non-employee compensation — what freelancers and contractors typically receive) and 1099-MISC (miscellaneous income). All variants work the same way with the fill tool — upload, place your text boxes, download. If you also need to handle a W-9 from a contractor before issuing a 1099, [filling out a W-9 online free](/blog/fill-w9-form-online-free) walks through the same process for that form.
+
+For accountants handling tax documents for multiple clients, [the PDF workflow for tax document signatures](/blog/accountants-tax-documents-signature) covers both filling and signature collection across a busy filing season.
+
+## FAQ
+
+**Can I fill a 1099 that was sent as a scanned image?**
+Yes. If the 1099 is a flat or scanned PDF with no interactive fields, you can still overlay text using the fill tool. Position each text box over the printed field on the page. The result looks identical to a form completed with a pen.
+
+**Does the IRS accept electronically filled 1099 PDFs?**
+When filing information returns with the IRS, businesses use the FIRE (Filing Information Returns Electronically) system or a payroll provider — not a filled PDF. The filled PDF is for completing the form to send to a contractor as their copy, or for your own records. Submitting the actual return to the IRS requires a separate e-filing step.
+
+**What if I also need to sign the 1099?**
+Not all 1099 variants require a payer signature, but if yours does, fill it first using the [Fill PDF tool](/fill), then open the downloaded file in the Sign tool to add your signature. Two steps, no extra software.
+
+[CTA]Fill your 1099 PDF now — free, browser-only, no account needed.|1099-NEC, 1099-MISC, 1099-DIV — all work the same way.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill Out a W-9 Online Free](/blog/fill-w9-form-online-free)
+- [Fill Government Forms Online Free](/blog/fill-government-forms-online-free)
+- [Fill IRS Forms Online Free](/blog/fill-irs-form-online-free)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
