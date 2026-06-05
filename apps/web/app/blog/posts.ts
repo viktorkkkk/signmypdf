@@ -13023,6 +13023,172 @@ Not all 1099 variants require a payer signature, but if yours does, fill it firs
 - [Fill IRS Forms Online Free](/blog/fill-irs-form-online-free)
 `,
   },
+  {
+    slug: 'electronic-signature-vs-notarization',
+    title: 'E-Signature vs Notarization: When to Use Which',
+    excerpt: 'Not sure if your document needs a notary or just a signature? Get the plain-English answer — and sign anything that doesn\'t require notarization free, in your browser.',
+    date: '2026-06-06',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['electronic signature vs notarization', 'when to notarize a document', 'e-signature legal requirements', 'notarization vs digital signature', 'sign PDF free', 'electronic signature legal', 'notary public vs e-sign'],
+    metaTitle: 'E-Signature vs Notarization: When to Use Which',
+    metaDescription: 'E-signature or notarization? Know which documents actually need a notary and when a free electronic signature is fully legal.',
+    content: `Your bank emails a loan modification with "sign and return." Your landlord sends a lease renewal via DocuSign. Your attorney says the power of attorney needs notarization. These all sound like "just sign the document" — but they're legally different steps, and using the wrong one can void a contract or delay a closing by days.
+
+Most people run into the notarization vs electronic signature question mid-transaction, when it's too late to change course easily. The distinction is specific, not subtle, and most forms don't explain which one they require until you're already stuck.
+
+[CTA]Sign documents that don't need notarization — free, no account, no paywall.|Files stay on your device. Works on phone or laptop.|Sign PDF Now — Free
+
+## The difference in plain terms
+
+An **electronic signature** is your consent. A typed name, drawn signature, or click-to-sign tells the other party you agree to the document. It's legally binding under the ESIGN Act and UETA for most commercial and personal contracts.
+
+**Notarization** is identity verification. A notary public witnesses you sign, checks your government-issued ID, and stamps the document to certify that you — specifically you — were present and signed it. The notary's seal doesn't validate the content; it validates the signer's identity.
+
+Most documents don't require notarization. Common exceptions: real estate deeds, wills, powers of attorney, affidavits, and certain court filings. If the document doesn't explicitly say "notarized," a plain electronic signature is valid.
+
+[IMAGE: Side-by-side comparison of an e-signed lease agreement on the left and a notarized real estate deed on the right]
+
+## How to tell which one your document needs
+
+1. Read the document header or instruction page carefully.
+2. Look for words like "notarized," "acknowledged before a notary," or "sworn statement."
+3. If neither appears, an electronic signature is legally sufficient.
+4. If notarization is required, use an in-person notary or a remote online notarization (RON) service if your state permits it.
+5. For any remaining unsigned supporting pages, [sign electronically](/sign) and download.
+
+For documents like a [power of attorney](/blog/sign-power-of-attorney-online) that do require notarization, you still need a notary for that specific step. Once it's done, any additional pages in the packet can usually be signed electronically.
+
+## At a glance
+
+| | Electronic Signature | Notarization |
+|---|---|---|
+| Cost | Free | $5–$25 per stamp (varies by state) |
+| Speed | Instant | Appointment required |
+| Identity check | No — consent only | Yes — government ID required |
+| Required for contracts? | Yes | No |
+| Required for real estate deeds? | Varies | Usually yes |
+| Required for wills? | Varies by state | Often yes |
+
+## Why most signing tools are frustrating
+
+- Many tools require an account before you can even view or sign the document.
+- Free tiers cap at one or two signings per month — you hit the limit at the worst moment.
+- Platforms built for senders (like DocuSign) aren't designed for recipients who just need to sign something once and move on.
+- Some tools add watermarks without making this clear until after you've done all the work.
+- The notarization vs e-signature distinction is never explained, so users over-complicate simple one-page signings.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Upload, sign, download — no email, no account, no surprise gate at the end.
+- **Files processed in your browser.** Contracts, loan modifications, lease renewals — your document never leaves your device.
+- **Works on any device.** Phone, tablet, or laptop. No install required.
+- **Two free signings per day without a watermark.** One-off signings are the most common case — the free tier covers them exactly.
+- **No upsell to notarization services.** If your document doesn't need a notary, you shouldn't be pitched one.
+
+[Courts have consistently upheld electronic signatures](/blog/digital-signatures-admissible-court) for contracts, leases, employment agreements, and most everyday documents. The ESIGN Act (2000) gives them equal legal standing to handwritten signatures for any document type that doesn't specifically require notarization. If you're not sure which standard applies in your jurisdiction, [e-signature vs wet signature legality](/blog/electronic-signature-vs-wet-signature) covers the broader framework.
+
+[IMAGE: Screenshot of the SignMyPDF sign tool with a lease document loaded and a signature being placed on the signature line]
+
+## FAQ
+
+**Which documents almost always require notarization?**
+Real estate deeds, most powers of attorney, wills (in many states), affidavits, and certain court-filed documents. Everything else — standard contracts, leases, employment agreements, NDAs, service agreements — typically needs an electronic signature under ESIGN and UETA, not a notary.
+
+**Can I get something notarized remotely?**
+Yes. Remote online notarization (RON) is legal in most US states and lets a notary verify your identity via video call before applying a digital notary seal. RON platforms are separate from e-signing tools — you'd use a dedicated RON provider for any document that requires a notary stamp.
+
+**What if I'm unsure whether a document needs notarization?**
+Check the document itself — it almost always says. A quick search for "[document type] notarization requirement [your state]" will surface the relevant statute. When in doubt, ask the issuing party: your bank, attorney, landlord, or the government agency that issued the form.
+
+[CTA]If your document doesn't say "notarized," you're done in two minutes.|Free, browser-only, no account.|Sign PDF Now — Free
+
+## Related tools
+
+- [Are Electronic Signatures Admissible in Court?](/blog/digital-signatures-admissible-court)
+- [E-Signature vs Wet Signature: Which Is Legal?](/blog/electronic-signature-vs-wet-signature)
+- [Sign a Power of Attorney Online Free](/blog/sign-power-of-attorney-online)
+`,
+  },
+  {
+    slug: 'owner-password-vs-user-password',
+    title: 'Owner vs User PDF Password: What\'s the Difference?',
+    excerpt: 'PDFs have two password types that do different things. Set the wrong one and you\'re either blocking the wrong people or leaving your content open to copying.',
+    date: '2026-06-06',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['owner password PDF', 'user password PDF', 'PDF password types', 'password protect PDF', 'PDF encryption', 'PDF permissions password', 'open password PDF'],
+    metaTitle: 'Owner vs User PDF Password: What\'s the Difference?',
+    metaDescription: 'PDF has two password types: user passwords lock opening, owner passwords restrict copying and editing. Know which to set before you send.',
+    content: `You set a password on a PDF before emailing it to a client. They call you three days later asking why they could copy the entire text into a Word doc and forward it. You set the wrong password type.
+
+PDFs support two different passwords that do completely different things. The owner password and user password are for opposite problems — and most tools don't explain either. Setting the wrong one leaves a gap you won't notice until something goes wrong.
+
+[CTA]Protect your PDF with the right password before your next send — free, browser-only.|No account. Files never leave your device.|Protect PDF Now — Free
+
+## The two types explained
+
+An **owner password** (also called a permissions password) controls what a recipient can do with the file once it's open. Copy text, print, fill form fields, edit content, extract pages — each of these can be restricted. Setting only an owner password means anyone can open the PDF, but locked actions are blocked. It protects your content, not your access gate.
+
+A **user password** (also called an open password) gates access entirely. No password, no view. The recipient must enter the correct string before the PDF opens at all. It controls who sees the document — but once they're in, they can do anything the file allows unless you've also set an owner password.
+
+You can set both simultaneously: a user password to control who opens the file, and an owner password to restrict what they do inside.
+
+[IMAGE: Two lock icons side by side — one labeled "Open Password" blocking the file view, and one labeled "Permissions Password" restricting copy and print actions inside the file]
+
+## Which one do you need?
+
+1. Ask: should anyone other than the intended recipient be blocked from opening this?
+2. If yes — set a user (open) password.
+3. Ask: can they open it, but should they be unable to copy, print, or edit the content?
+4. If yes — set an owner (permissions) password.
+5. For maximum protection — set both.
+
+Real examples:
+- **Tax return sent to your accountant** — user password. Only they should open it.
+- **Client proposal you don't want forwarded as an editable draft** — owner password.
+- **Signed contract sent to a counterparty** — both. Sensitive content, and you don't want the text extracted or the file modified.
+
+## Why most tools are frustrating
+
+- Many free tools only support an open password — no permissions panel at all.
+- Naming is inconsistent everywhere: "owner password," "permissions password," "security password," "master password" — four names for the same thing.
+- Some tools apply [AES-128 when AES-256 is the stronger standard](/blog/aes-128-vs-aes-256-pdf) and don't disclose which they used.
+- Permissions controls are buried in an "Advanced security" panel most users never find.
+- Once you've sent the file with the wrong protection, you have to re-protect and re-send — there's no remote fix.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Set a password and download the protected file immediately — no account required.
+- **AES-256 encryption on every file.** The same standard used in enterprise document platforms, not a weaker legacy variant.
+- **Files processed in your browser.** Your PDF — and everything sensitive in it — never leaves your device, even while the password is being applied.
+- **One screen, no buried settings.** You don't need to hunt through an "Advanced" panel to apply protection.
+- **Works on any device.** Protect a file on your phone before emailing it directly.
+
+For what password protection actually guarantees — and what it doesn't — [is a password-protected PDF actually secure](/blog/is-password-protected-pdf-actually-secure) covers the honest answer.
+
+[IMAGE: Screenshot of the SignMyPDF protect tool showing a clean single-screen layout with a password field and protect button]
+
+## FAQ
+
+**Can I set both passwords on the same PDF?**
+Yes. Both password types can be applied to the same file simultaneously. The user password prevents opening; the owner password restricts what recipients can do once the file is open. Most desktop PDF tools that expose both controls (Adobe Acrobat Pro, Preview on Mac) let you set them in one step.
+
+**What if I forget the owner password?**
+You can still open and read the file if no user password is set, or if you know the user password. The permissions restrictions remain enforced, but access to view isn't blocked. To remove or change restrictions, you need the owner password or a tool that handles [removing a password from a PDF you own](/blog/password-protect-pdf-without-adobe).
+
+**Does the recipient need special software to open a password-protected PDF?**
+No. Any standard PDF reader — Adobe Acrobat Reader, Preview on Mac, Chrome's built-in viewer, or any mobile PDF app — prompts for the password automatically. No plugins, no special setup required.
+
+[CTA]Protect your PDF in under a minute — free, no account needed.|AES-256 encryption. Files stay in your browser.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password-Protect a PDF Without Adobe](/blog/password-protect-pdf-without-adobe)
+- [Is a Password-Protected PDF Actually Secure?](/blog/is-password-protected-pdf-actually-secure)
+- [AES-128 vs AES-256: Which Protects Your PDF?](/blog/aes-128-vs-aes-256-pdf)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
