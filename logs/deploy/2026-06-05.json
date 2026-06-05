@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-05",
+  "timestamp": "2026-06-05T02:17:43Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "0f4585c787a228ff02bac8ca79025ee95e8ac119",
+  "newSlugs": "",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/26991332696"
+}
