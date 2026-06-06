@@ -13189,6 +13189,152 @@ No. Any standard PDF reader — Adobe Acrobat Reader, Preview on Mac, Chrome's b
 - [AES-128 vs AES-256: Which Protects Your PDF?](/blog/aes-128-vs-aes-256-pdf)
 `,
   },
+  {
+    slug: 'fill-pdf-on-chromebook-free',
+    title: 'Fill a PDF on Chromebook — No App Needed',
+    excerpt: 'Got a form to fill on your Chromebook? No Adobe, no app install — here\'s how to fill any PDF in Chrome in under two minutes.',
+    date: '2026-06-07',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill pdf chromebook', 'chromebook pdf form', 'fill pdf online free', 'chromebook pdf editor', 'fill pdf browser', 'pdf form chromebook', 'fill pdf without adobe'],
+    metaTitle: 'Fill a PDF on Chromebook — No App Needed',
+    metaDescription: 'Fill a PDF on your Chromebook without installing anything. Free, no signup, works in Chrome — your form data never leaves your device.',
+    content: `You need to fill a PDF on Chromebook — a job application, a school enrollment form, or a W-9 from a new client who needs it back by Friday. Chrome opens the PDF in its built-in viewer, but the viewer is read-only: you can see every field and can't type in any of them. When you try to fill a PDF on Chromebook through Google Docs, it converts the layout into a scrambled document you can't submit. The Android PDF apps in the Play Store were built for 6-inch phone screens — they behave oddly on a 13-inch display, and keyboard entry sometimes misfires. You can't fill a PDF on Chromebook without a tool that actually works in Chrome.
+
+Here's one that does.
+
+[CTA]Fill any PDF form on your Chromebook — free, no account, no install.|Your answers are processed in Chrome and never sent to a server.|Fill PDF Form Now — Free
+
+## How to fill a PDF on Chromebook (no app, no install)
+
+1. Open signmypdf.io/fill in Chrome on your Chromebook.
+2. Upload the PDF — drag it from Files, or click to browse.
+3. Click any area on the page and type your answer.
+4. Reposition or resize the text box to align with the printed field.
+5. Download the completed PDF directly to your Chromebook.
+
+Nothing installs. No Chrome extension, no Play Store app, no account. Upload, fill, download — all inside one browser tab. The [PDF fill tool](/fill) works on any Chromebook, including older and lower-spec models.
+
+[IMAGE: Screenshot of the SignMyPDF fill tool open in Chrome on a Chromebook, with a school enrollment form loaded and text fields placed over the printed lines]
+
+## How it works with common Chromebook workflows
+
+If the form arrived in Gmail, download the PDF attachment to your Downloads folder and drag it to the SignMyPDF upload area. If it's in Google Drive, download it first and upload it the same way. If you're on a managed school or work Chromebook — where IT blocks Play Store installs — SignMyPDF still works because it runs in a browser tab like any website. No special permissions are needed.
+
+For rental applications and lease forms, you can [fill a rental application PDF](/blog/fill-rental-application-pdf-free) and then add a signature to the same document without switching tools. If you fill forms regularly on mobile devices too, the same workflow applies — [filling PDFs on an Android phone](/blog/fill-pdf-on-android-free) works identically in Chrome.
+
+Once you download the filled PDF, it's a standard PDF file. You can email it, print it, or upload it to any portal that accepts PDF submissions. You don't need to re-open SignMyPDF to share the file.
+
+## Why most fill-PDF tools don't work on Chromebook
+
+- Most PDF editors are desktop software that ChromeOS can't run — Adobe Acrobat's full version is Windows and Mac only.
+- Android PDF apps resize incorrectly on Chromebook displays and don't always register keyboard input.
+- Google Docs converts PDF layout into an editable document, breaking the formatting of structured forms.
+- Several popular online tools add watermarks on free downloads.
+- Some tools require a paid plan before they unlock the download button.
+
+## Why SignMyPDF is different
+
+- **Runs in Chrome on any Chromebook** — no extension, no Play Store dependency, no install of any kind.
+- **Free, no registration, no paywall at download.** Fill the form and download it — nothing else required.
+- **Files processed in your browser.** The PDF and your answers never leave your device.
+- **Works on managed Chromebooks.** No elevated permissions; runs in any standard browser tab.
+- **Place text anywhere on the page.** You're not locked into the form's original field layout.
+
+## FAQ
+
+**Will this work on a school Chromebook with restricted settings?**
+Yes. SignMyPDF runs in Chrome like a standard website — it doesn't install anything, doesn't use a browser extension, and doesn't request device permissions beyond a single file upload. If the Chromebook can browse the web, it can use SignMyPDF. School IT policies that block Play Store installs don't affect browser-based tools.
+
+**What if the PDF has official form fields I'm supposed to click on?**
+SignMyPDF lets you place text boxes anywhere on the page. You position them over the printed field areas and type. It works the same way whether the original PDF had interactive fields or not — the output is a standard PDF with your text embedded. Most government and business forms work perfectly this way, even when the original was designed as an interactive file.
+
+**Can I fill a PDF and add a signature in the same session?**
+Yes. After placing your text fields, you can add a drawn or typed signature to the same document. Both steps happen before you download, so you don't need to upload the file a second time.
+
+[CTA]Fill any form, download it immediately — no account needed.|Works in Chrome on any Chromebook, including managed devices.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a PDF on Android — Free](/blog/fill-pdf-on-android-free)
+- [Fill a PDF on iPhone Without an App](/blog/fill-pdf-on-iphone-no-app)
+- [Sign a PDF on Chromebook for Free](/blog/sign-pdf-on-chromebook-free)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-on-android',
+    title: 'Password Protect a PDF on Android — Free',
+    excerpt: 'Need to password protect a PDF on Android? No app install, no watermark — here\'s how to do it in Chrome in under two minutes.',
+    date: '2026-06-07',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf android', 'android pdf password', 'encrypt pdf android', 'protect pdf on android', 'pdf password android free', 'android pdf encryption', 'password protect pdf free'],
+    metaTitle: 'Password Protect a PDF on Android — Free',
+    metaDescription: 'Password protect a PDF on Android without installing an app. Free, no signup, AES-256 encryption — your file never leaves your browser.',
+    content: `Trying to password protect a PDF on Android? It's harder than it should be. The standard Android file manager can view and share PDFs but adds no encryption. Adobe Acrobat on Android locks password protection behind a paid subscription. The "PDF locker" apps in the Play Store tend to request access to your entire device storage, show full-screen ads, or upload your file to a server you've never heard of. If you want to password protect a PDF on Android without installing an app — and without those tradeoffs — there's a browser-based path that works on any Android device in Chrome.
+
+[CTA]Password protect any PDF on your Android phone — free, no app, no account.|AES-256 encryption happens in Chrome. Your file never leaves your device.|Protect PDF Now — Free
+
+## How to password protect a PDF on Android
+
+1. Open signmypdf.io/protect in Chrome on your Android device.
+2. Upload your PDF from device storage or a cloud app.
+3. Type a strong password into the password field.
+4. Tap "Protect PDF."
+5. Download the encrypted file directly to your phone.
+
+The protected PDF is ready to email or share. The entire process ran in your browser — nothing was uploaded to a remote server.
+
+[IMAGE: Screenshot of the SignMyPDF protect tool open in Chrome on an Android phone, with a PDF loaded and a password field ready to fill]
+
+## Why PDF password protection is harder on Android than it should be
+
+Google Drive lets you restrict sharing via link permissions, but that protects access to the link — not the file itself. If a recipient downloads the file and forwards it, or if it's shared through a different channel, the PDF opens without any password.
+
+Adobe Acrobat Reader is free on Android for viewing, but adding a password requires a paid Acrobat plan. For a one-time document protection task, that's not a practical option.
+
+The Play Store does have "PDF encryption" apps. Most of them ask for broad storage permissions, display ads, or add a watermark to free output. Some upload your PDF to their servers during the encryption process — for a contract, a tax document, or any file containing personal information, that's a significant privacy concern.
+
+This matters most when handling sensitive documents you'd otherwise send over email unprotected. For a deeper look at the desktop equivalent, [protecting a PDF without Adobe](/blog/password-protect-pdf-without-adobe) covers the same browser-based approach on Windows and Mac.
+
+For context on what password protection actually guarantees — and what it doesn't — [is a password-protected PDF actually secure](/blog/is-password-protected-pdf-actually-secure) is a useful read before choosing any tool.
+
+## Why most tools are frustrating
+
+- Adobe Acrobat on Android requires a paid subscription for password protection.
+- Play Store PDF locker apps ask for excessive device permissions.
+- Many free apps add visible watermarks before or after encryption.
+- Cloud-based tools upload your file to their servers — a privacy risk for sensitive documents.
+- Some tools have document caps; the free tier runs out before you protect the files that matter.
+
+## Why SignMyPDF is different
+
+- **No app to install.** Password protect a PDF on Android using Chrome — nothing to download or update.
+- **Free, no registration, no paywall at download.** Protect the file and download it immediately.
+- **Files processed in your browser.** AES-256 encryption runs locally; the PDF never leaves your device.
+- **Works on Samsung, Pixel, OnePlus, and any other Android phone or tablet.**
+- **The protected file works everywhere.** Any PDF reader on Android, iOS, Windows, or Mac will prompt for the password automatically.
+
+## FAQ
+
+**Does the person receiving the PDF need any special software to open it?**
+No. Any standard PDF reader handles password-protected PDFs natively — Adobe Acrobat Reader, Chrome's built-in viewer, Samsung's PDF viewer, or any third-party Android PDF app. The recipient just gets prompted for the password when they try to open the file. You don't need to tell them anything about how the password was added.
+
+**Can I remove the password later if I need to share it more widely?**
+Yes, as long as you still have the original password. Open SignMyPDF, upload the protected PDF, enter the password to unlock it, and save the version without encryption. The full process is covered in [how to remove a password from a PDF you own](/blog/remove-password-from-pdf-you-own).
+
+**What encryption standard does this use?**
+AES-256 — the same standard used by Adobe Acrobat Pro and enterprise document management platforms. The encryption level is the same whether you run the tool on an Android phone, an iPhone, a Windows PC, or a Mac.
+
+[CTA]Protect any PDF from your Android phone right now — under a minute.|Free, no account, AES-256 encryption. Files stay in your browser.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect a PDF on iPhone](/blog/password-protect-pdf-on-iphone)
+- [Is a Password-Protected PDF Actually Secure?](/blog/is-password-protected-pdf-actually-secure)
+- [How to Remove a Password from a PDF You Own](/blog/remove-password-from-pdf-you-own)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
