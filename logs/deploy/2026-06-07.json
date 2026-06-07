@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-07",
+  "timestamp": "2026-06-07T02:12:55Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "19af6dab26a83fc11798f88c06d379ef25d56d65",
+  "newSlugs": "sign-release-of-liability-online fill-direct-deposit-form-pdf",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/27080063658"
+}
