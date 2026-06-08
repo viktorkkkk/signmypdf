@@ -13477,6 +13477,146 @@ The tool handles text fields; embedding a check image isn't supported. In practi
 - [Fill an Insurance Claim Form PDF Online](/blog/fill-insurance-claim-form-pdf)
 `,
   },
+  {
+    slug: 'sign-invoice-online-free',
+    title: 'Sign Your Invoice PDF Online — Free',
+    excerpt: 'Finished the project and need to sign the invoice before sending? No printer, no account — draw or type your signature and download the signed PDF in under two minutes.',
+    date: '2026-06-09',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign invoice online', 'sign invoice pdf', 'sign invoice free', 'freelance invoice signature', 'sign pdf invoice online', 'electronic signature invoice', 'sign invoice without printing'],
+    metaTitle: 'Sign Your Invoice PDF Online — Free',
+    metaDescription: 'Sign an invoice PDF online in under two minutes — free, no account, no printer. Draw or type your signature and download instantly.',
+    content: `You finished the work. The project is done, the client is happy, and all that is left is sending the invoice. You open the PDF, find there is no signature field, and your PDF reader shows it as read-only. You could print it, sign it by hand, scan it, and email the scan — but that takes fifteen minutes and assumes a printer is nearby. Sign your invoice online instead: upload the PDF, draw or type your name, place the signature, and download the signed copy. The whole thing takes under two minutes. Free, no account, no software. Most freelancers who discover how to sign invoices online for the first time stop printing entirely.
+
+[CTA]Sign your invoice PDF right now — free, no account.|Under two minutes. Your file stays in your browser, never uploaded to a server.|Sign PDF Now — Free
+
+## How to sign your invoice PDF online
+
+1. Open signmypdf.io/sign and upload your invoice.
+2. Click "Create signature" — draw, type, or upload an image.
+3. Click where on the invoice your signature belongs.
+4. Drag or nudge it until the placement looks right.
+5. Click "Sign & Download" to get the signed PDF instantly.
+
+No email confirmation required. The signed file downloads directly to your device in one click.
+
+[IMAGE: Screenshot of a freelance invoice open in SignMyPDF with a drawn signature placed near the sender name at the bottom of the page]
+
+## Why it matters whether your invoice is signed
+
+Most clients will not reject an unsigned invoice — but many will ask for one once the relationship scales up. Procurement teams, accounts-payable departments, and larger businesses often flag unsigned invoices for manual review before processing payment. A visible signature at the bottom signals the document is final and came from you specifically, which matters when you are submitting invoices to clients you have not worked with before.
+
+If you are also handling [service agreements](/blog/sign-service-agreement-online) alongside your invoices, the same tool covers those too — same upload, same flow. For freelancers who regularly sign a higher volume of client documents, including [contractor agreements](/blog/sign-contractor-agreement-online), saving your signature after the first use means you will not need to redraw it on every session.
+
+Larger clients sometimes require a signed invoice as part of their vendor compliance process. Getting ahead of that request rather than scrambling to find a printer when payment is due is worth the two minutes the first time you do it.
+
+## Why most tools are frustrating
+
+- Desktop PDF readers open invoices read-only with no drawing layer.
+- Converting the invoice to Word breaks column spacing and formatting.
+- Online editors add a watermark to free downloads.
+- Signature request tools like DocuSign send your client an email they did not ask for.
+- Uploading an invoice with client pricing details to a third-party server is an avoidable privacy risk.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Sign the invoice and download it — no account, no subscription required.
+- **Files processed in your browser.** Your invoice and signature never leave your device — nothing is uploaded to a server.
+- **Works on any device.** Mac, Windows, iPhone, Android — any browser handles it.
+- **Three signature styles.** Draw with a mouse, type your name in cursive, or upload a photo of your handwritten signature.
+- **Instant download.** One click after signing — no queue, no email loop.
+
+## FAQ
+
+**Is a signed invoice legally binding?**
+In most jurisdictions, yes. The ESIGN Act in the US establishes that electronic signatures on commercial documents carry the same legal weight as handwritten ones. Most clients accept a visibly signed PDF the same as a paper invoice. If a specific client requires a certified digital signature or a particular platform, confirm that separately before signing.
+
+**What if my invoice does not have a designated signature area?**
+You can place a signature anywhere on the page — the tool does not require pre-built form fields. Most freelancers add it near their business name at the bottom of the last page, or next to the total amount.
+
+**Can I save my signature for future invoices?**
+Yes. Once you have created and saved a signature, it is available for future sessions. The next time you sign an invoice or another document, your saved signature is ready without redrawing.
+
+[CTA]Sign your invoice PDF in under two minutes — free, no account.|Signature stays in your browser. Immediate download.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a Service Agreement Online](/blog/sign-service-agreement-online)
+- [Sign a Contractor Agreement Online](/blog/sign-contractor-agreement-online)
+- [Electronic Signature for Business Contracts](/blog/electronic-signature-business-contracts)
+`,
+  },
+  {
+    slug: 'password-protect-pdf-on-chromebook',
+    title: 'How to Password Protect a PDF on Chromebook',
+    excerpt: 'No Adobe Acrobat on ChromeOS? Password protect any PDF on your Chromebook in under two minutes — directly in Chrome, no app required, AES-256 encryption.',
+    date: '2026-06-09',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect pdf chromebook', 'chromebook pdf password', 'protect pdf on chromebook', 'chromeos pdf encryption', 'pdf password chromebook free', 'encrypt pdf chromebook', 'password protect pdf chrome browser'],
+    metaTitle: 'How to Password Protect a PDF on Chromebook',
+    metaDescription: 'Password protect a PDF on Chromebook using Chrome — no app, no Adobe. Free, no signup, AES-256 encryption. File stays in your browser.',
+    content: `Trying to password protect a PDF on Chromebook? Adobe Acrobat does not run on ChromeOS, and most PDF locker apps in the Google Play Store either add watermarks or upload your file to a remote server before encrypting it. The browser-based alternative works without any of that: signmypdf.io/protect runs entirely in Chrome, uses AES-256 encryption, and never sends your file anywhere. You can password protect a PDF on Chromebook in under two minutes, right from the files you already have open — no app, no account.
+
+[CTA]Password protect any PDF on your Chromebook right now — free, no account.|AES-256 encryption in Chrome. Your file never leaves your device.|Protect PDF Now — Free
+
+## How to password protect a PDF on Chromebook
+
+1. Open signmypdf.io/protect in Chrome on your Chromebook.
+2. Upload your PDF from the Files app or Google Drive.
+3. Type a strong password in the password field.
+4. Confirm the password and optionally restrict printing or copying.
+5. Click "Protect PDF" and download the encrypted file.
+
+The protected PDF saves directly to your Downloads folder. Any standard PDF reader on Windows, Mac, Android, or iPhone will prompt for the password when someone tries to open it.
+
+[IMAGE: Screenshot of signmypdf.io/protect open in Chrome on a Chromebook, with a PDF loaded and a password entered in the field]
+
+## Why Chromebook users run into this problem
+
+ChromeOS is designed around the web, which means the desktop software most people use for PDF encryption is not available. Adobe Acrobat Pro handles encryption reliably on Windows and Mac but has no ChromeOS version. Adobe Acrobat Reader on Android can open and view PDFs, but password protection requires a paid Acrobat subscription even through the Android app on a Chromebook.
+
+Some Chromebook users try the "Restricted" sharing option in Google Drive. That limits who can access the Drive link — but it does not add a password to the PDF file itself. If the recipient downloads the file, they can open it without any restriction. If you are [sending a confidential contract or sensitive document](/blog/sent-confidential-contract-unprotected), a sharing permission is not the same as encryption.
+
+The practical difference between these approaches is worth understanding before you choose one. [Password protecting a PDF versus encrypting email](/blog/password-pdf-vs-encrypted-email) breaks down what each method actually protects — and when one is genuinely better than the other.
+
+## Why most tools are frustrating
+
+- Adobe Acrobat does not run on ChromeOS for encryption purposes.
+- Google Drive sharing restrictions do not encrypt the file itself.
+- Play Store PDF locker apps often watermark the output or upload your file to a server.
+- Some browser-based tools charge before you can download the protected PDF.
+- Others require account creation before unlocking any feature.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Protect and download the PDF — no subscription, no account.
+- **Files processed in your browser.** Your PDF never leaves your Chromebook — no server upload, no third-party storage.
+- **AES-256 encryption.** The same standard used by Adobe Acrobat Pro and enterprise document platforms.
+- **Works natively in Chrome.** No Android app required, no Linux environment, no extensions — just the browser.
+- **Permission controls included.** Restrict printing, copying, or editing alongside the open password in the same step.
+
+## FAQ
+
+**Can I open the protected PDF on another device?**
+Yes. Any standard PDF reader on Windows, Mac, iPhone, or Android will prompt for the password when the file is opened. The encryption is cross-platform and compatible with all major PDF readers.
+
+**Does this work with PDFs already stored in Google Drive?**
+Yes. Download the file from Drive to your Chromebook first, then upload it to signmypdf.io/protect. After protecting it, you can re-upload the encrypted version to Drive. The encryption is applied to the file itself, not the sharing settings.
+
+**What if I forget the password?**
+There is no recovery option — the encryption is designed so only the correct password unlocks it. Save the password in a password manager or a secure note before sending the file. Once the password is lost, the protected PDF cannot be opened.
+
+[CTA]Password protect any PDF on your Chromebook right now — free, no account.|Immediate download. AES-256 encryption. File stays in Chrome.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password Protect a PDF on iPhone](/blog/password-protect-pdf-on-iphone)
+- [Password Protect a PDF Without Adobe](/blog/password-protect-pdf-without-adobe)
+- [Password Protect a PDF on Android — Free](/blog/password-protect-pdf-on-android)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
