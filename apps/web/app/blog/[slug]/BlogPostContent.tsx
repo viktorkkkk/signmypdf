@@ -113,6 +113,8 @@ const PROTECT_SLUGS = new Set([
   // Listicles
   '7-document-types-always-password-protect',
   'password-strength-checklist-pdfs-2026',
+  // New — slugs that don't match the heuristic patterns above
+  'protect-business-proposal-pdf',
 ]);
 
 export function getArticleTool(slug: string): ArticleTool {
