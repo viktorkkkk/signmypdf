@@ -1,0 +1,154 @@
+{
+  "date": "2026-06-10",
+  "timestamp": "2026-06-10T06:57:01.239Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-06-08T14:46:36.528Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 1874,
+    "clicks28d": 5,
+    "avgPosition28d": 27.121664887940234,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+        "impressions": 2,
+        "clicks": 1,
+        "position": 20
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 6,
+        "clicks": 1,
+        "position": 8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 406,
+        "clicks": 1,
+        "position": 10
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 38,
+        "clicks": 1,
+        "position": 10.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 671,
+        "clicks": 1,
+        "position": 21.5
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 13
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 45,
+        "clicks": 0,
+        "position": 36.4
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 25.3
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 8
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 14.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 48.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 38,
+        "clicks": 0,
+        "position": 24.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 16,
+        "clicks": 0,
+        "position": 31.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 38,
+        "clicks": 0,
+        "position": 28.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 14,
+        "clicks": 0,
+        "position": 14.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 114,
+        "clicks": 0,
+        "position": 63.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/esign-act-explained",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 10
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 5
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
