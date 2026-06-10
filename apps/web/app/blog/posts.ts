@@ -13759,6 +13759,150 @@ Yes. Any standard PDF reader on Windows, Mac, iPhone, or Android will prompt for
 - [I Sent a Confidential Contract Unprotected](/blog/sent-confidential-contract-unprotected)
 `,
   },
+  {
+    slug: 'sign-promissory-note-online',
+    title: 'Sign a Promissory Note Online Fast',
+    excerpt: 'Need to sign a promissory note today? Here\'s how to do it in your browser — no account, no printer, and no watermarks on the download.',
+    date: '2026-06-11',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign promissory note online', 'promissory note pdf', 'sign loan document online free', 'electronic signature loan', 'sign pdf free no account', 'digital signature pdf', 'e-sign promissory note'],
+    metaTitle: 'Sign a Promissory Note Online Fast',
+    metaDescription: 'Sign a promissory note PDF online — free, no account, no watermark. Upload, sign, and download in under two minutes. Files stay in your browser.',
+    content: `Your lender just emailed a promissory note PDF. The repayment schedule is set, the terms are agreed, and now they need your signature before funds move. You're at your desk with no printer, no scanner, and no Adobe Acrobat subscription. You've already clicked through two "sign promissory note online" results and both wanted a credit card before you could touch the file. There's a better way — and it takes under two minutes.
+
+[CTA]Sign your promissory note right now — free, no account.|Draw, type, or upload your signature. Files never leave your browser.|Sign PDF Now — Free
+
+## How to sign a promissory note online
+
+1. Go to signmypdf.io/sign and upload your promissory note PDF.
+2. Click the spot on the page where your signature belongs.
+3. Draw with your finger or mouse, type your name in a script font, or upload a signature image.
+4. Drag and resize the signature to sit neatly over the signature line.
+5. Download the signed PDF — no watermark, no account, no waiting.
+
+Most people finish in under two minutes. The downloaded file looks exactly like the original, with your signature placed cleanly on the page.
+
+[IMAGE: SignMyPDF editor with a promissory note PDF open and the signature placement panel visible over the borrower signature line]
+
+## Why most tools make this harder than it should be
+
+Signing one page shouldn't require a subscription. But most tools put obstacles in the way.
+
+- They require account creation before you can see — let alone sign — the document.
+- Free tiers stamp a visible watermark on the output so your lender gets a PDF that reads "TRIAL VERSION."
+- The actual download is locked behind a paid plan after you've already invested time in the process.
+- Enterprise workflows built for multi-party legal contracts are overkill for a single loan document.
+- Some platforms time out mid-session and lose the uploaded file entirely.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Sign and download without entering an email address or credit card.
+- **Files processed in your browser.** Your promissory note — with loan amounts, personal identifiers, and account information — is never uploaded to any server. Everything runs on your device.
+- **Three signature styles.** Draw a freehand signature, type your name in script, or upload an image of your signature — whichever your lender accepts.
+- **Works on any device.** Laptop, tablet, or phone. No app installation required.
+- **No watermarks.** The signed PDF looks exactly like the original.
+
+If the promissory note has more than one signature line — borrower, co-signer, witness — you can place all of them in a single session. See [how to add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf) for the exact steps.
+
+Before you sign, it's worth knowing your legal ground. In the U.S., the ESIGN Act makes electronic signatures on promissory notes equivalent to handwritten ones for most loan types. The rules get more specific for real-estate-secured mortgages — see [electronic signature laws by state](/blog/electronic-signature-laws-by-state) for a full breakdown.
+
+## FAQ
+
+**Is an electronically signed promissory note legally binding?**
+
+Yes, for most purposes. The federal ESIGN Act (2000) and the Uniform Electronic Transactions Act give e-signatures on promissory notes the same legal standing as wet ink. The main exception is federally regulated mortgage notes, which carry separate requirements. Check with your lender if your note is secured by real property.
+
+**Can both the borrower and lender sign the same PDF?**
+
+Yes. After you sign and download, forward the PDF to the lender or co-signer. They open it in SignMyPDF, add their signature on the next line, and download the completed copy. No shared account or platform needed — it's just a PDF file.
+
+**Does SignMyPDF store my promissory note?**
+
+No. Everything runs in your browser. The file is never sent to any server, and when you close the tab, nothing is retained. That matters when the document includes loan amounts, account numbers, and personal details.
+
+[CTA]Sign your promissory note right now — free, no watermark, no account.|Works on any device. Your file stays in your browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf)
+- [Electronic signature laws by state](/blog/electronic-signature-laws-by-state)
+- [Sign a contractor agreement online](/blog/sign-contractor-agreement-online)
+`,
+  },
+  {
+    slug: 'fill-lease-renewal-pdf-free',
+    title: 'Fill Out a Lease Renewal Form Free',
+    excerpt: 'Your landlord just sent a lease renewal PDF with blank fields to complete. Here\'s how to fill it out and sign it without printing — free, no account needed.',
+    date: '2026-06-11',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill lease renewal form', 'lease renewal pdf online', 'fill pdf form free', 'lease renewal online no print', 'tenant forms pdf free', 'fill pdf without printing', 'lease renewal signature online'],
+    metaTitle: 'Fill Out a Lease Renewal Form Free',
+    metaDescription: 'Fill out a lease renewal PDF online for free — no printing, no app. Type in blank fields, add your signature, and download in minutes. No account needed.',
+    content: `Your lease is up next month and your landlord just emailed a renewal form. There are blank fields for the new monthly rent, the renewal term, the start date, and your signature at the bottom. You need it back before the end of the week. Opening the PDF in your browser gives you a read-only file you can't type into. You don't have a printer. Filling out a lease renewal form online without either is the fastest path forward — and it takes about five minutes.
+
+[CTA]Fill out your lease renewal form right now — free, no account.|Type in any blank field, add your signature. Files stay in your browser.|Fill PDF Form Now — Free
+
+## How to fill out a lease renewal form online
+
+1. Go to signmypdf.io/fill and upload your lease renewal PDF.
+2. Click any blank field on the form and start typing.
+3. Fill in the rent amount, renewal term, start date, and any other required sections.
+4. Click the signature area and place your signature.
+5. Download the completed form — free, no account needed.
+
+The downloaded PDF looks exactly like what your landlord sent, with your information typed cleanly into each field.
+
+[IMAGE: SignMyPDF fill editor with a lease renewal PDF open, cursor active in the monthly rent field]
+
+## Why most tools make this harder
+
+Filling in a PDF form sounds like a two-minute job. Some tools turn it into a twenty-minute ordeal.
+
+- Many treat flat-scan PDFs as read-only — clicking a blank field does nothing at all.
+- Some require account creation before you can type a single character into the document.
+- Free tiers stamp a watermark on the download, which looks unprofessional on a legal document your landlord will keep on file.
+- Enterprise tools are built for corporate contracts, not a tenant returning a one-page renewal.
+- Mobile versions often break at exactly the wrong moment — a keyboard appears but nothing types into the PDF.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Fill in the whole form and download a clean copy without entering an email.
+- **Works on flat-scan and fillable PDFs.** Whether your landlord sent a proper form with interactive fields or a scanned document, you can click anywhere to place a text field and type directly.
+- **Files processed in your browser.** Your name, address, and rental terms never leave your device — nothing is sent to any server.
+- **Sign in the same session.** Once the fields are complete, add your signature right there without switching tools or tabs.
+- **Works on any device.** No app required — just your browser on a phone, tablet, or laptop.
+
+Lease renewals often come alongside a full updated lease agreement that also needs a signature, not just the renewal addendum. If you're handling both, [electronic signatures on rental agreements are legally valid](/blog/electronic-signature-legal-rental) in most U.S. states — that article covers what makes them enforceable.
+
+If you're filling this out on your phone, the process is the same. For a step-by-step phone walk-through, see [how to fill a PDF on iPhone without an app](/blog/fill-pdf-on-iphone-no-app).
+
+[IMAGE: Completed lease renewal PDF with typed-in fields for rent amount, term, and start date alongside a placed signature]
+
+## FAQ
+
+**What if the lease renewal PDF has no clickable fields?**
+
+That's the most common case. Lease renewals are often flat-scan documents with no interactive layer. SignMyPDF's fill tool lets you click anywhere on the page to place a text field directly over a blank line and type. No built-in form fields required.
+
+**Is a filled-and-signed lease renewal legally binding?**
+
+Yes, in most jurisdictions. Electronic signatures on lease renewals are valid under the U.S. ESIGN Act and equivalent laws in Canada, Australia, and the EU. The completed and signed document has the same legal standing as a paper version. If your landlord requires a wet signature, fill it out first and print the completed form — you've still saved the hassle of handwriting everything.
+
+**Is this really free?**
+
+Yes. Free, no registration, no paywall at download. Fill out your lease renewal, add your signature, and download the completed PDF without creating an account or entering a payment method.
+
+[CTA]Fill out your lease renewal form right now — free, no account.|Works on flat-scan and fillable PDFs. Files stay in your browser.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a rental application PDF for free](/blog/fill-rental-application-pdf-free)
+- [Electronic signature for rental agreements](/blog/electronic-signature-legal-rental)
+- [Fill a PDF on iPhone without an app](/blog/fill-pdf-on-iphone-no-app)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
