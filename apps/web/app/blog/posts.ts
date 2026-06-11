@@ -13903,6 +13903,144 @@ Yes. Free, no registration, no paywall at download. Fill out your lease renewal,
 - [Fill a PDF on iPhone without an app](/blog/fill-pdf-on-iphone-no-app)
 `,
   },
+  {
+    slug: 'sign-pdf-no-printer-no-scanner',
+    title: 'Sign PDF Without Printer or Scanner',
+    excerpt: 'You need to sign a contract today but have no printer and no scanner. Here\'s how to sign any PDF digitally on any device — free, no account, in five minutes.',
+    date: '2026-06-12',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign pdf without printer', 'sign pdf no scanner', 'sign pdf digitally free', 'digital signature no printing', 'sign pdf on phone', 'electronic signature no printer', 'sign document without printing'],
+    metaTitle: 'Sign PDF Without Printer or Scanner',
+    metaDescription: 'Sign a PDF without printing or scanning — free, no account. Draw, type, or upload your signature in your browser and download in minutes.',
+    content: `You've been sent a contract, lease renewal, or employment letter — you need to sign it and return it by end of day. You don't own a printer. You don't have a scanner. Signing a PDF without a printer or scanner sounds like you're stuck, but it's a fully solved problem. The need to sign PDFs without printing comes up constantly — landlords, employers, contractors, and banks all send documents this way. The process takes about five minutes in a browser on any device you already own.
+
+[CTA]Sign your PDF now — no printer or scanner needed.|Free, no account, works on any device. Your file stays in your browser.|Sign PDF Now — Free
+
+## How to sign a PDF without a printer or scanner
+
+1. Go to signmypdf.io/sign on your phone, tablet, or laptop.
+2. Upload the PDF — drag and drop or tap to pick the file.
+3. Create your signature: draw it freehand, type your name in script, or upload a photo.
+4. Click the document to place your signature on the correct line.
+5. Download the signed PDF and send it back.
+
+The whole sequence takes less time than finding a printer that's online and stocked with paper.
+
+[IMAGE: SignMyPDF signature editor on mobile, with a drawn signature placed on a rental agreement line]
+
+## Why most tools still make this harder than it should be
+
+The print-sign-scan workflow is decades old and a lot of software still assumes it's the only path. Even tools marketed as "digital signing" often mean they handle the scan step — the underlying assumption is that a physical signature lives somewhere.
+
+- Free tools almost always require an account before you can upload a file, let alone sign it.
+- Watermarks on free downloads are a common trap. You go through the whole process and the downloaded file has a banner across it — useless on a formal document.
+- Many tools send your file to a server during processing. That matters when the PDF contains your address, income details, or contract terms.
+- Mobile versions of desktop signing tools often break at inconvenient moments — the keyboard covers the signature line, or the download silently fails.
+- Some platforms still default to a "print this form, sign it, and scan it back" prompt as the recommended path.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Sign the document and download the finished file without entering an email address, creating an account, or providing payment details.
+- **Three signature options.** Draw freehand with a mouse or finger on a touchscreen, type your name in a handwriting-style font, or upload a photo of your handwritten signature — all three produce a clean result in the final PDF.
+- **Files processed in your browser.** Your document — which may include personal details, contract terms, or financial information — never leaves your device. Nothing is uploaded to any server.
+- **Works on any device.** Phone, tablet, or laptop. No app installation required. For a full mobile walkthrough, see [signing PDFs on iPhone without an app](/blog/cant-sign-pdf-iphone-fix).
+- **No watermarks.** The downloaded PDF looks exactly like the original — only your signature is added.
+
+If the PDF you've received won't let you click to place a signature because it's locked or set to read-only, [signing a locked or read-only PDF](/blog/sign-pdf-no-editing-allowed) covers what to do before giving up.
+
+## FAQ
+
+**Is an electronically signed PDF legally valid without a wet ink signature?**
+
+Yes, for most purposes. The U.S. ESIGN Act and the Uniform Electronic Transactions Act make electronic signatures legally equivalent to handwritten ones on contracts, leases, employment letters, and standard commercial agreements. Narrow exceptions exist — wills, certain real-estate mortgage instruments, and some court filings — but these aren't typical day-to-day PDFs. Check with the sending party if you're unsure whether they specifically require a physical signature.
+
+**My signature looks messy when I draw it on a laptop trackpad. What should I use instead?**
+
+The Type tab. Select a script font, type your name, and SignMyPDF renders it as a clean handwriting-style signature. It's the right choice when you don't have a touchscreen and trackpad drawing gives you a shaky result. The typed version is valid under the same electronic signature laws as a drawn one.
+
+**Does the recipient need a special tool to open the signed PDF?**
+
+No. The signature is embedded directly in the PDF file. Anyone can open it in any standard PDF viewer — Adobe Reader, a browser's built-in viewer, or a phone's Files app — and see the signature in place. No validation link, no account, no expiry on the recipient's side. For more on going account-free throughout the process, see [signing PDFs without providing an email](/blog/pdf-signing-no-email-required).
+
+[CTA]Sign your PDF now — no printer, no scanner, no account needed.|Works on phone or laptop. Files stay in your browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a locked or read-only PDF](/blog/sign-pdf-no-editing-allowed)
+- [Sign PDF on iPhone without an app](/blog/cant-sign-pdf-iphone-fix)
+- [Sign PDF without providing an email](/blog/pdf-signing-no-email-required)
+`,
+  },
+  {
+    slug: 'protect-pdf-before-emailing-clients',
+    title: 'Protect PDF Before Emailing Clients',
+    excerpt: 'You\'re about to email a proposal, invoice, or contract — but the PDF is wide open. Here\'s how to password-protect it in 30 seconds before you hit send.',
+    date: '2026-06-12',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['protect pdf before emailing', 'password protect pdf before sending', 'password protect pdf email', 'secure pdf for clients', 'pdf password protection free', 'protect client documents pdf', 'encrypt pdf before sending'],
+    metaTitle: 'Protect PDF Before Emailing Clients',
+    metaDescription: 'Password-protect a PDF before emailing clients — free, no account, 30 seconds. AES-256 encryption, no watermarks, files stay in your browser.',
+    content: `You've got the invoice, proposal, or contract ready to send. The email is addressed. Then you pause — the PDF is completely unprotected. Anyone who receives it can open it, copy the text, and forward it on without your knowledge. Protecting a PDF before emailing it to a client takes under a minute. Add a password, and only the person who has it can open the document. If you regularly email sensitive files to clients, password-protecting your PDFs before sending is the one step that costs nothing and stops casual interception cold.
+
+[CTA]Password-protect your PDF before sending — free, no account.|Set a password, download, attach, send. Files stay in your browser.|Protect PDF Now — Free
+
+## How to protect a PDF before emailing it
+
+1. Go to signmypdf.io/protect and upload your PDF.
+2. Type a strong password in the password field.
+3. Confirm the password and set any permission restrictions you need.
+4. Click Protect PDF and wait a few seconds while it encrypts.
+5. Download the protected file and attach it to your email.
+
+Share the password with your client through a separate channel — a text, phone call, or different email thread. Sending both in the same message defeats the point.
+
+[IMAGE: SignMyPDF protect tool with a password field filled in and a "Protect PDF" button ready to click]
+
+## Why most people skip this step
+
+Sending an unprotected PDF is the default behavior in every email client, which is exactly the problem. There's no warning, no nudge, nothing to prompt a pause before hitting send.
+
+- "It's going to one person" is the usual rationale — but email threads get forwarded, inboxes get handed over on role changes, and mail servers get breached.
+- Free tools that offer PDF protection are often slow, require an account, or leave a watermark that makes the document look unprofessional.
+- Adobe Acrobat can encrypt PDFs, but you need a paid subscription for the full protection feature set. See [Adobe Acrobat vs free PDF protection](/blog/adobe-vs-free-pdf-protection) for the honest comparison.
+- IT departments at larger companies often require password-protected PDFs for sensitive documents — an unprotected attachment can be flagged or rejected outright.
+- The mental overhead of adding protection feels high, so it gets skipped. It actually takes about 30 seconds.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Set a password, download the protected file, and email it — without creating an account or entering a credit card number.
+- **AES-256 encryption.** The same standard used by financial institutions and government systems. A brute-force attack on a strong password is computationally infeasible.
+- **Files processed in your browser.** Your contract, invoice, or proposal — with all its sensitive figures and names — is encrypted on your device. Nothing is uploaded to any server during the process.
+- **Permission controls.** Block printing, restrict copying, prevent annotations — set whatever limits match the document's sensitivity.
+- **Works on any device.** No app required. Upload from your laptop, phone, or tablet and download the protected version in the same session.
+
+For freelancers and consultants who send client documents regularly, [how freelancers should protect client contracts](/blog/freelancers-protect-client-contracts) covers the full workflow — what to password-protect, what permissions to restrict, and how to share the key securely.
+
+## FAQ
+
+**Should I send the password in the same email as the PDF?**
+
+No. If someone intercepts the email, having both the file and the password in the same thread makes the protection useless. Send the PDF first, then share the password through a different channel — a text message, a phone call, or a separate email thread. Most clients are fine with a short follow-up message saying the password is on its way.
+
+**What if my client can't open the protected PDF?**
+
+A password-protected PDF opens in any standard PDF viewer once the correct password is entered — Adobe Reader, the browser's built-in viewer, macOS Preview, and mobile PDF apps all support it. If they're struggling, the most common issue is pasting the password with a trailing space. Having them type it manually instead usually resolves it immediately.
+
+**Does password-protecting a PDF change how it looks?**
+
+No. The document layout, text, images, and signatures are unchanged. A password prompt appears before the document opens, and once it's entered correctly, everything looks exactly as it did before protection was applied.
+
+[CTA]Protect your PDF before sending — free, no account, 30 seconds.|Set a password, download, email. Files stay in your browser.|Protect PDF Now — Free
+
+## Related tools
+
+- [Why email alone isn't enough for sensitive documents](/blog/just-email-it-isnt-enough-for-sensitive-documents)
+- [How freelancers should protect client contracts](/blog/freelancers-protect-client-contracts)
+- [What to do when you sent a confidential PDF unprotected](/blog/sent-confidential-contract-unprotected)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
