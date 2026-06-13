@@ -14179,6 +14179,148 @@ Not automatically — those are separate permission toggles. When you protect th
 - [Password-protected PDF vs encrypted email](/blog/password-pdf-vs-encrypted-email)
 `,
   },
+  {
+    slug: 'sign-consulting-agreement-online',
+    title: 'Sign a Consulting Agreement Online',
+    excerpt: 'Your client needs a signed consulting agreement before work can start. Here\'s how to sign it online in two minutes — free, no account, no software.',
+    date: '2026-06-14',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign consulting agreement online', 'consulting agreement signature', 'sign consulting contract online', 'electronic signature consulting', 'sign service agreement free', 'sign contract online free', 'digital signature consulting agreement'],
+    metaTitle: 'Sign a Consulting Agreement Online',
+    metaDescription: 'Sign a consulting agreement online in minutes — free, no account. Draw, type, or upload your signature, then download the signed PDF instantly.',
+    content: `Your consulting agreement is ready and the client's waiting. You're not in the same office, you don't have a printer, and DocuSign wants a credit card before you can send anything. Getting a consulting agreement signed should not require a subscription or a scanner — it's a simple document that needs one signature. You need to sign this consulting agreement and get it back to your client today.
+
+[CTA]Sign your consulting agreement — free, no account.|Works in your browser, any device. No software needed.|Sign PDF Now — Free
+
+## How to sign a consulting agreement online
+
+1. Go to signmypdf.io/sign and upload your PDF.
+2. Click where your signature goes.
+3. Draw, type, or upload your signature.
+4. Add initials or a date if the agreement requires them.
+5. Download the signed PDF and send it to your client.
+
+Takes under two minutes from upload to a signed file in your Downloads folder.
+
+[IMAGE: SignMyPDF sign tool with a consulting agreement PDF loaded and a signature being placed in the signature block]
+
+## Why most tools make this harder than it needs to be
+
+- **DocuSign and HelloSign require an account before you can sign anything.** Even on a free plan, both tools gate the signature workflow behind an email-confirmed account. That's an extra step before your client even sees the document.
+- **Adobe Acrobat locks signing behind a paid subscription.** Adobe Reader is free and lets you view PDFs, but placing a signature requires Acrobat Standard or Pro — a monthly fee for something you need once.
+- **Free tools often add a watermark.** After placing your signature, the downloaded PDF comes back branded with an ad. You can't send that to a client.
+- **Many platforms require your client to have an account too.** Workflow-based tools assume both parties are on the same platform. For a solo consultant and a one-time client, that's friction neither of you needs.
+- **Uploading contract terms to third-party servers is a real risk.** Consulting agreements include pricing, scope, and IP clauses you'd rather not store on someone else's server.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Open the tool, sign the PDF, download it. No account, no trial, no credit card. The signed file is ready to email immediately.
+- **Your files never leave your browser.** Signing happens entirely on your device using JavaScript — nothing is uploaded to any server. For what that means legally, see [electronic signature laws by state](/blog/electronic-signature-laws-by-state).
+- **Works on any device.** MacBook, Android phone, iPad — the tool runs identically in any modern browser without installation.
+- **Multiple signature styles.** Draw with your mouse or trackpad, type your name in cursive, or upload a photo of your handwritten signature.
+- **Legally binding in most jurisdictions.** Electronic signatures on consulting agreements are valid under ESIGN and UETA in the US and eIDAS in the EU.
+
+Consultants who handle several document types often work through the same flow for each: service agreements, NDAs, proposals. If your consulting agreement needs two signatures — yours and a co-founder's, or two client contacts — see [how to add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf). For the service agreement signing flow specifically, [sign a service agreement online](/blog/sign-service-agreement-online) walks through the same process.
+
+## FAQ
+
+**Is an electronically signed consulting agreement legally binding?**
+
+Yes, in most countries. In the US, ESIGN and UETA make electronic signatures on consulting agreements legally equivalent to wet ink when both parties can show intent to sign. The EU equivalent is eIDAS. The exceptions — certain real estate and court documents — don't apply to consulting agreements.
+
+**Does my client need any software or an account to receive the signed PDF?**
+
+No. You sign the PDF and send it by email or file share. Your client receives a standard PDF they can open in any reader: Chrome, Preview, Adobe Reader. They don't need to visit SignMyPDF or create an account.
+
+**What if the agreement needs both my signature and my client's?**
+
+Sign your side first and download the PDF. Send it to your client and ask them to upload it to signmypdf.io/sign, add their signature, and send it back. Both signatures embed in the same PDF with no visible seam.
+
+[CTA]Sign your consulting agreement now — free, no account.|No software, no email, no subscription. Files stay on your device.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a service agreement online](/blog/sign-service-agreement-online)
+- [Add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf)
+- [Electronic signature laws by state](/blog/electronic-signature-laws-by-state)
+`,
+  },
+  {
+    slug: 'fill-pdf-checkbox-not-working',
+    title: 'PDF Checkbox Not Working — Quick Fix',
+    excerpt: 'Your PDF checkboxes won\'t respond when you click them. Here\'s the exact fix — place your own checkmarks over the unresponsive boxes in under two minutes, free.',
+    date: '2026-06-14',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['PDF checkbox not working', 'PDF checkbox won\'t click', 'fill PDF checkbox online', 'PDF form checkbox fix', 'flat PDF form checkbox', 'fill PDF checkboxes free', 'PDF interactive field not working'],
+    metaTitle: 'PDF Checkbox Not Working — Quick Fix',
+    metaDescription: 'PDF checkboxes won\'t click? Fix them in minutes by placing your own checkmarks with SignMyPDF — free, no account, works on flat and scanned PDFs.',
+    content: `You're filling out a form and the PDF checkboxes just don't respond. You click, you tap, nothing happens. The PDF checkbox is right there — you can see it — but it behaves like a locked image. Could be a job application, a medical intake form, or a state government document. You can't check a single PDF checkbox without printing the page, marking it by hand, and scanning it back. That shouldn't be necessary.
+
+[CTA]Fill your PDF form with checkmarks — free, no account.|Works on flat PDFs and scanned forms. No app needed.|Fill PDF Form Now — Free
+
+## Why your PDF checkbox won't check
+
+PDFs fall into two categories. **Interactive PDFs** have form fields programmed in — clicking a checkbox registers a check because the field is built to respond. **Flat PDFs** look like forms but are essentially images or static layouts, with no interactive elements underneath. The visual box is just a shape; there's nothing to click.
+
+This is extremely common with government forms (frequently issued as flat PDFs), scanned paper forms, and templates exported from Word or InDesign without form fields enabled. If you're dealing with text fields that won't accept typing either, the cause and fix are the same — see [why a PDF won't let you type in it](/blog/pdf-form-wont-let-me-type).
+
+The fix is simple: instead of clicking the checkbox, you overlay your own checkmark directly on top of it.
+
+## How to fix a PDF checkbox that won't check
+
+1. Go to signmypdf.io/fill and upload your PDF.
+2. Select the text tool and type an "X" or a tick mark.
+3. Drag the text element directly over the checkbox.
+4. Resize it until it fits neatly inside the box.
+5. Download the filled PDF.
+
+The mark sits exactly where the checkbox is. Most reviewers and submission systems can't tell the difference from an interactive check.
+
+[IMAGE: SignMyPDF fill tool with an X character positioned directly over a non-interactive checkbox on a government form PDF]
+
+## Why most tools can't fix this
+
+- **Reader apps don't add content to flat PDFs.** Preview on Mac, Chrome's built-in viewer, and iOS PDF apps can only display what's already there — they have no tools for placing new text or marks on a flat document.
+- **Adobe Acrobat Reader free tier stops at interactive fields.** Adobe's free reader handles built-in form fields but offers no overlay tools for flat PDFs. Acrobat Pro handles it — at the cost of a paid subscription.
+- **Online fill tools that detect form fields silently fail on flat PDFs.** Some PDF fillers scan for interactive fields and present them as editable inputs. When the PDF is flat, they find nothing and show a blank interface with no way to proceed.
+- **Desktop PDF editors require a full installation.** If you don't have one already, that's a large download just to place marks on a single document.
+- **Server-based tools upload your document.** Medical intake forms, job applications, and benefit paperwork often contain information you'd rather not send to an unknown server.
+
+## Why SignMyPDF handles this better
+
+- **Works on flat PDFs, scanned PDFs, and interactive PDFs alike.** The fill tool lets you place text anywhere on the page — no form fields required. It doesn't need the PDF to have interactive elements.
+- **Free, no registration, no paywall at download.** Upload, mark the checkboxes, download. No account, no watermark, no payment.
+- **Files stay in your browser.** Your document is never uploaded to any server. Everything runs locally on your device — important for medical forms, HR paperwork, and anything with sensitive content.
+- **Precise drag positioning.** Move and resize each text element until it sits exactly inside the right box.
+- **Works on mobile too.** For the full mobile walkthrough, see [filling a PDF on iPhone without any app](/blog/fill-pdf-on-iphone-no-app) — the process is identical to desktop.
+
+For other fill failures — when the PDF won't let you type into blank text fields at all — see [PDF form fields not working](/blog/pdf-form-fields-not-working-fix), which covers the full range of fill-related problems.
+
+## FAQ
+
+**Why does my PDF look like a form but not act like one?**
+
+It was almost certainly created from a scanned original or exported from a word processor without PDF form fields embedded. The visual design is there, but there's nothing interactive underneath the boxes. This is extremely common with government forms, older HR templates, and any document that started as paper. The practical fix is to overlay your own marks using a fill tool.
+
+**Will my filled PDF be accepted for submission?**
+
+In most cases, yes. A correctly positioned checkmark placed by a fill tool looks identical to an interactive check when printed or viewed on screen. If submitting by email or portal upload, the PDF will look correct. If you're uncertain, you can print, hand-mark, and scan — but that's rarely necessary.
+
+**Can I mark multiple checkboxes on the same form?**
+
+Yes. Add a text element for each checkbox, position each one individually, and they all save together in the downloaded PDF. There's no limit on how many marks you can add to one document.
+
+[CTA]Fix your PDF checkboxes now — free, no account.|Place checkmarks anywhere on the page. Files stay in your browser.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [PDF form fields not working — how to fix it](/blog/pdf-form-fields-not-working-fix)
+- [Fill a PDF form online for free](/blog/fill-pdf-form-online-free)
+- [PDF won't let you type — here's the fix](/blog/pdf-form-wont-let-me-type)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
