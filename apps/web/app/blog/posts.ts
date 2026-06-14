@@ -14321,6 +14321,139 @@ Yes. Add a text element for each checkbox, position each one individually, and t
 - [PDF won't let you type — here's the fix](/blog/pdf-form-wont-let-me-type)
 `,
   },
+  {
+    slug: 'sign-independent-contractor-agreement-online',
+    title: 'Sign Independent Contractor Agreement Online',
+    excerpt: 'Your client sent the independent contractor agreement as a PDF and needs it back today. Here\'s how to sign it in under two minutes — free, no account, no watermark.',
+    date: '2026-06-15',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign independent contractor agreement', 'contractor agreement PDF', 'IC agreement signature online', 'sign 1099 contractor form', 'electronic signature contractor', 'freelance contract signing', 'sign contractor PDF free'],
+    metaTitle: 'Sign Independent Contractor Agreement Online',
+    metaDescription: 'Sign an independent contractor agreement online in minutes — free, no account, no watermark. Files stay in your browser.',
+    content: `Your new client just sent the independent contractor agreement as a PDF. You need to sign it, get it back today, and start work — but you don't have Adobe Acrobat, and the client's platform requires you to create an account just to place your name. Printing is not an option either. You're remote, you have no printer, and even if you did, scanning a signed document and attaching it to an email is slower than your client expects. Signing an independent contractor agreement should take two minutes, not twenty.
+
+[CTA]Sign your contractor agreement — free, no account.|Draw, type, or upload your signature. Files stay in your browser.|Sign PDF Now — Free
+
+## How to sign an independent contractor agreement online
+
+1. Go to signmypdf.io/sign and upload your PDF.
+2. Click where your signature is required.
+3. Draw, type, or upload your signature.
+4. Add a date field if the agreement calls for one.
+5. Download the signed PDF and send it back.
+
+The whole process takes under two minutes. The signed file is a standard PDF — attach it to an email, share it via Google Drive, or send it through whatever platform your client prefers.
+
+[IMAGE: SignMyPDF sign tool with an independent contractor agreement loaded, showing a signature being positioned in the signature block]
+
+## Why most tools make this harder than it needs to be
+
+- **DocuSign and HelloSign require account creation before you sign anything.** Even on a free tier, you confirm an email address before you see the signature interface. For a freelancer signing a single agreement for a new client, that friction is a pointless detour.
+- **Adobe Acrobat Reader lets you view the PDF but won't let you sign it.** Placing a legally binding signature requires Acrobat Standard or Pro — a monthly subscription for something you need right now.
+- **Many free tools add a visible watermark to the download.** You can't send a client a signed contractor agreement that advertises a PDF tool across the bottom of every page.
+- **Some platforms require the sender to initiate the workflow.** If your client emailed you a plain PDF rather than a DocuSign envelope, envelope-based tools simply don't apply to the situation.
+- **Contractor agreements contain sensitive terms.** IP ownership clauses, payment rates, exclusivity terms, non-compete language — information you'd rather not upload to a server you don't control.
+
+## Why SignMyPDF is different
+
+- **Free, no registration, no paywall at download.** Upload your agreement, sign it, download it in under two minutes. No account, no trial period, no credit card required.
+- **Your files never leave your browser.** Signing runs entirely in JavaScript on your device — the agreement is never uploaded to any server. For more on what that means in practice, see [electronic signature security and privacy](/blog/electronic-signature-security).
+- **Legally binding in the US and most countries.** Electronic signatures on independent contractor agreements are valid under the ESIGN Act and UETA in the US and eIDAS in the EU. See [electronic signature laws by state](/blog/electronic-signature-laws-by-state) for state-level notes.
+- **Three ways to add your signature.** Draw with your mouse or trackpad, type your name in a cursive font, or upload a photo of your handwritten signature.
+- **Works on any device.** Desktop, tablet, phone — no app installation required.
+
+If your agreement needs two signatures — yours and a business partner's, or two client contacts — see [how to add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf) for the fastest way to handle it.
+
+## FAQ
+
+**Is an electronically signed independent contractor agreement legally binding?**
+
+Yes, in most jurisdictions. In the US, the ESIGN Act and UETA establish that electronic signatures carry the same legal weight as handwritten signatures on contractor agreements and most other commercial contracts. Courts routinely accept them. The standard exceptions — certain notarized real estate documents, court orders, wills — don't apply to independent contractor agreements.
+
+**My client says they need a wet signature. Do I have to print?**
+
+Ask first. Many clients request a wet signature as a default policy rather than a legal requirement. If you clarify that you're placing a drawn or typed signature directly on the PDF, most clients accept it. If they genuinely require ink on paper, you can still use SignMyPDF to fill in any date or other text fields, then print only the final page for signing.
+
+**What file format should I send back?**
+
+Send the downloaded PDF as-is. It's a standard file that opens in any PDF reader — Adobe Acrobat Reader, Preview on Mac, Chrome, or any iOS or Android PDF app. The signature is embedded in the document and doesn't require special software to view.
+
+[CTA]Sign your independent contractor agreement — free, no account.|No subscription, no watermark. Your document stays on your device.|Sign PDF Now — Free
+
+## Related tools
+
+- [How to add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf)
+- [Electronic signature security and privacy](/blog/electronic-signature-security)
+- [Electronic signature laws by state](/blog/electronic-signature-laws-by-state)
+`,
+  },
+  {
+    slug: 'protect-tax-return-pdf',
+    title: 'Password Protect a Tax Return PDF',
+    excerpt: 'Your tax return PDF has your SSN and bank details on it. Here\'s how to password protect it before emailing your accountant — free, no uploads, encryption stays on your device.',
+    date: '2026-06-15',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['password protect tax return PDF', 'protect tax documents PDF', 'secure tax return email', 'encrypt tax PDF', 'tax document PDF security', 'password PDF tax return free', 'protect SSN in PDF'],
+    metaTitle: 'Password Protect a Tax Return PDF',
+    metaDescription: 'Password protect your tax return PDF before emailing it — free, no account, files never leave your browser. AES encryption applied instantly.',
+    content: `Your accountant needs your tax return PDF today. It has your Social Security number on the first page, your bank account and routing numbers on the second, and your income from every employer and client listed throughout. Standard email attachments are not encrypted end-to-end — they travel through servers in readable form and sit in inboxes that can be accessed, forwarded, or compromised. Password protecting a tax return PDF before you send it means only someone with the right password can open the file, even if the email itself is later forwarded to the wrong address.
+
+[CTA]Password protect your tax return PDF now — free.|Encryption runs in your browser. No uploads, no account needed.|Protect PDF Now — Free
+
+## How to password protect a tax return PDF
+
+1. Go to signmypdf.io/protect and upload your PDF.
+2. Enter a strong password — at least 12 characters.
+3. Click Protect.
+4. Download the encrypted PDF.
+5. Email the file and share the password separately via text or phone.
+
+The password channel matters: share it differently from the email carrying the file. If both arrive in the same inbox and that inbox is compromised, the protection disappears.
+
+[IMAGE: SignMyPDF protect tool showing a tax return PDF with a strong password entered and the Protect button visible]
+
+## Why most tools fall short here
+
+- **Adobe Acrobat can add a password, but it requires a paid subscription.** Acrobat Reader is free and opens protected PDFs, but adding the password in the first place requires Acrobat Standard or Pro — a recurring cost for something you need a few times a year.
+- **Many free online tools upload your file to encrypt it.** Your tax return — with your SSN, income figures, and financial details — gets sent to a server you don't control. That defeats most of the reason for protecting it.
+- **Desktop tools like LibreOffice can add PDF passwords, but the steps are buried.** The export-with-password option lives several dialogs deep and isn't obvious unless you've done it before.
+- **Encrypted email (S/MIME or PGP) is more thorough, but requires setup on both ends.** Configuring email encryption requires both you and your accountant to manage certificates or keys — not realistic for a single file transfer.
+
+## Why SignMyPDF handles this better
+
+- **Free, no registration, no paywall at download.** Upload your tax return, set a password, download the encrypted PDF. No account, no trial, no credit card.
+- **Encryption runs in your browser.** Your tax return is never uploaded to any server — everything happens in JavaScript on your device. For context on what that protection actually provides, see [is a password-protected PDF actually secure](/blog/is-password-protected-pdf-actually-secure).
+- **AES-128 encryption.** The industry-standard algorithm used by Adobe Acrobat and every major PDF tool. Opens in any PDF reader once the correct password is entered.
+- **Your accountant doesn't need special software.** Standard password-protected PDFs open in Adobe Acrobat Reader, Preview on Mac, Chrome, and any iOS or Android PDF app. You share the password; they open the file.
+- **Works on any device.** No installation required — just a browser.
+
+Tax returns are among the most sensitive documents most people send by email, yet they're frequently sent unprotected. For a broader look at why attachments alone aren't enough, see [why "just email it" isn't enough for sensitive documents](/blog/just-email-it-isnt-enough-for-sensitive-documents). And if you're curious what exposure actually looks like when a protected file reaches the wrong person, [what happens if a password-protected PDF leaks](/blog/what-happens-if-protected-pdf-leaks) covers the realistic scenarios.
+
+## FAQ
+
+**How should I share the password with my accountant?**
+
+Use a separate channel from the email carrying the PDF — a phone call, a text message, or a secure client portal if your accountant uses one. Don't put the password in the body of the same email as the attachment. If both are intercepted together, the protection is meaningless.
+
+**What encryption does SignMyPDF apply?**
+
+AES-128, the same standard used by Adobe Acrobat and most professional PDF tools. It's the industry baseline for PDF password protection and is more than sufficient for protecting personal tax documents in transit and at rest in an inbox.
+
+**Can my accountant open the protected file without extra software?**
+
+Yes. Password-protected PDFs are a standard format supported by every major PDF reader. Once you share the password, your accountant opens the file in whatever reader they already have — no additional installations required on either end.
+
+[CTA]Protect your tax return PDF — free, no account.|No uploads. Encryption runs in your browser, files stay on your device.|Protect PDF Now — Free
+
+## Related tools
+
+- [Is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure)
+- [Why "just email it" isn't enough for sensitive documents](/blog/just-email-it-isnt-enough-for-sensitive-documents)
+- [What happens if a password-protected PDF leaks?](/blog/what-happens-if-protected-pdf-leaks)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
