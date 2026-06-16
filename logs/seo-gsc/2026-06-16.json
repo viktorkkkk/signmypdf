@@ -1,0 +1,154 @@
+{
+  "date": "2026-06-16",
+  "timestamp": "2026-06-16T08:37:25.187Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-06-16T00:00:05.469Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 2807,
+    "clicks28d": 9,
+    "avgPosition28d": 24.944780904880655,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 345,
+        "clicks": 4,
+        "position": 8.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+        "impressions": 3,
+        "clicks": 1,
+        "position": 16.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 13,
+        "clicks": 1,
+        "position": 8.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 254,
+        "clicks": 1,
+        "position": 10.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 51,
+        "clicks": 1,
+        "position": 9.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 1084,
+        "clicks": 1,
+        "position": 19.3
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 25
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 27,
+        "clicks": 0,
+        "position": 37.8
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 31
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 10.5
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 7.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 9,
+        "clicks": 0,
+        "position": 44.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 53,
+        "clicks": 0,
+        "position": 25.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 27,
+        "clicks": 0,
+        "position": 24.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 93
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 39,
+        "clicks": 0,
+        "position": 28.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 18,
+        "clicks": 0,
+        "position": 13.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 7.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+        "impressions": 9,
+        "clicks": 0,
+        "position": 21.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 9
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
