@@ -14743,6 +14743,170 @@ Yes. Your file is processed entirely in your browser — nothing is uploaded to 
 - [Fill an affidavit PDF online](/blog/fill-affidavit-pdf-online)
 `,
   },
+  {
+    slug: 'draw-vs-type-vs-upload-signature',
+    title: 'Draw, Type, or Upload Your Signature?',
+    excerpt: 'Draw, type, or upload your signature on a PDF — each method looks different and works better in different situations. Here\'s when to use which, free without an account.',
+    date: '2026-06-18',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['draw signature pdf', 'type signature pdf', 'upload signature pdf', 'pdf signature methods', 'sign pdf free', 'electronic signature options', 'how to sign a pdf'],
+    metaTitle: 'Draw, Type, or Upload Your Signature?',
+    metaDescription: 'Draw, type, or upload your PDF signature? Learn when each method works best — and why the choice matters for your signed documents. Free, no account.',
+    content: `
+## Draw, Type, or Upload Your Signature?
+
+When you open a PDF tool to sign a contract, lease, or employment offer, it asks you to choose: draw your signature on screen, type your name in a script font, or upload an image of your handwritten signature. Most people pick the first option without thinking. But draw, type, and upload produce different results — and the method that works best depends on the document, the device you're on, and who reviews the final PDF.
+
+Here's what each approach actually does, and how to pick the right one.
+
+[CTA]Sign PDF Now — Free|All three signature methods. No account, no email required.|Sign PDF Now — Free
+
+## What each method actually produces
+
+**Draw**: You trace your signature directly on the signing canvas using a mouse, finger, or stylus. The result looks like a genuine handwritten mark — organic lines, personal style, a feel that resembles what you'd produce with a pen. On a touchscreen this comes naturally; on a mouse, the quality depends on how well the tool smooths your strokes.
+
+**Type**: You type your name and the tool renders it in a cursive or script font. The result is clean and consistent, but it looks identical across every person who uses the same font. It carries the same legal weight as a drawn signature — but it's unmistakably machine-generated.
+
+**Upload**: You photograph or scan your real ink signature on plain paper, crop it, and upload the image. The PDF then contains your actual handwriting embedded as a transparent image. It takes a minute of preparation but produces the most polished, personally distinctive result of the three.
+
+[IMAGE: Side-by-side view of the same name rendered via draw, type, and upload methods in a PDF signing tool, showing the visual difference between each approach]
+
+## When to use each one
+
+Use **draw** on a phone or tablet — signing with a finger on a touchscreen is fast and produces a natural result. On a laptop with a mouse, drawn signatures can look uneven; type or upload will look more deliberate.
+
+Use **type** for routine documents where speed matters more than appearance: internal forms, vendor acknowledgements, low-stakes contracts within an organization you already know. A typed electronic signature is legally equivalent to a drawn one under the ESIGN Act — appearance doesn't affect enforceability.
+
+Use **upload** when the signature page will be reviewed carefully and filed — property agreements, employment offers, or any formal contract with a party you haven't dealt with before. Your actual ink signature embedded in the PDF looks intentional. For documents like these, see [how to sign a PDF without registration or email](/blog/pdf-signing-no-email-required).
+
+For context on when any of these methods is legally binding, see [electronic signature laws by state](/blog/electronic-signature-laws-by-state).
+
+## Why signature tools make this harder than it needs to be
+
+- **Method restrictions on free tiers**: many tools hide the upload option behind a paid plan, forcing free users to type even when a scanned signature would look better
+- **Poor draw canvas quality**: a tool that doesn't smooth strokes produces jagged results that look worse than a plain typed name
+- **No save option**: redrawing on every document wastes time when you sign multiple files in a session
+- **Paywall at download**: the signature step completes, then a watermark appears on the finished file
+- **Draw canvas disabled on mobile**: some tools lock drawing on the devices where it would feel most natural
+
+## Why SignMyPDF handles all three
+
+- **All three methods are free without an account.** Draw, type, or upload your signature — no registration, no paywall at download.
+- **Draw canvas that renders cleanly.** Stroke smoothing makes mouse-drawn signatures look intentional rather than jagged.
+- **Typed signatures in multiple font styles.** Choose one that reads like an actual signature, not a printed name.
+- **Upload accepts PNG or JPG.** Background removal is handled automatically so your signature sits cleanly over the document.
+- **Files processed entirely in your browser.** Your document never leaves your device, whether you're signing a single page or [placing signatures across multiple pages](/blog/add-multiple-signatures-one-pdf).
+
+## Frequently asked questions
+
+**Is a typed or drawn electronic signature legally valid?**
+
+Yes. The federal ESIGN Act and UETA — enacted in 47 states — treat drawn, typed, and uploaded electronic signatures as legally equivalent to handwritten signatures when the signer's intent is clear. The method used to create the signature doesn't affect its legal standing.
+
+**Which method will a landlord or employer accept?**
+
+All three are valid under US law for standard agreements. The only exception is a document that explicitly requires a notarized wet-ink signature — in that case, you need a notary regardless of which digital method you used. For leases, employment offers, and most commercial contracts, any electronic signature works.
+
+**Can I switch methods between documents?**
+
+Yes. Each time you open a new PDF in SignMyPDF you choose your method fresh. If you saved a signature previously (Pro feature), you can still draw a new one instead. There's no lock-in between documents.
+
+[CTA]Sign PDF Now — Free|Draw, type, or upload — free without an account.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a PDF without email or registration](/blog/pdf-signing-no-email-required)
+- [Add multiple signatures to one PDF](/blog/add-multiple-signatures-one-pdf)
+- [Electronic signature laws by state](/blog/electronic-signature-laws-by-state)
+`,
+  },
+  {
+    slug: 'shared-link-vs-password-protected-pdf',
+    title: 'Shared Link vs Password-Protected PDF',
+    excerpt: 'A shared cloud link and a password-protected PDF aren\'t the same protection. One controls access at the platform; the other encrypts the file itself. Here\'s when each is the right choice — free, no account.',
+    date: '2026-06-18',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['shared link vs pdf password', 'password protected pdf', 'secure file sharing', 'pdf security comparison', 'cloud storage vs pdf protection', 'protect pdf free', 'google drive vs pdf encryption'],
+    metaTitle: 'Shared Link vs Password-Protected PDF',
+    metaDescription: 'Shared cloud links and password-protected PDFs aren\'t the same security. Here\'s which one actually protects your file — and when to use each.',
+    content: `
+## Shared Link vs Password-Protected PDF
+
+Your colleague shares a Google Drive link to a contract. Your client drops a Dropbox folder containing financial details. Someone emails a PDF with no protection at all. In each case, one more forward and the contents could be anywhere. A shared link and a password-protected PDF both restrict access — but they work in completely different ways, and only one of them travels with the document wherever it goes.
+
+If you've wondered whether a cloud link is secure enough for confidential files, or whether a password-protected PDF is worth the extra step, here's the comparison.
+
+[CTA]Protect PDF Now — Free|AES encryption on any PDF. No account, instant download.|Protect PDF Now — Free
+
+## How each method actually works
+
+**Shared link (Google Drive, Dropbox, OneDrive)**
+
+A shared link grants access based on who has the URL, not on any property of the file itself. The document lives on the platform's servers; the link is the key. The owner can restrict access to specific emails, revoke the link, or set an expiry — but all of that control lives at the platform level. If a recipient downloads the file, platform permissions no longer apply to that copy.
+
+**Password-protected PDF**
+
+A password-protected PDF uses AES encryption applied directly to the file. That protection travels with the document — it doesn't matter how the file moves, who emails it, where it's saved, or what platform it ends up on. Anyone who opens it anywhere needs the password. Even if the file is forwarded, downloaded, or uploaded somewhere new, the encryption is still there. [What can actually happen if a protected PDF gets leaked](/blog/what-happens-if-protected-pdf-leaks) is a very different scenario from an unprotected file being forwarded.
+
+[IMAGE: Diagram showing a shared cloud link protecting access at the server level on the left, versus a password-protected PDF with a lock icon representing encryption that travels with the file on the right]
+
+## When to use each approach
+
+Use a **shared link** when:
+- You need to update the document later and want the link to always reflect the latest version
+- The content is internal or low-sensitivity
+- You want to revoke access after a deadline — a password-protected PDF can't be "unprotected" after you've sent it
+- Everyone receiving it is already on the same cloud platform
+
+Use a **password-protected PDF** when:
+- The file needs to travel outside your cloud ecosystem — email attachments, client portals, direct file transfers
+- The document contains financial details, contract terms, personal data, or anything you don't want forwarded freely
+- Protection can't depend on a cloud platform staying active or a policy staying the same
+- The recipient is outside your organization
+
+The core difference: a shared link protects access at the platform level; a password-protected PDF protects the file itself. For files that leave your organization, [adding a password before you send](/blog/protect-pdf-before-emailing-clients) is the more defensible choice.
+
+## What most sharing workflows miss
+
+- **Platform dependency**: when someone downloads a shared file, cloud sharing restrictions stop applying to that downloaded copy immediately
+- **Permissioning is not encryption**: "view only" settings address what people can do inside the platform — not what happens to a copy that leaves it
+- **Link forwarding**: most shared links can be forwarded to anyone, with or without the sender knowing
+- **No protection in transit**: an email link gives no protection to the file itself; a password-protected attachment requires the password on every open
+- **Account compromise risk**: if the cloud account is breached, all shared links from that account become exposed at once
+
+## Why SignMyPDF works for the PDF encryption side
+
+- **Free, no registration, no paywall at download.** Password-protect any PDF with AES encryption in under a minute. No account, no credit card.
+- **Encryption travels with the file.** Once a PDF is password-protected, the protection applies everywhere it goes — email, chat, USB, or any file transfer. For an overview of how strong this encryption is, see [AES-128 vs AES-256 PDF encryption explained](/blog/aes-128-vs-aes-256-pdf).
+- **Files processed in your browser.** The document is never uploaded to any server. Your content stays on your device during the entire process.
+- **Set permissions alongside a password.** Restrict printing, copying, or editing independently of the open password.
+- **Works on any device.** The recipient opens the protected file in any standard PDF reader — no app install, no cloud account required.
+
+## Frequently asked questions
+
+**Can someone bypass a cloud sharing restriction?**
+
+If a recipient downloads the file, the platform's access controls no longer apply to that copy. The file exists independently of the platform. A shared link controls who can access the file through the cloud service — it doesn't protect the file after it's been downloaded or saved elsewhere.
+
+**Is a PDF password genuinely secure?**
+
+AES-256 encryption — the standard for current PDF files — is computationally infeasible to crack by brute force. The real vulnerability is a weak password. A strong, unique password makes a password-protected PDF secure for all practical purposes. [Is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure) covers this in more detail.
+
+**Can I use both a cloud link and a PDF password at once?**
+
+Yes. Password-protect the PDF first using SignMyPDF, then share it via a Google Drive or Dropbox link. The recipient needs both the link and the password. You get two independent barriers — link revocation at the platform level and AES encryption at the file level.
+
+[CTA]Protect PDF Now — Free|AES encryption on any PDF, free without an account.|Protect PDF Now — Free
+
+## Related tools
+
+- [Password-protected PDF vs encrypted email](/blog/password-pdf-vs-encrypted-email)
+- [Dropbox password links vs protected PDFs](/blog/dropbox-password-links-vs-protected-pdfs)
+- [Is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
