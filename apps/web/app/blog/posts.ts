@@ -14907,6 +14907,162 @@ Yes. Password-protect the PDF first using SignMyPDF, then share it via a Google 
 - [Is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure)
 `,
   },
+  {
+    slug: 'fill-pdf-form-not-saving-fix',
+    title: 'Filled PDF Form Not Saving? Fix It Free',
+    excerpt: 'You fill a PDF form, click Save, and every field goes blank again. This isn\'t your browser\'s fault — it\'s how most PDF viewers handle form data. Here is the fix, free and without an account.',
+    date: '2026-06-19',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['filled pdf form not saving', 'pdf form save data', 'pdf form fields disappear', 'fill pdf form free', 'fix pdf form not saving', 'pdf form blank after save', 'fill pdf online free'],
+    metaTitle: 'Filled PDF Form Not Saving? Fix It Free',
+    metaDescription: 'Why does your filled PDF lose all typed data when you save it? Here is the real cause and how to fix it free, no account needed.',
+    content: `
+## Filled PDF Form Not Saving? Fix It Free
+
+You fill in a PDF form — an employment application, a government form, a rental agreement — click Save, and reopen the file. Every field is blank. The filled PDF form isn't saving your data, and there's no error message telling you why.
+
+The problem is widespread. PDF viewers like Chrome's built-in reader and Firefox's renderer let you type into form fields but don't bake that data into the file on export. Filled PDF form not saving properly is a viewer problem, not a user error. The fix takes under a minute once you use the right tool.
+
+[CTA]Fill PDF Form Now — Free|Fields stay filled. Download a complete, permanent PDF.|Fill PDF Form Now — Free
+
+## Why the data disappears
+
+When you open a PDF in Chrome's built-in viewer, Firefox's PDF renderer, or Safari's preview, form fields behave like a visual layer on top of the document. You type, and it looks correct on screen. When you click Save or Download, the underlying PDF exports without that overlay baked in.
+
+Adobe Acrobat Reader sometimes shows a warning: "This document contains interactive form fields." If the PDF was created with field restrictions, Reader may block saving entirely — or save a version stripped of your entries. [PDF form fields not working](/blog/pdf-form-fields-not-working-fix) covers more on why specific fields get locked by the PDF creator.
+
+The fix: use a tool that flattens the form on export. Flattening means your typed data becomes a permanent part of the PDF page itself, not a removable overlay.
+
+## How to fill a PDF so the data saves permanently
+
+1. Open [SignMyPDF Fill](/fill) in your browser
+2. Upload your PDF — drag and drop or click to browse
+3. Click each field and type your entry
+4. Check any checkboxes or select dropdown options
+5. Click Download — all entries are baked in permanently
+
+[IMAGE: SignMyPDF fill tool showing a completed form with all fields typed and the Download button highlighted]
+
+The downloaded file is a flattened PDF. It opens correctly in any viewer, prints with all data visible, and won't lose your entries if someone else opens it.
+
+## Why most tools lose your filled data
+
+- **Browser viewers treat fields as temporary overlays.** Chrome, Firefox, and Safari all work this way. Your typed text appears on screen but saving creates a copy of the underlying PDF without your entries.
+- **Adobe Reader restrictions.** Some PDFs are created with save restrictions. Reader may warn "you cannot save data typed into this form" — and then do exactly that.
+- **Online tools with account gates.** Several fill tools let you type freely but require an account or add a watermark before you can download.
+- **No flatten-on-export step.** Tools that save as "annotated PDF" rather than a flat PDF often produce files where the annotation layer disappears when opened in a different viewer.
+- **Session timeouts.** Spend 40 minutes filling a long application in some cloud tools and the session expires before you finish. [Filling a PDF without printing](/blog/fill-pdf-without-printing) outlines what a reliable workflow looks like end to end.
+
+## Why SignMyPDF keeps your data
+
+- **Free, no registration, no paywall at download.** Upload, fill, download — no account, no watermark, no subscription required.
+- **Flattened export every time.** Your typed data is embedded into the PDF on download. It won't disappear when the file is opened on another device or in a different viewer.
+- **Files processed in your browser.** Your form data never leaves your device. Nothing is uploaded to a server.
+- **No page or field limits.** Fill a two-page W-9 or a 20-page legal application the same way.
+- **Works on mobile too.** Fill forms on iOS or Android and download the completed PDF directly.
+
+## Frequently asked questions
+
+**Why does my filled PDF print blank even though it looks filled on screen?**
+
+The typed text exists as a browser overlay, not part of the PDF page. When the printer receives the file, it prints the underlying document without the overlay. Download the flattened version from SignMyPDF first, then print from that file — all fields will be visible.
+
+**Can I refill a PDF I already downloaded from SignMyPDF?**
+
+Once a PDF is flattened, form fields are no longer interactive — your typed text is part of the page. To change something, start from the original PDF and fill again. Keep your original file accessible before you flatten it.
+
+**What if some fields are greyed out and won't let me click them?**
+
+The PDF creator may have locked those fields. You can still fill the unlocked fields and download. If the entire form seems locked, check whether the PDF is a scanned image rather than a native form — scanned forms have no interactive fields at all.
+
+[CTA]Fill PDF Form Now — Free|Fill any PDF form free — data stays in the file permanently.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a PDF form online free](/blog/fill-pdf-form-online-free)
+- [PDF form fields won't let me type — fix](/blog/pdf-form-wont-let-me-type)
+- [Fill a PDF without printing](/blog/fill-pdf-without-printing)
+`,
+  },
+  {
+    slug: 'protect-pdf-from-copying-text',
+    title: 'Protect a PDF from Text Copying — Free',
+    excerpt: 'Someone opens your PDF, selects all, and pastes your contract into their own document. A permissions password stops that. Here is how to protect a PDF from text copying, free and without Adobe Acrobat.',
+    date: '2026-06-19',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['protect pdf from copying', 'prevent text copying pdf', 'pdf copy restriction', 'pdf permission password', 'protect pdf free', 'disable copy paste pdf', 'pdf owner password'],
+    metaTitle: 'Protect a PDF from Text Copying — Free',
+    metaDescription: 'Stop recipients from copying text out of your PDF using a permissions password. Free, no account, files stay on your device.',
+    content: `
+## Protect a PDF from Text Copying — Free
+
+You send a proposal. Three days later your client sends back a counter-offer — written in your words, rearranged. Or you share a contract template and it comes back lightly edited, with your firm's formatting and language claimed as the other side's own. The ability to protect a PDF from text copying is a real PDF feature that most people don't know exists.
+
+A standard PDF reader disables copy-paste when the creator sets a permissions restriction. No plugins, no DRM platform, no expensive software. You protect a PDF from copying using an owner password, and every major PDF reader enforces it automatically.
+
+[CTA]Protect PDF Now — Free|Block text copying on any PDF. No account, instant download.|Protect PDF Now — Free
+
+## How the copy restriction actually works
+
+A PDF can carry two password types: an open password (required to open the file at all) and an owner password (controls what actions the reader allows once the file is open). Text copying, editing, and printing are each independent permissions under the owner password.
+
+When you set an owner password and turn off the copy permission, every major PDF reader — Adobe Reader, Apple Preview, Chrome's viewer, and mobile PDF apps — disables the Select and Copy functions. Your recipient can read the document; they just can't paste from it.
+
+For a full breakdown of how the two password types differ, [owner password vs user password](/blog/owner-password-vs-user-password) explains each clearly.
+
+## How to protect a PDF from text copying
+
+1. Open [SignMyPDF Protect](/protect) in your browser
+2. Upload your PDF
+3. Under Permissions, uncheck Allow Text Copying
+4. Set an owner password to enforce the restriction
+5. Click Download — the protected file is ready immediately
+
+[IMAGE: SignMyPDF Protect permissions panel showing the Allow Text Copying checkbox unchecked and the owner password field filled in]
+
+The recipient opens the file normally. They can scroll, zoom, and read. Copy-paste is simply disabled at the reader level.
+
+## Why most tools make this harder than it needs to be
+
+- **Adobe Acrobat requires a paid subscription.** Setting permission passwords — including copy restrictions — is an Acrobat Pro feature. The free Reader doesn't support it.
+- **Many protect tools only add an open password.** You get a password gate on opening, but once the file is open, copying is still unrestricted.
+- **The permissions panel is often buried.** Tools that do support owner passwords sometimes hide the permissions under an "Advanced" tab most users never find.
+- **Cloud tools upload your file.** For confidential contracts and proposals, uploading to a third-party server is a real privacy concern. [What happens if a protected PDF leaks](/blog/what-happens-if-protected-pdf-leaks) is worth reading if the material is sensitive.
+- **Inconsistent enforcement across readers.** Some non-standard readers ignore permission flags. The major ones — Adobe Reader, Apple Preview, Chrome, Android and iOS PDF apps — all enforce them correctly.
+
+## Why SignMyPDF handles this correctly
+
+- **Free, no registration, no paywall at download.** Set copy restrictions and download the protected PDF without an account or payment.
+- **Files processed in your browser.** Your PDF never leaves your device. Everything runs locally — nothing is uploaded to a server.
+- **Explicit permission controls.** Copy, edit, and print restrictions are three separate checkboxes, each independent. You see exactly what you're setting.
+- **Owner password and open password independently.** Restrict copying without adding an open password, or combine both layers for tighter control.
+- **AES-256 encryption behind the permissions.** The restrictions are backed by strong encryption, not a soft flag. [Can a protected PDF be hacked](/blog/can-protected-pdf-be-hacked) gives an honest look at what AES-256 protection means in practice.
+
+## Frequently asked questions
+
+**Does blocking copy-paste prevent screenshots?**
+
+No. The copy restriction disables the copy-paste function in PDF readers — it doesn't prevent someone from taking a screenshot. For genuinely confidential material, enterprise DRM systems can restrict viewing entirely, but they are a separate category of tool at a much higher cost.
+
+**Can the recipient remove the copy restriction?**
+
+Only with the owner password. Without it, bypassing AES-256 encryption is computationally infeasible. A recipient who doesn't have the owner password cannot unlock the permissions through any standard method.
+
+**Do I need to add an open password too?**
+
+No. A copy restriction can be set with an owner password alone. The recipient opens the file without entering anything — they just can't copy from it. Add an open password only if you also want to gate who can open the document at all.
+
+[CTA]Protect PDF Now — Free|Restrict text copying on any PDF, free without an account.|Protect PDF Now — Free
+
+## Related tools
+
+- [Owner password vs user password — what's the difference](/blog/owner-password-vs-user-password)
+- [Password-protect a PDF free, no software needed](/blog/password-protect-pdf-free-online-no-software)
+- [Protect a PDF before emailing clients](/blog/protect-pdf-before-emailing-clients)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
