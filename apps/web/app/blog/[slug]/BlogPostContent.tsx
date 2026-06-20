@@ -115,6 +115,7 @@ const PROTECT_SLUGS = new Set([
   'password-strength-checklist-pdfs-2026',
   // New — slugs that don't match the heuristic patterns above
   'protect-business-proposal-pdf',
+  'protect-invoice-pdf-online',
 ]);
 
 export function getArticleTool(slug: string): ArticleTool {

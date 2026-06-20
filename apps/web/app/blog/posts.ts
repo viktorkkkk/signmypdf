@@ -15203,6 +15203,161 @@ Most small claims forms include a declaration or verification statement that req
 - [Fill out a PDF without printing](/blog/fill-pdf-without-printing)
 `,
   },
+  {
+    slug: 'pdf-signature-grayed-out-fix',
+    title: 'PDF Signature Grayed Out: Fix It Fast',
+    excerpt: 'The signature button is grayed out and clicking it does nothing. Here\'s why it happens and the fastest fixes — no Adobe Acrobat required.',
+    date: '2026-06-21',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['pdf signature grayed out', 'sign pdf grayed out', 'signature button grayed out pdf', 'pdf signature not working', 'pdf signature disabled', 'pdf signing restricted fix', 'sign pdf owner password', 'fix grayed out pdf signature'],
+    metaTitle: 'PDF Signature Grayed Out: Fix It Fast',
+    metaDescription: 'Signature button grayed out in your PDF? Learn why it happens and the fastest fixes — no Adobe Acrobat or paid tool required.',
+    content: `
+## PDF Signature Grayed Out: Fix It Fast
+
+The document needs your signature by 5 PM. You open the PDF, look for the signature button — and it's grayed out. Click it anyway. Nothing. The PDF signature grayed out problem hits people at exactly the worst moment: a lease, a work contract, a bank form. It looks like there should be something to click, but the tool is blocking you. PDF signature grayed out has a handful of specific causes, and each has a fix — you don't need Adobe Acrobat or a paid tool to get through them.
+
+[CTA]Sign PDF Now — Free|Add your signature to any PDF in your browser. No account, no install.|Sign PDF Now — Free
+
+## Why the PDF signature button is grayed out
+
+Grayed-out signature buttons usually mean one of three things:
+
+- **Your viewer doesn't support signing.** Chrome's built-in PDF viewer, Safari's preview pane, and most mobile reader apps don't have a signing feature at all. The button isn't disabled — it simply doesn't exist in those tools. This is the most common cause.
+- **The PDF has editing restrictions.** The author applied an owner password that blocks modifications. You can open and read the file, but signing is disabled at the file level.
+- **The document has an author certification.** Some official contracts are certified by the sender. A certified PDF is locked against further modifications to prove it hasn't been altered. No tool can add to it without the original sender unlocking it first.
+
+## How to fix a grayed-out PDF signature
+
+1. Switch to [SignMyPDF](/sign) — browser viewers can't sign PDFs
+2. Download the PDF file first if you're viewing it in a browser tab
+3. Try signing from SignMyPDF to bypass field-level restrictions
+4. If the PDF has an owner password you control, [remove it first](/blog/remove-password-from-pdf-you-own)
+5. If a certification lock is the cause, ask the sender to re-send an uncertified version
+
+For most people, fix 1 solves it immediately. If you're trying to sign in Chrome, Firefox, or Safari — the browser PDF viewer is the problem, not the file. Open the same PDF at SignMyPDF and the signing interface will be active.
+
+[IMAGE: Screenshot showing a grayed-out signature button in Chrome's PDF viewer, next to an active sign interface in SignMyPDF with a drawn signature placed on the document]
+
+Fix 3 matters when a specific signature field inside the PDF is read-only — a different issue from when a [PDF signature field isn't clickable](/blog/pdf-signature-field-not-clickable-fix) because the field itself is broken. SignMyPDF lets you place a freeform signature anywhere on the page as a visual overlay, bypassing field-level restrictions entirely.
+
+## Why most tools are frustrating here
+
+- Adobe Reader shows the button as grayed out with no explanation of which restriction is blocking it
+- Browser viewers don't tell you they don't support signing — the button just doesn't respond, leaving you to guess
+- Many PDF editors show a sign option but throw an error at the save step, because restrictions only surface when the tool tries to write the file
+- Paid tools like Adobe Acrobat Pro can bypass some restrictions — but they cost roughly $25/month for a problem you might face once
+- Some browser extensions claim to add signing but inject an image that doesn't embed properly, so the signature doesn't survive being forwarded
+
+## Why SignMyPDF handles this differently
+
+- Free, no registration, no paywall at download — you can sign and download in under 2 minutes
+- Freeform signature placement: draw, type, or upload a signature image and drop it anywhere on any page
+- Works around most field-level restrictions by placing the signature as a visual layer over the page content rather than filling a locked form field
+- Files processed in browser — your document isn't sent to a server, which matters for contracts and legal PDFs
+- If a PDF has a certification lock that truly prevents signing, the tool tells you clearly instead of silently failing
+
+## FAQ
+
+**Why does the signature button work on some PDFs but not others?**
+PDFs with pre-placed interactive signature fields behave differently from flat documents with no fields. A grayed-out button usually means you're in a viewer that doesn't support signing, or the file has editing restrictions applied by the sender. Try the same file in SignMyPDF — if the button works there, the viewer was the issue, not the file.
+
+**Can I sign a PDF that has an owner password?**
+If you can open the PDF — meaning there's no user-open password, or you know it — SignMyPDF can add a visual signature on top. Owner passwords restrict editing at the file level but don't block SignMyPDF's overlay method. If you own the document and want to fully remove the restriction first, [remove the password from the PDF you own](/blog/remove-password-from-pdf-you-own), then sign the unlocked version.
+
+**I signed the PDF but the signature disappeared when I opened it later — is that the same problem?**
+No. A disappearing signature after saving is a different issue — it means the signature didn't embed correctly into the file. That's covered in [why signatures disappear from a signed PDF](/blog/signature-disappears-pdf-fix). A grayed-out button is a problem that happens before you sign; a disappearing signature is a problem that surfaces after.
+
+[CTA]Sign PDF Now — Free|Sign any PDF directly in your browser — free, no account.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a PDF with editing disabled](/blog/sign-pdf-no-editing-allowed)
+- [Fix a typo on an already-signed PDF](/blog/fix-typo-on-signed-pdf)
+- [Signature disappears after saving — fix it](/blog/signature-disappears-pdf-fix)
+`,
+  },
+  {
+    slug: 'protect-invoice-pdf-online',
+    title: 'Protect Invoice PDFs Before Sending to Clients',
+    excerpt: 'Your invoice has bank details, pricing, and client info. Protect your invoice PDF with a password before sending — a 30-second step that keeps it between you and your client.',
+    date: '2026-06-21',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['protect invoice pdf', 'password protect invoice pdf', 'protect invoice before sending', 'secure invoice pdf email', 'encrypt invoice pdf', 'protect pdf invoice freelancer', 'invoice pdf security', 'password protect business pdf'],
+    metaTitle: 'Protect Invoice PDFs Before Sending to Clients',
+    metaDescription: 'Your invoice has bank details and pricing. Protect your invoice PDF with a password before sending — free, no account, files stay in your browser.',
+    content: `
+## Protect Invoice PDFs Before Sending to Clients
+
+Protect your invoice PDF before you send it — that one step stops your bank details from reaching anyone other than your client. Most freelancers email their invoice as a plain PDF with no protection at all. Protecting an invoice PDF with a password takes about 30 seconds, and the client needs only a PDF viewer they already have to open it. Skip that step, and anyone whose inbox that email ever reaches — a forwarded thread, a compromised account — has your bank account number, your pricing, and your client's project details.
+
+Invoice fraud targeting altered PDF bank details is a real pattern aimed at small businesses and freelancers. Someone intercepts your email, swaps out the routing number on your invoice, and your client pays into the wrong account. A password-protected PDF can't be silently modified and re-forwarded — altering it requires re-saving it, and a saved-over file loses the password, which your client would notice immediately.
+
+[CTA]Protect PDF Now — Free|Password-protect your invoice before sending. Free, no account.|Protect PDF Now — Free
+
+## How to protect an invoice PDF in 30 seconds
+
+1. Finish your invoice and export it as a PDF from your billing tool
+2. Open [SignMyPDF Protect](/protect) in your browser
+3. Upload the invoice PDF
+4. Set a password — use something distinct from your email or banking passwords
+5. Download the protected file and email it to your client
+
+[IMAGE: SignMyPDF Protect interface showing a password field with an invoice PDF uploaded and the protect button ready to click]
+
+One rule matters here: send the password in a separate message from the PDF itself. A text, a WhatsApp, a quick call — anything other than the same email thread. If someone intercepts the email carrying the PDF, they still can't open it without the password from the separate channel.
+
+## What an unprotected invoice exposes
+
+Most invoices include:
+- Your bank account or routing number (or ACH, Stripe, or PayPal details)
+- Your business address and tax ID or VAT number
+- The client's project scope and the amount they paid
+- Sometimes: your hourly rate or itemized line items
+
+A plain PDF is just a file. Anyone in a forwarded thread, anyone whose inbox gets compromised, or anyone who opens the client's email on a shared device can read — and potentially copy or edit — all of it.
+
+## Why most invoices go unprotected
+
+- **The sending workflow doesn't prompt you.** You finish the invoice in Wave, FreshBooks, or a spreadsheet and hit send. No step in that flow suggests adding a password.
+- **Clients don't ask for it.** There's no external pressure to protect invoices until something goes wrong.
+- **Protection tools feel complicated.** Adding a PDF password in Adobe Acrobat means navigating File then Properties then Security — multiple menu levels in a paid desktop app most freelancers don't have. Free, no registration, no paywall at download is what makes protection practical.
+- **It feels disproportionate.** People associate password protection with classified documents, not a $500 invoice. But freelance invoices are exactly what invoice fraud targets.
+
+## Why SignMyPDF is right for this
+
+- **Free, no registration, no paywall at download.** Protect your invoice and download the secured file immediately — no account, no subscription, no per-document charge.
+- **Files processed in browser.** Your invoice data — bank details, client names, pricing — never leaves your device. Everything runs locally. This is what makes it appropriate for financial documents.
+- **AES-256 encryption.** The protection uses the same standard used in financial and legal applications. For what that means in practice, [AES-128 vs AES-256 PDF encryption explained](/blog/aes-128-vs-aes-256-pdf) breaks it down.
+- **Works with any PDF viewer.** The protected file opens in Adobe Reader, Mac Preview, iOS Files, and the built-in PDF viewer on Android — the client just types the password you sent separately.
+- **No cap on free uses.** Whether you protect one invoice per week or fifty, there's no daily limit on the protect tool for free users.
+
+[IMAGE: Password prompt appearing when a recipient opens a protected invoice PDF in Adobe Reader, with the invoice content hidden behind the lock screen]
+
+If you regularly send sensitive documents to clients beyond invoices, [protecting confidential business reports as PDFs](/blog/protect-confidential-business-reports-pdf) covers the same workflow across other document types.
+
+## FAQ
+
+**Does my client need special software to open a protected invoice?**
+No. Any standard PDF viewer handles password-protected PDFs. When the client opens the file, they'll see a password prompt, type the password you sent separately, and the invoice opens normally. Adobe Reader, Mac Preview, and the built-in viewers on iOS and Android all support it without any extra install.
+
+**Is password protection actually strong enough for financial documents?**
+AES-256 password protection is very strong against real-world attacks when you use a proper password — not a word or a date. A brute-force attack against a well-chosen password on an AES-256-encrypted PDF isn't feasible with current technology. For an honest look at the real limits, [is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure) covers what's truly at risk and what isn't.
+
+**What if I forget the password I set?**
+Re-protect a new version from your original invoice file. The protected PDF can't be unlocked without the password, but re-creating it from your source document takes the same 30 seconds as protecting it the first time. Keep a note of the password in a password manager — not in the invoice file name itself.
+
+[CTA]Protect PDF Now — Free|Protect your invoice before you send it. No account needed.|Protect PDF Now — Free
+
+## Related tools
+
+- [Why your lawyer asks you to password-protect PDFs](/blog/why-lawyer-asks-password-protect-pdf)
+- [Freelancers: how to protect client contracts](/blog/freelancers-protect-client-contracts)
+- [What happens if a protected PDF leaks?](/blog/what-happens-if-protected-pdf-leaks)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
