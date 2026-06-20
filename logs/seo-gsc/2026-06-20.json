@@ -1,0 +1,154 @@
+{
+  "date": "2026-06-20",
+  "timestamp": "2026-06-20T06:53:40.523Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-06-19T01:25:56.655Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 3513,
+    "clicks28d": 15,
+    "avgPosition28d": 23.1821804725306,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 606,
+        "clicks": 6,
+        "position": 8.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 25,
+        "clicks": 2,
+        "position": 8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+        "impressions": 4,
+        "clicks": 1,
+        "position": 15
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+        "impressions": 6,
+        "clicks": 1,
+        "position": 33.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 231,
+        "clicks": 1,
+        "position": 10.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+        "impressions": 20,
+        "clicks": 1,
+        "position": 12.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 63,
+        "clicks": 1,
+        "position": 9.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 56,
+        "clicks": 1,
+        "position": 9.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 1262,
+        "clicks": 1,
+        "position": 18.4
+      },
+      {
+        "url": "https://signmypdf.io/blog",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 25
+      },
+      {
+        "url": "https://signmypdf.io/blog/fill-irs-form-online-free",
+        "impressions": 20,
+        "clicks": 0,
+        "position": 36.8
+      },
+      {
+        "url": "https://signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 41
+      },
+      {
+        "url": "https://signmypdf.io/terms",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 10.5
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 12,
+        "clicks": 0,
+        "position": 7.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 31.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 63
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 67,
+        "clicks": 0,
+        "position": 25.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 33,
+        "clicks": 0,
+        "position": 24.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/consultants-proposals-digital-signature",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 77
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 93
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
