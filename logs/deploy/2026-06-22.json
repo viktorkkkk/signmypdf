@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-22",
+  "timestamp": "2026-06-22T02:15:32Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "8c0469bb85948d406a6c928b0d18ed007ccf6c6c",
+  "newSlugs": "sign-pdf-mac-preview-vs-browser fill-scanned-pdf-form-online",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/27925411790"
+}
