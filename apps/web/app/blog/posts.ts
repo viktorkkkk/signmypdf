@@ -15504,6 +15504,176 @@ Use something you can communicate separately from the file — random enough tha
 - [Fill PDF Form Online — Free](/fill)
 `,
   },
+  {
+    slug: 'sign-pdf-mac-preview-vs-browser',
+    title: 'Sign PDF on Mac: Preview vs Browser Tool',
+    excerpt: 'Mac Preview can sign PDFs but ties your signature to one device. A browser tool works on any Mac, Windows PC, or phone — free, no account.',
+    date: '2026-06-23',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['sign PDF Mac', 'Mac Preview signature', 'sign PDF without software', 'sign PDF browser', 'Mac PDF signing tool', 'free PDF signature Mac', 'SignMyPDF vs Preview'],
+    metaTitle: 'Sign PDF on Mac: Preview vs Browser Tool',
+    metaDescription: 'Mac Preview can sign PDFs but ties the signature to one Mac. A browser tool is faster, works on any device, and keeps files private — free, no account.',
+    content: `You're on a Mac. You need to sign a PDF — a contract, a lease, or a form someone sent you. Preview is already installed, already open in the Dock. The natural move is to try to sign your PDF right there.
+
+Most Mac users run into two problems quickly. Drawing a signature on the trackpad produces something that looks more like a seismograph reading than a signature. Camera mode works better, but only if the room is well lit, you have a blank piece of paper, and you can hold your hand steady. Even when it works, that saved signature lives on that Mac only. Switch machines, borrow a colleague's laptop, or try to sign something on your phone — and it's gone.
+
+A browser-based signing tool works on any device, in any browser, without setup.
+
+[CTA]Sign a PDF in your browser now — free|No install, no Apple ID, no trackpad required.|Sign PDF Now — Free
+
+## How to Sign a PDF in Mac Preview
+
+1. Open the PDF in Preview.
+2. Click the Markup toolbar icon (pencil in a circle at top right).
+3. Click the Signature button, then Create Signature.
+4. Draw on the trackpad, photograph your signature, or type your name.
+5. Click the saved signature and drag it onto the page.
+
+The signature saves to your macOS Keychain. It reappears next time you use Preview on the same Mac — which is convenient until you're not on the same Mac.
+
+## How to Sign a PDF with SignMyPDF
+
+1. Go to signmypdf.io/sign and upload your PDF.
+2. Click Draw, Type, or Upload to create your signature.
+3. Drag it into position on the page and resize if needed.
+4. Download the signed PDF immediately.
+
+No Apple ID. No trackpad required. Works on any browser, any device.
+
+[IMAGE: SignMyPDF sign interface showing a signature being dragged into position on a PDF page, with a clean result below]
+
+## Why Preview Gets in the Way
+
+- **Trackpad drawing rarely looks right.** Most trackpad signatures look messier than your actual signature. Camera capture is cleaner, but it requires good lighting, a blank piece of paper, and a steady hand — setup that takes longer than the signing itself.
+- **Your saved signature is device-locked.** Preview stores signatures in your macOS Keychain, tied to that specific Mac. On a different machine, you start over.
+- **Auto-sizing doesn't exist.** If the PDF has a designated signature field, Preview's dragged signature often overflows the box or sits misaligned. Resizing is manual and fiddly, especially on multi-page documents.
+- **Doesn't follow you to other platforms.** If you work across a Mac and a Windows PC, or need to sign something on your iPhone, Preview's saved signature isn't there.
+- **Some restricted PDFs block it.** Certain PDFs with permission settings prevent Preview's markup layer from saving correctly — you sign, you save, and the recipient opens an empty space.
+
+## Why SignMyPDF Works Better
+
+- **Free, no registration, no paywall at download.** Sign 2 PDFs per day at no cost, no account required.
+- **Works on any device or OS.** Mac, Windows, Android, iPhone, Chromebook — same browser tool, same result.
+- **Files processed in browser.** Your PDF never leaves your device — worth noting for contracts, legal forms, and anything with sensitive information.
+- **Cleaner signature placement.** The signature renders as a transparent image that sits naturally on the page, with no white background box.
+- **Saves across devices.** Draw once, and your signature reappears on your next visit from any device you use SignMyPDF on.
+
+For documents that need text filled in before you sign — dates, initials on every page, or form answers — use the [Fill tool](/fill) first, then add your signature on top.
+
+[IMAGE: Side-by-side showing a trackpad-drawn Preview signature on the left looking rough, versus a clean SignMyPDF signature on the right]
+
+## When Preview Is the Right Call
+
+Preview is a solid tool for personal documents, draft annotations, or anything you're not sending to another party. If you're signing your own notes or marking up a draft for your own reference — and you're always on the same Mac — the built-in tool is genuinely convenient.
+
+For anything involving another party — a [non-compete agreement](/blog/sign-non-compete-agreement-online), an employment form, or a lease — a dedicated signing tool gives a cleaner result and works on whatever device you happen to be using that day.
+
+## Quick Comparison
+
+| | Mac Preview | SignMyPDF |
+|---|---|---|
+| Cost | Free (built-in) | Free (2/day) |
+| Account required | Apple ID | None |
+| Works on Windows | No | Yes |
+| Works on iPhone | Limited | Yes |
+| Signature input | Trackpad / photo / type | Draw, type, or upload |
+| File privacy | Local only | Browser-only (no server) |
+
+## FAQ
+
+**Is a signature made in a browser legally valid on a Mac?**
+Yes. E-signatures carry the same legal weight regardless of the software used to create them, under ESIGN (US) and eIDAS (EU). Legal validity depends on the signer's intent, not on whether they used Preview or a browser tool.
+
+**Can I use a Mac Preview signature inside SignMyPDF?**
+Not directly. But you can export your Preview signature as a PNG file and use SignMyPDF's Upload option to import it. Draw your signature in Preview, export it as a PNG, then upload that file to SignMyPDF for future use on any device.
+
+**Does SignMyPDF work offline on a Mac?**
+You need an internet connection to open the tool in your browser. Once loaded, signature drawing and PDF processing happen entirely in your browser — your file is never sent to a server.
+
+[CTA]Sign your PDF now — free, no account, no install|Works on Mac and every other device. Files never leave your browser.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign PDF — Free](/sign)
+- [Fill PDF form online free](/fill)
+- [Sign a PDF on your iPhone](/blog/sign-pdf-on-iphone-free)
+`,
+  },
+  {
+    slug: 'fill-scanned-pdf-form-online',
+    title: 'Fill a Scanned PDF Form Online Free',
+    excerpt: 'Your form arrived as a scanned image. No clickable fields. Add text boxes over the blanks and download a completed PDF — no printing, no software.',
+    date: '2026-06-23',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: ['fill scanned PDF', 'scanned PDF form', 'PDF form not fillable', 'fill image PDF', 'fill PDF online free', 'type on PDF form', 'scanned form fill online'],
+    metaTitle: 'Fill a Scanned PDF Form Online Free',
+    metaDescription: 'Got a scanned PDF with no clickable fields? Add text boxes over the blank lines and download a filled PDF — free, no account, no software.',
+    content: `Your insurance company, bank, or HR department sends you a scanned PDF form to complete. You open it — no fillable fields, no text boxes, nothing you can click into. You're looking at a flat image of a paper form that was photocopied or photographed and saved as a PDF.
+
+Filling a scanned PDF form is different from filling an interactive one. Standard form fields don't exist in this kind of file. What you need instead is a way to place typed text directly on top of the image, positioned to align with the blank lines.
+
+That's exactly what SignMyPDF's Fill tool does. No OCR software. No Acrobat Pro subscription. No printing and re-scanning.
+
+[CTA]Fill your scanned PDF now — free, no account required|Add text anywhere on the page, aligned with the original blanks.|Fill PDF Form Now — Free
+
+## How to Fill a Scanned PDF Form Online
+
+1. Go to signmypdf.io/fill and upload the PDF.
+2. Click 'Add Text' to place a text box anywhere on the page.
+3. Type your answer in the box.
+4. Drag the text box to align it with the blank line on the form.
+5. Repeat for each field, then download the completed PDF.
+
+Your recipient gets a document that looks filled out, with your typed answers sitting exactly where the blanks were.
+
+[IMAGE: SignMyPDF Fill tool showing a scanned bank form with text boxes added over the blank fields, positioned to match the printed layout]
+
+## Why Scanned PDFs Are Hard to Fill
+
+- **No clickable fields exist.** The PDF is an image — clicking anywhere does nothing. Standard 'click to type' doesn't apply. Most PDF readers, including the free version of Adobe Reader, can only fill PDFs that have interactive form fields built in.
+- **Printing is the obvious workaround — but it's a time sink.** Print the form, fill by hand, scan it back in, upload it. That's four steps, a printer, a scanner, and legibility concerns, just to answer a few questions.
+- **OCR software is expensive for occasional use.** Adobe Acrobat Pro ($22.99/month) can recognize scanned forms and convert them to editable PDFs using optical character recognition. Worth it if you do this daily; hard to justify for one form.
+- **E-signature apps don't cover this.** Most e-signature tools handle adding a signature to an interactive PDF, not typing answers into a scanned one. They'll take your signature, but they won't let you fill the form first.
+- **Handwritten responses look less professional.** A typed answer looks cleaner on official documents — insurance forms, government paperwork, and HR records often end up in permanent files.
+
+## Why SignMyPDF Works on Scanned Forms
+
+The Fill tool places draggable text boxes on top of any PDF — including flat, image-only ones. You're not filling interactive fields that don't exist; you're building your own text layer and positioning it precisely over the blank lines.
+
+- **Free, no registration, no paywall at download.** Fill 2 PDFs per day without creating an account or giving an email address.
+- **Files processed in browser.** Your form content — tax details, medical history, financial data — never reaches a server. The file stays on your device throughout.
+- **Accurate placement.** Drag and resize each text box until it lines up exactly with the blank line below it.
+- **Font size control.** Match the text size to the form's printed text so the filled version looks consistent and professional.
+- **Works on any device.** Mac, Windows, iPhone, Android — open signmypdf.io/fill in your browser.
+
+For forms that also need a signature after filling — a medical release, a tax consent form, an insurance claim — use the [Sign tool](/sign) as a second step, or keep both tabs open.
+
+For a different problem — where a PDF does have form fields but they still won't accept typing — see [PDF form fields not working](/blog/pdf-form-fields-not-working-fix). That's a separate issue caused by field restrictions, not a scanned PDF.
+
+[IMAGE: Close-up of typed text aligned precisely over a blank line in a scanned form, showing the clean, professional finished appearance]
+
+## FAQ
+
+**Will the typed text look like it belongs in the form?**
+It depends on how closely the font size matches the original. SignMyPDF uses a clean sans-serif by default, similar to most standard form fonts. Adjust the font size until the text lines up cleanly with the form's printed baseline, and the filled version looks indistinguishable from a digitally completed document.
+
+**Can I fill a scanned PDF on my phone?**
+Yes. The Fill tool works in mobile browsers. Positioning text boxes by touch is less precise than with a mouse, but zooming in on each field area makes it manageable. For forms with many small fields, a desktop browser is easier.
+
+**Is it legal to type over a scanned form this way?**
+Yes. You're adding your answers to the questions the form asks — that's exactly what filling out a form means. Government agencies, insurance companies, and employers routinely accept typed responses on scanned PDF forms. You're not altering the questions or the form's structure; you're completing it.
+
+[CTA]Fill your scanned PDF form now — free|No printing. No software. Works in your browser on any device.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill PDF Form Online — Free](/fill)
+- [Sign PDF Online — Free](/sign)
+- [Fix PDF form fields not working](/blog/pdf-form-fields-not-working-fix)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
