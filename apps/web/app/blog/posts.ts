@@ -15674,6 +15674,172 @@ Yes. You're adding your answers to the questions the form asks — that's exactl
 - [Fix PDF form fields not working](/blog/pdf-form-fields-not-working-fix)
 `,
   },
+  {
+    slug: 'electronic-signature-rejected-by-landlord',
+    title: 'Electronic Signature Rejected by Landlord?',
+    excerpt: 'Your landlord won\'t accept your electronic signature on the lease. Here\'s whether they can legally refuse wet ink — and how a drawn signature usually fixes it.',
+    date: '2026-06-24',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'electronic signature rejected landlord',
+      'landlord wont accept electronic signature',
+      'can landlord refuse electronic signature',
+      'sign lease online free',
+      'drawn signature pdf lease',
+      'electronic signature lease legal',
+      'sign rental agreement electronically',
+      'electronic signature not accepted fix',
+    ],
+    metaTitle: 'Electronic Signature Rejected by Landlord?',
+    metaDescription: 'Landlord won\'t accept your electronic signature? Learn whether they can legally require wet ink and how a drawn signature usually fixes it.',
+    content: `
+## Electronic Signature Rejected by Landlord?
+
+You emailed your signed lease back to the landlord. An hour later: "We need a handwritten signature — not a digital one." Move-in is four days away, you don't own a printer, and now you're searching for what to do when your electronic signature is rejected by a landlord.
+
+This is more common than it looks. Electronic signatures rejected by landlords are almost always about appearance, not legal principle — landlords who see a typed font clicked through a button don't recognize it as a "real" signature. A drawn signature changes that response entirely.
+
+[CTA]Sign PDF Now — Free|Draw your real signature and download a clean lease PDF in under 2 minutes. No account.|Sign PDF Now — Free
+
+## Can a landlord legally reject your electronic signature?
+
+Yes. The ESIGN Act and UETA make electronic signatures legally valid across the US, but those laws don't obligate landlords to accept them. A landlord who specifies upfront that they require wet-ink signatures is within their rights. But most landlords aren't invoking a legal position — they're skeptical of a typed font that looks like someone pressed a button. See [electronic signature laws by state](/blog/electronic-signature-laws-by-state) for jurisdiction-specific detail.
+
+A drawn signature is different. When a landlord sees handwriting placed directly on the signature line, they don't question the format. They've been accepting scanned signatures — which look identical to a drawn digital signature — for years.
+
+## How to sign your lease so landlords accept it
+
+1. Open your lease PDF in [SignMyPDF](/sign) in your browser
+2. Click "Add Signature" and choose the Draw tab
+3. Sign with your mouse, trackpad, or finger — your actual handwriting
+4. Place the signature exactly on the signature line
+5. Download the PDF — it looks indistinguishable from a scanned wet-ink page
+
+[IMAGE: Side-by-side comparison showing a typed click-to-sign vs a drawn signature placed on a lease signature line in SignMyPDF]
+
+If your landlord uses a platform like DocuSign or HelloSign to send forms for [rental agreement signing](/blog/electronic-signature-legal-rental), they already accept digital signatures — they just don't realize that a free browser tool produces the same clean output. Showing them the actual PDF usually resolves the objection on first look.
+
+## Why most signing tools fall short here
+
+- Typed fonts (click-to-sign) look nothing like real handwriting — landlords notice immediately
+- Tools that add "Electronically signed by..." banners inside the PDF signal a third-party process and raise suspicion
+- Many apps require account creation before you can even reach the signing interface
+- Downloaded files carry third-party logos that mark the document as generated externally
+- Multi-step email-link workflows take time you don't have when move-in is days away
+
+## Why SignMyPDF works where others don't
+
+- Draw mode captures real handwriting — your mouse or finger strokes, not a font
+- Clean PDF output: no logos, no "signed via..." overlays in the downloaded file
+- Free, no registration, no paywall at download — 2 PDFs per day free
+- Files processed entirely in your browser — your lease never leaves your device
+- Done in under two minutes: open, draw, place, download
+
+## FAQ
+
+**Can a landlord legally refuse an electronic signature?**
+Yes and no. The ESIGN Act and UETA validate electronic signatures but don't force landlords to accept them. A landlord who requires wet ink upfront is within their rights. In practice, most landlords are skeptical of typed signatures specifically — not drawn ones. Switching to a hand-drawn signature almost always ends the objection without a legal argument.
+
+**Will my drawn mouse signature look like my real signature?**
+Mouse signatures are messier than normal handwriting — hand control with a mouse is just awkward. On a phone or tablet, a finger or stylus drawn in SignMyPDF gets much closer to your natural signature. Either way, drawn signatures look far more legitimate to landlords than any click-to-sign font.
+
+**What if my landlord still refuses after I redraw the signature?**
+Your remaining options are printing at a library or print shop, couriering the signed page, or scanning a hand-signed copy and emailing it. A small number of landlords genuinely need a physical document — usually older property management companies with no digital workflow. That said, a drawn signature from SignMyPDF is visually identical to a scanned wet-ink document, and most landlords accept it on first look.
+
+[CTA]Sign PDF Now — Free|Sign your lease in the browser, free. No account, no watermarks.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a lease agreement online — free](/blog/how-to-sign-lease-agreement-online)
+- [Sign a lease renewal online](/blog/sign-lease-renewal-online)
+- [Electronic signature vs. wet ink: key differences](/blog/electronic-signature-vs-wet-signature)
+`,
+  },
+  {
+    slug: 'stop-pdf-from-being-forwarded',
+    title: 'Stop Your PDF From Being Forwarded or Shared',
+    excerpt: 'Someone forwarded your confidential PDF without permission. Here\'s what password protection actually does — and how to prevent unauthorized access the next time.',
+    date: '2026-06-24',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'stop pdf from being forwarded',
+      'prevent pdf from being shared',
+      'password protect pdf before sharing',
+      'pdf forwarded without permission',
+      'stop pdf sharing',
+      'protect confidential pdf',
+      'pdf password prevent unauthorized access',
+      'encrypt pdf before emailing',
+    ],
+    metaTitle: 'Stop Your PDF From Being Forwarded or Shared',
+    metaDescription: 'Someone forwarded your PDF without permission. Learn how password protection limits who can open it — free, no account, files stay in your browser.',
+    content: `
+## Stop Your PDF From Being Forwarded or Shared
+
+You sent your project quote to one client. A week later, a competing vendor already knows your pricing. Someone forwarded your PDF without asking — with no warning and no trace. Stopping a PDF from being shared after the fact is impossible. But you can control who can actually open it the next time you send one. A password-protected PDF is still forwarded as easily as any file, but the person on the other end hits a password wall before they can read a single line.
+
+That's the real protection: not blocking the forward, but making the file unreadable without a password only you control.
+
+[CTA]Protect PDF Now — Free|Password-protect your PDF before sharing. Free, files never leave your browser.|Protect PDF Now — Free
+
+## What actually stops a PDF from being read by unauthorized people
+
+Nothing prevents someone from forwarding an email attachment — that's not a PDF problem, it's just how email works. What you can control is whether the forwarded file is readable. A properly encrypted PDF requires a password to open, and if the password wasn't shared with the unintended recipient, the file is useless to them even if they have it.
+
+Beyond the open password, you can also set permissions that restrict what authorized users can do: disable copying text, block printing, prevent editing. These restrictions work on top of the open password and are enforced by any standard PDF viewer.
+
+If you regularly share confidential PDFs — quotes, proposals, contracts, financial summaries — [protecting them before emailing](/blog/protect-pdf-before-emailing-clients) is a 30-second step that creates a real barrier. Without it, you're relying entirely on the recipient's discretion.
+
+## How to protect your PDF before sharing
+
+1. Open [SignMyPDF Protect](/protect) in your browser
+2. Upload your PDF
+3. Set an open password — something distinct from your email or banking passwords
+4. Optionally restrict copying, printing, or editing in the permissions panel
+5. Download the protected file and share the password separately — by phone or text, never in the same email
+
+[IMAGE: SignMyPDF protect interface showing the password field and permission toggles for copying, printing, and editing]
+
+That last step matters more than it sounds. If you put the password in the same email thread as the PDF, anyone who receives the forwarded message has both. [Just sending a document by email isn't enough](/blog/just-email-it-isnt-enough-for-sensitive-documents) for anything genuinely sensitive — the password and the file should never travel together.
+
+## Why most protection tools are frustrating
+
+- Many free PDF tools apply a restriction flag that some viewers ignore entirely — not real AES encryption
+- Others require a paid plan for the encryption level that actually holds up
+- The difference between an open password and permission restrictions is almost never explained
+- Files get uploaded to a server, meaning your document was already exposed during processing
+- Clunky interfaces and file size limits slow down a workflow that should take 30 seconds
+
+## Why SignMyPDF handles this differently
+
+- Free, no registration, no paywall at download — 2 PDFs per day free
+- AES 256-bit encryption — what banks use, not a soft metadata flag
+- Files processed entirely in your browser — your PDF never touches a server
+- You control both the open password and the permissions layer independently
+- Upload, set password, download — done in under a minute
+
+## FAQ
+
+**Does password protection stop someone from forwarding my PDF?**
+No — anyone can forward the email or share the file, just like any attachment. What the password does is prevent the recipient from opening it. Even if your PDF reaches a hundred inboxes, none of those people can read it without the password. That's why you share the password through a different channel: if you include it in the same email, you've left the door open.
+
+**What's the difference between an open password and permissions?**
+An open password controls who can open the file at all. Permission restrictions control what an authorized user can do once inside — printing, copying text, editing the content. You can set one without the other. For most sensitive documents, an open password alone is enough; add restrictions if you also need to prevent copying or printing by authorized recipients.
+
+**Can someone bypass a PDF password?**
+A strong password on an AES-encrypted PDF is practically unbreakable within any realistic timeframe. The real vulnerability isn't technical — it's a weak or guessable password, or the password being carelessly shared. Treat it like a PIN: something distinct, not reused from other accounts. Length matters more than complexity: 12 or more random characters beats a short word every time.
+
+[CTA]Protect PDF Now — Free|Password-protect your PDF in 30 seconds. Free, no account, no uploads.|Protect PDF Now — Free
+
+## Related tools
+
+- [Sent a confidential document unprotected? What to do](/blog/sent-confidential-contract-unprotected)
+- [Is a password-protected PDF actually secure?](/blog/is-password-protected-pdf-actually-secure)
+- [Password protect PDF free online](/blog/password-protect-pdf-online-free)
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {

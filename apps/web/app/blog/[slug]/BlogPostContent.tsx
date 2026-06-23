@@ -116,6 +116,9 @@ const PROTECT_SLUGS = new Set([
   // New — slugs that don't match the heuristic patterns above
   'protect-business-proposal-pdf',
   'protect-invoice-pdf-online',
+  'protect-tax-return-pdf',
+  'protect-confidential-business-reports-pdf',
+  'stop-pdf-from-being-forwarded',
 ]);
 
 export function getArticleTool(slug: string): ArticleTool {
