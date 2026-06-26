@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-26",
+  "timestamp": "2026-06-26T02:11:53Z",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "sha": "df6d49842e4926445d4f66c016650f89dda0ca0a",
+  "newSlugs": "sign-pdf-and-email-back protect-pdf-for-remote-workers",
+  "deployUrl": "",
+  "deployOutcome": "failure",
+  "indexnowOutcome": "skipped",
+  "googleOutcome": "skipped",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/28212715866"
+}
