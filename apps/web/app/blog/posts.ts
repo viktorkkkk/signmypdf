@@ -16476,6 +16476,158 @@ Yes — when setting the owner password, you can disable text selection and copy
 - [Protect Confidential Business Reports PDF](/blog/protect-confidential-business-reports-pdf) — for internal reports that should not be forwarded
 `,
   },
+  {
+    slug: 'sign-custody-agreement-online',
+    title: 'Sign a Custody Agreement Online — Free',
+    excerpt: 'Attorney emailed the parenting plan and it needs signing today. Skip the printer — sign it in your browser, no account, no watermark, instant download.',
+    date: '2026-06-29',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'sign custody agreement online',
+      'sign parenting plan online',
+      'custody agreement electronic signature',
+      'sign family law documents online',
+      'electronic signature custody agreement',
+      'sign pdf family law',
+      'sign divorce documents online',
+    ],
+    metaTitle: 'Sign a Custody Agreement Online — Free',
+    metaDescription: 'Sign a custody agreement PDF online — no account, no printer, no watermark. Works on phone or desktop. Instant download.',
+    content: `Your lawyer emailed the custody agreement and parenting plan Thursday at 4 PM. You need to sign a custody agreement online and return it before tonight's mediation — and you have two hours. No printer at work. The usual PDF signing tools want you to create an account, start a free trial, or pay before downloading the signed copy. Sign custody agreement documents in your browser: no account, no watermark, no platform coordination with the other parent.
+
+This should be a five-minute task. Here's how to do it.
+
+[CTA]Sign PDF Now — Free|Sign your custody agreement in the browser. No account, no watermark — the signed PDF downloads instantly.|Sign PDF Now — Free
+
+## How to Sign a Custody Agreement PDF Online
+
+1. Open [SignMyPDF at /sign](/sign) in any browser — no install needed
+2. Upload the custody agreement PDF your attorney sent
+3. Click the signature line and choose draw, type, or upload your signature
+4. Place a date field if the agreement requires one
+5. Download the signed PDF and email it back to your attorney
+
+No account required on either side. The attorney and court receive a standard PDF file — no platform to join, no special viewer needed.
+
+[IMAGE: A parenting plan PDF open in a browser with a handwritten-style signature placed on the petitioner signature line and a date field added below it]
+
+## Why Signing a Custody Agreement Gets Complicated
+
+Signing family law documents should be routine. Here's what gets in the way:
+
+- **Sending platforms require the sender to set up a workflow.** If your attorney emailed you a PDF to sign and return, you're not inside a DocuSign or HelloSign envelope — you need a standalone tool that handles just your signature.
+- **Most tools add friction right at the start.** Account creation, email verification, and product tours before you can upload a single file.
+- **Watermarks make the document look unofficial.** A custody agreement with a "TRIAL" or "FREE VERSION" banner across it is not what you want to deliver to your attorney or submit to a court.
+- **The signed file needs to be a standard PDF.** Some platforms create proprietary signed documents that require the recipient to have the same software installed to verify them.
+- **Mobile tools fall short at the worst time.** You may be signing this from your phone with a mediation deadline an hour away — desktop-first tools stop working well on small screens.
+
+## Why SignMyPDF Works for This
+
+- **Free, no registration, no paywall at download** — up to 2 PDFs per day without an account; your signed custody agreement downloads with no watermark attached
+- **Works on any device** — phone, tablet, or desktop; the same browser tool handles all three without installing anything
+- **Files processed in your browser** — custody agreements contain full names, addresses, children's information, and custody schedules; none of that leaves your device
+- **No coordination needed with the other party** — you sign, send the file by email, the other parent signs their copy the same way; your attorney collects both versions
+- **Draw, type, or upload your signature** — whichever matches what the agreement expects or what the other party anticipates
+
+For divorces where both the parenting plan and property settlement need signatures, [sign a settlement agreement online](/blog/sign-settlement-agreement-online) covers the same workflow for the financial side. If you're not certain whether electronic signatures are valid for custody agreements in your state, [electronic signature laws by state](/blog/electronic-signature-laws-by-state) breaks down the rules by jurisdiction.
+
+## Frequently Asked Questions
+
+**Is an electronic signature valid on a custody agreement?**
+In most US states, yes. The federal E-SIGN Act and the Uniform Electronic Transactions Act (UETA), adopted in 49 states, make electronic signatures enforceable on family law documents including parenting plans and custody agreements. Some courts require notarization on certain custody orders — confirm the specific requirement with your attorney before signing.
+
+**The other parent also needs to sign. How does that work?**
+One parent signs, downloads the PDF, and returns it to the attorney. The attorney shares the signed file with the second parent. The second parent opens it in SignMyPDF, adds their signature in the correct location, and downloads the final version. Neither parent needs an account. No platform coordination required. The process works the same way the attorney would handle it if they were walking you through it manually.
+
+**Will the court accept a PDF signed this way?**
+Family courts in most jurisdictions accept electronically signed agreed orders and parenting plans. If the court requires wet-ink signatures — some family courts still do for final custody orders — your attorney will tell you before you proceed. For preliminary agreements between parties and drafts under attorney review, an electronic signature is standard.
+
+[CTA]Sign PDF Now — Free|Sign your custody agreement online — no printer, no account, no watermark. Instant download.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign Divorce Papers Online](/blog/sign-divorce-papers-online) — for divorce documents beyond the parenting plan
+- [Sign Settlement Agreement Online](/blog/sign-settlement-agreement-online) — property and financial agreements in the same workflow
+- [Electronic Signature Laws by State](/blog/electronic-signature-laws-by-state) — verify your state's requirements for family law electronic signatures
+`,
+  },
+  {
+    slug: 'fill-accident-report-form-pdf',
+    title: 'Fill an Accident Report Form PDF — Free',
+    excerpt: 'Insurer sent an accident report PDF and needs it back today. Fill it from your phone or browser — no account, no printer, no Adobe required.',
+    date: '2026-06-29',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'fill accident report form pdf',
+      'accident report form online',
+      'fill accident report online',
+      'fill incident report pdf',
+      'accident report pdf filler',
+      'fill pdf form free',
+      'pdf form filler no account',
+    ],
+    metaTitle: 'Fill an Accident Report Form PDF — Free',
+    metaDescription: 'Fill an accident report form PDF on your phone or browser. No account, no printer, no Adobe. Free, instant download.',
+    content: `Your insurer texted a link right after the fender-bender: fill out an accident report form PDF and submit it before end of business. You're still in the parking lot. Your phone opens the PDF but the fields won't respond when you tap them. Or your employer sent an incident report PDF the morning after a workplace fall and needs it back by noon. Either way, you need to fill an accident report form PDF right now, without a printer, without Adobe, and without creating an account.
+
+Here's the fastest way.
+
+[CTA]Fill PDF Form Now — Free|Open the fill tool, upload your accident report PDF, and type directly into any field — no account, no watermark.|Fill PDF Form Now — Free
+
+## How to Fill an Accident Report Form PDF
+
+1. Go to [signmypdf.io/fill](/fill) — works in any browser on your phone or laptop
+2. Upload the accident report PDF from your email or files app
+3. Click or tap any field and start typing
+4. If a field won't respond, use the text tool to place a text box over it
+5. Download the completed form and send it however the requester specified
+
+The downloaded file is a standard PDF — you can email it, upload it to a claims portal, or print it if a hard copy is required.
+
+[IMAGE: An accident report PDF open on a phone browser with the date, location, and description fields filled in using the SignMyPDF fill tool]
+
+## Why PDF Tools Are Frustrating for Accident Reports
+
+Accident report forms are often scanned or flat PDFs, which breaks most standard form-filling tools:
+
+- **Flat or scanned PDFs have no interactive fields.** Your phone's PDF viewer opens the document fine but treats it as a read-only image — clicking a blank space does nothing.
+- **Adobe Reader won't let you type.** Acrobat Reader is a viewer. Acrobat Pro lets you fill forms and costs money. Most people have Reader, not Pro.
+- **Mobile PDF apps hide form editing behind a paywall.** The form opens for free; the ability to type requires an upgrade screen you don't have time for.
+- **Some tools compress or alter your document.** When the accident report is a legal record, you don't want a tool that reprocesses the original file in ways you can't verify.
+- **Account creation in the wrong moment.** You're filling this out right after something stressful happened. Nobody wants to verify an email before they can type into a form.
+
+## Why SignMyPDF Works for This
+
+- **Free, no registration, no paywall at download** — fill the accident report, download, send; no account required at any step
+- **Works on scanned and flat PDFs** — if the form has no interactive fields, place text boxes anywhere on the page; the result looks the same in the downloaded file
+- **Mobile-first** — designed to work on a phone; tap any blank field on the form and the keyboard opens immediately
+- **Files processed in your browser** — your accident details, license plates, witness names, and insurance information never reach a server
+- **Signing built in** — if the form requires a signature at the bottom, add it in the same session without switching tools
+
+If your accident report triggers an insurance claim form, [fill an insurance claim form PDF](/blog/fill-insurance-claim-form-pdf) walks through the same workflow for claim forms specifically. For any form that won't let you type in the fields, [fill PDF without printing](/blog/fill-pdf-without-printing) explains exactly why that happens and how to get around it.
+
+## Frequently Asked Questions
+
+**What if the accident report PDF won't let me click the fields?**
+That's a flat or scanned PDF with no interactive form fields. Use the text tool in SignMyPDF to click anywhere on the document and place a text box over the blank area. It works regardless of whether the original PDF has interactive fields or not.
+
+**Can I fill this from my phone at the scene?**
+Yes. Go to signmypdf.io/fill in your phone's browser — Chrome or Safari both work. Upload the PDF from your email or files app and tap any field to type. No app to install, no login required. If your signal is weak, download the PDF first and fill it once you have a stable connection.
+
+**Is an electronically filled accident report accepted?**
+Yes. Insurance companies, employers, and property managers accept typed accident report forms. The content — time, location, description, parties involved — is what matters. If a signature is also required, add it in the same session using the sign tool.
+
+[CTA]Fill PDF Form Now — Free|Fill your accident report PDF from your phone or browser — no account, no printer, files stay on your device.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill Insurance Claim Form PDF](/blog/fill-insurance-claim-form-pdf) — for the claim form that follows an accident report
+- [Fill PDF Without Printing](/blog/fill-pdf-without-printing) — when the PDF form won't let you type
+- [Sign PDF and Email Back](/blog/sign-pdf-and-email-back) — for accident reports that also require your signature
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
