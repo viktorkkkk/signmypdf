@@ -16628,6 +16628,160 @@ Yes. Insurance companies, employers, and property managers accept typed accident
 - [Sign PDF and Email Back](/blog/sign-pdf-and-email-back) — for accident reports that also require your signature
 `,
   },
+  {
+    slug: 'sign-termination-letter-online',
+    title: 'Sign a Termination Letter Online',
+    excerpt: 'Need to sign an employment termination letter without printing? Upload the PDF, add your signature in your browser, and download the signed file — no account, no paywall.',
+    date: '2026-06-30',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'sign termination letter',
+      'sign pdf online',
+      'electronic signature',
+      'hr documents',
+      'employment documents',
+      'digital signature free',
+      'sign letter online',
+    ],
+    metaTitle: 'Sign a Termination Letter Online',
+    metaDescription: 'Sign a termination letter online in minutes — free, no account. Upload your PDF, draw or type your signature, and download the signed file instantly.',
+    content: `You got the termination letter as a PDF and need to sign it before the end of the day. The document is one page — one signature at the bottom — but your options are awkward. The printer is in another room, printing and scanning wastes ten minutes, and the company's signing platform is for client contracts. You need to sign a termination letter and get it back to HR. Here's how to do it without installing anything or creating an account.
+
+[CTA]Sign PDF Now — Free|Upload your termination letter PDF and sign it in your browser — no account, no watermark, files stay on your device.|Sign PDF Now — Free
+
+## How to Sign a Termination Letter Online
+
+1. Open [signmypdf.io/sign](/sign) in any browser
+2. Upload the termination letter PDF
+3. Draw or type your signature in the Signature panel
+4. Click the signature line in the document to place it
+5. Download the signed PDF and send it back to HR
+
+The whole process takes about two minutes. No email to verify, no plan to pick.
+
+[IMAGE: A termination letter PDF open in the SignMyPDF editor with a handwritten signature placed on the signature line at the bottom of the last page]
+
+## Why Most Tools Make This Harder Than It Should Be
+
+Signing a single page shouldn't require a workflow. But most digital signature platforms are built for bulk contract routing, not one-off HR paperwork.
+
+- **Account creation before anything.** Most tools won't let you touch a document until you've created an account and confirmed your email address. For a single termination letter, that's two unnecessary steps before you can see the file.
+- **Free tiers usually mean watermarks or strict limits.** You can often sign one document for free, but the result carries a watermark, or you hit a monthly cap before your second document.
+- **Multi-step envelope setup for a single-signer document.** Platforms designed for contract pipelines want you to define recipients, set signing order, and send invitation emails. That overhead makes no sense when you're the only person signing and you already have the file in hand.
+- **Your document gets uploaded to their server.** Termination letters contain real personal data — the employee's name, title, final date, HR contact details. That information doesn't need to sit in a third-party cloud system.
+- **Clunky mobile experience.** Many signature platforms have stripped-down phone interfaces that make it hard to place a signature accurately, and sometimes require you to finish the download on desktop.
+
+If you regularly handle employment-related PDFs, [sign an employment offer letter online](/blog/sign-employment-offer-letter-online) covers the same workflow for the hiring side of the equation — the signing steps are identical.
+
+## Why SignMyPDF Works for Termination Letters
+
+- **Free, no registration, no paywall at download** — upload, sign, and download without an account or subscription
+- **Files processed in your browser** — the PDF stays on your device; nothing is uploaded to a server, which matters for documents that contain personal employee information
+- **Draw or type your signature** — use a mouse, trackpad, or your finger on a touchscreen; typed signatures render in a realistic handwriting style
+- **Works on any device** — Chrome, Safari, or Firefox; Windows, Mac, iPhone, or Android
+- **No workflow setup** — upload the document, place your signature, download the file; no recipients to define, no invitations to send
+
+For situations where the termination letter is part of a broader package of employment documents, [electronic signature for business contracts](/blog/electronic-signature-business-contracts) explains what makes an electronic signature hold up across different document types and jurisdictions.
+
+## Frequently Asked Questions
+
+**Is an electronically signed termination letter legally binding?**
+Yes. The federal ESIGN Act and the Uniform Electronic Transactions Act (UETA), adopted in 49 states, treat electronic signatures as legally equivalent to handwritten ones on employment documents, including termination letters. Most HR departments and employment lawyers accept them routinely. If you're in a heavily regulated industry — healthcare, finance — or if the termination involves a separation agreement with significant legal provisions, verify your company's HR policy and consult your legal team. For standard employment situations, an electronic signature is valid.
+
+**Can I sign the termination letter from my phone?**
+Yes. Open signmypdf.io/sign in Chrome or Safari on your phone. You can draw your signature with your finger and it captures a natural handwriting shape on the touchscreen. Once you download the signed PDF, it lands in your downloads folder so you can attach it to an email immediately.
+
+**Does SignMyPDF store the signed termination letter?**
+No. All processing happens inside your browser. The file and its contents — including any personal information about the employee — never reach a server. Once you close the tab, nothing is retained anywhere.
+
+[CTA]Sign PDF Now — Free|Sign your termination letter in your browser — no account required, files never leave your device.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign an Employment Offer Letter Online](/blog/sign-employment-offer-letter-online) — same workflow for the other end of the employment lifecycle
+- [Electronic Signature for Business Contracts](/blog/electronic-signature-business-contracts) — when the document is more formal or legally complex
+- [Sign a Non-Compete Agreement Online](/blog/sign-non-compete-agreement-online) — often signed alongside termination paperwork
+`,
+  },
+  {
+    slug: 'protect-pdf-from-printing',
+    title: 'Stop Your PDF from Being Printed',
+    excerpt: 'Shared a document and found someone printed it without permission? Set PDF print restrictions in your browser — free, no account, files never leave your device.',
+    date: '2026-06-30',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'protect pdf from printing',
+      'restrict pdf printing',
+      'pdf permissions',
+      'pdf password',
+      'block pdf printing',
+      'document security',
+      'pdf owner password',
+    ],
+    metaTitle: 'Stop Your PDF from Being Printed',
+    metaDescription: 'Block printing on any PDF in minutes — free, no software, no account. Set print restrictions and download the protected file to share safely.',
+    content: `You sent a pricing sheet to a client for their internal reference and three weeks later someone shows you a printed copy the client handed to someone outside the organization. The document was supposed to stay digital. You can't undo what already happened, but you can make sure every PDF you send from now on can't be printed without your permission.
+
+PDF print restrictions are a permission you set inside the file itself — the recipient reads the document normally, but the print option is grayed out or absent entirely. It takes about two minutes to protect a PDF from printing, and it costs nothing.
+
+[CTA]Protect PDF Now — Free|Block printing on any PDF in your browser — no account, no software, files never leave your device.|Protect PDF Now — Free
+
+## How to Stop a PDF from Being Printed
+
+1. Open [signmypdf.io/protect](/protect) in any browser
+2. Upload the PDF you want to restrict
+3. Set a password for the file
+4. Uncheck the "Allow printing" permission toggle
+5. Download the protected PDF and share it instead of the original
+
+The protected file opens and reads normally in any viewer. The print menu is grayed out or absent, depending on which PDF application the recipient uses.
+
+[IMAGE: The SignMyPDF protect tool showing a permissions panel with the Allow Printing toggle switched off and an owner password field filled in]
+
+## Why Most Tools Handle This Badly
+
+Most people assume password-protecting a PDF automatically restricts what recipients can do with it. It doesn't — and many tools don't explain the difference.
+
+- **Password-only tools don't control permissions.** Adding a password to open the file means recipients need a password to read it. That says nothing about what they can do once they're in. Printing restrictions require a separate layer: owner-level permissions.
+- **Granular permission controls are often paywalled.** Many online PDF tools let you add a basic password for free, but lock printing, copying, and editing restrictions behind a paid subscription.
+- **Sensitive files get uploaded to a third-party server.** A pricing document, a proposal draft, or a client contract with confidential terms doesn't belong on a server you didn't choose and didn't vet.
+- **No way to verify before sharing.** Some tools claim to apply printing restrictions, but the resulting file still opens with print available in Adobe Reader. You won't know until after you've sent it.
+- **All-or-nothing permission controls.** Platforms that do support permissions often apply them as a single toggle rather than letting you choose: block printing but still allow reading and copying, or vice versa.
+
+If your concern extends to forwarding — the client sharing the file beyond the intended audience — [stop PDF from being forwarded](/blog/stop-pdf-from-being-forwarded) explains how to combine restrictions to address both problems.
+
+## Why SignMyPDF Is Different
+
+- **Free, no registration, no paywall at download** — set print restrictions on any PDF and download the protected file without an account or subscription
+- **Files processed in your browser** — your document never reaches a server, which matters for pricing documents, proposals, and anything commercially sensitive
+- **Separate permission controls** — toggle printing, copying, editing, and annotation independently; not everything has to be locked at once
+- **Owner password protects your settings** — the permission restrictions are secured by your owner password so recipients can't simply remove them in a PDF editor
+- **Download and test before sharing** — open the protected file in your own PDF viewer to confirm print is disabled before you send it anywhere
+
+For a look at what the copying restriction covers on top of printing, [protect PDF from copying text](/blog/protect-pdf-from-copying-text) explains how the same permission layer blocks text extraction.
+
+## Frequently Asked Questions
+
+**Can someone bypass a PDF print restriction?**
+Technically yes, with dedicated recovery software. But for most business documents the restriction stops casual printing — a client, colleague, or reviewer won't take the trouble to circumvent it. The goal is reasonable friction and a clear signal that this document is not meant for printing or redistribution. Most people respect that boundary, and the restriction creates an accountability layer: if the document gets printed anyway, it happened deliberately, not by accident.
+
+**Will the print restriction work in Adobe Reader and Chrome?**
+Yes. Print restrictions follow the PDF specification and are honored by Adobe Reader, Apple Preview, Chrome's built-in PDF viewer, and most standard PDF applications. If a recipient opens the file in any major viewer, the print option will be disabled or absent.
+
+**Does blocking printing affect anything else in the document?**
+No. The text, images, layout, and visual quality of the PDF are unchanged. The document reads and displays normally. The only difference is a flag in the file's permissions metadata that tells compliant viewers to disable the print function.
+
+[CTA]Protect PDF Now — Free|Stop your PDFs from being printed — free, no account, files stay on your device.|Protect PDF Now — Free
+
+## Related tools
+
+- [Stop PDF from Being Forwarded](/blog/stop-pdf-from-being-forwarded) — restrict forwarding alongside printing
+- [Protect PDF from Copying Text](/blog/protect-pdf-from-copying-text) — block text extraction from your document
+- [Biggest Mistake When Protecting PDFs](/blog/biggest-mistake-protecting-pdfs) — common errors that leave your PDF exposed
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
