@@ -16782,6 +16782,162 @@ No. The text, images, layout, and visual quality of the PDF are unchanged. The d
 - [Biggest Mistake When Protecting PDFs](/blog/biggest-mistake-protecting-pdfs) — common errors that leave your PDF exposed
 `,
   },
+  {
+    slug: 'fill-power-of-attorney-pdf',
+    title: 'Fill a Power of Attorney PDF Online',
+    excerpt: 'Power of attorney form locked in PDF? Click any field, type your information, and download the completed form in minutes — free, no account, no printing required.',
+    date: '2026-07-01',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'fill power of attorney pdf',
+      'power of attorney form online',
+      'fill legal form pdf',
+      'poa form online',
+      'fill pdf online free',
+      'legal document pdf',
+      'fill pdf form free',
+    ],
+    metaTitle: 'Fill a Power of Attorney PDF Online',
+    metaDescription: 'Fill a power of attorney PDF online — free, no account, no software. Type into any POA form and download the completed document in minutes.',
+    content: `The notary appointment is tomorrow morning and the power of attorney form is still blank. Your parent's attorney emailed a PDF, but every field is locked — clicking anywhere opens a text-selection cursor, not a text box. You need to fill a power of attorney PDF in the next hour and don't have time to print, handwrite, and scan a multi-page legal document.
+
+Most POA forms are fillable PDFs with interactive fields you can tab through. But some are scanned images or flat PDFs with no interactive layer, which means standard software just shows a read-only document. SignMyPDF's fill tool lets you click anywhere on a flat or locked PDF and type, even if the original has no form fields — then download the completed form ready for notarization.
+
+[CTA]Fill PDF Form Now — Free|Fill any power of attorney PDF in your browser — free, no account, files stay on your device.|Fill PDF Form Now — Free
+
+## How to Fill a Power of Attorney PDF Online
+
+1. Open [signmypdf.io/fill](/fill) in any browser
+2. Upload the power of attorney PDF
+3. Click any blank field or line and type your information
+4. Use the text tool to place text on flat or scanned pages
+5. Download the completed PDF, ready for signing and notarization
+
+The completed file downloads as a standard PDF — exactly what a notary, attorney, or financial institution expects to receive.
+
+[IMAGE: A power of attorney PDF open in the SignMyPDF fill tool with the principal name, agent name, and effective date fields typed in]
+
+## Why Most Tools Make This Harder Than It Should Be
+
+Filling a legal form should not require a subscription or a desktop application. But the usual options fall short in specific ways.
+
+- **Adobe Reader locks flat PDFs.** The free version fills interactive form fields only. If the POA arrived as a scanned image, Reader shows a read-only document — upgrading to Acrobat Pro is the only path forward, which costs money for a one-time form.
+- **Most free online tools only handle interactive PDFs.** If the fields aren't clickable from the start, many web tools simply display the document with no way to add text.
+- **Printing and handwriting hurts document quality.** Handwritten text on a scanned copy looks unprofessional and can cause legibility problems when institutions verify the details.
+- **Legal documents carry sensitive personal data.** A POA form typically includes Social Security numbers, addresses, financial account scope, and the identities of both principal and agent. Uploading that to an unvetted server is an unnecessary risk.
+- **Mobile support is inconsistent.** You may be filling the form from a phone at a hospital or care facility — and some tools simply do not work on a phone browser.
+
+For a related scenario, [fill a medical release form online](/blog/fill-medical-release-form-online) walks through the same workflow for healthcare authorization forms, which are often completed alongside POA documents before a medical procedure.
+
+## Why SignMyPDF Works for Power of Attorney Forms
+
+- **Free, no registration, no paywall at download** — fill the entire multi-page form and download the completed document without creating an account or picking a plan
+- **Works on flat and interactive PDFs** — whether the POA is a scanned image or a structured form with clickable fields, the text tool lets you add information anywhere on the page
+- **Files processed in your browser** — your personal details, Social Security numbers, and the scope of legal authority stay on your device; nothing is uploaded to a server
+- **Works on mobile** — open the fill tool in Chrome or Safari on an iPhone or Android device; useful when the form arrives while you're traveling or at a care facility
+- **Signature support in the same session** — many POA forms require a signature before notarization; add it in the same session without switching tools
+
+If the POA has multiple pages requiring signatures in different places, [sign multiple PDF pages](/blog/sign-multiple-pdf-pages) explains how to place signatures on different pages in one session.
+
+## Frequently Asked Questions
+
+**Can I fill a power of attorney form that is a scanned image?**
+Yes. If the PDF is a scan with no clickable form fields, use the text tool in SignMyPDF to click anywhere on the page and type. A text box appears at that position and you can move and resize it to align with the printed field lines on the page.
+
+**Do I need to print the filled PDF for notarization?**
+Usually yes. Notarization is a physical process — the notary watches you sign, checks your ID, and applies a seal to the paper. Print the filled PDF, sign in front of the notary, and keep the notarized original. Some states have remote online notarization laws; check your state's current rules if you want an entirely digital process.
+
+**Is it safe to fill a POA that includes a Social Security number?**
+SignMyPDF processes all files inside your browser. The PDF — including Social Security numbers, addresses, and the scope of authority granted — never reaches a server. Once you close the tab, nothing is retained anywhere.
+
+[CTA]Fill PDF Form Now — Free|Fill your power of attorney PDF in your browser — no account, files never leave your device.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill a Medical Release Form Online](/blog/fill-medical-release-form-online) — for healthcare authorization forms often completed alongside POA documents
+- [Fill PDF Without Printing](/blog/fill-pdf-without-printing) — when the form is a flat image and standard fill tools won't work
+- [Sign Multiple PDF Pages](/blog/sign-multiple-pdf-pages) — when the POA requires signatures on more than one page
+`,
+  },
+  {
+    slug: 'teachers-protect-exam-pdfs',
+    title: 'Protect Your Exam PDF from Edits',
+    excerpt: 'Stop students from editing your exam PDF before the test. Add password protection and disable editing in your browser — free, no account, files never leave your device.',
+    date: '2026-07-01',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'protect exam pdf',
+      'protect pdf from editing',
+      'lock pdf from editing',
+      'pdf permissions',
+      'pdf password protection',
+      'education pdf security',
+      'restrict pdf editing',
+    ],
+    metaTitle: 'Protect Your Exam PDF from Edits',
+    metaDescription: 'Lock your exam PDF so students can read it but cannot edit or copy it — free, no account, files stay in your browser, never on a server.',
+    content: `You just finalized the semester exam and need to protect your exam PDF before sharing it with students. Last semester someone got the file a day early, edited answers, and shared the modified version in a group chat. You need to protect your exam PDF this time — so it can be opened and read normally but editing is disabled in every standard PDF viewer.
+
+PDF protection adds an owner password and permission restrictions to the file. Students open and read it without entering a password, but the edit and copy options are grayed out. SignMyPDF's protect tool applies both layers inside your browser — the exam file never reaches a server.
+
+[CTA]Protect PDF Now — Free|Lock your exam PDF from editing in your browser — free, no account, files stay on your device.|Protect PDF Now — Free
+
+## How to Protect an Exam PDF from Edits
+
+1. Open [signmypdf.io/protect](/protect) in any browser
+2. Upload the exam PDF
+3. Set an owner password (you need this to unlock the file later)
+4. Toggle off "Allow editing" in the permissions panel
+5. Download the protected PDF and share it with students
+
+Students who receive the file can open and read it normally. Edit and copy options are disabled in standard PDF viewers.
+
+[IMAGE: The SignMyPDF protect tool showing a permissions panel with the Allow Editing toggle switched off and an owner password field filled in]
+
+## Why Most Tools Handle This Badly
+
+Most PDF tools don't explain the difference between a password that opens a file and one that controls what recipients can do with it. That gap matters for exam distribution.
+
+- **Password-to-open is not the same as edit restriction.** Many educators add a password assuming it prevents editing. It doesn't — once the file is opened with the correct password, it is fully editable. Edit restrictions require a separate owner-level permission flag written into the document.
+- **Free tools often gate permission controls behind a paywall.** Basic online PDF tools let you add an open password for free, then charge a subscription to set editing, copying, and printing restrictions separately.
+- **Sensitive exam content gets uploaded to a third-party server.** Uploading original exam questions to a cloud document service before the test creates an exposure you didn't intend.
+- **No way to verify the restriction actually applied.** Some tools claim to apply edit restrictions, but the resulting file still allows editing in Adobe Reader. You find out after you've sent it to 30 students.
+- **School-issued software often requires IT provisioning.** Enterprise document systems take time to access and require tickets or admin approval for simple one-off files.
+
+If your exam also has answer key pages you want to prevent from being copied, [protect PDF from copying text](/blog/protect-pdf-from-copying-text) explains how the copy restriction layers on top of the edit restriction.
+
+## Why SignMyPDF Works for Exam PDFs
+
+- **Free, no registration, no paywall at download** — protect any exam file and download it without an account; no billing cycle to manage for one-off files
+- **Files processed in your browser** — the exam questions never reach a server, so there is no cloud copy that could be accessed or indexed outside the session
+- **Separate permission toggles** — disable editing without disabling printing if you want students to print a physical copy; or disable both for digital-only exams
+- **Owner password gives you control back** — you can unlock and edit the file later if a question needs correcting, because you hold the owner password
+- **No software to install** — works in any browser on a school laptop, personal device, or tablet; no IT request required
+
+For situations where the concern is the file being forwarded to classmates outside the intended distribution, [stop PDF from being forwarded](/blog/stop-pdf-from-being-forwarded) covers how sharing restrictions complement edit restrictions.
+
+## Frequently Asked Questions
+
+**Will edit restrictions work in all PDF viewers?**
+Edit restrictions follow the PDF specification and are honored by Adobe Reader, Apple Preview, Chrome's built-in PDF viewer, and most standard applications. A small number of recovery-focused tools ignore these flags — they're designed for document recovery, not regular reading. For students using a standard laptop or phone, edit and copy options will simply not appear.
+
+**What if a student takes a screenshot of the exam?**
+PDF permissions block in-application editing and text copying but cannot prevent screenshots. If screenshot prevention is a requirement, that is a proctoring or device-management problem, not a document problem. PDF protection covers the most common vector — editing the file directly and sharing modified answers.
+
+**Can I protect just part of the exam, like an answer key at the end?**
+PDF permissions apply to the entire file, not individual pages. If you need the answer key separated, export it as a separate PDF and protect each file independently. Share the exam-only file with students and keep the protected answer key on your end.
+
+[CTA]Protect PDF Now — Free|Lock your exam PDF from student edits — free, no account, files never leave your device.|Protect PDF Now — Free
+
+## Related tools
+
+- [Protect PDF from Copying Text](/blog/protect-pdf-from-copying-text) — block text extraction alongside edit restrictions
+- [Stop PDF from Being Forwarded](/blog/stop-pdf-from-being-forwarded) — restrict forwarding so the file stays with the intended recipients
+- [Biggest Mistake When Protecting PDFs](/blog/biggest-mistake-protecting-pdfs) — common errors that leave your PDF exposed after protection
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
