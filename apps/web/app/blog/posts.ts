@@ -16938,6 +16938,156 @@ PDF permissions apply to the entire file, not individual pages. If you need the 
 - [Biggest Mistake When Protecting PDFs](/blog/biggest-mistake-protecting-pdfs) — common errors that leave your PDF exposed after protection
 `,
   },
+  {
+    slug: 'sign-affidavit-online-free',
+    title: 'Sign an Affidavit Online — Free',
+    excerpt: 'Affidavit arrived as a PDF and the courthouse needs it signed today? Add your signature in your browser, download the signed file in minutes — free, no account, no printing required.',
+    date: '2026-07-02',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'sign affidavit online',
+      'sign affidavit pdf',
+      'affidavit signature online',
+      'sign legal document online free',
+      'sign pdf no registration',
+      'electronic signature affidavit',
+      'online affidavit signing',
+    ],
+    metaTitle: 'Sign an Affidavit Online — Free',
+    metaDescription: 'Sign an affidavit PDF online free — no account, no software. Add your signature and download the completed document in minutes.',
+    content: `The courthouse is hours away and the attorney needs a signed affidavit today. The form arrived as a PDF attachment, but there's no PDF signing software on your laptop and you don't want to spend the next 30 minutes creating an account just to add your name to a page. Signing an affidavit online should take minutes, not half a workday.
+
+An affidavit is a sworn written statement — the signature is what turns the form into a legal declaration. The signed PDF is what the attorney, courthouse, or government office actually needs. You can sign an affidavit online in your browser without printing a single page.
+
+[CTA]Sign PDF Now — Free|Sign your affidavit in your browser — free, no account, your file never leaves your device.|Sign PDF Now — Free
+
+## How to Sign an Affidavit Online
+
+1. Open [signmypdf.io/sign](/sign) in any browser
+2. Upload the affidavit PDF
+3. Draw, type, or upload your signature
+4. Click the page where your signature belongs
+5. Download the signed PDF, ready to submit
+
+The signed affidavit downloads as a standard PDF with your signature embedded — exactly what a courthouse, attorney, or notary expects to receive.
+
+[IMAGE: An affidavit PDF open in the SignMyPDF sign tool with a handwritten-style signature placed on the signature line near the bottom of the page]
+
+## Why Most Tools Make This Harder Than It Should Be
+
+If you've tried to sign an affidavit with a free online tool, you've probably hit at least one of these walls.
+
+- **Forced account creation before you can sign anything.** Most platforms require an email address, a password, and sometimes a phone verification step before the signing screen appears. For a one-time affidavit, that's an account you'll never use again. If skipping registration is a priority, [sign a PDF without email required](/blog/pdf-signing-no-email-required) explains how.
+- **Watermarks on the downloaded file.** Several free PDF signing tools add a large watermark to the output — unusable for a legal submission to a courthouse or attorney.
+- **Subscription required to download.** Some platforms let you sign but show a paywall when you try to save the signed file.
+- **Complex multi-step enterprise workflows.** Tools designed for large teams ask you to set up a signing workflow and assign recipients before you can sign your own document.
+- **Unreliable mobile support.** If you're filling out the form on a phone or tablet, many web tools break at the upload step or render the signature canvas incorrectly.
+
+## Why SignMyPDF Works for Affidavits
+
+- **Free, no registration, no paywall at download** — sign the entire affidavit and download the signed PDF without creating an account or entering payment details
+- **Three signature options** — draw freehand on any touchscreen, type your name in a handwritten font, or upload a scan of your existing signature
+- **Files processed in your browser** — the affidavit content never reaches a server, which matters when the form contains Social Security numbers, addresses, or legal declarations
+- **Works on any device** — open the sign tool in Chrome, Safari, or Firefox on a laptop, phone, or tablet; no app to install
+- **No watermark on the downloaded file** — the signed PDF looks exactly as submitted, suitable for legal office or courthouse review
+
+If the affidavit is part of a broader legal packet requiring multiple signatures, [sign a service agreement online](/blog/sign-service-agreement-online) covers the same workflow for other commonly signed legal documents.
+
+## Frequently Asked Questions
+
+**Is an electronic signature on an affidavit legally valid?**
+It depends on the jurisdiction and how the affidavit will be used. In the United States, the ESIGN Act and most state UETA laws recognize electronic signatures on most documents. For court filings, confirm with the specific court or your attorney — some jurisdictions require a wet signature on sworn statements, while others accept electronic ones.
+
+**Do I need a notary after signing online?**
+Usually yes. An affidavit is a sworn statement, which typically requires a notary public to witness your signature and apply a seal confirming the oath. Sign the document online, print it if required, and then visit a notary. Some US states now permit remote online notarization — check your state's current rules.
+
+**Can I sign a multi-page affidavit with SignMyPDF?**
+Yes. If the document requires signatures or initials on multiple pages, place each one separately using the sign tool. You can sign every required page in a single session before downloading the completed file.
+
+[CTA]Sign PDF Now — Free|Sign your affidavit in your browser — no account, no watermark, files stay on your device.|Sign PDF Now — Free
+
+## Related tools
+
+- [Sign a Non-Compete Agreement Online](/blog/sign-non-compete-agreement-online) — same browser-based workflow for another common legal document
+- [Sign a Service Agreement Online](/blog/sign-service-agreement-online) — when the legal packet includes a services or consulting agreement alongside the affidavit
+- [Sign Divorce Papers Online](/blog/sign-divorce-papers-online) — another situation where legal documents arrive as PDFs that need a quick signature
+`,
+  },
+  {
+    slug: 'fill-customs-declaration-form-pdf',
+    title: 'Fill a Customs Declaration Form Free',
+    excerpt: 'Customs form is a flat PDF with no clickable fields? Click any line, type your information, and download the completed declaration in minutes — free, no account, no software.',
+    date: '2026-07-02',
+    readTime: '4 min read',
+    author: 'SignMyPDF Team',
+    tags: [
+      'fill customs declaration form',
+      'customs form pdf online',
+      'cn22 form pdf online',
+      'cn23 form online free',
+      'fill customs form free',
+      'customs declaration pdf',
+      'fill government form pdf',
+    ],
+    metaTitle: 'Fill a Customs Declaration Form Free',
+    metaDescription: 'Fill any customs declaration PDF online free — CN22, CN23, commercial invoice. No account, no software. Download the completed form in minutes.',
+    content: `You're shipping a package internationally and the customs declaration form is a flat PDF with no clickable fields. Clicking anywhere just selects the text rather than opening a text box. You need to fill a customs declaration form before the courier pickup window closes and you don't have time to print, handwrite, and scan a multi-section document.
+
+Customs declaration forms — CN22, CN23, PS Form 2976, commercial invoices — typically arrive as flat PDFs issued by postal services or freight authorities. A browser-based fill tool lets you click anywhere on the page, type your entries, and download the completed declaration in minutes, without installing anything.
+
+[CTA]Fill PDF Form Now — Free|Fill any customs form PDF in your browser — free, no account, files never leave your device.|Fill PDF Form Now — Free
+
+## How to Fill a Customs Declaration Form PDF Online
+
+1. Open [signmypdf.io/fill](/fill) in any browser
+2. Upload the customs declaration PDF
+3. Click a field area and type your entry
+4. Repeat for each section: shipper, recipient, contents, declared value
+5. Download the completed form, ready to print and attach to your package
+
+The completed file downloads as a standard PDF you can print and tape to the outside of the shipment, or email to a freight forwarder who needs it in advance.
+
+[IMAGE: A CN23 customs declaration PDF open in the SignMyPDF fill tool with the shipper address, recipient address, and contents description fields typed in]
+
+## Why Most Tools Make This Harder Than It Should Be
+
+- **Flat customs PDFs have no interactive fields.** Most customs forms issued by national postal services are flat documents — no form layer, no clickable fields. Standard PDF readers show them as read-only images. You need a text-overlay tool, not a traditional form filler.
+- **Desktop PDF software is expensive for a one-time form.** Adobe Acrobat Pro costs money on a subscription basis. Using it to fill a single customs form is not a reasonable trade.
+- **Many online tools only handle interactive PDFs.** If the customs form has no clickable fields, a lot of web tools display the document with no way to add text at all.
+- **Customs forms contain sensitive commercial data.** Shipper and recipient addresses, contents descriptions, Harmonized System codes, and declared values are information you'd rather not store on an unvetted server. For a wider look at other government forms with similar concerns, [fill government forms online free](/blog/fill-government-forms-online-free) covers the same privacy considerations.
+- **Printing and handwriting introduces errors.** Customs authorities can delay or return shipments if handwritten declarations are illegible or the declared value is ambiguous.
+
+## Why SignMyPDF Works for Customs Forms
+
+- **Free, no registration, no paywall at download** — fill the entire customs declaration and download the completed PDF without creating an account or picking a plan
+- **Works on flat PDFs with no form fields** — the text overlay tool lets you click anywhere on the page and type; the text is embedded exactly where you place it, so printed entries align with the form's field lines
+- **Files processed in your browser** — shipper details, recipient addresses, declared goods values, and HS codes stay on your device and are never uploaded to a server
+- **Adjust text size to fit tight fields** — customs forms often have small boxes for codes and values; resize the text element to fit before downloading
+- **Download and verify before printing** — view the completed document to confirm every field is correctly positioned before committing to paper
+
+If the same shipment requires a separate commercial invoice as a flat PDF, [fill a bank form PDF online](/blog/fill-bank-form-pdf-online) uses the same overlay workflow for structured financial forms.
+
+## Frequently Asked Questions
+
+**Can I fill a CN22 or CN23 customs form with SignMyPDF?**
+Yes. Both CN22 and CN23 are typically flat PDFs with no interactive fields. Use the text overlay tool to click into each field area and type your entry — description of contents, weight, declared value, and customs category. Place each text element so it aligns with the printed field lines on the page.
+
+**Does the filled PDF look the same as a properly completed physical form?**
+The text is added as an overlay on the original PDF layout. When printed, the completed form shows your typed entries in the positions where you placed them. For most postal and customs authorities, a machine-typed form is preferable to handwriting and is accepted for standard international shipments.
+
+**What if a field is too small for my typed text?**
+Reduce the font size in the text tool before typing in a tight field. Most customs forms use small boxes for HS codes and weight entries — a 9 to 10 point font usually fits without running over the field boundary.
+
+[CTA]Fill PDF Form Now — Free|Fill your customs declaration form in your browser — no account, no software, files stay on your device.|Fill PDF Form Now — Free
+
+## Related tools
+
+- [Fill Government Forms Online Free](/blog/fill-government-forms-online-free) — other official forms that arrive as flat PDFs with no clickable fields
+- [Fill a Bank Form PDF Online](/blog/fill-bank-form-pdf-online) — same overlay workflow for structured financial institution forms
+- [Fill PDF Without Printing](/blog/fill-pdf-without-printing) — when the form is a scanned image and standard fill tools won't add text
+`,
+  },
 ];
 
 export function getAllPosts(): BlogPost[] {
