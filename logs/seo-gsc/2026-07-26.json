@@ -1,0 +1,154 @@
+{
+  "date": "2026-07-26",
+  "timestamp": "2026-07-26T05:49:38.842Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-07-20T20:21:46.614Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 6111,
+    "clicks28d": 31,
+    "avgPosition28d": 26.06480117820324,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 1685,
+        "clicks": 20,
+        "position": 8.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 271,
+        "clicks": 4,
+        "position": 10.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 141,
+        "clicks": 3,
+        "position": 8.8
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 22,
+        "clicks": 1,
+        "position": 3.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 580,
+        "clicks": 1,
+        "position": 65.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+        "impressions": 21,
+        "clicks": 1,
+        "position": 34.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+        "impressions": 37,
+        "clicks": 1,
+        "position": 11.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog",
+        "impressions": 14,
+        "clicks": 0,
+        "position": 25.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 14.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 13,
+        "clicks": 0,
+        "position": 21.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 13
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 69,
+        "clicks": 0,
+        "position": 23.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 50,
+        "clicks": 0,
+        "position": 28.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+        "impressions": 10,
+        "clicks": 0,
+        "position": 34.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 14,
+        "clicks": 0,
+        "position": 17.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 12.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 15
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+        "impressions": 54,
+        "clicks": 0,
+        "position": 26.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 70
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-international-contracts",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 35
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
