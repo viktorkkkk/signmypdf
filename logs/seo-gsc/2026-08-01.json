@@ -1,0 +1,154 @@
+{
+  "date": "2026-08-01",
+  "timestamp": "2026-08-01T05:44:44.133Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-04-27T04:32:05.823Z",
+    "sitemapDownloaded": "2026-07-26T23:12:39.764Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "117",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 6816,
+    "clicks28d": 40,
+    "avgPosition28d": 23.796068075117372,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 1982,
+        "clicks": 26,
+        "position": 7.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 431,
+        "clicks": 4,
+        "position": 10.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 212,
+        "clicks": 3,
+        "position": 10.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 670,
+        "clicks": 2,
+        "position": 65.8
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 24,
+        "clicks": 1,
+        "position": 3.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 48,
+        "clicks": 1,
+        "position": 7.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+        "impressions": 3,
+        "clicks": 1,
+        "position": 9.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+        "impressions": 52,
+        "clicks": 1,
+        "position": 10.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 1114,
+        "clicks": 1,
+        "position": 16.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog",
+        "impressions": 15,
+        "clicks": 0,
+        "position": 24.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+        "impressions": 8,
+        "clicks": 0,
+        "position": 15.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 18,
+        "clicks": 0,
+        "position": 24.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 16.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+        "impressions": 63,
+        "clicks": 0,
+        "position": 22.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 78,
+        "clicks": 0,
+        "position": 24.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+        "impressions": 59,
+        "clicks": 0,
+        "position": 65.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 13,
+        "clicks": 0,
+        "position": 18.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+        "impressions": 6,
+        "clicks": 0,
+        "position": 11.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 25
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+        "impressions": 67,
+        "clicks": 0,
+        "position": 26.7
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
