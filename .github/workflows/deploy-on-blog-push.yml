@@ -81,16 +81,20 @@ jobs:
           echo "Triggering production deploy..."
           # `vercel deploy --prod` blocks until the deployment is READY.
           # Returns deployment URL (e.g. https://signmypdf-xxx.vercel.app).
-          # Run from apps/web/ — Vercel project's rootDirectory is set to
-          # apps/web in the dashboard, but the CLI uploads from cwd, so we
-          # explicitly cd into the app to avoid bundling the monorepo root.
-          cd apps/web
+          # Run from the repo ROOT. The Vercel project's rootDirectory is
+          # already `apps/web`, so the CLI resolves it relative to cwd —
+          # running from apps/web/ makes it look for apps/web/apps/web and
+          # fail with "the provided path does not exist". That is what broke
+          # every auto-deploy since the monorepo split.
           DEPLOY_URL=$(npx --yes vercel@latest deploy \
             --prod \
             --token "$VERCEL_TOKEN" \
             --yes \
             2>&1 | tee /tmp/vercel.log | tail -1)
           echo "Deploy URL: $DEPLOY_URL"
+          # On failure the CLI's error text is the only diagnostic, and
+          # `tail -1` throws it away — echo the log before exiting.
+          if [ -z "${DEPLOY_URL##*Error*}" ]; then cat /tmp/vercel.log; exit 1; fi
           echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
 
       - name: Submit to IndexNow (Bing)
