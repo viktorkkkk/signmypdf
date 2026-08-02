@@ -348,10 +348,26 @@ function renderInline(text: string): React.ReactNode[] {
 // Parse content
 function formatContent(content: string, tool: ArticleTool = 'sign') {
   const meta = TOOL_META[tool];
+  // Runs in document order, so a flag is enough to swallow the blockquotes
+  // that follow a "What Our Users Say" heading.
+  let inReviews = false;
   return content
     .split('\n\n')
     .map((block, i) => {
       const trimmed = block.trim();
+
+      // Fabricated testimonials ("Sarah M., Denver, CO") appear in 32 frozen
+      // articles. They are invented, so they are an E-E-A-T liability across
+      // the whole domain. Dropped at render time — posts.ts stays untouched
+      // per Hard Rule 1, same mechanism as the [QuickSummary] removal below.
+      if (/^#{2,3}\s*What Our Users Say\s*$/i.test(trimmed)) {
+        inReviews = true;
+        return null;
+      }
+      if (inReviews) {
+        if (trimmed.startsWith('>')) return null;
+        inReviews = false;
+      }
 
       // Skip [QuickSummary] blocks entirely — the templated 4-field plate
       // (Time / Cost / Works on / Registration) is removed across the blog.
