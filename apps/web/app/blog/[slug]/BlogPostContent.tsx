@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, isValidElement } from 'react';
 import Link from 'next/link';
 import {
   PenLine,
@@ -30,6 +30,23 @@ import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
 import ChromeExtensionBanner from '../../components/ChromeExtensionBanner';
+import {
+  QuickAnswer,
+  Toc,
+  SectionLabel,
+  StepHead,
+  PhoneShot,
+  ShotGrid,
+  Callout,
+  CompareTable,
+  FaqAccordion,
+  RelatedGrid,
+  CtaCard,
+  type CompareCell,
+  type FaqItem,
+  type RelatedItem,
+} from '../components/ArticleBlocks';
+import { extractToc, stripAnchor } from '../guide-parse';
 
 // ─── Tool category per article ──────────────────────────────────
 // Each article is routed to the tool that best matches its topic. This
@@ -606,6 +623,368 @@ function formatContent(content: string, tool: ArticleTool = 'sign') {
     });
 }
 
+// ─── Long-form guide layout ─────────────────────────────────────────────────
+// Opt-in per article via `layout: 'guide'` in posts.ts. The legacy renderer
+// above is deliberately untouched, so articles that don't set the flag render
+// exactly as before. Markers are documented in app/blog/components/ArticleBlocks.tsx.
+
+type GuidePiece = { kind: 'break' } | { kind: 'node'; node: React.ReactNode };
+
+const SHOT_RE = /^\[SHOT\s+([^|\]]+?)\s*\|\s*([^|\]]+?)\s*(?:\|\s*([^|\]]+?)\s*)?(?:\|\s*(\d+)x(\d+)\s*)?\]$/;
+const REL_RE = /^\[([^|\]]+?)\s*\|\s*([^|\]]+?)\s*(?:\|\s*([^\]]+?)\s*)?\]$/;
+
+function parseTableRow(row: string): string[] {
+  return row.split('|').slice(1, -1).map((c) => c.trim());
+}
+
+/** `[+]None` / `[-]50 MB` → coloured yes/no cell. */
+function parseCompareCell(raw: string): CompareCell {
+  if (raw.startsWith('[+]')) return { text: renderInline(raw.slice(3).trim()), tone: 'yes' };
+  if (raw.startsWith('[-]')) return { text: renderInline(raw.slice(3).trim()), tone: 'no' };
+  return { text: renderInline(raw) };
+}
+
+function renderShot(line: string, key: string, priority: boolean): React.ReactNode | null {
+  const m = line.trim().match(SHOT_RE);
+  if (!m) return null;
+  return (
+    <PhoneShot
+      key={key}
+      src={m[1].trim()}
+      alt={m[2].trim()}
+      caption={m[3]?.trim()}
+      width={m[4] ? parseInt(m[4], 10) : 640}
+      height={m[5] ? parseInt(m[5], 10) : 1387}
+      priority={priority}
+    />
+  );
+}
+
+/**
+ * Render the plain blocks of a guide (everything outside the paired
+ * [QUICKANSWER] / [SHOTS] / [FAQ] / [RELATED] / [CALLOUT:x] regions).
+ * `state` carries the running shot counter so only the first screenshot
+ * on the page is eager-loaded (it is the LCP candidate).
+ */
+function renderGuideBlocks(
+  text: string,
+  tool: ArticleTool,
+  toc: { id: string; label: string }[],
+  state: { shots: number },
+  keyBase: string
+): GuidePiece[] {
+  const meta = TOOL_META[tool];
+  const out: GuidePiece[] = [];
+
+  text.split('\n\n').forEach((raw, i) => {
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+    const key = `${keyBase}-${i}`;
+
+    // Table of contents — rendered in the main column, never the sidebar.
+    if (trimmed === '[TOC]') {
+      out.push({ kind: 'node', node: <Toc key={key} items={toc} /> });
+      return;
+    }
+
+    // Inline upload widget. Its position in the article is deliberate:
+    // it sits after the first method, not above the opening paragraph.
+    if (trimmed === '[WIDGET]') {
+      out.push({
+        kind: 'node',
+        node: (
+          <div key={key} className="ba-widget">
+            <div style={{ padding: 28, background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)', borderRadius: 18, boxShadow: '0 16px 44px rgba(37, 99, 235, 0.24)' }}>
+              <BlogPdfUploader tool={tool} />
+              <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.82)', marginTop: 16, textAlign: 'center' }}>
+                {meta.heroSub}
+              </p>
+            </div>
+          </div>
+        ),
+      });
+      return;
+    }
+
+    // Section kicker — also starts a new card.
+    if (trimmed.startsWith('[LABEL]')) {
+      out.push({ kind: 'break' });
+      out.push({ kind: 'node', node: <SectionLabel key={key}>{trimmed.slice(7).trim()}</SectionLabel> });
+      return;
+    }
+
+    // Numbered step head: `[STEP 1] Title`
+    const stepMatch = trimmed.match(/^\[STEP\s+(\d+)\]\s*([^\n]+)$/);
+    if (stepMatch) {
+      out.push({
+        kind: 'node',
+        node: <StepHead key={key} n={parseInt(stepMatch[1], 10)} title={renderInline(stepMatch[2].trim())} />,
+      });
+      return;
+    }
+
+    // Single screenshot.
+    if (trimmed.startsWith('[SHOT ')) {
+      const shot = renderShot(trimmed, `${key}-s`, state.shots === 0);
+      if (shot) {
+        state.shots += 1;
+        out.push({ kind: 'node', node: <ShotGrid key={key}>{shot}</ShotGrid> });
+        return;
+      }
+    }
+
+    // Comparison table.
+    if (trimmed.startsWith('[COMPARE]')) {
+      const rows = trimmed.split('\n').map((r) => r.trim()).filter((r) => r.startsWith('|'));
+      const headers = parseTableRow(rows[0] || '').map((h) => renderInline(h));
+      const body = rows
+        .slice(1)
+        .filter((r) => !/^\|[-| :]+\|$/.test(r))
+        .map((r) => {
+          const cells = parseTableRow(r);
+          return { head: renderInline(cells[0]), cells: cells.slice(1).map(parseCompareCell) };
+        });
+      out.push({ kind: 'node', node: <CompareTable key={key} headers={headers} rows={body} /> });
+      return;
+    }
+
+    // Closing CTA card — its own section.
+    if (trimmed.startsWith('[CTA]')) {
+      const parts = trimmed.slice(5).split('|');
+      out.push({ kind: 'break' });
+      out.push({
+        kind: 'node',
+        node: (
+          <CtaCard
+            key={key}
+            title={parts[0]?.trim() || meta.defaultCtaTitle}
+            sub={parts[1]?.trim() || undefined}
+            href={meta.href}
+            button={parts[2]?.trim() || meta.defaultCtaBtn}
+          />
+        ),
+      });
+      return;
+    }
+
+    // Headings. `## ` starts a new card; `{#anchor}` becomes the id.
+    if (trimmed.startsWith('## ')) {
+      const { text: headText, id } = stripAnchor(trimmed.slice(3).trim());
+      // A kicker directly above the heading belongs to the same card.
+      const prev = out[out.length - 1];
+      const afterLabel = prev?.kind === 'node' && isValidElement(prev.node) && prev.node.type === SectionLabel;
+      if (!afterLabel) out.push({ kind: 'break' });
+      out.push({ kind: 'node', node: <h2 key={key} id={id}>{renderInline(headText)}</h2> });
+      return;
+    }
+    if (trimmed.startsWith('### ')) {
+      const { text: headText, id } = stripAnchor(trimmed.slice(4).trim());
+      out.push({ kind: 'node', node: <h3 key={key} id={id}>{renderInline(headText)}</h3> });
+      return;
+    }
+
+    if (trimmed.startsWith('- ')) {
+      const items = trimmed.split('\n').filter((l) => l.trim().startsWith('- '));
+      out.push({
+        kind: 'node',
+        node: <ul key={key}>{items.map((it, j) => <li key={j}>{renderInline(it.trim().slice(2))}</li>)}</ul>,
+      });
+      return;
+    }
+
+    if (/^\d+\./.test(trimmed)) {
+      const items = trimmed.split('\n').filter((l) => /^\d+\./.test(l.trim()));
+      out.push({
+        kind: 'node',
+        node: <ol key={key}>{items.map((it, j) => <li key={j}>{renderInline(it.trim().replace(/^\d+\.\s*/, ''))}</li>)}</ol>,
+      });
+      return;
+    }
+
+    out.push({ kind: 'node', node: <p key={key}>{renderInline(trimmed)}</p> });
+  });
+
+  return out;
+}
+
+const PAIRED_RE = /\[(QUICKANSWER|SHOTS|FAQ|RELATED)\]([\s\S]*?)\[\/\1\]|\[CALLOUT:(\w+)\]([\s\S]*?)\[\/CALLOUT\]/g;
+
+/**
+ * Parse a whole guide article into `.ba-card` sections. `head` (the H1 and
+ * the meta line) is prepended to the first card so the title, the quick
+ * answer and the TOC share one plate, as in the reference layout.
+ */
+function renderGuide(
+  content: string,
+  tool: ArticleTool,
+  toc: { id: string; label: string }[],
+  head: React.ReactNode
+): React.ReactNode[] {
+  const pieces: GuidePiece[] = [];
+  const state = { shots: 0 };
+  let cursor = 0;
+  let n = 0;
+
+  PAIRED_RE.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = PAIRED_RE.exec(content)) !== null) {
+    if (m.index > cursor) {
+      pieces.push(...renderGuideBlocks(content.slice(cursor, m.index), tool, toc, state, `g${n++}`));
+    }
+    const key = `p${n++}`;
+    const kind = m[1];
+    const body = (m[2] ?? m[4] ?? '').trim();
+
+    if (kind === 'QUICKANSWER') {
+      pieces.push({
+        kind: 'node',
+        node: (
+          <QuickAnswer key={key}>
+            {body.split(/\n\s*\n/).map((p, j) => <p key={j}>{renderInline(p.trim())}</p>)}
+          </QuickAnswer>
+        ),
+      });
+    } else if (kind === 'SHOTS') {
+      const shots = body
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l.startsWith('[SHOT '))
+        .map((l, j) => {
+          const node = renderShot(l, `${key}-${j}`, state.shots === 0);
+          if (node) state.shots += 1;
+          return node;
+        })
+        .filter(Boolean);
+      pieces.push({ kind: 'node', node: <ShotGrid key={key} two={shots.length > 1}>{shots}</ShotGrid> });
+    } else if (kind === 'FAQ') {
+      const items: FaqItem[] = [];
+      for (const chunk of body.split(/\n\s*\n/)) {
+        const lines = chunk.trim().split('\n');
+        const q = lines[0]?.trim().match(/^\*\*(.+)\*\*$/);
+        if (!q || lines.length < 2) continue;
+        items.push({ q: q[1].trim(), a: renderInline(lines.slice(1).join(' ').trim()) });
+      }
+      pieces.push({ kind: 'node', node: <FaqAccordion key={key} items={items} /> });
+    } else if (kind === 'RELATED') {
+      const items: RelatedItem[] = [];
+      for (const line of body.split('\n')) {
+        const r = line.trim().match(REL_RE);
+        if (r) items.push({ title: r[1].trim(), href: r[2].trim(), desc: r[3]?.trim() });
+      }
+      pieces.push({ kind: 'node', node: <RelatedGrid key={key} items={items} /> });
+    } else {
+      // [CALLOUT:variant] — first line is the title, the rest is the body.
+      const lines = body.split('\n');
+      const { text: titleText, id } = stripAnchor(lines[0].trim());
+      const rest = lines.slice(1).join('\n').trim();
+      pieces.push({
+        kind: 'node',
+        node: (
+          <div key={key} id={id}>
+            <Callout variant="warning" title={renderInline(titleText)}>
+              {renderGuideBlocks(rest, tool, toc, state, `${key}-b`)
+                .filter((p): p is { kind: 'node'; node: React.ReactNode } => p.kind === 'node')
+                .map((p) => p.node)}
+            </Callout>
+          </div>
+        ),
+      });
+    }
+    cursor = m.index + m[0].length;
+  }
+  if (cursor < content.length) {
+    pieces.push(...renderGuideBlocks(content.slice(cursor), tool, toc, state, `g${n++}`));
+  }
+
+  // Group into cards: every `break` closes the current card.
+  const cards: React.ReactNode[][] = [[head]];
+  for (const p of pieces) {
+    if (p.kind === 'break') {
+      if (cards[cards.length - 1].length > 0) cards.push([]);
+    } else {
+      cards[cards.length - 1].push(p.node);
+    }
+  }
+
+  return cards
+    .filter((c) => c.length > 0)
+    .map((c, i) => {
+      // The CTA card renders its own `.ba-card` wrapper.
+      if (c.length === 1 && isValidElement(c[0]) && c[0].type === CtaCard) return c[0];
+      return <section key={`card-${i}`} className="ba-card">{c}</section>;
+    });
+}
+
+function GuideArticle({ post, tool }: { post: BlogPost; tool: ArticleTool }) {
+  const toc = extractToc(post.content);
+  // The visible date is the last-updated one — a 2026-04 publication date on
+  // a guide that was rewritten today reads as stale in the SERP.
+  const displayDate = post.modified || post.date;
+
+  const head = (
+    <div key="head">
+      <h1 className="ba-h1">{post.title}</h1>
+      <p className="ba-meta">
+        <span className="ba-updated">
+          Updated{' '}
+          {new Date(displayDate).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'UTC',
+          })}
+        </span>
+        <span className="ba-dot">·</span><span>{post.readTime}</span>
+        <span className="ba-dot">·</span><span>{post.author}</span>
+      </p>
+    </div>
+  );
+
+  return (
+    <>
+      <NavHeader />
+
+      <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+        <div className="container" style={{ paddingTop: 12, paddingBottom: 12 }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#64748b' }}>
+            <Link href="/" style={{ color: '#64748b', textDecoration: 'none' }}>Home</Link>
+            <span>/</span>
+            <Link href="/blog" style={{ color: '#64748b', textDecoration: 'none' }}>Blog</Link>
+            <span>/</span>
+            <span style={{ color: '#334155' }}>{post.breadcrumb || post.title}</span>
+          </nav>
+        </div>
+      </div>
+
+      <div className="container" style={{ paddingTop: 28, paddingBottom: 48 }}>
+        <div className="ba-cols">
+          <main className="ba-main">
+            {renderGuide(post.content, tool, toc, head)}
+          </main>
+
+          <aside className="ba-rail">
+            <div className="ba-rail-inner">
+              <div className="ba-card">
+                <Toc items={toc} variant="rail" />
+              </div>
+              <div className="ba-card">
+                <p className="ba-label">Sign it now</p>
+                <p style={{ fontSize: 14.5, color: 'var(--color-ink-2)', margin: '0 0 16px', lineHeight: 1.6 }}>
+                  Free in your browser. No app, no account, no watermark.
+                </p>
+                <Link href={TOOL_META[tool].href} className="ba-btn ba-btn-block">Sign a PDF Free</Link>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <StickyCTA tool={tool} />
+      <SiteFooter />
+    </>
+  );
+}
+
 // Related Articles
 function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPosts: BlogPost[] }) {
   const relatedPosts = allPosts.filter(p => p.slug !== currentSlug).slice(0, 6);
@@ -639,6 +1018,12 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {
   const tool = getArticleTool(post.slug);
   const meta = TOOL_META[tool];
+
+  // Long-form guides own their whole layout (TOC, mid-article widget,
+  // sidebar rail). Everything else keeps the original template.
+  if (post.layout === 'guide') {
+    return <GuideArticle post={post} tool={tool} />;
+  }
 
   return (
     <>

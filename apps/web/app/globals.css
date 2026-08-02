@@ -9,6 +9,8 @@
 @import '@signmypdf/ui/styles/fse.css';
 /* /sign-pdf-chrome-extension landing — `.spce-*` class namespace. */
 @import './sign-pdf-chrome-extension/sign-pdf-chrome-extension.css';
+/* Long-form blog guide layout — `.ba-*` class namespace. */
+@import './blog/blog-article.css';
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -75,6 +77,25 @@
   --tool-compress-bg: #ECFEFF;
   --tool-split-fg:    #C026D3;  /* fuchsia — Organize tier, paired with Merge */
   --tool-split-bg:    #FDF4FF;
+
+  /* Long-form editorial tokens (added 2026-08-02 for the `.ba-*` guide
+     layout in app/blog/blog-article.css). Tinted surfaces + their ink and
+     border pairs, plus the two radii and the card shadow the guide blocks
+     share. Kept here rather than inline so any future long-form page picks
+     up the same values. */
+  --color-ink-2:          #475569;   /* body copy inside long-form prose */
+  --color-ink-3:          #8A94A6;   /* captions, kickers, meta */
+  --color-primary-soft:   #EDF1FE;   /* quick-answer plate */
+  --color-primary-ink:    #1E3AAF;   /* text on --color-primary-soft */
+  --color-success-ink:    #15803D;
+  --color-success-soft:   #F0FDF4;
+  --color-success-line:   #BBF7D0;
+  --color-warning-ink:    #92590B;
+  --color-warning-soft:   #FFFBEB;
+  --color-warning-line:   #FDE3A7;
+  --radius-lg:            16px;
+  --radius-md:            10px;
+  --shadow-card:          0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
 }
 
 @media (max-width: 768px) {

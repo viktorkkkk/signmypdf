@@ -1,3 +1,13 @@
+/** Structured-data payload for a step-by-step guide (schema.org/HowTo). */
+export interface HowToData {
+  name: string;
+  /** ISO 8601 duration, e.g. 'PT1M'. */
+  totalTime?: string;
+  supply?: string[];
+  tool?: string[];
+  steps: { name: string; text: string; anchor?: string }[];
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -9,6 +19,19 @@ export interface BlogPost {
   tags: string[];
   metaTitle: string;
   metaDescription: string;
+  /** Last substantive rewrite. Drives the visible "Updated …" pill and
+   *  `dateModified` in the Article schema. Falls back to `date`. */
+  modified?: string;
+  /** `'guide'` opts the article into the long-form layout (quick answer,
+   *  TOC, phone screenshots, mid-article upload widget, desktop rail).
+   *  See app/blog/components/ArticleBlocks.tsx for the content markers. */
+  layout?: 'guide';
+  /** Short label for the breadcrumb trail and BreadcrumbList schema. */
+  breadcrumb?: string;
+  /** Absolute-from-root path to a 1200×630 social image for this article. */
+  ogImage?: string;
+  /** Emits a HowTo block alongside the Article schema. */
+  howTo?: HowToData;
 }
 
 export type { BlogPost as default };
@@ -367,108 +390,226 @@ Related reading:
   },
   {
     slug: 'sign-pdf-on-iphone-free',
-    title: 'Sign PDF on iPhone Free: No App Required (2026)',
-    excerpt: 'Sign PDF documents on your iPhone without installing apps. Works in Safari and Chrome. Draw with your finger or type your signature — done in seconds.',
-    content: `Signing PDF documents on your iPhone has never been easier — and you do not need to download any app from the App Store to do it. SignMyPDF works entirely within Safari, Chrome, or any iOS browser, letting you draw or type your signature and download a professionally signed PDF in under two minutes. This guide covers everything iPhone users need to know about signing PDFs for free in 2026.
+    title: 'How to Sign a PDF on iPhone Free (2026) — No App Needed',
+    breadcrumb: 'Sign a PDF on iPhone',
+    layout: 'guide',
+    ogImage: '/images/blog/sign-pdf-iphone/og.png',
+    excerpt: 'Sign a PDF on iPhone in under a minute with the built-in Markup tool, and see the four cases where Markup will not do the job.',
+    content: `[QUICKANSWER]
+To sign a PDF on iPhone, open the file in Mail or the Files app and tap the **Markup** icon in the bottom toolbar. Tap the blue **+** button, choose **Add Signature**, sign with your finger, then tap the blue checkmark. Drag the signature onto the signature line and pull a corner handle to resize it. Markup ships with iOS, so there is nothing to install and nothing to pay.
 
-## Why Sign PDFs on iPhone Without an App?
+That covers a simple one-page document. Markup has no typed signature, it signs one page at a time, and it saves your signature as a movable object instead of fixing it into the page. If any of that matters for your document, go to [Method 2](#browser) or [sign it in your browser](/sign) instead.
+[/QUICKANSWER]
 
-The App Store is full of PDF signing apps, but most of them have serious drawbacks. Many free apps display intrusive advertisements throughout the signing process. Others require you to create an account before you can access any features, then immediately push you toward a paid subscription. Some apps request access to your contacts, camera, or microphone — permissions that have nothing to do with signing a PDF. And all of them take time to download, install, and set up before you can sign your first document.
+[TOC]
 
-SignMyPDF works directly in your iPhone's browser, which means you can open the website and sign a document in the time it would take most apps to finish installing. There are no ads, no unnecessary permissions, no account required, and no subscription pushed on you. Just open Safari, go to signmypdf.io, and start signing.
+[LABEL] Method 1 · Built into iOS
 
-Using a browser-based tool also means your PDF is processed entirely on your iPhone — the file is never uploaded to any server. This is an important privacy consideration when you are dealing with sensitive documents like employment contracts, medical forms, or financial agreements.
+## Sign a PDF on iPhone with Markup {#markup|Sign with Markup}
 
-## How to Sign a PDF on iPhone: Complete Steps
+Markup is Apple's own annotation layer. It works in Mail, Files, Photos and Quick Look on every iPhone running iOS 15 or later. No account, no cost.
 
-### Step 1: Open Safari or Chrome
-Both Safari and Chrome work perfectly on iPhone. Open your preferred browser and navigate to signmypdf.io. The site loads quickly and the interface automatically adjusts for mobile screens.
+[STEP 1] Open the PDF and turn on Markup
 
-### Step 2: Upload Your PDF
-Tap the "Choose PDF File" button. iOS will show you a file picker where you can select a PDF from Files, iCloud Drive, your Downloads folder, or directly from an email attachment you have received. If someone sent you a PDF via email or iMessage, you can also open it directly in SignMyPDF by tapping "Share" and selecting "Open in Browser."
+Open the file in the Files app, or tap the attachment inside Mail. Tap the Markup icon in the bottom toolbar. It turns blue and a round **+** button appears in the bottom-right corner. Any fillable fields in the document get a pale blue tint at this point.
 
-### Step 3: Create Your Signature
-You have two choices: draw your signature using your finger, or type your name and choose a font.
+[SHOT /images/blog/sign-pdf-iphone/markup-1.webp | Signing a PDF on iPhone: the Markup toolbar active in the Files app with the blue plus button | Markup is on. The + button sits bottom-right.]
 
-**For drawing:** Tap the "Draw" tab and sign with your finger on the signature canvas. For best results, hold your iPhone in landscape orientation — the wider canvas gives you more room to create a natural-looking signature. Sign slowly and deliberately for the best result.
+[STEP 2] Tap + and choose Add Signature
 
-**For typing:** Tap the "Type" tab, enter your name, and select from the available signature fonts. This takes about 5 seconds and looks professional on any document.
+The **Add Form Item to PDF** menu opens with two entries: Add Signature and Add Text Form Box. Tap Add Signature. If you have signed something on this iPhone before, your saved signatures appear straight away with an **Add or Remove Signature** button underneath.
 
-### Step 4: Place Your Signature on the PDF
-Tap anywhere on the document to place your signature at that location. You can then drag it to the exact position you need. To resize, drag the corner handle — pinching to resize also works on most iOS browsers.
+[SHOTS]
+[SHOT /images/blog/sign-pdf-iphone/markup-2.webp | How to sign a PDF on iPhone: Add Signature in the Markup Add Form Item menu | Add Signature sits above Add Text Form Box.]
+[SHOT /images/blog/sign-pdf-iphone/markup-2b.webp | Saved signatures stored on iPhone in the iOS Markup signature library | Saved signatures stay on the device and sync to a Mac via iCloud.]
+[/SHOTS]
 
-### Step 5: Download the Signed PDF
-Tap the download button to save your signed PDF. On iPhone, the file will be saved to your Downloads folder in Files or to iCloud Drive depending on your settings. You can then share it directly via email, iMessage, WhatsApp, or any other app using the standard iOS Share Sheet.
+[STEP 3] Sign with your finger
 
-## iPhone vs App: Comparison
+The canvas opens with the prompt "Sign your name using your finger". Sign, then tap the blue checkmark. Tap Clear if you want another go.
 
-| Factor | SignMyPDF in Browser | PDF App from App Store |
-|--------|---------------------|------------------------|
-| Download required | No | Yes (50-200 MB) |
-| Account needed | No | Usually yes |
-| Advertisements | None | Common in free versions |
-| Privacy | File stays on device | Often uploaded to servers |
-| Speed to first signature | Under 2 minutes | 5-15 minutes with setup |
-| Cost | Free (2/day) | Free with limits or subscription |
+Turn the phone sideways before you sign. The canvas roughly doubles in width and the result comes out much closer to how you actually sign. Most people skip this and end up with a cramped signature.
 
-## Tips for Signing PDFs on iPhone
+[SHOT /images/blog/sign-pdf-iphone/markup-3.webp | Drawing a signature with a finger on the iPhone Markup signature canvas | The canvas takes a finger, a stylus or an Apple Pencil.]
 
-**Use landscape mode for drawing:** Rotating your iPhone to landscape orientation before drawing your signature gives you significantly more horizontal space, which makes it much easier to create a natural-looking flowing signature.
+[STEP 4] Place it and resize
 
-**Zoom in before signing:** If you need to see the signature line clearly, pinch to zoom in on the document before placing your signature. This helps you position it precisely without guessing.
+The signature lands on the page inside a blue selection box. Drag it onto the signature line and pull the corner handles to size it. The small toolbar above it lets you change the stroke colour, duplicate the signature or delete it. Tap Done to save. iOS writes over the original file, so duplicate the PDF first if you need to keep a clean copy.
 
-**Use a stylus for better results:** If you have an Apple Pencil (on iPad) or any capacitive stylus, it produces a much more precise and natural-looking drawn signature than a fingertip.
+[SHOT /images/blog/sign-pdf-iphone/markup-4.webp | Signature placed on a PDF page on iPhone with blue resize handles in Markup | Corner handles resize it. It stays selectable after saving.]
 
-**Save your signature for reuse:** After creating your signature, use the "Save" option to store it in your browser. Next time you open SignMyPDF on the same iPhone, your saved signature will be available without redrawing.
+[CALLOUT:warning]Four things Markup can't do {#limits|What Markup can't do}
+1. **No typed signature.** The canvas takes finger input only. If a signature drawn on a six-inch screen looks nothing like yours, Markup offers no font-based alternative.
+2. **One page at a time.** There is no way to apply a signature across pages. A twelve-page contract that needs initials on every page means twelve manual placements.
+3. **Form fields stay manual.** Add Text Form Box gives you a floating box you position yourself. Markup does not read the fields already built into the PDF, so a W-9 with twenty fields means twenty boxes to line up by hand.
+4. **The signature stays movable.** Markup keeps it as an annotation instead of flattening it into the page. That is why you can still drag it after saving, and in many PDF editors so can whoever receives the file.
+[/CALLOUT]
 
-**Sharing your signed PDF:** After downloading, tap the share icon in Safari or Files to send the signed PDF via email, upload it to Dropbox or Google Drive, or share it through any other app installed on your iPhone.
+If none of those apply, you are done. The rest of this page covers the cases where they do.
 
-## What Our Users Say
+[WIDGET]
 
-> "Got a lease to sign while I was traveling. Sat down in a coffee shop, opened Safari, signed the whole thing in 3 minutes on my iPhone. Landlord got it before I finished my coffee." — **Chris M., Boston, MA**
+[LABEL] Method 2 · In the browser
 
-> "I was skeptical about signing legally binding documents on my phone, but after reading about the ESIGN Act I tried it. Works perfectly and my attorney confirmed it is fully valid." — **Lisa P., San Diego, CA**
+## Sign a PDF on iPhone in Safari, no app {#browser|Sign in Safari, no app}
 
-> "My old PDF signing app kept asking for a subscription every time I opened it. Found SignMyPDF, signed my documents for free, and deleted the app immediately." — **Nathan B., Dallas, TX**
+This covers all four gaps above and runs in Safari or Chrome. There is nothing to install and no account.
 
-[CALLOUT]🔒 Your PDF is processed entirely in your browser. Files are never uploaded to our servers — your documents stay 100% private.
+### Draw or type your signature
 
-[CTA]Sign PDF on Your iPhone Right Now — Free|No app download. No registration. Works in Safari and Chrome.|Sign PDF Free Now
+Open [signmypdf.io/sign](/sign) and upload the PDF. The **Draw** tab gives you a wide canvas plus five ink colours and three stroke weights. The **Type** tab takes your name and renders it in one of four styles: Script, Handwritten, Elegant or Modern. Typing takes about five seconds and comes out identical every time.
 
-## Frequently Asked Questions
+[SHOTS]
+[SHOT /images/blog/sign-pdf-iphone/smp-1.webp | Drawing a signature on iPhone in mobile Safari with colour and stroke options | Draw tab: five colours, three stroke weights, save for reuse.]
+[SHOT /images/blog/sign-pdf-iphone/smp-2.webp | Typed signature on iPhone with four font styles, the option iOS Markup does not offer | Type tab: four signature styles. Markup has no equivalent.]
+[/SHOTS]
 
-**Do I need to install an app to sign PDFs on iPhone?**
-No. SignMyPDF works completely within Safari, Chrome, or any iOS browser. There is nothing to download or install. Simply open the website and start signing immediately.
+### Choose which pages get signed
 
-**Does it work on older iPhones?**
-Yes. SignMyPDF works on iPhone 6 and newer running iOS 12 or later. Virtually any iPhone still in active use today meets these requirements.
+Page thumbnails appear with a checkbox on each one. Tick the pages you need and all of them get the signature in the same pass. On a three-page agreement where page 1 takes initials and page 3 takes the signature, that is one action instead of two rounds of manual placement.
 
-**Can I sign a PDF on my iPhone for free?**
-Yes. You can sign up to 2 PDF documents per day for free, with no account required and no app download. For unlimited signing, the Pro plan is $9/month or $7.50/month billed annually.
+[SHOT /images/blog/sign-pdf-iphone/smp-3.webp | Selecting which PDF pages to sign on iPhone using page checkboxes, signing two pages at once | Pages 1 and 3 ticked. One tap signs both.]
 
-**Is electronic signature legal in the US when signed on a phone?**
-Yes. The ESIGN Act and UETA do not distinguish between signing on a desktop computer, a laptop, or a mobile phone. An electronic signature created on your iPhone is fully legally binding.
+### Place it and download
 
-**Can I sign on my phone without internet?**
-You need internet to initially load the SignMyPDF page. Once loaded, your PDF is processed locally in your iPhone's browser without any further network access required for the actual signing process.
+Tap the page to drop the signature, drag to move it, use the corner handle to resize. Then tap Sign & Download. The signature is flattened into the page, so nobody can pull it off afterwards.
 
-**How do I share the signed PDF after downloading it?**
-After downloading the signed PDF to your iPhone, open it in the Files app and tap the Share button. You can email it, send it via iMessage or WhatsApp, upload it to cloud storage, or share it with any app that accepts PDF files.
+[SHOT /images/blog/sign-pdf-iphone/smp-4.webp | Placing a drawn signature on a PDF signature line in Safari on iPhone before downloading | Drag to move, corner handle to resize, then download.]
 
----
+The file is processed inside your iPhone's browser and never reaches a server, which matters when the document is a lease, a bank form or an employment contract. Two documents a day are free with no account.
 
-See also:
+[LABEL] Method 3 · App Store
 
-- [Sign PDF on Android free — no app needed](/blog/sign-pdf-android-free)
-- [How to sign PDF online — complete guide](/blog/how-to-sign-pdf-online)
-- [How to add a signature to PDF — 3 methods](/blog/how-to-add-signature-to-pdf)
-- [Sign PDF without Adobe Acrobat](/blog/sign-pdf-without-adobe)`,
+## Dedicated iPhone PDF apps {#apps|iPhone PDF apps}
+
+Adobe Acrobat Reader, PDF Expert and Smallpdf all have iOS apps with signing built in. They make sense if you sign documents most days and want offline access and a synced signature library.
+
+For a single document they are slow. A 200 MB download, a signup and an upgrade prompt take longer than either method above. If you are avoiding Adobe specifically, see [how to sign a PDF without Adobe](/blog/sign-pdf-without-adobe).
+
+## Markup vs browser vs app {#compare|Comparison table}
+
+[COMPARE]
+| | iOS Markup | Safari + SignMyPDF | App Store app |
+|---|---|---|---|
+| Install required | [+]None | [+]None | [-]50–200 MB |
+| Account required | [+]No | [+]No | [-]Usually |
+| Typed signature | [-]No | [+]Yes, 4 styles | [+]Yes |
+| Several pages at once | [-]No | [+]Yes | [+]Yes |
+| Reads existing form fields | [-]No | [+]Yes | [+]Yes |
+| Signature flattened into page | [-]No | [+]Yes | [+]Usually |
+| Password-protected PDF | [-]No | [+]Yes | [+]Yes |
+| File leaves the device | [+]No | [+]No | [-]Often |
+| Cost | [+]Free | [+]Free, 2 a day | [-]Free tier or subscription |
+
+## Troubleshooting {#fix|Troubleshooting}
+
+### The Markup icon isn't there
+
+Save the file into the Files app and open it from there. If it still does not appear, the PDF is either password protected or it is a scanned image rather than a real PDF.
+
+### My signature looks nothing like my real one
+
+Rotate to landscape before drawing. If that is not enough, sign a sheet of paper, photograph it and upload the image, or switch to a typed signature.
+
+### I can't type into the form fields
+
+Markup cannot fill interactive fields. See [PDF form fields not working](/blog/pdf-form-fields-not-working-fix).
+
+### The signature disappeared after I sent the file
+
+This happens when the signature was saved as an unflattened annotation. Full explanation in [why a signature disappears from a PDF](/blog/signature-disappears-pdf-fix).
+
+### The PDF says editing is not allowed
+
+Permissions are set on the file. See [sign a PDF with no editing allowed](/blog/sign-pdf-no-editing-allowed).
+
+### The signed PDF looks different when someone else opens it
+
+Usually a font or annotation-rendering difference between viewers. See [signed PDF looks different — fix](/blog/signed-pdf-looks-different-fix).
+
+### Nothing downloads in Safari
+
+Open Settings, then Safari, then Downloads, and confirm a destination is set. If a download stalls, see [PDF not downloading after signing](/blog/why-pdf-not-downloading-after-sign).
+
+## Is a signature made on an iPhone legally binding? {#legal|Legally binding?}
+
+In the United States, yes. The ESIGN Act and UETA make an electronic signature legally equivalent to a handwritten one, and neither law distinguishes between a desktop, a laptop and a phone. Wills, some family-law documents and certain notarised instruments still require wet ink in many states. More detail in [electronic signature laws by state](/blog/electronic-signature-laws-by-state).
+
+## Frequently asked questions {#faq|FAQ}
+
+[FAQ]
+**How do I sign a PDF on iPhone without an app?**
+Open the PDF in Mail or Files, tap the Markup icon, tap the blue plus button, choose Add Signature, sign with your finger and drag it onto the signature line. For a typed signature, several pages at once, or fillable form fields, open [signmypdf.io/sign](/sign) in Safari, which also needs no install.
+
+**Where is the Markup tool on iPhone?**
+It is the pen-tip icon in the bottom toolbar when a PDF is open in Files, Mail or Photos. In some views it sits inside the share sheet under "Markup".
+
+**Can I sign a PDF on iPhone for free?**
+Yes. Markup is free and unlimited. SignMyPDF is free for two documents a day with no account.
+
+**Can I type my signature instead of drawing it?**
+Not in Markup. It takes finger input only. Browser tools and full PDF apps let you type your name and pick a signature style.
+
+**Can I sign several pages at once on iPhone?**
+Not in Markup. Each page is placed by hand. A browser tool with page selection applies the signature to every ticked page in one pass.
+
+**Does my signature save for next time?**
+Yes. Markup stores it on the device and syncs it to Preview on a Mac through iCloud.
+
+**Does this work on iPad?**
+Yes, the steps are identical. An Apple Pencil gives a noticeably better result than a fingertip.
+
+**Does this work on Android?**
+The steps differ but the idea is the same. See [sign a PDF on Android free](/blog/sign-pdf-android-free).
+[/FAQ]
+
+## Related guides
+
+[RELATED]
+[Fill a PDF on iPhone without an app | /blog/fill-pdf-on-iphone-no-app | Form fields, not just signatures]
+[Signature disappears from a PDF | /blog/signature-disappears-pdf-fix | Why it happens and how to stop it]
+[PDF form fields not working | /blog/pdf-form-fields-not-working-fix | When you can't type into the boxes]
+[Sign a PDF on Android free | /blog/sign-pdf-android-free | Same job, different phone]
+[Sign a PDF without Adobe | /blog/sign-pdf-without-adobe | No Acrobat subscription needed]
+[How to sign a PDF online | /blog/how-to-sign-pdf-online | The complete desktop guide]
+[/RELATED]
+
+[CTA]Need what Markup can't do?|Typed signatures, several pages at once, real form fields. Free in your browser, no app, no account.|Sign a PDF Free`,
     date: '2026-04-06',
+    modified: '2026-08-02',
     author: 'SignMyPDF Team',
-    readTime: '7 min read',
-    tags: ['iphone', 'ios', 'mobile', 'free', 'pdf signing'],
-    metaTitle: 'Sign PDF on iPhone Free | No App Required (2026)',
-    metaDescription: 'Sign PDFs on iPhone without installing any app. Works in Safari and Chrome. Draw with your finger or type your name — free, no registration.',
+    readTime: '6 min read',
+    tags: ['how to sign a pdf on iphone', 'sign a pdf on iphone', 'sign pdf on iphone free', 'iphone', 'ios', 'markup'],
+    metaTitle: 'How to Sign a PDF on iPhone Free (2026) — No App Needed',
+    metaDescription: "How to sign a PDF on iPhone in under a minute with the built-in Markup tool, plus what to do when Markup can't handle your document. Free, no app, no account.",
+    howTo: {
+      name: 'How to sign a PDF on iPhone',
+      totalTime: 'PT1M',
+      supply: ['An iPhone running iOS 15 or later', 'A PDF file'],
+      tool: ['iOS Markup'],
+      steps: [
+        {
+          name: 'Open the PDF and turn on Markup',
+          text: 'Open the file in the Files app or tap the attachment in Mail, then tap the Markup icon in the bottom toolbar. A blue plus button appears bottom-right.',
+          anchor: 'markup',
+        },
+        {
+          name: 'Tap plus and choose Add Signature',
+          text: 'The Add Form Item to PDF menu opens. Tap Add Signature. Saved signatures appear if you have signed on this iPhone before.',
+          anchor: 'markup',
+        },
+        {
+          name: 'Sign with your finger',
+          text: 'Sign on the canvas and tap the blue checkmark. Turning the phone to landscape gives a wider canvas and a better result.',
+          anchor: 'markup',
+        },
+        {
+          name: 'Place it and resize',
+          text: 'Drag the signature onto the signature line and pull a corner handle to resize it, then tap Done to save.',
+          anchor: 'markup',
+        },
+      ],
+    },
   },
   {
     slug: 'sign-pdf-on-mac',
