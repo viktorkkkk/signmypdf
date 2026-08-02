@@ -248,20 +248,30 @@ export function RelatedGrid({ items }: { items: RelatedItem[] }) {
   );
 }
 
-/** Dark closing CTA card. */
+/**
+ * CTA card.
+ *
+ * `dark` is the closing card and owns its own `.ba-card` plate.
+ * `light` is the mid-article variant — it sits inside the section it
+ * interrupts, and the lighter surface keeps it from reading as a duplicate
+ * of the dark one further down the page.
+ */
 export function CtaCard({
   title,
   sub,
   href,
   button,
+  variant = 'dark',
 }: {
   title: ReactNode;
   sub?: ReactNode;
   href: string;
   button: string;
+  variant?: 'dark' | 'light';
 }) {
+  const className = variant === 'light' ? 'ba-cta-light' : 'ba-card ba-cta';
   return (
-    <div className="ba-card ba-cta">
+    <div className={className}>
       <h2>{title}</h2>
       {sub && <p>{sub}</p>}
       <Link href={href} className="ba-btn">{button}</Link>

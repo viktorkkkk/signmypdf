@@ -476,6 +476,8 @@ Tap the page to drop the signature, drag to move it, use the corner handle to re
 
 [SHOT /images/blog/sign-pdf-iphone/smp-4.webp | Placing a drawn signature on a PDF signature line in Safari on iPhone before downloading | Drag to move, corner handle to resize, then download.]
 
+[CTA:light]Try it on your own PDF|Typed signatures, several pages at once, real form fields. Free in your browser.|Sign a PDF Free
+
 The file is processed inside your iPhone's browser and never reaches a server, which matters when the document is a lease, a bank form or an employment contract. Two documents a day are free with no account.
 
 [LABEL] Method 3 · App Store

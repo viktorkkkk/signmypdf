@@ -766,15 +766,20 @@ function renderGuideBlocks(
       return;
     }
 
-    // Closing CTA card — its own section.
-    if (trimmed.startsWith('[CTA]')) {
-      const parts = trimmed.slice(5).split('|');
-      out.push({ kind: 'break' });
+    // CTA. `[CTA]` is the dark closing card and starts its own section;
+    // `[CTA:light]` is the mid-article variant and stays inside the current
+    // section, so no break.
+    const ctaMatch = trimmed.match(/^\[CTA(?::(light|dark))?\]/);
+    if (ctaMatch) {
+      const variant = (ctaMatch[1] as 'light' | 'dark') || 'dark';
+      const parts = trimmed.slice(ctaMatch[0].length).split('|');
+      if (variant === 'dark') out.push({ kind: 'break' });
       out.push({
         kind: 'node',
         node: (
           <CtaCard
             key={key}
+            variant={variant}
             title={parts[0]?.trim() || meta.defaultCtaTitle}
             sub={parts[1]?.trim() || undefined}
             href={meta.href}

@@ -27,7 +27,12 @@
    takes over and the inline copy is hidden. Never both. */
 .ba-rail { display: none; }
 @media (min-width: 1024px) {
-  .ba-rail { display: block; }
+  /* `stretch`, not `start`. The grid sets align-items: start, which collapsed
+     the rail to its own content height — and a sticky child can only travel
+     inside its parent's box, so with parent height == child height it never
+     moved. Stretching the rail to the full row height is what gives
+     .ba-rail-inner somewhere to stick to. */
+  .ba-rail { display: block; align-self: stretch; }
   .ba-rail-inner { position: sticky; top: 88px; }
 }
 
@@ -52,7 +57,9 @@
   margin: 0 0 14px;
   text-wrap: balance;
 }
-.ba-meta {
+/* `.ba-main .ba-meta`, not `.ba-meta` — the generic `.ba-main p` prose rule
+   further down would otherwise win on specificity and override the gap. */
+.ba-main .ba-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -60,7 +67,7 @@
   font-size: 13.5px;
   font-weight: 500;
   color: var(--color-ink-3);
-  margin: 0 0 24px;
+  margin: 0 0 28px;
 }
 .ba-meta .ba-updated {
   background: var(--color-success-soft);
@@ -176,7 +183,9 @@
   margin: 26px 0 7px;
 }
 .ba-main p { margin: 0 0 17px; color: var(--color-ink-2); line-height: 1.68; font-size: 16px; }
-.ba-main p:last-child { margin-bottom: 0; }
+/* The meta line is the last child of the head block, so the generic
+   last-child reset was cancelling its 28px gap before the Quick Answer. */
+.ba-main p:last-child:not(.ba-meta) { margin-bottom: 0; }
 /* Scoped to prose so it can't repaint TOC entries, related cards or the
    CTA button, all of which carry their own link colours. */
 .ba-main p a, .ba-main li a { color: var(--color-primary); font-weight: 600; text-decoration: none; }
@@ -378,10 +387,33 @@
 .ba-rel-grid .ba-rel-t { display: block; font-weight: 700; color: var(--color-text); font-size: 15px; line-height: 1.35; }
 .ba-rel-grid .ba-rel-d { display: block; font-size: 12.8px; color: var(--color-ink-3); margin-top: 3px; font-weight: 500; }
 
-/* ── final CTA ─────────────────────────────────────────────── */
+/* ── CTA ───────────────────────────────────────────────────── */
 .ba-cta { background: var(--color-text); color: #fff; text-align: center; }
 .ba-cta h2 { color: #fff; margin-bottom: 8px; }
 .ba-cta p { color: #C4CBDA; margin-bottom: 22px; }
+
+/* Mid-article variant. Lives inside the section it interrupts, so no card
+   plate of its own — and a light surface so it doesn't read as a repeat of
+   the dark closing card. */
+.ba-cta-light {
+  background: var(--color-primary-soft);
+  border: 1px solid #D9E1FD;
+  border-radius: var(--radius-md);
+  padding: 26px 22px;
+  margin: 30px 0;
+  text-align: center;
+}
+.ba-main .ba-cta-light h2 {
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+.ba-main .ba-cta-light p {
+  color: var(--color-ink-2);
+  font-size: 15px;
+  margin: 0 0 20px;
+}
 .ba-btn {
   display: inline-block;
   background: var(--color-primary);
