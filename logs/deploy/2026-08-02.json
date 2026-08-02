@@ -1,13 +1,13 @@
 {
   "date": "2026-08-02",
-  "timestamp": "2026-08-02T08:47:24Z",
+  "timestamp": "2026-08-02T09:00:55Z",
   "event": "push",
   "ref": "refs/heads/main",
-  "sha": "0818bd3e3978b2ce7d86d48b016823facbfffa42",
+  "sha": "30f2baf60a712bdc7f79708ff90106ccb64e3b5f",
   "newSlugs": "",
-  "deployUrl": "",
-  "deployOutcome": "failure",
-  "indexnowOutcome": "skipped",
-  "googleOutcome": "skipped",
-  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/30740451303"
+  "deployUrl": "✓ Ready in 1m",
+  "deployOutcome": "success",
+  "indexnowOutcome": "success",
+  "googleOutcome": "success",
+  "runUrl": "https://github.com/viktorkkkk/signmypdf/actions/runs/30740841106"
 }
