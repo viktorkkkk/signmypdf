@@ -581,7 +581,10 @@ The steps differ but the idea is the same. See [sign a PDF on Android free](/blo
     readTime: '6 min read',
     tags: ['how to sign a pdf on iphone', 'sign a pdf on iphone', 'sign pdf on iphone free', 'iphone', 'ios', 'markup'],
     metaTitle: 'How to Sign a PDF on iPhone Free (2026) — No App Needed',
-    metaDescription: "How to sign a PDF on iPhone in under a minute with the built-in Markup tool, plus what to do when Markup can't handle your document. Free, no app, no account.",
+    // "cannot", not "can't": the apostrophe is emitted as `&#x27;` in the
+    // meta tag, which pushes the attribute to 163 chars and trips the
+    // 50-160 invariant in scripts/seo-health-check.mjs.
+    metaDescription: 'How to sign a PDF on iPhone in under a minute with the built-in Markup tool, plus what to do when Markup cannot handle your document. Free, no app, no account.',
     howTo: {
       name: 'How to sign a PDF on iPhone',
       totalTime: 'PT1M',
