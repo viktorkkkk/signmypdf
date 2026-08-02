@@ -21,8 +21,10 @@
 
 .ba-main { min-width: 0; }
 
-/* Right rail is desktop-only on purpose: on mobile it would land
-   below the article and break the reading order (CTA → TOC). */
+/* Exactly one table of contents is visible at any width. Below 1024px the
+   rail is gone (in a sidebar it would land under the article and break the
+   reading order), so the inline copy carries it; at 1024px and up the rail
+   takes over and the inline copy is hidden. Never both. */
 .ba-rail { display: none; }
 @media (min-width: 1024px) {
   .ba-rail { display: block; }
@@ -94,6 +96,11 @@
 .ba-quick strong { font-weight: 700; color: var(--color-text); }
 
 /* ── table of contents (in the main column) ────────────────── */
+/* Counterpart to the .ba-rail rule above — see the note there. */
+.ba-toc { display: block; }
+@media (min-width: 1024px) {
+  .ba-toc { display: none; }
+}
 .ba-toc {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -323,6 +330,37 @@
 }
 .ba-faq details[open] summary::after { transform: rotate(-135deg); top: 26px; }
 .ba-faq details p { padding: 0 0 18px; font-size: 15.5px; margin: 0; color: var(--color-ink-2); line-height: 1.68; }
+
+/* ── troubleshooting card grid ─────────────────────────────── */
+/* A flat stack of seven H3 + paragraph pairs reads as a wall of text and
+   gives no visual boundary between problems. Cards make it scannable while
+   the headings stay <h3> — each one is its own long-tail query. */
+.ba-fix-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+@media (min-width: 720px) {
+  .ba-fix-grid { grid-template-columns: 1fr 1fr; }
+}
+.ba-fix-card {
+  background: #FAFBFF;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.ba-main .ba-fix-card h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.ba-main .ba-fix-card p {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
 
 /* ── related guides ────────────────────────────────────────── */
 .ba-rel-grid { display: grid; grid-template-columns: 1fr; gap: 11px; margin-top: 18px; }

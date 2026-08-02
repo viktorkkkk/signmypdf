@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getPublishedPosts } from '../../blog/posts';
+import { getPostBySlug, getPublishedPostSummaries } from '../../blog/posts';
 import { extractFaq } from '../guide-parse';
 import BlogPostContent from './BlogPostContent';
 
@@ -11,8 +11,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const posts = getPublishedPosts();
-  return posts.map((post) => ({
+  return getPublishedPostSummaries().map((post) => ({
     slug: post.slug,
   }));
 }
@@ -65,7 +64,10 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  const allPosts = getPublishedPosts();
+  // Summaries, not full posts: `BlogPostContent` is a Client Component, so
+  // every prop is serialised into the RSC payload. Passing full posts shipped
+  // the body of all ~180 articles to the browser on every blog page.
+  const allPosts = getPublishedPostSummaries();
   const url = `${SITE}/blog/${slug}`;
 
   const articleSchema = {

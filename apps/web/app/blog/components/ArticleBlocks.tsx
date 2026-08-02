@@ -17,6 +17,7 @@ import type { ReactNode } from 'react';
      [CALLOUT:warning] … [/CALLOUT]      → <Callout>
      [COMPARE] | a | b |                 → <CompareTable>
      [WIDGET]                            → inline upload dropzone
+     [FIXGRID] … [/FIXGRID]              → <FixGrid>
      [FAQ] … [/FAQ]                      → <FaqAccordion>
      [RELATED] … [/RELATED]              → <RelatedGrid>
 
@@ -204,6 +205,28 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
           <summary>{it.q}</summary>
           <p>{it.a}</p>
         </details>
+      ))}
+    </div>
+  );
+}
+
+export type FixItem = { title: ReactNode; body: ReactNode };
+
+/**
+ * Troubleshooting grid: one card per problem, two columns from 720px.
+ *
+ * Headings stay `<h3>` on purpose — each "The Markup icon isn't there" is
+ * its own long-tail query, and demoting them to <strong> would throw away
+ * the heading hierarchy Google ranks on. The card is styling only.
+ */
+export function FixGrid({ items }: { items: FixItem[] }) {
+  return (
+    <div className="ba-fix-grid">
+      {items.map((it, i) => (
+        <div key={i} className="ba-fix-card">
+          <h3>{it.title}</h3>
+          <p>{it.body}</p>
+        </div>
       ))}
     </div>
   );

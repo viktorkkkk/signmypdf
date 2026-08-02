@@ -25,7 +25,7 @@ import {
   FileSignature,
   type LucideIcon,
 } from 'lucide-react';
-import { BlogPost } from '../posts';
+import { BlogPost, BlogPostSummary } from '../posts';
 import NavHeader from '../../components/NavHeader';
 import SiteFooter from '../../components/SiteFooter';
 import BlogPdfUploader from '../../components/BlogPdfUploader';
@@ -40,10 +40,12 @@ import {
   Callout,
   CompareTable,
   FaqAccordion,
+  FixGrid,
   RelatedGrid,
   CtaCard,
   type CompareCell,
   type FaqItem,
+  type FixItem,
   type RelatedItem,
 } from '../components/ArticleBlocks';
 import { extractToc, stripAnchor } from '../guide-parse';
@@ -823,7 +825,7 @@ function renderGuideBlocks(
   return out;
 }
 
-const PAIRED_RE = /\[(QUICKANSWER|SHOTS|FAQ|RELATED)\]([\s\S]*?)\[\/\1\]|\[CALLOUT:(\w+)\]([\s\S]*?)\[\/CALLOUT\]/g;
+const PAIRED_RE = /\[(QUICKANSWER|SHOTS|FAQ|FIXGRID|RELATED)\]([\s\S]*?)\[\/\1\]|\[CALLOUT:(\w+)\]([\s\S]*?)\[\/CALLOUT\]/g;
 
 /**
  * Parse a whole guide article into `.ba-card` sections. `head` (the H1 and
@@ -881,6 +883,29 @@ function renderGuide(
         items.push({ q: q[1].trim(), a: renderInline(lines.slice(1).join(' ').trim()) });
       }
       pieces.push({ kind: 'node', node: <FaqAccordion key={key} items={items} /> });
+    } else if (kind === 'FIXGRID') {
+      // `### Problem` plus the prose that follows it becomes one card. The
+      // heading and its answer are normally separated by a blank line, so
+      // pair across chunks rather than expecting both on one.
+      const items: FixItem[] = [];
+      let pendingTitle: string | null = null;
+      for (const chunk of body.split(/\n\s*\n/)) {
+        const text = chunk.trim();
+        if (!text) continue;
+        if (text.startsWith('### ')) {
+          const lines = text.split('\n');
+          pendingTitle = lines[0].slice(4).trim();
+          const inline = lines.slice(1).join(' ').trim();
+          if (inline) {
+            items.push({ title: renderInline(pendingTitle), body: renderInline(inline) });
+            pendingTitle = null;
+          }
+        } else if (pendingTitle) {
+          items.push({ title: renderInline(pendingTitle), body: renderInline(text) });
+          pendingTitle = null;
+        }
+      }
+      pieces.push({ kind: 'node', node: <FixGrid key={key} items={items} /> });
     } else if (kind === 'RELATED') {
       const items: RelatedItem[] = [];
       for (const line of body.split('\n')) {
@@ -1002,7 +1027,7 @@ function GuideArticle({ post, tool }: { post: BlogPost; tool: ArticleTool }) {
 }
 
 // Related Articles
-function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPosts: BlogPost[] }) {
+function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPosts: BlogPostSummary[] }) {
   const relatedPosts = allPosts.filter(p => p.slug !== currentSlug).slice(0, 6);
 
   return (
@@ -1028,7 +1053,8 @@ function RelatedArticles({ currentSlug, allPosts }: { currentSlug: string; allPo
 
 interface BlogPostContentProps {
   post: BlogPost;
-  allPosts: BlogPost[];
+  /** Summaries only — see BlogPostSummary in posts.ts for why. */
+  allPosts: BlogPostSummary[];
 }
 
 export default function BlogPostContent({ post, allPosts }: BlogPostContentProps) {

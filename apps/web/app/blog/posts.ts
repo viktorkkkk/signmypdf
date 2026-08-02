@@ -503,6 +503,7 @@ For a single document they are slow. A 200 MB download, a signup and an upgrade 
 
 ## Troubleshooting {#fix|Troubleshooting}
 
+[FIXGRID]
 ### The Markup icon isn't there
 
 Save the file into the Files app and open it from there. If it still does not appear, the PDF is either password protected or it is a scanned image rather than a real PDF.
@@ -530,6 +531,7 @@ Usually a font or annotation-rendering difference between viewers. See [signed P
 ### Nothing downloads in Safari
 
 Open Settings, then Safari, then Downloads, and confirm a destination is set. If a download stalls, see [PDF not downloading after signing](/blog/why-pdf-not-downloading-after-sign).
+[/FIXGRID]
 
 ## Is a signature made on an iPhone legally binding? {#legal|Legally binding?}
 
@@ -17242,6 +17244,36 @@ export function getAllPosts(): BlogPost[] {
 export function getPublishedPosts(): BlogPost[] {
   const today = new Date().toISOString().slice(0, 10); // e.g. "2026-04-22"
   return getAllPosts().filter(post => post.date <= today);
+}
+
+/**
+ * A post without its `content` body.
+ *
+ * Anything that crosses into a Client Component must use this. React
+ * serialises every prop of a Client Component into the RSC payload, so
+ * handing `BlogPost[]` to one ships the full text of every article to the
+ * browser on every page — 1.4 MB of it before this type existed, against
+ * 50 KB of actual rendered HTML. Listings only ever need the metadata.
+ */
+export type BlogPostSummary = Pick<
+  BlogPost,
+  'slug' | 'title' | 'excerpt' | 'date' | 'readTime' | 'tags'
+>;
+
+export function toSummary(post: BlogPost): BlogPostSummary {
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    date: post.date,
+    readTime: post.readTime,
+    tags: post.tags,
+  };
+}
+
+/** `getPublishedPosts()` stripped to what a listing needs. */
+export function getPublishedPostSummaries(): BlogPostSummary[] {
+  return getPublishedPosts().map(toSummary);
 }
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
