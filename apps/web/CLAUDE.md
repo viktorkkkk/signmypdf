@@ -668,6 +668,18 @@ The other **51 articles dated ≤ 2026-04-27** remain in the OLD long format and
 
 `www.signmypdf.io` is canonical EVERYWHERE: `app/sitemap.ts`, `public/robots.txt`, `app/blog/[slug]/page.tsx` JSON-LD, `app/sign/page.tsx` + `app/page.tsx` SoftwareApplication JSON-LD, `app/lib/email.ts`, `app/api/auth/magic-link/route.ts`, `app/privacy/page.tsx`, `submit-indexnow.mjs`, `scripts/index-pages.mjs`, all openGraph URLs. The previous apex exception in `index-pages.mjs` was removed Apr 27 once the Domain property went live.
 
+**Apex redirect is 308 Permanent as of 2026-08-02.** It had been Vercel's default **307 Temporary** (`redirectStatusCode: null` on the apex domain), which tells Google the apex URL is still the real one — so apex URLs kept their own index entries instead of consolidating onto www. A 3-month GSC export showed 7 apex pages still indexed (89 impressions) alongside 93 www pages, with `/blog/fill-irs-form-online-free` indexed under **both** hosts (72 apex + 62 www impressions) — textbook duplicate-host split.
+
+Fixed by setting `redirectStatusCode: 308` on the apex domain through the Vercel API:
+
+```bash
+curl -X PATCH -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" \
+  -d '{"redirect":"www.signmypdf.io","redirectStatusCode":308}' \
+  "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID/domains/signmypdf.io?teamId=$VERCEL_ORG_ID"
+```
+
+This is **domain configuration, not code** — it survives deploys and is not in the repo. If apex URLs ever start reappearing in GSC, re-check `redirectStatusCode` on the domain before looking at anything in `app/`. Consolidation takes 2-6 weeks of recrawling; do not "help" it by resubmitting apex URLs.
+
 ### Per-page metadata (added Apr 25)
 
 Every public page emits its own canonical + og:url + page-specific title/description. Inheritance from `app/layout.tsx` only applies to the homepage `/` (whose layout-level defaults match it). Source of truth:
@@ -900,6 +912,50 @@ To prevent the canonical/og:url regression from coming back, every new public ro
 ### Freeze rule reminder
 
 Articles in `app/blog/posts.ts` whose `date` has passed are frozen per `## Blog Publication Plan` Hard Rule #1. If a published article's `metaDescription` is over 160 chars, the path is to **allowlist it** (with an inline reason in `ALLOWLIST`), NOT to edit the post. Future-dated articles are NOT frozen and must be brought into compliance before their date hits.
+
+### Long-form guide layout (`layout: 'guide'`, added 2026-08-02)
+
+Second rendering path in `app/blog/[slug]/BlogPostContent.tsx`, opt-in per article via `layout: 'guide'` in `posts.ts`. Articles without the flag go through `formatContent()` exactly as before — **do not migrate existing articles to it in bulk**, that is the site-wide-change failure mode described under `## SEO Indexing Status`.
+
+What the guide path does differently:
+
+- **The upload widget moves into the body.** The default template renders `<BlogPdfUploader />` above the first paragraph, so Google's snippet candidate is an upload box. A guide places it at a `[WIDGET]` marker mid-article and opens with a `[QUICKANSWER]` block instead. This was the whole reason the path exists.
+- **Sections become `.ba-card` plates**, split at every `## ` heading and `[LABEL]` kicker.
+- **TOC and related-guide cards live in the main column.** The sticky right rail (TOC duplicate + "Sign it now") is `display: none` below 1024px — in the sidebar those blocks fall below the article on mobile and the reading order breaks.
+- **Title tag bypasses the `%s | SignMyPDF` template** (`title.absolute` in `generateMetadata`) — guide titles are already at the SERP truncation point.
+- **Visible date is `post.modified`**, rendered as "Updated 2 August 2026". `modified` also drives `dateModified` in the Article schema and `lastModified` in `app/sitemap.ts`.
+- **Per-article schema.** `app/blog/[slug]/page.tsx` emits Article + BreadcrumbList always, HowTo when the post sets `howTo`, and a FAQPage generated from the visible `[FAQ]` block via `extractFaq()` in `app/blog/guide-parse.ts`. Articles with no `[FAQ]` block keep the site-wide default questions. **Never hand-write FAQPage entities that differ from the rendered accordion** — Google drops schema that does not match visible text.
+
+Content markers (parsed in `renderGuide()`, components in `app/blog/components/ArticleBlocks.tsx`, styles in `app/blog/blog-article.css` under `.ba-*`):
+
+| Marker | Renders |
+|---|---|
+| `[QUICKANSWER] … [/QUICKANSWER]` | direct-answer plate under the H1 |
+| `[TOC]` | table of contents, auto-built from `{#anchor}` suffixes |
+| `[LABEL] Method 1 · Built into iOS` | section kicker; starts a new card |
+| `[STEP 1] Title` | numbered step head |
+| `[SHOT /path.webp \| alt \| caption]` | phone-framed screenshot (first one on the page is eager + `fetchpriority=high`) |
+| `[SHOTS] … [/SHOTS]` | two-up screenshot grid |
+| `[CALLOUT:warning] Title … [/CALLOUT]` | amber callout (plain `[CALLOUT]` still means the old blue one) |
+| `[COMPARE]` + a pipe table | comparison table; `[+]`/`[-]` cell prefixes colour the cell |
+| `[WIDGET]` | inline upload dropzone |
+| `[FAQ] … [/FAQ]` | `<details>` accordion + the FAQPage schema |
+| `[RELATED] … [/RELATED]` | related-guide cards |
+| `[CTA]Title\|Sub\|Button` | dark closing CTA card |
+
+Anchors: append `{#id}` or `{#id|Short TOC label}` to a `## ` heading or a `[CALLOUT:…]` title. The TOC is derived from those, so anchors and TOC entries cannot drift apart.
+
+Gotchas hit while building this:
+- Scope prose link colour to `.ba-main p a, .ba-main li a`. A bare `.ba-main a` repaints TOC entries and the CTA button (blue text on a blue button).
+- `metaDescription` length is measured on the **rendered** attribute. An apostrophe becomes `&#x27;` and costs 5 extra characters against the 50-160 invariant.
+
+Live example: [/blog/sign-pdf-on-iphone-free](https://www.signmypdf.io/blog/sign-pdf-on-iphone-free).
+
+### Fabricated-testimonial removal (added 2026-08-02)
+
+32 frozen articles contain a `## What Our Users Say` heading followed by three invented blockquote reviews ("Sarah M., Denver, CO"). `formatContent()` now swallows the heading and the blockquotes directly under it — same render-layer mechanism as `[QuickSummary]`, so `posts.ts` stays untouched and Hard Rule 1 holds.
+
+The raw strings still travel in the RSC payload (the post is passed as a prop to a client component). They are no longer rendered content. Purging them from source would mean editing 32 indexed articles in one commit — do not do that without a deliberate decision.
 
 ### Render-layer emoji replacement (added 2026-04-28)
 

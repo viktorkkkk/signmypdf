@@ -16,7 +16,7 @@ function lastModFor(route: string): Date {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Canonical = www. The apex domain (signmypdf.io) 307-redirects to www;
+  // Canonical = www. The apex domain (signmypdf.io) 308-redirects to www;
   // listing apex URLs in the sitemap forces Google to follow a redirect for
   // every URL, which delays indexing and dilutes ranking signals.
   const baseUrl = 'https://www.signmypdf.io';

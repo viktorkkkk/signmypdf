@@ -94,7 +94,7 @@ Pricing (unchanged from the rest of the site):
 Business context (for future sessions that need it):
 
 - Company — **PIXELTIDE LLC**, 833 Saint Vincent, Irvine CA 92618, USA
-- Domain — `signmypdf.io` (apex 307-redirects to `www.signmypdf.io`)
+- Domain — `signmypdf.io` (apex **308**-redirects to `www.signmypdf.io`; was 307 until 2026-08-02 — see `apps/web/CLAUDE.md → ### Canonical host policy`)
 - Support email — `support@signmypdf.io`
 - Chrome Web Store developer account — `viktor.kolektionok@gmail.com`
 - Trader status — **Non-trader** (publisher shows *SignMyPDF* / PIXELTIDE LLC). Google approved the submission without trader verification because Sign PDF is free with no in-extension transactions; the LLC carries the responsibility for the published product, not the transaction-flow paperwork.
