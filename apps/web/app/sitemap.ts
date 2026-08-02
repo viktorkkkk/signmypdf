@@ -114,7 +114,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
   const blogPosts = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    // `modified` is set when an article is rewritten in place — reporting the
+    // publication date instead would tell Google nothing has changed.
+    lastModified: new Date(post.modified || post.date),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
