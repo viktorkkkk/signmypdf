@@ -28,9 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = post.metaTitle || post.title;
 
   return {
-    // Guides own their full title tag: the root `%s | SignMyPDF` template
-    // would push these past the SERP truncation point.
-    title: post.layout === 'guide' ? { absolute: title } : title,
+    // Opt out of the root `%s | SignMyPDF` template when the 12-char suffix
+    // would push the title past the SERP truncation point. Guides always do;
+    // individual posts opt in with `absoluteTitle: true`.
+    title: post.layout === 'guide' || post.absoluteTitle ? { absolute: title } : title,
     description: post.metaDescription || post.excerpt,
     keywords: post.tags,
     alternates: {

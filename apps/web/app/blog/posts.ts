@@ -28,6 +28,10 @@ export interface BlogPost {
   layout?: 'guide';
   /** Short label for the breadcrumb trail and BreadcrumbList schema. */
   breadcrumb?: string;
+  /** Emit `metaTitle` as the whole `<title>`, without the root layout's
+   *  ` | SignMyPDF` suffix. Set it when the 12-char suffix would push the
+   *  title past the ~60-char SERP slot. `layout: 'guide'` implies it. */
+  absoluteTitle?: boolean;
   /** Absolute-from-root path to a 1200×630 social image for this article. */
   ogImage?: string;
   /** Emits a HowTo block alongside the Article schema. */
@@ -4211,6 +4215,7 @@ Yes. Electronic signatures created with SignMyPDF are legally valid under the ES
     readTime: '8 min read',
     author: 'SignMyPDF Team',
     tags: ['rental application', 'fill pdf', 'tenant forms', 'apartment application', 'free pdf tool'],
+    absoluteTitle: true,
     metaTitle: "Fill a Rental Application PDF Online — Free",
     metaDescription: "Fill out any rental application PDF in your browser — no printing, no scanning, no account. Type your details and download in five minutes.",
     content: `Applying for an apartment or rental property means paperwork — and lots of it. Most landlords and property managers still send rental applications as PDF files, expecting you to print, fill out by hand, scan, and email back. In 2026, there is a much faster and more professional way to handle this. You can fill out a rental application PDF directly in your browser in minutes, with clean typed text that makes a better impression on any landlord.
@@ -4950,8 +4955,9 @@ Yes. SignMyPDF processes all documents 100% client-side in your browser. No docu
     readTime: '7 min read',
     author: 'SignMyPDF Team',
     tags: ['PDF form fields not working', 'PDF fillable fields fix', 'PDF form locked', 'PDF not editable', 'fix PDF form'],
-    metaTitle: 'PDF Form Fields Not Working? Here is the Fix (2026)',
-    metaDescription: 'PDF form fields grayed out, locked, or not clickable? Step-by-step fixes for Chrome, Adobe Acrobat, and mobile browsers — plus a free workaround that always works.',
+    absoluteTitle: true,
+    metaTitle: "PDF Form Fields Not Working? Fix It in 2 Minutes",
+    metaDescription: "Clicking a field does nothing? The form is flat, locked, or your viewer can't handle it. Here's how to type on it anyway — free, no software.",
     content: `[CALLOUT] 🔧 If your PDF form fields are not working, the most reliable fix is to open the PDF in a dedicated tool like SignMyPDF instead of your browser or system PDF viewer.
 
 You download a PDF form, open it to fill it out, and nothing happens when you click the fields. The text boxes are grayed out, the checkboxes do not respond, or you can see the form fields but cannot type anything into them. This is one of the most common PDF frustrations, and it has several possible causes — most of which are easy to fix once you know what you are dealing with.
@@ -7553,6 +7559,7 @@ Practically, no. AES-128 is unbroken and would take longer than the age of the u
     author: 'SignMyPDF Team',
     readTime: '4 min read',
     tags: ['password protected pdf', 'pdf wont open', 'aes-128 vs aes-256', 'pdf encryption compatibility', 'protected pdf troubleshooting'],
+    absoluteTitle: true,
     metaTitle: "Protected PDF Won't Open on Their Device? Fix",
     metaDescription: "Your password-protected PDF opens on your laptop but not on the recipient's phone. Usually the encryption, not the password. Here's the fix.",
   },
@@ -8099,6 +8106,7 @@ AES-256, the same algorithm used by banks and government agencies for sensitive 
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['sign read-only pdf', 'pdf read-only fix', 'pdf wont let me sign', 'sign protected pdf', 'read-only pdf signature', 'sign pdf without editing', 'pdf restriction fix'],
+    absoluteTitle: true,
     metaTitle: "PDF Read-Only? How to Add Text and Sign It",
     metaDescription: "Your PDF opens read-only and won't let you type or sign. Here's how to add text and a signature to a locked PDF — free, no software.",
     content: `
@@ -9265,6 +9273,7 @@ Navigate to each page, place your signature or initial, and repeat. For a long c
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['ZIP password vs PDF password', 'PDF password protection', 'password protect PDF free', 'PDF encryption', 'ZIP encryption comparison', 'secure PDF sharing', 'AES-256 PDF protection'],
+    absoluteTitle: true,
     metaTitle: "ZIP Password vs PDF Password: Which Should You Use?",
     metaDescription: "A colleague says zip it, your lawyer says password-protect the PDF. Here's what each actually protects and which one your recipient can open.",
     content: `
@@ -9506,6 +9515,7 @@ Yes. SignMyPDF applies AES-256 encryption locally using JavaScript — the same 
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['signed pdf looks different', 'signed pdf looks wrong', 'pdf signature rendering issue', 'fix signed pdf', 'pdf layout shift after signing', 'signature position wrong', 'pdf signing fix'],
+    absoluteTitle: true,
     metaTitle: "Signed PDF Looks Different for the Recipient — Fix",
     metaDescription: "Your signature shifts position or the layout changes when someone else opens the signed PDF. Here's what causes it and how to fix it.",
     content: `
