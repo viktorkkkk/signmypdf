@@ -112,6 +112,25 @@ Stable communication preferences captured here so future Claude Code sessions ca
 - **No scope creep into non-revenue work.** Polishing for its own sake is out of scope unless it directly supports a shipped feature or unblocks something the user named.
 - **Deploys on assigned tasks are silent** (per stored memory) — commit, push, and run prod deploys without asking when the user gave a concrete task.
 
+## SEO reporting (root `scripts/`)
+
+Infra-level, so it lives here rather than in the app. Full detail — formulas, CTR norms, watchlist rules — in [apps/web/CLAUDE.md → READ FIRST](apps/web/CLAUDE.md).
+
+| Script | Schedule | Does |
+|---|---|---|
+| `weekly-report.mjs` | Mon 02:00 UTC | "what happened" → Telegram, 35 lines |
+| `monthly-report.mjs` | 1st 02:00 UTC | "what paid off" → Telegram, 60 lines |
+| `gsc-blog-export.mjs` | manual | per-page blog CSV |
+| `gsc-index-coverage.mjs` | manual | reconstructs Index Coverage via URL Inspection |
+| `submit-sitemaps.mjs` | manual | PUT sitemaps to Search Console |
+| `lib/index-status.mjs` | — | cached indexed-page count, 7-day TTL |
+
+Both reports read `scripts/gsc-watchlist.json`. **Stamp `lastChangeDate` + `changeType` there on every page edit, without asking** — the monthly before/after block is dead without it.
+
+Secrets come from the environment only: `GSC_CREDENTIALS`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Never into a RemoteTrigger prompt — a plaintext PAT lived in one until 2026-08-02 and had to be rotated.
+
+Blog auto-publication is **off** and stays off without an explicit ask.
+
 ## Open issues / context
 
 These bubble up to the monorepo level because they affect cross-cutting decisions or are at the top of the priority queue. Full detail in [apps/web/CLAUDE.md](apps/web/CLAUDE.md).

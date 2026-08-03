@@ -9,6 +9,122 @@
 
 ---
 
+# READ FIRST — state as of 2026-08-03
+
+Everything below this block is history. Where it disagrees with this block, this block wins.
+
+## Site state
+
+- **81 of 197 sitemap URLs are in Google's index. 97 URLs Google does not know at all.**
+- Root cause is **crawl budget on a young domain with no backlinks** — not content quality, not on-page SEO. Both were audited and are clean. Until external links exist, more articles make it worse, not better.
+- **Troubleshooting articles earn clicks. How-to and legal articles do not.** `signature-disappears-pdf-fix` alone is 45 of 75 blog clicks in 3 months. Write for "my thing is broken", not "how do I".
+- 3-month totals (2026-05-03 → 2026-08-01): 81 blog URLs with ≥1 impression, 13 393 impressions, 75 clicks, 65 zero-click pages, 53 pages under 50 impressions.
+
+**Baselines — do not lose these, every later measurement compares against them:**
+
+| Page | Impressions | Position | CTR | Clicks |
+|---|---|---|---|---|
+| `/blog/signature-disappears-pdf-fix` | 3561 | 8.0 | 1.26% | 45 |
+| `/blog/sign-pdf-on-iphone-free` | 3292 | 17.7 | 0.09% | 3 |
+
+## Article format
+
+**`layout: 'guide'`** in `posts.ts` opts an article into the long-form renderer. Reference implementation: [`/blog/sign-pdf-on-iphone-free`](https://www.signmypdf.io/blog/sign-pdf-on-iphone-free). Full marker table in `### Long-form guide layout` further down.
+
+Components available to a guide, driven by content markers: `QuickAnswer`, `Toc`, `StepHead`, `PhoneShot`, `ShotGrid`, `Callout`, `CompareTable`, `FixGrid`, `FaqAccordion`, `RelatedGrid`, `CtaCard`. Source: `app/blog/components/ArticleBlocks.tsx`.
+
+**`absoluteTitle: true`** drops the root ` | SignMyPDF` suffix from `<title>`. Set it whenever the title plus 12 characters would pass ~60. `layout: 'guide'` implies it.
+
+Hard limits:
+- title ≤ 55 chars (the suffix, if kept, eats 12 more)
+- `metaDescription` 50–160 chars **measured on the rendered attribute** — an apostrophe becomes `&#x27;` and costs 5 extra
+- a year in brackets only where freshness is the selling point; never as filler
+
+**Do not bulk-migrate existing articles to `layout: 'guide'`.** A site-wide content change is the failure mode that cost ~3 weeks of traffic in April.
+
+## Never do this
+
+- **No invented testimonials, quotes or statistics.** 32 articles carried fabricated reviews; they are stripped at the render layer in `formatContent()`. Do not write new ones, do not "restore" them.
+- **Never pass `content` into a Client Component.** `allPosts` must be `BlogPostSummary[]`. Passing full posts shipped 1.4 MB of article bodies into every blog page's RSC payload.
+- **No secrets in the RemoteTrigger prompt.** A plaintext GitHub PAT lived there until 2026-08-02 and had to be rotated. Credentials come from the environment or GitHub secrets, never from a prompt.
+- **Do not re-enable blog auto-publication** without an explicit ask. The trigger is `enabled: false`; the old GitHub Actions publisher is deleted. Thin auto-generated content is what created the 97-unknown-URL problem.
+
+## Sitemap
+
+`/sitemap.xml` is a **sitemap index** over three files (route handlers in `app/sitemap*.xml/route.ts`, shared data in `app/lib/sitemap-data.ts`):
+
+| File | URLs | Priority | changefreq | Contents |
+|---|---:|---|---|---|
+| `sitemap-core.xml` | 9 | 1.0 | weekly | tools + `/blog` |
+| `sitemap-blog-1.xml` | 27 | 0.8 | weekly | articles over 50 impressions |
+| `sitemap-blog-2.xml` | 161 | 0.3 | monthly | the tail + secondary pages |
+
+The 50-impression split is frozen in `app/blog/sitemap-priority.json`. **Regenerate it when the traffic picture moves:**
+
+```bash
+node scripts/gsc-blog-export.mjs          # fresh CSV in logs/gsc-export/
+# then rebuild the slug list from that CSV and update sitemap-priority.json
+node scripts/submit-sitemaps.mjs          # PUT all four to Search Console
+```
+
+`scripts/seo-health-check.mjs` follows the index one level down. If you change the sitemap shape again, check that script first — it is the only thing guarding the canonical/og:url invariants.
+
+Public sitemap pings are dead: Google's `/ping` returns 404 (retired June 2023), Bing's returns 410. The working channels are the Search Console API and IndexNow.
+
+## Reporting
+
+Two scripts, two questions. They deliberately share no code.
+
+| | `scripts/weekly-report.mjs` | `scripts/monthly-report.mjs` |
+|---|---|---|
+| Question | what happened | where are we heading, what paid off |
+| Schedule | Mon 02:00 UTC | 1st 02:00 UTC |
+| Line budget | 35 | 60 |
+| Clicks / CTR | 28-day window | calendar month |
+| Impressions / position | week over week | month over month |
+
+Why asymmetric: the site earns ~6 clicks a week, so week-over-week click deltas are noise. Every window closes on **the day before yesterday** — GSC lags 2–3 days.
+
+`scripts/gsc-watchlist.json` drives block 2 of both. **When you change a page, stamp it — do not ask first:**
+
+```json
+{ "path": "/blog/slug", "lastChangeDate": "2026-08-03", "changeType": "title" }
+```
+
+`changeType` is `title` | `content` | `images`. Also bump the top-level `lastChangeDate`. Without the stamp the monthly report cannot measure the 28 days before against the 28 after, which is the block the whole report exists for.
+
+**Click-potential formulas — the norm depends on the fix:**
+
+| Fix | Formula | Why |
+|---|---|---|
+| Заголовок | `impressions × norm(current position) − clicks` | a better title lifts CTR where the page already sits; it does not move it up |
+| Переписать | `impressions × norm(4) − clicks` | a rewrite is what actually moves position |
+| Скриншоты | no number | not a formula-shaped effect |
+
+Using norm(4) for title work overstated it 3–4×. Corrected 2026-08-03.
+
+**CTR norm by position:**
+
+| Pos | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11–15 | 16–20 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CTR | 27% | 15% | 11% | 8% | 6% | 5% | 4% | 3% | 2.6% | 2.3% | 1.5% | 1% |
+
+Index coverage in both reports comes from `scripts/lib/index-status.mjs`, cached 7 days in `logs/index-status.json` and committed back from CI so `previousIndexed` survives and the shrinking-index alert can fire.
+
+Telegram: bot `@seo_signmypdf_bot`, chat 265788630. `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` live in GitHub secrets and `.claude/tokens.local`. With them unset both scripts print instead of sending.
+
+## Calendar
+
+| Date | What |
+|---|---|
+| **16 Aug 2026** | Position check on `/blog/sign-pdf-on-iphone-free` — 2 weeks after the rewrite. Queries: `how to sign a pdf on iphone`, `how to sign pdf on iphone`, `sign a pdf on iphone`, `sign pdf on iphone free`. Compare to the baseline table above. |
+| **30 Aug 2026** | 28-day windows finally clear of pre-change data. Before this the monthly report correctly says "рано судить" — that is not a bug. |
+| **1 Sep 2026** | First scheduled monthly report. Decide then whether the sitemap split moved crawl coverage, and only then revisit `electronic-signature-laws-by-state` (1520 impressions at position 64, noindex candidate — **do not touch before September**) and the 97 unknown URLs. |
+
+Nothing is planned between now and 16 August.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -89,7 +205,7 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Free plan pricing updated: "2 PDFs/day without watermark", "✗ Watermark after 2 PDFs/day"
 
 ### SEO & Blog
-- [x] Blog with 40 articles (1500+ words each)
+- [x] Blog with 40 articles (1500+ words each) — 178 as of 2026-08-03
 - [x] Each article: comparison table, US user reviews (blockquotes), CTA block, FAQ, internal links
 - [x] BlogPostContent.tsx: tables, `[CTA]`, `[CALLOUT]`, step cards, bold/links in lists, QuickSummary
 - [x] Blog footer matches main site (light style, PIXELTIDE LLC copyright)
@@ -100,7 +216,7 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] Blog CTAs match article topic: Sign articles → `/` CTA, Fill articles → `/fill` CTA
 - [x] Tri-state tool routing in BlogPostContent.tsx — `getArticleTool(slug)` returns `'sign' | 'fill' | 'protect'` based on FILL_SLUGS + PROTECT_SLUGS sets + filename heuristics. Drives CTA href, button text, hero subtitle, sticky CTA, and BlogPdfUploader target route.
 - [x] getPublishedPosts() filters by date ≤ build date — future-dated articles invisible until deploy
-- [x] Daily trigger (02:00 UTC) auto-publishes 2 articles (1 SIGN + 1 FILL), deploys, submits to Bing + Google
+- [x] ~~Daily trigger (02:00 UTC) auto-publishes 2 articles~~ — **DISABLED 2026-07-02, do not re-enable** (see READ FIRST)
 - [x] All 45 URLs submitted to Google Indexing API + Bing IndexNow (Apr 22 2026)
 
 ### Bugs Fixed
@@ -172,7 +288,7 @@ git push https://$GITHUB_TOKEN@github.com/viktorkkkk/signmypdf.git main
 - [x] GitHub repo: `github.com/viktorkkkk/signmypdf`
 - [x] Vercel deploy token: stored in `.claude/tokens.local` (gitignored)
 - [x] GitHub token: stored in `.claude/tokens.local` (expires May 2026)
-- [x] Daily trigger ID: `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (runs 02:00 UTC daily)
+- [x] Daily trigger ID: `trig_01Mw8wt1nCK3jpDA7ymfp4g2` — **`enabled: false` since 2026-07-02**, prompt carries no secrets since 2026-08-02
 - [x] Google service account: `signmypdf-seo-reporter@signmypdf-seo.iam.gserviceaccount.com`
 - [x] Google credentials file: `signmypdf-seo-97022bc5390f.json` (gitignored, embedded in trigger)
 - [x] Bing Webmaster Tools: site added, sitemap submitted, Request indexing sent for main pages
@@ -533,7 +649,7 @@ Applied via `.tool-accent-sign | .tool-accent-fill | .tool-accent-protect` modif
 
 ## Blog Status (2026-04-29)
 
-**Daily trigger:** `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (cron `0 2 * * *` UTC). **v3.1 prompt is live** (anchor bug-fix patch landed 2026-04-29).
+**Daily trigger:** `trig_01Mw8wt1nCK3jpDA7ymfp4g2` (cron `0 2 * * *` UTC). **DISABLED since 2026-07-02 — do not re-enable without an explicit ask.** The prompt below is preserved for reference; its secrets were stripped 2026-08-02.
 
 **Backups (rollback targets, newest first):**
 - v3.1 (anchor fix, override removed): `~/.config/signmypdf/blog-trigger-prompt-backup-2026-04-29-v3.1.md`
