@@ -170,7 +170,10 @@ const [t28, t28p, p28, p28p, p7, p7p] = await Promise.all([
   pages(W7PREV),
 ]);
 
-const watchlist = JSON.parse(readFileSync(join(HERE, 'gsc-watchlist.json'), 'utf8')).pages;
+const wl = JSON.parse(readFileSync(join(HERE, 'gsc-watchlist.json'), 'utf8'));
+// Entries are objects; only the path matters here — the monthly report is
+// what reads lastChangeDate / changeType.
+const watchlist = wl.pages.map((p) => (typeof p === 'string' ? p : p.path));
 
 /** Count article images on a page. Chrome (logo, extension banner) is served
  *  from /_next/static/media, article art from /images/blog — so the path is a
@@ -208,11 +211,18 @@ let shown = 0;
 for (const path of watchlist) {
   const url = SITE + path;
   const now = p28.get(url);
-  if (!now) continue;
+  const label = shortPath(url).replace('/blog/', '');
+  if (!now) {
+    // Say it out loud. A silently missing row is indistinguishable from a
+    // page that dropped out of the index.
+    L.push(`${label} · нет показов за период`);
+    shown++;
+    continue;
+  }
   const was = p28p.get(url) || { clicks: 0, impressions: 0, ctr: 0, position: now.position };
   // One line per page — two lines each blew past the 35-line budget.
   L.push(
-    `${shortPath(url).replace('/blog/', '')} · поз ${pos(was.position)}→${pos(now.position)}${arrPos(now.position, was.position)}` +
+    `${label} · поз ${pos(was.position)}→${pos(now.position)}${arrPos(now.position, was.position)}` +
       ` · CTR ${pct(was.ctr)}→${pct(now.ctr)}${arrUp(now.ctr, was.ctr)}` +
       ` · клики ${was.clicks}→${now.clicks}${arrUp(now.clicks, was.clicks)}`,
   );
@@ -267,32 +277,45 @@ for (const [url, p] of p28) {
 
   if (p.position <= 15 && p.impressions >= 80 && ctrPercent < norm * 0.6) {
     candidates.push({
+      path,
       imp: p.impressions,
       text: `✏️ Заголовок: ${path} — поз ${pos(p.position)}, CTR ${ctrPercent.toFixed(2)}% против нормы ${norm}%`,
     });
   }
   if (p.position >= 8 && p.position <= 20 && p.impressions >= 200) {
     candidates.push({
+      path,
       imp: p.impressions,
       text: `📝 Переписать: ${path} — поз ${pos(p.position)}, ${p.impressions} показов, потенциал ×${(8 / norm).toFixed(1)}`,
     });
   }
   if (p.position > 50 && p.impressions >= 200) {
     candidates.push({
+      path,
       imp: p.impressions,
       text: `🗑 Кандидат в noindex: ${path} — поз ${pos(p.position)}, ${p.impressions} показов`,
     });
   }
-  if (watchlist.includes(path) || p.impressions >= 300) {
+  // Articles only — recommending screenshots for the /sign tool page is noise.
+  if (path.startsWith('/blog/') && (watchlist.includes(path) || p.impressions >= 300)) {
     const n = await countImages(url);
     if (n >= 0 && n < 2) {
-      candidates.push({ imp: p.impressions, text: `🖼 Добавить скриншоты: ${path} — сейчас ${n} картинок` });
+      candidates.push({ path, imp: p.impressions, text: `🖼 Добавить скриншоты: ${path} — сейчас ${n} картинок` });
     }
   }
 }
 const recLines = [];
 recLines.push('ЧТО ДЕЛАТЬ');
-const recs = candidates.sort((a, b) => b.imp - a.imp).slice(0, 3);
+// One line per URL — a page can trip two rules at once.
+const seenRec = new Set();
+const recs = candidates
+  .sort((a, b) => b.imp - a.imp)
+  .filter((x) => {
+    if (seenRec.has(x.path)) return false;
+    seenRec.add(x.path);
+    return true;
+  })
+  .slice(0, 3);
 if (!recs.length) recLines.push('  срочного нет');
 else recLines.push(...recs.map((r) => r.text));
 
@@ -312,11 +335,20 @@ if (t28p.impressions > 0 && (t28.impressions - t28p.impressions) / t28p.impressi
 }
 const alertLines = alerts.length ? ['', 'ТРЕВОГА', ...alerts] : [];
 
+// A 28-day window still carries pre-change data for 28 days after an edit,
+// so spell out when the numbers can be trusted rather than leaving it to memory.
+const footerLines = [];
+if (wl.lastChangeDate) {
+  const stable = new Date(new Date(wl.lastChangeDate).getTime() + 28 * DAY);
+  footerLines.push('');
+  footerLines.push(`Заголовки обновлены ${ru(wl.lastChangeDate)} · данные за 28 дней стабилизируются к ${ru(stable)}`);
+}
+
 // Assemble with a hard 35-line budget. Movement is the only elastic block,
 // so it absorbs whatever room is left; its rows are already ordered by
 // priority, so the trim drops the least actionable ones.
 const MAX_LINES = 35;
-const fixed = L.length + 1 + recLines.length + alertLines.length; // +1 for the blank after movement
+const fixed = L.length + 1 + recLines.length + alertLines.length + footerLines.length; // +1 for the blank after movement
 const budget = Math.max(0, MAX_LINES - fixed - 1); // -1 for the movement header
 const shownMovement = movementLines.slice(0, budget);
 
@@ -326,6 +358,7 @@ else L.push(...shownMovement);
 L.push('');
 L.push(...recLines);
 L.push(...alertLines);
+L.push(...footerLines);
 
 const message = L.join('\n');
 

@@ -1,0 +1,42 @@
+name: Monthly SEO Report
+
+on:
+  schedule:
+    # 02:00 UTC on the 1st = 09:00 Bangkok (UTC+7). The reporting cut-off is
+    # two days back, so a run on the 1st lands inside the month just finished —
+    # which is the month the report is about.
+    - cron: '0 2 1 * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the report instead of sending it to Telegram'
+        required: false
+        default: 'false'
+      month:
+        description: 'Re-report a past month, YYYY-MM (blank = the month just finished)'
+        required: false
+        default: ''
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build and send the monthly report
+        env:
+          GSC_CREDENTIALS: ${{ secrets.GSC_CREDENTIALS }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ -n "${{ github.event.inputs.month }}" ]; then ARGS="$ARGS --month=${{ github.event.inputs.month }}"; fi
+          node scripts/monthly-report.mjs $ARGS

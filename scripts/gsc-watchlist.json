@@ -1,14 +1,15 @@
 {
-  "_comment": "Pages tracked individually in the weekly Telegram report (scripts/weekly-report.mjs, block 2). Paths are relative to https://www.signmypdf.io. Add a page here when you start optimising it; remove it once it is stable and no longer interesting.",
+  "_comment": "Pages tracked individually in the weekly and monthly reports (scripts/weekly-report.mjs, scripts/monthly-report.mjs). Paths are relative to https://www.signmypdf.io. Set lastChangeDate + changeType when you optimise a page: the monthly report reads them to measure the 28 days before against the 28 days after, which is the only honest way to tell whether the work paid off. changeType is one of title | content | images.",
+  "lastChangeDate": "2026-08-02",
   "pages": [
-    "/blog/sign-pdf-on-iphone-free",
-    "/blog/signature-disappears-pdf-fix",
-    "/blog/pdf-form-fields-not-working-fix",
-    "/blog/pdf-read-only-add-text-fix",
-    "/blog/signed-pdf-looks-different-fix",
-    "/blog/protected-pdf-wont-open-some-devices",
-    "/blog/fill-rental-application-pdf-free",
-    "/blog/zip-password-vs-pdf-password",
-    "/sign"
+    { "path": "/blog/sign-pdf-on-iphone-free", "lastChangeDate": "2026-08-02", "changeType": "content" },
+    { "path": "/blog/signature-disappears-pdf-fix", "lastChangeDate": "2026-08-03", "changeType": "title" },
+    { "path": "/blog/pdf-form-fields-not-working-fix", "lastChangeDate": "2026-08-03", "changeType": "title" },
+    { "path": "/blog/pdf-read-only-add-text-fix", "lastChangeDate": "2026-08-02", "changeType": "title" },
+    { "path": "/blog/signed-pdf-looks-different-fix", "lastChangeDate": "2026-08-02", "changeType": "title" },
+    { "path": "/blog/protected-pdf-wont-open-some-devices", "lastChangeDate": "2026-08-02", "changeType": "title" },
+    { "path": "/blog/fill-rental-application-pdf-free", "lastChangeDate": "2026-08-02", "changeType": "title" },
+    { "path": "/blog/zip-password-vs-pdf-password", "lastChangeDate": "2026-08-02", "changeType": "title" },
+    { "path": "/sign" }
   ]
 }
