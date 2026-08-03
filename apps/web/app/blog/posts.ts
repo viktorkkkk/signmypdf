@@ -4211,8 +4211,8 @@ Yes. Electronic signatures created with SignMyPDF are legally valid under the ES
     readTime: '8 min read',
     author: 'SignMyPDF Team',
     tags: ['rental application', 'fill pdf', 'tenant forms', 'apartment application', 'free pdf tool'],
-    metaTitle: 'Fill Out Rental Application PDF Online Free (2026) — No Printing',
-    metaDescription: 'Fill out any rental application PDF online for free in under 2 minutes. No printing, no scanning, no registration. Works on desktop, iPhone, and Android.',
+    metaTitle: "Fill a Rental Application PDF Online — Free",
+    metaDescription: "Fill out any rental application PDF in your browser — no printing, no scanning, no account. Type your details and download in five minutes.",
     content: `Applying for an apartment or rental property means paperwork — and lots of it. Most landlords and property managers still send rental applications as PDF files, expecting you to print, fill out by hand, scan, and email back. In 2026, there is a much faster and more professional way to handle this. You can fill out a rental application PDF directly in your browser in minutes, with clean typed text that makes a better impression on any landlord.
 
 [CALLOUT]📋 Quick Summary: Upload your rental application PDF to SignMyPDF.io/fill → click any blank field → type your information → download and send. No printing, no scanning, no registration required. Free for up to 2 PDFs per day.
@@ -7553,8 +7553,8 @@ Practically, no. AES-128 is unbroken and would take longer than the age of the u
     author: 'SignMyPDF Team',
     readTime: '4 min read',
     tags: ['password protected pdf', 'pdf wont open', 'aes-128 vs aes-256', 'pdf encryption compatibility', 'protected pdf troubleshooting'],
-    metaTitle: "Password-Protected PDF Won't Open? Here's Why and How to Fix It",
-    metaDescription: "Your protected PDF works on one device but not another? It's usually old readers vs new encryption. The 30-second fix that works for any reader.",
+    metaTitle: "Protected PDF Won't Open on Their Device? Fix",
+    metaDescription: "Your password-protected PDF opens on your laptop but not on the recipient's phone. Usually the encryption, not the password. Here's the fix.",
   },
   {
     slug: 'pdf-signing-no-email-required',
@@ -8099,8 +8099,8 @@ AES-256, the same algorithm used by banks and government agencies for sensitive 
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['sign read-only pdf', 'pdf read-only fix', 'pdf wont let me sign', 'sign protected pdf', 'read-only pdf signature', 'sign pdf without editing', 'pdf restriction fix'],
-    metaTitle: 'PDF Is Read-Only? How to Sign It Anyway',
-    metaDescription: "Your PDF says it's read-only and won't accept a signature. Here's how to sign a read-only PDF for free — no account, no software required.",
+    metaTitle: "PDF Read-Only? How to Add Text and Sign It",
+    metaDescription: "Your PDF opens read-only and won't let you type or sign. Here's how to add text and a signature to a locked PDF — free, no software.",
     content: `
 Your PDF opened but won't let you click to sign it. A read-only banner appears, or your PDF viewer grays out every editing tool. You need to sign this document — a lease, an NDA, a contract — and you're stuck before you've even started. Signing a read-only PDF feels impossible in a standard viewer, but the restriction is almost always a limitation of the tool you're using, not the file itself.
 
@@ -9265,8 +9265,8 @@ Navigate to each page, place your signature or initial, and repeat. For a long c
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['ZIP password vs PDF password', 'PDF password protection', 'password protect PDF free', 'PDF encryption', 'ZIP encryption comparison', 'secure PDF sharing', 'AES-256 PDF protection'],
-    metaTitle: 'ZIP Password vs PDF Password: Key Differences',
-    metaDescription: 'ZIP passwords and PDF passwords work differently. Here is when to use each, and how to password-protect your PDF free in your browser — no account needed.',
+    metaTitle: "ZIP Password vs PDF Password: Which Should You Use?",
+    metaDescription: "A colleague says zip it, your lawyer says password-protect the PDF. Here's what each actually protects and which one your recipient can open.",
     content: `
 A colleague says "zip it with a password" before emailing. Your attorney says send a "password-protected PDF." Both restrict access — but ZIP password protection and PDF password encryption work differently, fail differently, and create different experiences for the recipient. When you're sharing a tax return, a signed contract, or a medical record, picking the wrong method can mean your recipient can't open the file on their phone, or that the protection doesn't cover what you assumed it did.
 
@@ -9506,8 +9506,8 @@ Yes. SignMyPDF applies AES-256 encryption locally using JavaScript — the same 
     readTime: '4 min read',
     author: 'SignMyPDF Team',
     tags: ['signed pdf looks different', 'signed pdf looks wrong', 'pdf signature rendering issue', 'fix signed pdf', 'pdf layout shift after signing', 'signature position wrong', 'pdf signing fix'],
-    metaTitle: 'Signed PDF Looks Wrong — How to Fix It',
-    metaDescription: 'Your signed PDF looks different on the recipient screen? Here is why it happens and how to fix it without re-doing the whole document.',
+    metaTitle: "Signed PDF Looks Different for the Recipient — Fix",
+    metaDescription: "Your signature shifts position or the layout changes when someone else opens the signed PDF. Here's what causes it and how to fix it.",
     content: `
 Your client says the signature is in the wrong spot. Your colleague opens the same file and sees a completely shifted layout. You signed the document carefully — but now the signed PDF looks different on their screen from what you saw when you placed it.
 
