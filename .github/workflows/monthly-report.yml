@@ -17,6 +17,9 @@ on:
         required: false
         default: ''
 
+permissions:
+  contents: write
+
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -40,3 +43,20 @@ jobs:
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
           if [ -n "${{ github.event.inputs.month }}" ]; then ARGS="$ARGS --month=${{ github.event.inputs.month }}"; fi
           node scripts/monthly-report.mjs $ARGS
+
+      - name: Persist the index-status cache
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          set -euo pipefail
+          # CI checks out fresh every run, so the cache only survives if it is
+          # committed back. Without this the index count is recomputed (207
+          # inspections) on every run and "previousIndexed" is always null,
+          # which kills the shrinking-index alert.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/index-status.json || true
+          git diff --cached --quiet && echo "cache unchanged" && exit 0
+          git commit -m "chore(seo): index-status cache $(date -u +%F)"
+          for i in 1 2 3; do
+            git pull --rebase --quiet && git push && break || sleep 5
+          done

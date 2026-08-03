@@ -23,6 +23,7 @@ import { homedir } from 'os';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createSign } from 'crypto';
+import { getIndexStatus } from './lib/index-status.mjs';
 
 const SITE = 'https://www.signmypdf.io';
 const PROPERTY = 'sc-domain:signmypdf.io';
@@ -161,6 +162,8 @@ const thisMonth = months[months.length - 1];
 const prevMonth = months[months.length - 2];
 const [pagesThis, pagesPrev] = await Promise.all([pagesOf(thisMonth), pagesOf(prevMonth)]);
 
+const indexStatus = await getIndexStatus(token);
+
 const wl = JSON.parse(readFileSync(join(HERE, 'gsc-watchlist.json'), 'utf8'));
 const entries = wl.pages.map((p) => (typeof p === 'string' ? { path: p } : p));
 
@@ -215,8 +218,9 @@ const summary = [
   `CTR ${pct(tPrev.ctr)} → ${pct(tThis.ctr)}${arrUp(tThis.ctr, tPrev.ctr)}`,
   `Позиция ${pos(tPrev.position)} → ${pos(tThis.position)}${arrPos(tThis.position, tPrev.position)}`,
   `Страниц в топ-20: ${top20Prev} → ${top20This}${arrUp(top20This, top20Prev)}`,
-  '',
 ];
+if (indexStatus) summary.push(`Индекс: ${indexStatus.indexed} из ${indexStatus.total} страниц в Google`);
+summary.push('');
 
 // 3 — did the work pay off (the block this report exists for)
 const TYPE_RU = { title: 'заголовок', content: 'содержимое', images: 'картинки' };
@@ -264,26 +268,36 @@ const newcomerLines = [...pagesThis.values()]
   .map((p) => `🟢 ${shortPath(p.url).replace('/blog/', '')} · ${p.impressions} показов · поз ${pos(p.position)}`);
 
 // 6 — plan, priced in clicks
-const potential = (p) => Math.floor(p.impressions * (NORM_AT_4 / 100) - p.clicks);
+/**
+ * Extra clicks a fix could earn per month.
+ *
+ * The norm depends on which fix it is. A better title does not move the page
+ * up the page — it lifts CTR at the position the page already holds, so the
+ * norm for THAT position is the ceiling. A rewrite is what moves the page, so
+ * position 4 is the fair target there. Using the position-4 norm for title
+ * work overstated it by 3-4x.
+ */
+const potentialAt = (p, normPercent) => Math.floor(p.impressions * (normPercent / 100) - p.clicks);
 const plan = [];
 for (const p of pagesThis.values()) {
   const path = shortPath(p.url);
   const ctrPercent = p.ctr * 100;
   const norm = ctrNorm(p.position);
-  const gain = potential(p);
-  const tail = gain > 0 ? ` → потенциал +${gain} кликов/мес` : '';
+  const gainTitle = potentialAt(p, norm); // same position, better CTR
+  const gainRewrite = potentialAt(p, NORM_AT_4); // page actually climbs
+  const tail = (g) => (g > 0 ? ` → потенциал +${g} кликов/мес` : '');
   if (p.position <= 15 && p.impressions >= 80 && ctrPercent < norm * 0.6) {
     plan.push({
       path,
       imp: p.impressions,
-      text: `✏️ Заголовок: ${path} — поз ${pos(p.position)}, CTR ${ctrPercent.toFixed(2)}% против ${norm}%${tail}`,
+      text: `✏️ Заголовок: ${path} — поз ${pos(p.position)}, CTR ${ctrPercent.toFixed(2)}% против ${norm}%${tail(gainTitle)}`,
     });
   }
   if (p.position >= 8 && p.position <= 20 && p.impressions >= 200) {
     plan.push({
       path,
       imp: p.impressions,
-      text: `📝 Переписать: ${path} — поз ${pos(p.position)}, ${p.impressions} показов${tail}`,
+      text: `📝 Переписать: ${path} — поз ${pos(p.position)}, ${p.impressions} показов${tail(gainRewrite)}`,
     });
   }
   if (p.position > 50 && p.impressions >= 200) {
@@ -309,6 +323,13 @@ const picked = plan
   .map((x) => x.text);
 planLines.push(...(picked.length ? picked : ['  срочного нет']));
 
+const alarms = [];
+if (indexStatus && indexStatus.previousIndexed !== null && indexStatus.indexed < indexStatus.previousIndexed) {
+  alarms.push('');
+  alarms.push('ТРЕВОГА');
+  alarms.push(`⚠️ Индекс: ${indexStatus.previousIndexed} → ${indexStatus.indexed} страниц в Google`);
+}
+
 const footer = [];
 if (wl.lastChangeDate) {
   const stable = new Date(new Date(wl.lastChangeDate).getTime() + 28 * DAY);
@@ -319,7 +340,7 @@ if (wl.lastChangeDate) {
 }
 
 // Assemble: fixed blocks first, then spend what is left on the three lists.
-const fixed = head.length + trend.length + summary.length + planLines.length + footer.length;
+const fixed = head.length + trend.length + summary.length + planLines.length + alarms.length + footer.length;
 // Reserve slots up front. Block 3 is the point of this report, but a top-10
 // rendered as a top-1 is worse than useless, so the lists get a floor.
 const RESERVE_TOP = Math.min(10, topLines.length);
@@ -363,6 +384,7 @@ if (newcomerLines.length && budget > 1) {
 }
 
 L.push(...planLines);
+L.push(...alarms);
 L.push(...footer);
 
 const message = L.join('\n');

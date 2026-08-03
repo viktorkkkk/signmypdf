@@ -27,6 +27,7 @@ import { homedir } from 'os';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createSign } from 'crypto';
+import { getIndexStatus } from './lib/index-status.mjs';
 
 const SITE = 'https://www.signmypdf.io';
 const PROPERTY = 'sc-domain:signmypdf.io';
@@ -175,6 +176,9 @@ const wl = JSON.parse(readFileSync(join(HERE, 'gsc-watchlist.json'), 'utf8'));
 // what reads lastChangeDate / changeType.
 const watchlist = wl.pages.map((p) => (typeof p === 'string' ? p : p.path));
 
+// Cached weekly — this is the run that normally pays for the refresh.
+const indexStatus = await getIndexStatus(token);
+
 /** Count article images on a page. Chrome (logo, extension banner) is served
  *  from /_next/static/media, article art from /images/blog — so the path is a
  *  reliable discriminator and needs no DOM parsing. */
@@ -203,6 +207,7 @@ L.push(`Клики ${t28p.clicks} → ${t28.clicks}${arrUp(t28.clicks, t28p.clic
 L.push(`Показы ${t28p.impressions} → ${t28.impressions}${arrUp(t28.impressions, t28p.impressions)}`);
 L.push(`CTR ${pct(t28p.ctr)} → ${pct(t28.ctr)}${arrUp(t28.ctr, t28p.ctr)}`);
 L.push(`Позиция ${pos(t28p.position)} → ${pos(t28.position)}${arrPos(t28.position, t28p.position)}`);
+if (indexStatus) L.push(`Индекс: ${indexStatus.indexed} из ${indexStatus.total} страниц в Google`);
 L.push('');
 
 // 2 — watchlist
@@ -328,6 +333,9 @@ for (const path of watchlist) {
   if (now && was && now.position - was.position > 5) {
     alerts.push(`⚠️ ${shortPath(url)}: позиция ${pos(was.position)} → ${pos(now.position)}`);
   }
+}
+if (indexStatus && indexStatus.previousIndexed !== null && indexStatus.indexed < indexStatus.previousIndexed) {
+  alerts.push(`⚠️ Индекс: ${indexStatus.previousIndexed} → ${indexStatus.indexed} страниц в Google`);
 }
 if (t28p.impressions > 0 && (t28.impressions - t28p.impressions) / t28p.impressions < -0.2) {
   const drop = Math.round(((t28.impressions - t28p.impressions) / t28p.impressions) * 100);
