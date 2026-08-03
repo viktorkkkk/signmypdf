@@ -1,0 +1,14 @@
+{
+  "_comment": "Pages tracked individually in the weekly Telegram report (scripts/weekly-report.mjs, block 2). Paths are relative to https://www.signmypdf.io. Add a page here when you start optimising it; remove it once it is stable and no longer interesting.",
+  "pages": [
+    "/blog/sign-pdf-on-iphone-free",
+    "/blog/signature-disappears-pdf-fix",
+    "/blog/pdf-form-fields-not-working-fix",
+    "/blog/pdf-read-only-add-text-fix",
+    "/blog/signed-pdf-looks-different-fix",
+    "/blog/protected-pdf-wont-open-some-devices",
+    "/blog/fill-rental-application-pdf-free",
+    "/blog/zip-password-vs-pdf-password",
+    "/sign"
+  ]
+}
