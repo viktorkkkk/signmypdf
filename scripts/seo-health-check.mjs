@@ -73,12 +73,31 @@ function extract(html, regex) {
   return m ? decodeEntities(m[1]).trim() : null;
 }
 
+async function fetchXml(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Sitemap fetch failed: HTTP ${res.status} for ${url}`);
+  return res.text();
+}
+
+/**
+ * Follows a sitemap index one level down.
+ *
+ * /sitemap.xml became an index on 2026-08-03. Without this the check would
+ * "discover" three sitemap URLs, pass, and quietly stop verifying the 197
+ * pages it exists to guard.
+ */
 async function fetchSitemapUrls() {
-  const res = await fetch(SITEMAP_URL);
-  if (!res.ok) throw new Error(`Sitemap fetch failed: HTTP ${res.status}`);
-  const xml = await res.text();
-  const matches = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)];
-  return matches.map((m) => m[1].trim());
+  const xml = await fetchXml(SITEMAP_URL);
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+
+  if (!/<sitemapindex/i.test(xml)) return locs;
+
+  const urls = [];
+  for (const child of locs) {
+    const childXml = await fetchXml(child);
+    urls.push(...[...childXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim()));
+  }
+  return urls;
 }
 
 async function checkUrl(url) {

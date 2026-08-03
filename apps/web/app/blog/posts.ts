@@ -438,7 +438,7 @@ Turn the phone sideways before you sign. The canvas roughly doubles in width and
 
 [STEP 4] Place it and resize
 
-The signature lands on the page inside a blue selection box. Drag it onto the signature line and pull the corner handles to size it. The small toolbar above it lets you change the stroke colour, duplicate the signature or delete it. Tap Done to save. iOS writes over the original file, so duplicate the PDF first if you need to keep a clean copy.
+The signature lands on the page inside a blue selection box. Drag it onto the signature line and pull the corner handles to size it. If you would rather compare every way of [adding a signature to a PDF](/blog/how-to-add-signature-to-pdf) before committing to one, that guide covers drawing, typing and uploading an image side by side. The small toolbar above it lets you change the stroke colour, duplicate the signature or delete it. Tap Done to save. iOS writes over the original file, so duplicate the PDF first if you need to keep a clean copy.
 
 [SHOT /images/blog/sign-pdf-iphone/markup-4.webp | Signature placed on a PDF page on iPhone with blue resize handles in Markup | Corner handles resize it. It stays selectable after saving.]
 
@@ -461,7 +461,7 @@ This covers all four gaps above and runs in Safari or Chrome. There is nothing t
 
 ### Draw or type your signature
 
-Open [signmypdf.io/sign](/sign) and upload the PDF. The **Draw** tab gives you a wide canvas plus five ink colours and three stroke weights. The **Type** tab takes your name and renders it in one of four styles: Script, Handwritten, Elegant or Modern. Typing takes about five seconds and comes out identical every time.
+Open [signmypdf.io/sign](/sign) and upload the PDF. The **Draw** tab gives you a wide canvas plus five ink colours and three stroke weights. The **Type** tab takes your name and renders it in one of four styles: Script, Handwritten, Elegant or Modern. Typing takes about five seconds and comes out identical every time. The desktop flow is the same — [how to sign a PDF online](/blog/how-to-sign-pdf-online) walks through it on a laptop.
 
 [SHOTS]
 [SHOT /images/blog/sign-pdf-iphone/smp-1.webp | Drawing a signature on iPhone in mobile Safari with colour and stroke options | Draw tab: five colours, three stroke weights, save for reuse.]
@@ -490,7 +490,7 @@ The file is processed inside your iPhone's browser and never reaches a server, w
 
 Adobe Acrobat Reader, PDF Expert and Smallpdf all have iOS apps with signing built in. They make sense if you sign documents most days and want offline access and a synced signature library.
 
-For a single document they are slow. A 200 MB download, a signup and an upgrade prompt take longer than either method above. If you are avoiding Adobe specifically, see [how to sign a PDF without Adobe](/blog/sign-pdf-without-adobe).
+For a single document they are slow. A 200 MB download, a signup and an upgrade prompt take longer than either method above. If you are avoiding Adobe specifically, see [how to sign a PDF without Adobe](/blog/sign-pdf-without-adobe); if the document is going to a client who expects an e-sign service, a [free DocuSign alternative](/blog/docusign-alternative-free) covers that case without the subscription.
 
 ## Markup vs browser vs app {#compare|Comparison table}
 
@@ -6729,7 +6729,7 @@ Before diving into the fix, understanding why this happens can help you avoid th
 
 **Flattening issues:** When a PDF isn't properly "flattened," the signature remains a separate, editable layer. Some viewers strip these layers entirely for security reasons, taking your signature with them.
 
-**Software version mismatches:** Older PDF readers may not support newer signature formats. If your recipient uses outdated software, they might not see your signature at all.
+**Software version mismatches:** Older PDF readers may not support newer signature formats. If your recipient uses outdated software, they might not see your signature at all. This bites hardest on machines that cannot install a desktop PDF reader in the first place, which is why [signing a PDF on a Chromebook](/blog/sign-pdf-on-chromebook-free) needs a browser-based tool rather than an app.
 
 **Cloud sync problems:** Services like Google Drive, Dropbox, and OneDrive sometimes create preview versions of PDFs that don't include all layers. The original file might be fine, but the preview shows a missing signature.
 
@@ -6739,7 +6739,7 @@ The good news? Using a tool that properly embeds and flattens your signature eli
 
 ### Step 1: Open SignMyPDF
 
-Visit [signmypdf.io](/) in any modern web browser on your computer, tablet, or smartphone. The tool works on Chrome, Safari, Firefox, Edge, and virtually any other browser. There's no software to download and no account to create — just open the page and you're ready to go.
+Visit [signmypdf.io](/) in any modern web browser on your computer, tablet, or smartphone. The tool works on Chrome, Safari, Firefox, Edge, and virtually any other browser. There's no software to download and no account to create — just open the page and you're ready to go. The full walkthrough lives in [how to sign a PDF online](/blog/how-to-sign-pdf-online) if you want the desktop version step by step.
 
 ### Step 2: Upload Your PDF Document
 
@@ -6810,7 +6810,7 @@ If you've already signed a document and the signature disappeared, here's how to
 
 **Ask the sender to re-sign:** If someone sent you a document with a missing signature, ask them to re-sign using a tool that properly embeds signatures — and recommend SignMyPDF while you're at it.
 
-**Avoid Preview for signing (Mac users):** While Apple's Preview app can add signatures to PDFs, it doesn't always embed them properly. Documents signed in Preview often lose their signatures when opened on Windows or in other PDF readers. [Signing PDFs on Mac](/blog/sign-pdf-on-mac) is much more reliable with SignMyPDF.
+**Avoid Preview for signing (Mac users):** While Apple's Preview app can add signatures to PDFs, it doesn't always embed them properly. Documents signed in Preview often lose their signatures when opened on Windows or in other PDF readers. [Signing PDFs on Mac](/blog/sign-pdf-on-mac) is much more reliable with SignMyPDF, and the same applies if you are trying to [sign a PDF without Adobe](/blog/sign-pdf-without-adobe) altogether.
 
 ## What Our Users Say
 
