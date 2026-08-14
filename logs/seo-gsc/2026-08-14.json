@@ -1,0 +1,154 @@
+{
+  "date": "2026-08-14",
+  "timestamp": "2026-08-14T04:40:45.455Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-08-09T08:25:51.986Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 8680,
+    "clicks28d": 54,
+    "avgPosition28d": 21.025115207373272,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 2452,
+        "clicks": 28,
+        "position": 7.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 84,
+        "clicks": 4,
+        "position": 7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 621,
+        "clicks": 3,
+        "position": 11.1
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 29,
+        "clicks": 2,
+        "position": 2.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 739,
+        "clicks": 2,
+        "position": 59.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 306,
+        "clicks": 2,
+        "position": 11.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 1168,
+        "clicks": 2,
+        "position": 15.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 197,
+        "clicks": 1,
+        "position": 18.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+        "impressions": 8,
+        "clicks": 1,
+        "position": 10
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+        "impressions": 3,
+        "clicks": 1,
+        "position": 9.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 46,
+        "clicks": 1,
+        "position": 7.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+        "impressions": 62,
+        "clicks": 1,
+        "position": 24.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+        "impressions": 15,
+        "clicks": 1,
+        "position": 11.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+        "impressions": 4,
+        "clicks": 1,
+        "position": 22
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+        "impressions": 143,
+        "clicks": 1,
+        "position": 14.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+        "impressions": 97,
+        "clicks": 1,
+        "position": 8.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+        "impressions": 35,
+        "clicks": 1,
+        "position": 31.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/signnow-free-alternative",
+        "impressions": 13,
+        "clicks": 1,
+        "position": 10.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog",
+        "impressions": 18,
+        "clicks": 0,
+        "position": 28.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+        "impressions": 7,
+        "clicks": 0,
+        "position": 13.1
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
