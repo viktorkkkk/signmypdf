@@ -1,0 +1,1993 @@
+{
+  "date": "2026-08-15",
+  "timestamp": "2026-08-15T03:28:47.717Z",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "urlCount": 197,
+  "okCount": 197,
+  "issueCount": 3,
+  "allowlistedCount": 4,
+  "ok": false,
+  "issues": [
+    "https://www.signmypdf.io/blog/photographers-digital-signatures: description length 162 chars (target 50-160)",
+    "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents: description length 161 chars (target 50-160)",
+    "https://www.signmypdf.io/blog/why-lawyer-asks-password-protect-pdf: description length 165 chars (target 50-160)"
+  ],
+  "allowlisted": [
+    "https://www.signmypdf.io/blog/sent-confidential-contract-unprotected: description length 162 chars (target 50-160)",
+    "https://www.signmypdf.io/blog/password-protect-pdf-online-free: description length 162 chars (target 50-160)",
+    "https://www.signmypdf.io/blog/signmypdf-vs-docusign-freelancers: description length 172 chars (target 50-160)",
+    "https://www.signmypdf.io/blog/fill-pdf-form-online-free: description length 163 chars (target 50-160)"
+  ],
+  "results": [
+    {
+      "url": "https://www.signmypdf.io",
+      "finalUrl": "https://www.signmypdf.io/",
+      "status": 200,
+      "title": "SignMyPDF — Free PDF Signature Tool | No Registration",
+      "canonical": "https://www.signmypdf.io",
+      "ogUrl": "https://www.signmypdf.io",
+      "description": "Sign PDF documents online for free. No registration. Draw or type your signature, download instantly. Legally binding electronic signatures.",
+      "descriptionLength": 140
+    },
+    {
+      "url": "https://www.signmypdf.io/sign",
+      "finalUrl": "https://www.signmypdf.io/sign",
+      "status": 200,
+      "title": "Sign PDF Online Free — Draw or Type Your Signature | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/sign",
+      "ogUrl": "https://www.signmypdf.io/sign",
+      "description": "Sign any PDF in your browser. Draw or type your signature, place it on any page, download instantly. No registration, 100% client-side.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/fill",
+      "finalUrl": "https://www.signmypdf.io/fill",
+      "status": 200,
+      "title": "Fill PDF Form Online Free — Type into Any PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/fill",
+      "ogUrl": "https://www.signmypdf.io/fill",
+      "description": "Fill out any PDF form in your browser. Add text, dates, checkmarks. No printing, no flattening — just type and download. 100% free, no registration.",
+      "descriptionLength": 148
+    },
+    {
+      "url": "https://www.signmypdf.io/protect",
+      "finalUrl": "https://www.signmypdf.io/protect",
+      "status": 200,
+      "title": "Password Protect PDF Online — Free Encryption Tool | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/protect",
+      "ogUrl": "https://www.signmypdf.io/protect",
+      "description": "Add a password to any PDF instantly. Free, secure, no registration required. Lock PDF from editing, copying and printing.",
+      "descriptionLength": 121
+    },
+    {
+      "url": "https://www.signmypdf.io/merge",
+      "finalUrl": "https://www.signmypdf.io/merge",
+      "status": 200,
+      "title": "Merge PDF Online Free — Combine PDF Files | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/merge",
+      "ogUrl": "https://www.signmypdf.io/merge",
+      "description": "Combine multiple PDFs into one file. Free, no registration, works in your browser. Drag and drop to reorder before merging.",
+      "descriptionLength": 123
+    },
+    {
+      "url": "https://www.signmypdf.io/compress",
+      "finalUrl": "https://www.signmypdf.io/compress",
+      "status": 200,
+      "title": "Compress PDF Online Free — Reduce PDF File Size | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/compress",
+      "ogUrl": "https://www.signmypdf.io/compress",
+      "description": "Reduce PDF file size to fit email attachments and upload limits. Free, no registration, works in your browser. See the result before downloading.",
+      "descriptionLength": 145
+    },
+    {
+      "url": "https://www.signmypdf.io/split",
+      "finalUrl": "https://www.signmypdf.io/split",
+      "status": 200,
+      "title": "Split PDF Online Free — Extract Pages from PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/split",
+      "ogUrl": "https://www.signmypdf.io/split",
+      "description": "Extract pages from a PDF or split it into multiple files. Free, no registration, works in your browser.",
+      "descriptionLength": 103
+    },
+    {
+      "url": "https://www.signmypdf.io/sign-nda",
+      "finalUrl": "https://www.signmypdf.io/sign-nda",
+      "status": 200,
+      "title": "Free Mutual NDA Template — Sign Online or Download | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/sign-nda",
+      "ogUrl": "https://www.signmypdf.io/sign-nda",
+      "description": "Free mutual non-disclosure agreement template. Fill and sign online in your browser, or download as PDF or Word. No registration.",
+      "descriptionLength": 129
+    },
+    {
+      "url": "https://www.signmypdf.io/blog",
+      "finalUrl": "https://www.signmypdf.io/blog",
+      "status": 200,
+      "title": "Blog | PDF Signing Tips, Guides & Best Practices | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog",
+      "ogUrl": "https://www.signmypdf.io/blog",
+      "description": "Learn how to sign PDFs online, electronic signature tips, and document security best practices. Expert guides for digital document workflows.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+      "finalUrl": "https://www.signmypdf.io/blog/dochub-free-alternative",
+      "status": 200,
+      "title": "DocHub Free Alternative for Filling PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/dochub-free-alternative",
+      "ogUrl": "https://www.signmypdf.io/blog/dochub-free-alternative",
+      "description": "Need a DocHub free alternative? Fill any PDF form online at SignMyPDF — no account, no paywall at download, files stay in your browser.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+      "finalUrl": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+      "status": 200,
+      "title": "Protected PDF Keeps Asking for Password | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+      "ogUrl": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+      "description": "Protected PDF keeps prompting for the password on every open? Here is why it happens and how to fix it in under five minutes.",
+      "descriptionLength": 125
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+      "status": 200,
+      "title": "Adobe Fill & Sign vs SignMyPDF: Which Wins | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/adobe-fill-sign-vs-signmypdf",
+      "description": "Adobe Fill & Sign is free for interactive forms but has limits. See how SignMyPDF compares — no account, no paywall, works on flat scans too.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/signed-pdf-looks-different-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/signed-pdf-looks-different-fix",
+      "status": 200,
+      "title": "Signed PDF Looks Different for the Recipient — Fix",
+      "canonical": "https://www.signmypdf.io/blog/signed-pdf-looks-different-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/signed-pdf-looks-different-fix",
+      "description": "Your signature shifts position or the layout changes when someone else opens the signed PDF. Here&#x27;s what causes it and how to fix it.",
+      "descriptionLength": 138
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/zip-password-vs-pdf-password",
+      "finalUrl": "https://www.signmypdf.io/blog/zip-password-vs-pdf-password",
+      "status": 200,
+      "title": "ZIP Password vs PDF Password: Which Should You Use?",
+      "canonical": "https://www.signmypdf.io/blog/zip-password-vs-pdf-password",
+      "ogUrl": "https://www.signmypdf.io/blog/zip-password-vs-pdf-password",
+      "description": "A colleague says zip it, your lawyer says password-protect the PDF. Here&#x27;s what each actually protects and which one your recipient can open.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+      "status": 200,
+      "title": "Sign a Car Purchase Agreement Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+      "description": "Sign your car purchase agreement online free — no account, no software. Upload the PDF, sign it in your browser, download in minutes.",
+      "descriptionLength": 133
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+      "finalUrl": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+      "status": 200,
+      "title": "Password PDF vs Encrypted Email: Which Is Safer? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+      "ogUrl": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+      "description": "Password-protected PDFs encrypt the file itself. Encrypted email only protects transmission. See which keeps your document safe — and when to use each.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+      "status": 200,
+      "title": "Sign Multiple PDF Pages at Once — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+      "description": "Place your signature or initials on multiple pages of any PDF — free, no account, no app. Lease agreements, loan docs, HR forms. Download one clean file.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/hipaa-electronic-signatures",
+      "finalUrl": "https://www.signmypdf.io/blog/hipaa-electronic-signatures",
+      "status": 200,
+      "title": "Sign HIPAA Forms Online Without Software | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/hipaa-electronic-signatures",
+      "ogUrl": "https://www.signmypdf.io/blog/hipaa-electronic-signatures",
+      "description": "Sign HIPAA authorization and medical consent forms online. Free, no registration — files processed in your browser, never sent to any server.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+      "status": 200,
+      "title": "Fill Out Bank Forms Online Free — No App | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+      "description": "Fill out any bank PDF form online for free. Works on scanned forms with no interactive fields. No account, no app install — files stay in your browser.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+      "status": 200,
+      "title": "PDF Read-Only? How to Add Text and Sign It",
+      "canonical": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+      "description": "Your PDF opens read-only and won&#x27;t let you type or sign. Here&#x27;s how to add text and a signature to a locked PDF — free, no software.",
+      "descriptionLength": 142
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+      "status": 200,
+      "title": "Fill a Visa Application Form as a PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+      "description": "Visa forms locked, read-only, or scanned? Fill a visa application PDF in your browser — no printing, no scanning, no account needed.",
+      "descriptionLength": 132
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+      "finalUrl": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+      "status": 200,
+      "title": "Adobe vs Free PDF Protection: Worth Paying? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+      "ogUrl": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+      "description": "Adobe charges $12.99/month to protect PDFs. See if free alternatives use the same AES-256 encryption — and which ones skip the account wall.",
+      "descriptionLength": 140
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/hellosign-alternatives-free",
+      "finalUrl": "https://www.signmypdf.io/blog/hellosign-alternatives-free",
+      "status": 200,
+      "title": "Best Free HelloSign Alternatives for Filling PDF Forms | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/hellosign-alternatives-free",
+      "ogUrl": "https://www.signmypdf.io/blog/hellosign-alternatives-free",
+      "description": "HelloSign only collects signatures — it can&#x27;t fill PDF forms. Here are the best free tools to fill and sign PDFs, no account needed.",
+      "descriptionLength": 137
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+      "finalUrl": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+      "status": 200,
+      "title": "Protected PDF Won&#x27;t Open on Their Device? Fix",
+      "canonical": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+      "ogUrl": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+      "description": "Your password-protected PDF opens on your laptop but not on the recipient&#x27;s phone. Usually the encryption, not the password. Here&#x27;s the fix.",
+      "descriptionLength": 150
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+      "finalUrl": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+      "status": 200,
+      "title": "Are Digital Signatures Admissible in Court? Complete Legal Guide | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+      "ogUrl": "https://www.signmypdf.io/blog/digital-signatures-admissible-court",
+      "description": "Digital signatures are legally admissible in U.S. courts under the ESIGN Act and UETA. What makes one court-ready and the key exceptions to know.",
+      "descriptionLength": 145
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/smallpdf-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/smallpdf-vs-signmypdf",
+      "status": 200,
+      "title": "Smallpdf vs SignMyPDF: Full Feature Comparison 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/smallpdf-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/smallpdf-vs-signmypdf",
+      "description": "Smallpdf vs SignMyPDF compared: pricing, privacy, and features. Discover which free PDF signing tool is best for you. Try SignMyPDF free today.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+      "status": 200,
+      "title": "How to Sign a PDF When Editing Is Not Allowed — Free 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+      "description": "Sign a locked or protected PDF online for free without unlocking it. SignMyPDF overlays your signature without modifying the document. No registration needed.",
+      "descriptionLength": 158
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+      "status": 200,
+      "title": "Signature Disappeared From Your PDF? Here&#x27;s Why",
+      "canonical": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+      "description": "You signed the PDF, sent it, and the signature is gone. It was saved as an annotation instead of being flattened. Here&#x27;s how to fix it — free, no software.",
+      "descriptionLength": 160
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+      "status": 200,
+      "title": "PDF Form Fields Not Working? Fix It in 2 Minutes",
+      "canonical": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+      "description": "Clicking a field does nothing? The form is flat, locked, or your viewer can&#x27;t handle it. Here&#x27;s how to type on it anyway — free, no software.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+      "status": 200,
+      "title": "Electronic Signature Laws by State: 2026 Legal Guide | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+      "description": "Electronic signature laws by state explained for 2026. Learn what makes e-signatures legally binding and sign PDFs free — no registration required.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+      "status": 200,
+      "title": "iLovePDF vs SignMyPDF: Honest Comparison (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/ilovepdf-vs-signmypdf",
+      "description": "iLovePDF vs SignMyPDF compared: privacy, pricing, and features. See why local processing beats server uploads. Try SignMyPDF free today.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+      "status": 200,
+      "title": "How to Sign NDA Online Without Printing (2026) | Free Tool | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-nda-online-without-printing",
+      "description": "Sign NDA online without printing using SignMyPDF&#x27;s free browser tool. No registration, no uploads, 100% private. Start signing NDAs instantly today.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-rental-application-pdf-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-rental-application-pdf-free",
+      "status": 200,
+      "title": "Fill a Rental Application PDF Online — Free",
+      "canonical": "https://www.signmypdf.io/blog/fill-rental-application-pdf-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-rental-application-pdf-free",
+      "description": "Fill out any rental application PDF in your browser — no printing, no scanning, no account. Type your details and download in five minutes.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+      "finalUrl": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+      "status": 200,
+      "title": "eIDAS Regulation & EU Electronic Signatures Explained (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+      "ogUrl": "https://www.signmypdf.io/blog/eidas-regulation-eu-signatures",
+      "description": "Learn how the EU eIDAS regulation defines electronic signatures, what SES, AdES, and QES mean, and how US businesses can sign compliantly with EU partners.",
+      "descriptionLength": 155
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+      "status": 200,
+      "title": "Fill Out IRS Forms Online Free (2026) | No Registration | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-irs-form-online-free",
+      "description": "Fill out IRS forms online free with SignMyPDF&#x27;s private browser tool. No registration, no uploads, no servers. Complete W-9s, 1099s & more in minutes.",
+      "descriptionLength": 155
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+      "status": 200,
+      "title": "How to Sign a PDF on iPhone Free (2026) — No App Needed",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+      "description": "How to sign a PDF on iPhone in under a minute with the built-in Markup tool, plus what to do when Markup cannot handle your document. Free, no app, no account.",
+      "descriptionLength": 159
+    },
+    {
+      "url": "https://www.signmypdf.io/sign-pdf-chrome-extension",
+      "finalUrl": "https://www.signmypdf.io/sign-pdf-chrome-extension",
+      "status": 200,
+      "title": "Sign PDF Free Forever in Chrome — Chrome Extension | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/sign-pdf-chrome-extension",
+      "ogUrl": "https://www.signmypdf.io/sign-pdf-chrome-extension",
+      "description": "Sign PDF files directly in Chrome. Free forever, no signup, files stay on your device. Works with Gmail, Drive, and any website.",
+      "descriptionLength": 128
+    },
+    {
+      "url": "https://www.signmypdf.io/extension/privacy",
+      "finalUrl": "https://www.signmypdf.io/extension/privacy",
+      "status": 200,
+      "title": "Privacy Policy — Sign PDF Chrome Extension | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/extension/privacy",
+      "ogUrl": "https://www.signmypdf.io/extension/privacy",
+      "description": "Privacy policy for the Sign PDF Chrome extension. We don&#x27;t collect or store any of your data. All PDF processing happens in your browser.",
+      "descriptionLength": 142
+    },
+    {
+      "url": "https://www.signmypdf.io/extension/support",
+      "finalUrl": "https://www.signmypdf.io/extension/support",
+      "status": 200,
+      "title": "Support — Sign PDF Chrome Extension | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/extension/support",
+      "ogUrl": "https://www.signmypdf.io/extension/support",
+      "description": "Get help with the Sign PDF Chrome extension. FAQ, contact information, and quick answers to common questions.",
+      "descriptionLength": 109
+    },
+    {
+      "url": "https://www.signmypdf.io/privacy",
+      "finalUrl": "https://www.signmypdf.io/privacy",
+      "status": 200,
+      "title": "Privacy Policy | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/privacy",
+      "ogUrl": "https://www.signmypdf.io/privacy",
+      "description": "Privacy Policy for SignMyPDF online PDF signing service.",
+      "descriptionLength": 56
+    },
+    {
+      "url": "https://www.signmypdf.io/terms",
+      "finalUrl": "https://www.signmypdf.io/terms",
+      "status": 200,
+      "title": "Terms of Service | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/terms",
+      "ogUrl": "https://www.signmypdf.io/terms",
+      "description": "Terms of Service for SignMyPDF online PDF signing service.",
+      "descriptionLength": 58
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-affidavit-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-affidavit-online-free",
+      "status": 200,
+      "title": "Sign an Affidavit Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-affidavit-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-affidavit-online-free",
+      "description": "Sign an affidavit PDF online free — no account, no software. Add your signature and download the completed document in minutes.",
+      "descriptionLength": 127
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-customs-declaration-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-customs-declaration-form-pdf",
+      "status": 200,
+      "title": "Fill a Customs Declaration Form Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-customs-declaration-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-customs-declaration-form-pdf",
+      "description": "Fill any customs declaration PDF online free — CN22, CN23, commercial invoice. No account, no software. Download the completed form in minutes.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-power-of-attorney-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-power-of-attorney-pdf",
+      "status": 200,
+      "title": "Fill a Power of Attorney PDF Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-power-of-attorney-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-power-of-attorney-pdf",
+      "description": "Fill a power of attorney PDF online — free, no account, no software. Type into any POA form and download the completed document in minutes.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/teachers-protect-exam-pdfs",
+      "finalUrl": "https://www.signmypdf.io/blog/teachers-protect-exam-pdfs",
+      "status": 200,
+      "title": "Protect Your Exam PDF from Edits | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/teachers-protect-exam-pdfs",
+      "ogUrl": "https://www.signmypdf.io/blog/teachers-protect-exam-pdfs",
+      "description": "Lock your exam PDF so students can read it but cannot edit or copy it — free, no account, files stay in your browser, never on a server.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-termination-letter-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-termination-letter-online",
+      "status": 200,
+      "title": "Sign a Termination Letter Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-termination-letter-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-termination-letter-online",
+      "description": "Sign a termination letter online in minutes — free, no account. Upload your PDF, draw or type your signature, and download the signed file instantly.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-from-printing",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-from-printing",
+      "status": 200,
+      "title": "Stop Your PDF from Being Printed | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-from-printing",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-from-printing",
+      "description": "Block printing on any PDF in minutes — free, no software, no account. Set print restrictions and download the protected file to share safely.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-custody-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-custody-agreement-online",
+      "status": 200,
+      "title": "Sign a Custody Agreement Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-custody-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-custody-agreement-online",
+      "description": "Sign a custody agreement PDF online — no account, no printer, no watermark. Works on phone or desktop. Instant download.",
+      "descriptionLength": 120
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-accident-report-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-accident-report-form-pdf",
+      "status": 200,
+      "title": "Fill an Accident Report Form PDF — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-accident-report-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-accident-report-form-pdf",
+      "description": "Fill an accident report form PDF on your phone or browser. No account, no printer, no Adobe. Free, instant download.",
+      "descriptionLength": 116
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-fafsa-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-fafsa-form-pdf",
+      "status": 200,
+      "title": "Fill FAFSA Form PDF Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-fafsa-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-fafsa-form-pdf",
+      "description": "Fill your FAFSA form PDF online free in your browser. No Acrobat needed, no signup, no watermark — type directly into any form field on any device.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-employee-handbook",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-employee-handbook",
+      "status": 200,
+      "title": "Protect Employee Handbook PDF From Edits | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-employee-handbook",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-employee-handbook",
+      "description": "Stop employees from editing your company handbook after sending. Protect any PDF free in your browser — no software, no account needed.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+      "status": 200,
+      "title": "Sign a PDF and Email It Back — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+      "description": "Sign a PDF in your browser and email it back — no printer, no account, no paywall. Free, works on mobile or computer.",
+      "descriptionLength": 117
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-for-remote-workers",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-for-remote-workers",
+      "status": 200,
+      "title": "Protect PDF for Remote Workers — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-for-remote-workers",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-for-remote-workers",
+      "description": "Password-protect any PDF before sharing with remote colleagues. Free, browser-based — files stay on your device, no account required.",
+      "descriptionLength": 133
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-letter-of-intent-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-letter-of-intent-online",
+      "status": 200,
+      "title": "Sign a Letter of Intent Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-letter-of-intent-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-letter-of-intent-online",
+      "description": "Sign a Letter of Intent PDF online — no account, no watermark, no printer. Works on any device. Free, instant download.",
+      "descriptionLength": 119
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-parental-consent-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-parental-consent-form-pdf",
+      "status": 200,
+      "title": "Fill Parental Consent Form PDF — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-parental-consent-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-parental-consent-form-pdf",
+      "description": "Fill and sign a parental consent form PDF online. Works on scanned forms — no printer, no account, no app. Free download.",
+      "descriptionLength": 121
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-employment-verification-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-employment-verification-form-pdf",
+      "status": 200,
+      "title": "Fill Employment Verification Form PDF Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-employment-verification-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-employment-verification-form-pdf",
+      "description": "Fill an employment verification form PDF online — no signup, no software, no printer. Works on scanned forms too. Free, instant download.",
+      "descriptionLength": 137
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/onedrive-vs-password-pdf-protection",
+      "finalUrl": "https://www.signmypdf.io/blog/onedrive-vs-password-pdf-protection",
+      "status": 200,
+      "title": "OneDrive Sharing vs PDF Password Protection | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/onedrive-vs-password-pdf-protection",
+      "ogUrl": "https://www.signmypdf.io/blog/onedrive-vs-password-pdf-protection",
+      "description": "OneDrive view links vs PDF passwords — which actually protects your confidential file? Honest comparison of features, limits, and what each controls.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-rejected-by-landlord",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-rejected-by-landlord",
+      "status": 200,
+      "title": "Electronic Signature Rejected by Landlord? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-rejected-by-landlord",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-rejected-by-landlord",
+      "description": "Landlord won&#x27;t accept your electronic signature? Learn whether they can legally require wet ink and how a drawn signature usually fixes it.",
+      "descriptionLength": 144
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/stop-pdf-from-being-forwarded",
+      "finalUrl": "https://www.signmypdf.io/blog/stop-pdf-from-being-forwarded",
+      "status": 200,
+      "title": "Stop Your PDF From Being Forwarded or Shared | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/stop-pdf-from-being-forwarded",
+      "ogUrl": "https://www.signmypdf.io/blog/stop-pdf-from-being-forwarded",
+      "description": "Someone forwarded your PDF without permission. Learn how password protection limits who can open it — free, no account, files stay in your browser.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-mac-preview-vs-browser",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-mac-preview-vs-browser",
+      "status": 200,
+      "title": "Sign PDF on Mac: Preview vs Browser Tool | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-mac-preview-vs-browser",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-mac-preview-vs-browser",
+      "description": "Mac Preview can sign PDFs but ties the signature to one Mac. A browser tool is faster, works on any device, and keeps files private — free, no account.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-scanned-pdf-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-scanned-pdf-form-online",
+      "status": 200,
+      "title": "Fill a Scanned PDF Form Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-scanned-pdf-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-scanned-pdf-form-online",
+      "description": "Got a scanned PDF with no clickable fields? Add text boxes over the blank lines and download a filled PDF — free, no account, no software.",
+      "descriptionLength": 138
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-form-on-mac-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-form-on-mac-free",
+      "status": 200,
+      "title": "Fill PDF Forms on Mac Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-form-on-mac-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-form-on-mac-free",
+      "description": "Fill any PDF form on Mac free in your browser. Works on locked forms. No Adobe Acrobat, no download, no account required.",
+      "descriptionLength": 121
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-google-drive",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-google-drive",
+      "status": 200,
+      "title": "Password Protect PDF Before Google Drive | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-google-drive",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-google-drive",
+      "description": "Google Drive access controls are not PDF encryption. Password-protect your PDF before uploading — AES-256, no account, free.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+      "status": 200,
+      "title": "PDF Signature Grayed Out: Fix It Fast | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+      "description": "Signature button grayed out in your PDF? Learn why it happens and the fastest fixes — no Adobe Acrobat or paid tool required.",
+      "descriptionLength": 125
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-invoice-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-invoice-pdf-online",
+      "status": 200,
+      "title": "Protect Invoice PDFs Before Sending to Clients | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-invoice-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-invoice-pdf-online",
+      "description": "Your invoice has bank details and pricing. Protect your invoice PDF with a password before sending — free, no account, files stay in your browser.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-employee-handbook-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-employee-handbook-online",
+      "status": 200,
+      "title": "Sign an Employee Handbook Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-employee-handbook-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-employee-handbook-online",
+      "description": "Sign an employee handbook PDF online without printing or creating an account. Free, no watermark, files processed in your browser.",
+      "descriptionLength": 130
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-small-claims-court-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-small-claims-court-form-pdf",
+      "status": 200,
+      "title": "Fill a Small Claims Court Form PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-small-claims-court-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-small-claims-court-form-pdf",
+      "description": "Fill any small claims court form PDF online — interactive fields or flat scans. Free, no account, files processed in your browser.",
+      "descriptionLength": 130
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-form-not-saving-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-form-not-saving-fix",
+      "status": 200,
+      "title": "Filled PDF Form Not Saving? Fix It Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-form-not-saving-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-form-not-saving-fix",
+      "description": "Why does your filled PDF lose all typed data when you save it? Here is the real cause and how to fix it free, no account needed.",
+      "descriptionLength": 128
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+      "status": 200,
+      "title": "Protect a PDF from Text Copying — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+      "description": "Stop recipients from copying text out of your PDF using a permissions password. Free, no account, files stay on your device.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/draw-vs-type-vs-upload-signature",
+      "finalUrl": "https://www.signmypdf.io/blog/draw-vs-type-vs-upload-signature",
+      "status": 200,
+      "title": "Draw, Type, or Upload Your Signature? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/draw-vs-type-vs-upload-signature",
+      "ogUrl": "https://www.signmypdf.io/blog/draw-vs-type-vs-upload-signature",
+      "description": "Draw, type, or upload your PDF signature? Learn when each method works best — and why the choice matters for your signed documents. Free, no account.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/shared-link-vs-password-protected-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/shared-link-vs-password-protected-pdf",
+      "status": 200,
+      "title": "Shared Link vs Password-Protected PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/shared-link-vs-password-protected-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/shared-link-vs-password-protected-pdf",
+      "description": "Shared cloud links and password-protected PDFs aren&#x27;t the same security. Here&#x27;s which one actually protects your file — and when to use each.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-settlement-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-settlement-agreement-online",
+      "status": 200,
+      "title": "Sign Settlement Agreement Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-settlement-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-settlement-agreement-online",
+      "description": "Sign a settlement agreement PDF online for free. No account, no watermark — place your e-signature in your browser and download the signed file instantly.",
+      "descriptionLength": 154
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-real-estate-disclosure-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-real-estate-disclosure-form-pdf",
+      "status": 200,
+      "title": "Fill Real Estate Disclosure Form Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-real-estate-disclosure-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-real-estate-disclosure-form-pdf",
+      "description": "Fill a real estate disclosure form PDF online free — no account, no software, no watermark. Type answers, check boxes, sign, and download in minutes.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-hoa-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-hoa-form-online",
+      "status": 200,
+      "title": "Fill HOA Forms Online: No Printing Needed | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-hoa-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-hoa-form-online",
+      "description": "Fill HOA forms online without printing or scanning. Works on flat scan PDFs and interactive forms. Free, no account, no watermark — download immediately.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-confidential-business-reports-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-confidential-business-reports-pdf",
+      "status": 200,
+      "title": "Protect Business Reports Before Emailing | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-confidential-business-reports-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-confidential-business-reports-pdf",
+      "description": "Password protect business report PDFs in your browser before emailing. AES-128 encryption. Free, no account, no watermark — download in seconds.",
+      "descriptionLength": 144
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-independent-contractor-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-independent-contractor-agreement-online",
+      "status": 200,
+      "title": "Sign Independent Contractor Agreement Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-independent-contractor-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-independent-contractor-agreement-online",
+      "description": "Sign an independent contractor agreement online in minutes — free, no account, no watermark. Files stay in your browser.",
+      "descriptionLength": 120
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-tax-return-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-tax-return-pdf",
+      "status": 200,
+      "title": "Password Protect a Tax Return PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-tax-return-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-tax-return-pdf",
+      "description": "Password protect your tax return PDF before emailing it — free, no account, files never leave your browser. AES encryption applied instantly.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-consulting-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-consulting-agreement-online",
+      "status": 200,
+      "title": "Sign a Consulting Agreement Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-consulting-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-consulting-agreement-online",
+      "description": "Sign a consulting agreement online in minutes — free, no account. Draw, type, or upload your signature, then download the signed PDF instantly.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+      "status": 200,
+      "title": "PDF Checkbox Not Working — Quick Fix | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+      "description": "PDF checkboxes won&#x27;t click? Fix them in minutes by placing your own checkmarks with SignMyPDF — free, no account, works on flat and scanned PDFs.",
+      "descriptionLength": 150
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-nda-pdf-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-nda-pdf-online-free",
+      "status": 200,
+      "title": "Fill an NDA Form PDF Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-nda-pdf-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-nda-pdf-online-free",
+      "description": "Fill in any NDA PDF online for free. No software, no signup — type into blank fields, download, and send in minutes.",
+      "descriptionLength": 116
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-from-editing-online",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-from-editing-online",
+      "status": 200,
+      "title": "Protect PDF from Editing Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-from-editing-online",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-from-editing-online",
+      "description": "Lock your PDF from editing online — free, no software. Set an owner password, restrict permissions, and download in seconds.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-no-printer-no-scanner",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-no-printer-no-scanner",
+      "status": 200,
+      "title": "Sign PDF Without Printer or Scanner | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-no-printer-no-scanner",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-no-printer-no-scanner",
+      "description": "Sign a PDF without printing or scanning — free, no account. Draw, type, or upload your signature in your browser and download in minutes.",
+      "descriptionLength": 137
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-pdf-before-emailing-clients",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-pdf-before-emailing-clients",
+      "status": 200,
+      "title": "Protect PDF Before Emailing Clients | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-pdf-before-emailing-clients",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-pdf-before-emailing-clients",
+      "description": "Password-protect a PDF before emailing clients — free, no account, 30 seconds. AES-256 encryption, no watermarks, files stay in your browser.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-promissory-note-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-promissory-note-online",
+      "status": 200,
+      "title": "Sign a Promissory Note Online Fast | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-promissory-note-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-promissory-note-online",
+      "description": "Sign a promissory note PDF online — free, no account, no watermark. Upload, sign, and download in under two minutes. Files stay in your browser.",
+      "descriptionLength": 144
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-lease-renewal-pdf-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-lease-renewal-pdf-free",
+      "status": 200,
+      "title": "Fill Out a Lease Renewal Form Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-lease-renewal-pdf-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-lease-renewal-pdf-free",
+      "description": "Fill out a lease renewal PDF online for free — no printing, no app. Type in blank fields, add your signature, and download in minutes. No account needed.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+      "status": 200,
+      "title": "Fill Out a W-4 Form Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+      "description": "Fill out a W-4 form PDF online without printing — free, no account. Click to place text fields anywhere on the form. Your tax data stays in your browser.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/protect-business-proposal-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/protect-business-proposal-pdf",
+      "status": 200,
+      "title": "Protect Business Proposals Before You Send | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/protect-business-proposal-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/protect-business-proposal-pdf",
+      "description": "Password protect your business proposal PDF in one minute — free, no account. AES-256 encryption. Your proposal stays in your browser, never uploaded.",
+      "descriptionLength": 150
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-invoice-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-invoice-online-free",
+      "status": 200,
+      "title": "Sign Your Invoice PDF Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-invoice-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-invoice-online-free",
+      "description": "Sign an invoice PDF online in under two minutes — free, no account, no printer. Draw or type your signature and download instantly.",
+      "descriptionLength": 131
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-chromebook",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-chromebook",
+      "status": 200,
+      "title": "How to Password Protect a PDF on Chromebook | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-on-chromebook",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-chromebook",
+      "description": "Password protect a PDF on Chromebook using Chrome — no app, no Adobe. Free, no signup, AES-256 encryption. File stays in your browser.",
+      "descriptionLength": 134
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-release-of-liability-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-release-of-liability-online",
+      "status": 200,
+      "title": "Sign a Release of Liability Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-release-of-liability-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-release-of-liability-online",
+      "description": "Sign a release of liability PDF online — free, no account, no printer. Draw or type your signature and download the signed document in seconds.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-direct-deposit-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-direct-deposit-form-pdf",
+      "status": 200,
+      "title": "Fill a Direct Deposit Form PDF Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-direct-deposit-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-direct-deposit-form-pdf",
+      "description": "Fill a direct deposit authorization form PDF online — free, no account. Works with flat, scanned PDFs. Bank data stays in your browser, never uploaded.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-on-chromebook-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-on-chromebook-free",
+      "status": 200,
+      "title": "Fill a PDF on Chromebook — No App Needed | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-on-chromebook-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-on-chromebook-free",
+      "description": "Fill a PDF on your Chromebook without installing anything. Free, no signup, works in Chrome — your form data never leaves your device.",
+      "descriptionLength": 134
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+      "status": 200,
+      "title": "Password Protect a PDF on Android — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+      "description": "Password protect a PDF on Android without installing an app. Free, no signup, AES-256 encryption — your file never leaves your browser.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-vs-notarization",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-vs-notarization",
+      "status": 200,
+      "title": "E-Signature vs Notarization: When to Use Which | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-vs-notarization",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-vs-notarization",
+      "description": "E-signature or notarization? Know which documents actually need a notary and when a free electronic signature is fully legal.",
+      "descriptionLength": 125
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+      "finalUrl": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+      "status": 200,
+      "title": "Owner vs User PDF Password: What&#x27;s the Difference? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+      "ogUrl": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+      "description": "PDF has two password types: user passwords lock opening, owner passwords restrict copying and editing. Know which to set before you send.",
+      "descriptionLength": 137
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+      "status": 200,
+      "title": "Sign a Lease Renewal Without Printing | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+      "description": "Sign a lease renewal PDF online in minutes — no account, no printer, no paywall. Files never leave your browser. Free.",
+      "descriptionLength": 118
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-1099-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-1099-form-online",
+      "status": 200,
+      "title": "Fill Out a 1099 Form Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-1099-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-1099-form-online",
+      "description": "Fill out a blank 1099 PDF online — no account, no software, no server upload. Works on flat and interactive forms. Free.",
+      "descriptionLength": 120
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-without-printing",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-without-printing",
+      "status": 200,
+      "title": "Fill a PDF Without Printing: Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-without-printing",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-without-printing",
+      "description": "Fill a PDF without printing or scanning. Type on any page, editable or scanned. Free, no account, browser-only. Download immediately.",
+      "descriptionLength": 133
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-encryption-explained-plain-english",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-encryption-explained-plain-english",
+      "status": 200,
+      "title": "PDF Encryption Explained in Plain English | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-encryption-explained-plain-english",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-encryption-explained-plain-english",
+      "description": "PDF encryption uses AES-128 to scramble your file. Learn what it does, the two password types, and how to protect your PDF free in a browser.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-vs-wet-signature",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-vs-wet-signature",
+      "status": 200,
+      "title": "E-Signature vs Wet Signature: Which Is Legal? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-vs-wet-signature",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-vs-wet-signature",
+      "description": "Electronic signatures are legally binding in the US and EU. Compare e-signatures vs wet signatures, understand when each applies, and sign your PDF free.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/financial-advisors-protect-client-statements",
+      "finalUrl": "https://www.signmypdf.io/blog/financial-advisors-protect-client-statements",
+      "status": 200,
+      "title": "Financial Advisors: Protect Client Statements | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/financial-advisors-protect-client-statements",
+      "ogUrl": "https://www.signmypdf.io/blog/financial-advisors-protect-client-statements",
+      "description": "Financial advisors: password-protect client statements before emailing. Free, browser-only encryption, no account. Meets basic NPI safeguard expectations.",
+      "descriptionLength": 154
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-vendor-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-vendor-agreement-online",
+      "status": 200,
+      "title": "Sign a Vendor Agreement Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-vendor-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-vendor-agreement-online",
+      "description": "Sign vendor agreements online in minutes. Free, no account, no paywall. Works on any device — upload, sign, download instantly.",
+      "descriptionLength": 127
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-i9-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-i9-form-online",
+      "status": 200,
+      "title": "Fill Out I-9 Form Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-i9-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-i9-form-online",
+      "description": "Fill out your I-9 form online for free. No account, no install required. Works on any PDF — type into any field and download instantly.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-scholarship-application-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-scholarship-application-pdf",
+      "status": 200,
+      "title": "Fill Scholarship Application PDF Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-scholarship-application-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-scholarship-application-pdf",
+      "description": "How to fill a scholarship application PDF online — even scanned forms with no editable fields. Free, no account, no watermark. Works on any device.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+      "status": 200,
+      "title": "AES-128 vs AES-256 for PDF Protection | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+      "description": "AES-128 vs AES-256 for PDF encryption: what the difference means in practice, which standard your PDF tool uses, and why password strength matters more.",
+      "descriptionLength": 152
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-power-of-attorney-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-power-of-attorney-online",
+      "status": 200,
+      "title": "Sign Power of Attorney Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-power-of-attorney-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-power-of-attorney-online",
+      "description": "Sign a power of attorney PDF online free — no account, no watermarks, no printing. Files stay in your browser. Works on iPhone and Android.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/hr-pdf-resume-protection",
+      "finalUrl": "https://www.signmypdf.io/blog/hr-pdf-resume-protection",
+      "status": 200,
+      "title": "Why HR Teams Password-Protect Resumes | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/hr-pdf-resume-protection",
+      "ogUrl": "https://www.signmypdf.io/blog/hr-pdf-resume-protection",
+      "description": "Why HR teams password-protect resume PDFs before sharing — and how to do it free in your browser, no account, no software needed.",
+      "descriptionLength": 129
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-signature-invalid-error-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-signature-invalid-error-fix",
+      "status": 200,
+      "title": "PDF Signature Invalid Error — Fix It Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-signature-invalid-error-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-signature-invalid-error-fix",
+      "description": "PDF signature shows invalid in Adobe Acrobat — here is what the certificate error means and the fastest fix for any PDF viewer.",
+      "descriptionLength": 127
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-affidavit-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-affidavit-pdf-online",
+      "status": 200,
+      "title": "Fill an Affidavit PDF Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-affidavit-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-affidavit-pdf-online",
+      "description": "Fill and sign an affidavit PDF online free — no printer, no account, no software. Files processed in your browser, never uploaded.",
+      "descriptionLength": 130
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-on-android-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-on-android-free",
+      "status": 200,
+      "title": "Fill PDF Forms on Android — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-on-android-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-on-android-free",
+      "description": "Fill a PDF form on Android using just your browser — no app, no account, no paywall. Works in Chrome, Firefox, and Samsung Internet.",
+      "descriptionLength": 132
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/dropbox-password-links-vs-protected-pdfs",
+      "finalUrl": "https://www.signmypdf.io/blog/dropbox-password-links-vs-protected-pdfs",
+      "status": 200,
+      "title": "Dropbox Link Passwords vs PDF Passwords | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/dropbox-password-links-vs-protected-pdfs",
+      "ogUrl": "https://www.signmypdf.io/blog/dropbox-password-links-vs-protected-pdfs",
+      "description": "Dropbox link passwords protect access to the file, not the file itself. PDF passwords travel with the document — protect free with AES-256.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+      "status": 200,
+      "title": "PDF Signature Field Not Clickable — Fix | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+      "description": "PDF signature field not responding to clicks? Here&#x27;s the fix — sign any PDF free in 30 seconds, no install, no account.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+      "finalUrl": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+      "status": 200,
+      "title": "Can a Password-Protected PDF Be Hacked? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+      "ogUrl": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+      "description": "Can a password-protected PDF be cracked? It depends on the encryption type. Learn what AES-256 means for your files — protect free.",
+      "descriptionLength": 131
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-partnership-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-partnership-agreement-online",
+      "status": 200,
+      "title": "Sign a Partnership Agreement Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-partnership-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-partnership-agreement-online",
+      "description": "Sign a partnership agreement PDF online — free, no account, no watermark. Your document stays in your browser and is never uploaded to a server.",
+      "descriptionLength": 144
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-dmv-form-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-dmv-form-pdf-online",
+      "status": 200,
+      "title": "Fill Out a DMV Form PDF Online for Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-dmv-form-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-dmv-form-pdf-online",
+      "description": "Fill out any DMV form PDF online for free. No account, no watermark. Works on broken PDF fields. Your data stays in your browser.",
+      "descriptionLength": 129
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/just-email-it-isnt-enough-for-sensitive-documents",
+      "finalUrl": "https://www.signmypdf.io/blog/just-email-it-isnt-enough-for-sensitive-documents",
+      "status": 200,
+      "title": "Why Email Alone Won&#x27;t Protect Sensitive PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/just-email-it-isnt-enough-for-sensitive-documents",
+      "ogUrl": "https://www.signmypdf.io/blog/just-email-it-isnt-enough-for-sensitive-documents",
+      "description": "Email alone won&#x27;t protect sensitive PDFs — your file sits in inboxes and archives you don&#x27;t control. Password-protect first, free, no account.",
+      "descriptionLength": 152
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/smallpdf-vs-ilovepdf-vs-signmypdf-protection",
+      "finalUrl": "https://www.signmypdf.io/blog/smallpdf-vs-ilovepdf-vs-signmypdf-protection",
+      "status": 200,
+      "title": "Smallpdf vs iLovePDF vs SignMyPDF: Protect | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/smallpdf-vs-ilovepdf-vs-signmypdf-protection",
+      "ogUrl": "https://www.signmypdf.io/blog/smallpdf-vs-ilovepdf-vs-signmypdf-protection",
+      "description": "Smallpdf, iLovePDF, and SignMyPDF all protect PDFs free. Compare file processing location, account requirements, and encryption transparency.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-authorization-letter-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-authorization-letter-online",
+      "status": 200,
+      "title": "Sign an Authorization Letter Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-authorization-letter-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-authorization-letter-online",
+      "description": "Sign any authorization letter online — free, no account, no printer needed. Upload the PDF, add your signature, download in two minutes.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+      "finalUrl": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+      "status": 200,
+      "title": "Biggest Mistake When Protecting PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+      "ogUrl": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+      "description": "The most common mistake when protecting PDFs — and how to avoid it. Password-protect any PDF free, no account, no server upload.",
+      "descriptionLength": 128
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+      "status": 200,
+      "title": "Fix a Typo on a Signed PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+      "description": "Spotted a typo after signing a PDF? Correct the original and re-sign in minutes — free, no account needed, works in any browser.",
+      "descriptionLength": 128
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-form-wont-let-me-type",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-form-wont-let-me-type",
+      "status": 200,
+      "title": "PDF Form Won&#x27;t Let You Type? Fix It | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-form-wont-let-me-type",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-form-wont-let-me-type",
+      "description": "Can&#x27;t type in a PDF form? Locked fields, scanned forms, and read-only PDFs all have fixes. Fill any PDF free — no account, no software.",
+      "descriptionLength": 140
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/medical-practices-hipaa-pdf-sharing",
+      "finalUrl": "https://www.signmypdf.io/blog/medical-practices-hipaa-pdf-sharing",
+      "status": 200,
+      "title": "HIPAA PDF Sharing for Medical Practices | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/medical-practices-hipaa-pdf-sharing",
+      "ogUrl": "https://www.signmypdf.io/blog/medical-practices-hipaa-pdf-sharing",
+      "description": "Medical practices that email patient forms need to protect PDFs. Learn what HIPAA requires for PDF sharing and how to password-protect forms for free.",
+      "descriptionLength": 150
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-school-permission-slip-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-school-permission-slip-online",
+      "status": 200,
+      "title": "Sign a School Permission Slip Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-school-permission-slip-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-school-permission-slip-online",
+      "description": "No printer? Sign a school permission slip online free in under two minutes. Works on your phone. No account required.",
+      "descriptionLength": 117
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/why-pdf-not-downloading-after-sign",
+      "finalUrl": "https://www.signmypdf.io/blog/why-pdf-not-downloading-after-sign",
+      "status": 200,
+      "title": "PDF Not Downloading After Signing — Fix | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/why-pdf-not-downloading-after-sign",
+      "ogUrl": "https://www.signmypdf.io/blog/why-pdf-not-downloading-after-sign",
+      "description": "Signed your PDF but the download failed? Find the most common causes — browser blockers, server timeouts, storage limits — and how to fix each.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-on-iphone-no-app",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-on-iphone-no-app",
+      "status": 200,
+      "title": "Fill a PDF on iPhone Without an App | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-on-iphone-no-app",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-on-iphone-no-app",
+      "description": "Fill any PDF on iPhone free in Safari. No app download, no account, no subscription. Works on locked PDFs too.",
+      "descriptionLength": 110
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+      "status": 200,
+      "title": "Fill Out Medical History PDF in Minutes | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-medical-history-form-pdf",
+      "description": "Fill a medical history form PDF online free. Works on locked PDFs. No account, no software. Your file stays in your browser.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-free-online-no-software",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-free-online-no-software",
+      "status": 200,
+      "title": "Password Protect PDF Free, No Software | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-free-online-no-software",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-free-online-no-software",
+      "description": "Password protect a PDF free online without software. AES-256 encryption, no account, no watermark. Your file stays in your browser.",
+      "descriptionLength": 131
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-security",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-security",
+      "status": 200,
+      "title": "Is Your Electronic Signature Legally Secure? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-security",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-security",
+      "description": "Find out what makes an electronic signature legally secure — and why browser-based signing offers stronger privacy than most paid tools.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/is-password-protected-pdf-actually-secure",
+      "finalUrl": "https://www.signmypdf.io/blog/is-password-protected-pdf-actually-secure",
+      "status": 200,
+      "title": "Is Your Password-Protected PDF Secure? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/is-password-protected-pdf-actually-secure",
+      "ogUrl": "https://www.signmypdf.io/blog/is-password-protected-pdf-actually-secure",
+      "description": "The honest answer about whether your password-protected PDF actually protects your documents — and the one mistake that makes strong encryption useless.",
+      "descriptionLength": 152
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-non-compete-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-non-compete-agreement-online",
+      "status": 200,
+      "title": "Sign a Non-Compete Agreement Online | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-non-compete-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-non-compete-agreement-online",
+      "description": "Need to sign a non-compete agreement PDF before your start date? Do it in your browser — no account, no printer, no paywall before download.",
+      "descriptionLength": 140
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/photographers-digital-signatures",
+      "finalUrl": "https://www.signmypdf.io/blog/photographers-digital-signatures",
+      "status": 200,
+      "title": "Digital Signatures for Photographers | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/photographers-digital-signatures",
+      "ogUrl": "https://www.signmypdf.io/blog/photographers-digital-signatures",
+      "description": "Photographers: fill and sign model releases and session agreements in a browser — free, no account, works on any PDF contract without both parties needing an app.",
+      "descriptionLength": 162
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/what-happens-if-protected-pdf-leaks",
+      "finalUrl": "https://www.signmypdf.io/blog/what-happens-if-protected-pdf-leaks",
+      "status": 200,
+      "title": "What Happens If a Protected PDF Leaks? | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/what-happens-if-protected-pdf-leaks",
+      "ogUrl": "https://www.signmypdf.io/blog/what-happens-if-protected-pdf-leaks",
+      "description": "Password-protecting a PDF is not guaranteed security. Here is what actually happens if a protected PDF leaks — and how to protect properly before sending.",
+      "descriptionLength": 154
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+      "status": 200,
+      "title": "Add Multiple Signatures to One PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+      "description": "Two people need to sign the same PDF? Add multiple signatures in minutes — free, no account, no locking after the first signer.",
+      "descriptionLength": 127
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/remove-password-from-pdf-you-own",
+      "finalUrl": "https://www.signmypdf.io/blog/remove-password-from-pdf-you-own",
+      "status": 200,
+      "title": "Remove a Password From a PDF You Own | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/remove-password-from-pdf-you-own",
+      "ogUrl": "https://www.signmypdf.io/blog/remove-password-from-pdf-you-own",
+      "description": "Lost the password to your own PDF? Remove a PDF password you set — free, no account, no watermark, files stay in your browser.",
+      "descriptionLength": 126
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-international-contracts",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-international-contracts",
+      "status": 200,
+      "title": "Electronic Signatures for International Contracts | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-international-contracts",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-international-contracts",
+      "description": "Sign cross-border contracts using an electronic signature recognized in the EU, UK, Canada, and US. Free, no account, no server upload.",
+      "descriptionLength": 135
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-insurance-claim-form-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-insurance-claim-form-pdf",
+      "status": 200,
+      "title": "Fill an Insurance Claim Form Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-insurance-claim-form-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-insurance-claim-form-pdf",
+      "description": "Fill out insurance claim forms online without printing or scanning. Works on flat PDFs and fillable forms. Free, no account, no watermark.",
+      "descriptionLength": 138
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/consultants-proposals-digital-signature",
+      "finalUrl": "https://www.signmypdf.io/blog/consultants-proposals-digital-signature",
+      "status": 200,
+      "title": "Consultants: Fill and Sign Proposals Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/consultants-proposals-digital-signature",
+      "ogUrl": "https://www.signmypdf.io/blog/consultants-proposals-digital-signature",
+      "description": "Fill in and sign consulting proposals without a subscription or account. Free, browser-only, no watermark — done in minutes.",
+      "descriptionLength": 124
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/real-estate-agents-protect-property-documents",
+      "finalUrl": "https://www.signmypdf.io/blog/real-estate-agents-protect-property-documents",
+      "status": 200,
+      "title": "Protect Property Documents Before Sending | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/real-estate-agents-protect-property-documents",
+      "ogUrl": "https://www.signmypdf.io/blog/real-estate-agents-protect-property-documents",
+      "description": "Password-protect real estate documents before emailing them. AES-256, free, no account — your files never leave your browser.",
+      "descriptionLength": 125
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-service-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-service-agreement-online",
+      "status": 200,
+      "title": "Sign a Service Agreement Online Fast | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-service-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-service-agreement-online",
+      "description": "Need to sign a service agreement online today? No printer, no subscription, no account required. Sign your PDF in under two minutes — free.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/forgot-my-pdf-password-options",
+      "finalUrl": "https://www.signmypdf.io/blog/forgot-my-pdf-password-options",
+      "status": 200,
+      "title": "Forgot PDF Password? Your Real Options | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/forgot-my-pdf-password-options",
+      "ogUrl": "https://www.signmypdf.io/blog/forgot-my-pdf-password-options",
+      "description": "Forgot your PDF password? Here are your real options — what works, what does not, and how to protect future files without losing access.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/signnow-free-alternative",
+      "finalUrl": "https://www.signmypdf.io/blog/signnow-free-alternative",
+      "status": 200,
+      "title": "Free SignNow Alternative for Filling PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/signnow-free-alternative",
+      "ogUrl": "https://www.signmypdf.io/blog/signnow-free-alternative",
+      "description": "SignNow free trial lasts 7 days, then requires a subscription. Fill and sign PDFs for free with no account, no expiry, no server upload.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+      "status": 200,
+      "title": "Fill Your College Application PDF Fast | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-college-application-pdf",
+      "description": "Stuck on a college application PDF that will not let you type? Fill flat, scanned, or locked forms free in your browser — no account, no watermark.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-iphone",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-iphone",
+      "status": 200,
+      "title": "Password Protect a PDF on iPhone Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-on-iphone",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-iphone",
+      "description": "No built-in way to password protect a PDF on iPhone? Use SignMyPDF in Safari — AES-256 encryption, no app, no account, no server upload. Free.",
+      "descriptionLength": 142
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+      "status": 200,
+      "title": "Electronic Signatures in Real Estate: What&#x27;s Legal | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-real-estate-legal",
+      "description": "Electronic signatures are valid in all 50 U.S. states for real estate documents. Sign purchase agreements, disclosures, and addenda free — no account needed.",
+      "descriptionLength": 157
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/law-firms-free-pdf-tools",
+      "finalUrl": "https://www.signmypdf.io/blog/law-firms-free-pdf-tools",
+      "status": 200,
+      "title": "Free PDF Fill Tools Law Firms Actually Use | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/law-firms-free-pdf-tools",
+      "ogUrl": "https://www.signmypdf.io/blog/law-firms-free-pdf-tools",
+      "description": "Free PDF tools for law firms — fill forms, add signatures, no Adobe needed. No monthly cap, files stay in your browser. Works on scanned court forms too.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/zoho-sign-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/zoho-sign-vs-signmypdf",
+      "status": 200,
+      "title": "Zoho Sign vs SignMyPDF for Filling PDF Forms | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/zoho-sign-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/zoho-sign-vs-signmypdf",
+      "description": "Zoho Sign is built for workflows. SignMyPDF Fill handles any PDF form — scanned, locked, or interactive. Compare features, pricing, and privacy.",
+      "descriptionLength": 144
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+      "finalUrl": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+      "status": 200,
+      "title": "Why Accountants Need Password-Protected PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+      "ogUrl": "https://www.signmypdf.io/blog/accountant-wont-accept-unprotected-tax-documents",
+      "description": "Your accountant wants a password-protected PDF. Here is why it matters and how to protect any tax document free in your browser — no account, no software needed.",
+      "descriptionLength": 161
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/accountants-tax-documents-signature",
+      "finalUrl": "https://www.signmypdf.io/blog/accountants-tax-documents-signature",
+      "status": 200,
+      "title": "Accountants: Fill Client Tax Forms for Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/accountants-tax-documents-signature",
+      "ogUrl": "https://www.signmypdf.io/blog/accountants-tax-documents-signature",
+      "description": "Scanned tax PDFs have no interactive fields — most tools fail on them. Here&#x27;s how accountants fill client tax forms free, without Adobe Acrobat.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/why-lawyer-asks-password-protect-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/why-lawyer-asks-password-protect-pdf",
+      "status": 200,
+      "title": "Why Lawyers Ask You to Password Protect PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/why-lawyer-asks-password-protect-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/why-lawyer-asks-password-protect-pdf",
+      "description": "Standard email isn&#x27;t encrypted. That&#x27;s why lawyers require password-protected PDFs for contracts. Here&#x27;s how to protect any PDF free, no Adobe needed.",
+      "descriptionLength": 165
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-contractor-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-contractor-agreement-online",
+      "status": 200,
+      "title": "Sign a Contractor Agreement Online Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-contractor-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-contractor-agreement-online",
+      "description": "Sign a contractor agreement in your browser — no printing, no scanning, no account. Draw or type your signature, download instantly. Free.",
+      "descriptionLength": 138
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-windows-11",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-windows-11",
+      "status": 200,
+      "title": "Password Protect a PDF on Windows 11 Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-on-windows-11",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-windows-11",
+      "description": "Windows 11 has no built-in PDF password feature. Learn three ways to password protect a PDF on Windows 11 — one free, browser-based, no install needed.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+      "status": 200,
+      "title": "DocuSign Free Plan vs SignMyPDF: Fill PDFs | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/docusign-free-plan-vs-signmypdf",
+      "description": "DocuSign&#x27;s free plan caps at a few documents per month and lacks form-filling flexibility. Compare it to SignMyPDF — unlimited, free, no account needed.",
+      "descriptionLength": 157
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-mac",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-mac",
+      "status": 200,
+      "title": "Password Protect a PDF on Mac | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-on-mac",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-on-mac",
+      "description": "macOS Preview&#x27;s PDF password has no permission controls. Protect a PDF on Mac with AES-256, free, no account — restrict printing, copying, annotating.",
+      "descriptionLength": 155
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+      "status": 200,
+      "title": "Sign Business Contracts Online — Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-business-contracts",
+      "description": "Need to sign a business contract today? Skip DocuSign credit card walls. Sign electronically in your browser — free, no account, no software.",
+      "descriptionLength": 141
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/esign-act-explained",
+      "finalUrl": "https://www.signmypdf.io/blog/esign-act-explained",
+      "status": 200,
+      "title": "ESIGN Act Explained: Your Electronic Signature Rights | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/esign-act-explained",
+      "ogUrl": "https://www.signmypdf.io/blog/esign-act-explained",
+      "description": "ESIGN Act explained — what it covers, what it doesn&#x27;t, and how to sign a PDF that&#x27;s legally enforceable. Free, browser-only, no account.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/freelancers-protect-client-contracts",
+      "finalUrl": "https://www.signmypdf.io/blog/freelancers-protect-client-contracts",
+      "status": 200,
+      "title": "Freelancers: Protect Client Contracts in PDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/freelancers-protect-client-contracts",
+      "ogUrl": "https://www.signmypdf.io/blog/freelancers-protect-client-contracts",
+      "description": "Freelancers — protect client contracts before emailing. Browser-only, AES-256, no account. Password-protect any PDF in 30 seconds, free.",
+      "descriptionLength": 136
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/property-managers-tenant-signatures",
+      "finalUrl": "https://www.signmypdf.io/blog/property-managers-tenant-signatures",
+      "status": 200,
+      "title": "Property Managers: Fill Tenant Lease Forms Free | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/property-managers-tenant-signatures",
+      "ogUrl": "https://www.signmypdf.io/blog/property-managers-tenant-signatures",
+      "description": "Property managers: fill tenant lease forms, rental apps, addenda online. Free, no account, unlimited fills, browser-only.",
+      "descriptionLength": 121
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+      "status": 200,
+      "title": "Sign PDF Without Email — Free Tool Comparison | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+      "description": "Most \"free\" PDF signers ask for your email at step 3. Here is how to sign PDF without email — 6 tools compared, no wall.",
+      "descriptionLength": 120
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/remote-teams-sign-documents",
+      "finalUrl": "https://www.signmypdf.io/blog/remote-teams-sign-documents",
+      "status": 200,
+      "title": "How Remote Teams Sign Documents Online Without Printing | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/remote-teams-sign-documents",
+      "ogUrl": "https://www.signmypdf.io/blog/remote-teams-sign-documents",
+      "description": "Remote teams lose days on paper signatures. Sign contracts, NDAs, and employment agreements instantly with a free browser-based PDF signer.",
+      "descriptionLength": 139
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-without-adobe",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-without-adobe",
+      "status": 200,
+      "title": "How to Password Protect a PDF Without Adobe Acrobat (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-without-adobe",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-without-adobe",
+      "description": "Password protect a PDF without Adobe Acrobat. Free, instant, 100% private — your file never leaves your browser. AES-256 encryption in under 2 minutes.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-construction-contract-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-construction-contract-online",
+      "status": 200,
+      "title": "Sign Construction Contract Online Free (2026) | SignMyPDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-construction-contract-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-construction-contract-online",
+      "description": "Sign construction contract online free with SignMyPDF. No registration, 100% private browser-based signing. Try it now — works on any device instantly.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sent-confidential-contract-unprotected",
+      "finalUrl": "https://www.signmypdf.io/blog/sent-confidential-contract-unprotected",
+      "status": 200,
+      "title": "I Sent a Confidential Contract Unprotected — Here&#x27;s What I Do Now | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sent-confidential-contract-unprotected",
+      "ogUrl": "https://www.signmypdf.io/blog/sent-confidential-contract-unprotected",
+      "description": "One accidental email to 400 contacts taught me to always password-protect PDFs first. Here&#x27;s the exact 2-minute browser routine I use now — free, no account.",
+      "descriptionLength": 162
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+      "finalUrl": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+      "status": 200,
+      "title": "PandaDoc Free Alternative: Sign PDFs Without Fees 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+      "ogUrl": "https://www.signmypdf.io/blog/pandadoc-free-alternative",
+      "description": "PandaDoc free alternative that requires no monthly fees or registration. Sign PDFs instantly in your browser with SignMyPDF. Try it free today.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-divorce-papers-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-divorce-papers-online",
+      "status": 200,
+      "title": "How to Sign Divorce Papers Online Without a Lawyer 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-divorce-papers-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-divorce-papers-online",
+      "description": "Sign divorce papers online for free with SignMyPDF. No lawyer needed, no registration, completely private. Start signing your divorce documents in 2 minutes.",
+      "descriptionLength": 157
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+      "status": 200,
+      "title": "How to Fill Out a Job Application PDF Online — Free 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+      "description": "Fill out a job application PDF online for free — no printing, no scanning, no registration. Use SignMyPDF to complete employment forms digitally in minutes.",
+      "descriptionLength": 156
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-government-forms-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-government-forms-online-free",
+      "status": 200,
+      "title": "Fill Out Government Forms Online Free (2026) | SignMyPDF | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-government-forms-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-government-forms-online-free",
+      "description": "Fill out government forms online free with SignMyPDF. No registration, no uploads, 100% private browser-based tool. Start filling forms in seconds.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-medical-release-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-medical-release-form-online",
+      "status": 200,
+      "title": "How to Sign a Medical Release Form Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-medical-release-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-medical-release-form-online",
+      "description": "Sign HIPAA medical release forms and patient consent PDFs online in minutes — free, no registration, 100% private. Step-by-step guide for 2026.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/password-protect-pdf-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/password-protect-pdf-online-free",
+      "status": 200,
+      "title": "Password Protect PDF Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/password-protect-pdf-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/password-protect-pdf-online-free",
+      "description": "Password protect a PDF online free in under a minute. No Adobe, no registration, no uploads — runs 100% in your browser. Lock PDF from editing, copying, printing.",
+      "descriptionLength": 162
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-insurance-documents-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-insurance-documents-online",
+      "status": 200,
+      "title": "Sign Insurance Documents Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-insurance-documents-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-insurance-documents-online",
+      "description": "Sign insurance forms, claims, and policy documents online for free. No printing, no scanning, no account needed. Works on any device in under 2 minutes.",
+      "descriptionLength": 152
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+      "finalUrl": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+      "status": 200,
+      "title": "How HR Teams Collect Signatures Without DocuSign 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+      "ogUrl": "https://www.signmypdf.io/blog/hr-teams-collect-signatures",
+      "description": "HR teams collect signatures without DocuSign using free browser-based tools. No registration, no uploads, complete privacy. Try SignMyPDF free today.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-windows-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-windows-free",
+      "status": 200,
+      "title": "Sign PDF on Windows Free | No Adobe Needed (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-windows-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-windows-free",
+      "description": "Sign PDFs on Windows without Adobe Acrobat. Browser-based, works in Chrome and Edge. Free, no installation, no registration required.",
+      "descriptionLength": 133
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+      "status": 200,
+      "title": "How to Fill Out a Medical Release Form Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+      "description": "Fill HIPAA medical release forms, patient consent forms, and health record requests online for free. No printing, no faxing, no account needed.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-from-google-drive-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-from-google-drive-free",
+      "status": 200,
+      "title": "How to Sign PDF from Google Drive Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-from-google-drive-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-from-google-drive-free",
+      "description": "Sign a PDF from Google Drive for free in 3 minutes. No add-ons, no subscription, no registration. Download, sign, re-upload — simple and private.",
+      "descriptionLength": 145
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+      "finalUrl": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+      "status": 200,
+      "title": "How to Fill PDF Forms for EU Compliance Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+      "ogUrl": "https://www.signmypdf.io/blog/eidas-fill-pdf-eu",
+      "description": "Fill PDF forms that meet EU eIDAS compliance requirements for free. Browser-based, no registration, works for business and government documents across Europe.",
+      "descriptionLength": 158
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+      "finalUrl": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+      "status": 200,
+      "title": "Adobe Acrobat vs SignMyPDF: Is $14.99/mo Worth It? (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+      "ogUrl": "https://www.signmypdf.io/blog/adobe-acrobat-vs-signmypdf",
+      "description": "Adobe Acrobat vs SignMyPDF honest comparison (2026). Find out when the $14.99/month subscription is worth it — and when a free alternative is all you need.",
+      "descriptionLength": 155
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-on-chromebook-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-on-chromebook-free",
+      "status": 200,
+      "title": "How to Sign PDF on Chromebook Free (2026): No Extensions Needed | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-on-chromebook-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-on-chromebook-free",
+      "description": "Sign PDF on Chromebook for free in 2 minutes. No extensions, no Adobe, no registration required. Works in Chrome browser on all Chromebook models.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-employment-offer-letter-online",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-employment-offer-letter-online",
+      "status": 200,
+      "title": "How to Sign Employment Offer Letter Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-employment-offer-letter-online",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-employment-offer-letter-online",
+      "description": "Sign your employment offer letter online for free in 2 minutes. No registration, no uploads, 100% private. Start signing your job offer now!",
+      "descriptionLength": 140
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/cant-sign-pdf-iphone-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/cant-sign-pdf-iphone-fix",
+      "status": 200,
+      "title": "Can&#x27;t Sign PDF on iPhone? Here&#x27;s the Fix (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/cant-sign-pdf-iphone-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/cant-sign-pdf-iphone-fix",
+      "description": "Can&#x27;t sign a PDF on iPhone? Here&#x27;s why it fails and how to fix it free in 2 minutes using Safari — no app download, no registration needed.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/small-business-document-signing",
+      "finalUrl": "https://www.signmypdf.io/blog/small-business-document-signing",
+      "status": 200,
+      "title": "Small Business PDF Signing & Filling: Free Tools Guide (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/small-business-document-signing",
+      "ogUrl": "https://www.signmypdf.io/blog/small-business-document-signing",
+      "description": "How small businesses sign and fill PDF documents for free in 2026. Contracts, NDAs, invoices, employee forms — without DocuSign or Adobe subscriptions.",
+      "descriptionLength": 151
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+      "finalUrl": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+      "status": 200,
+      "title": "How Freelancers Sign Contracts Free in 2026 | No Software | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+      "ogUrl": "https://www.signmypdf.io/blog/freelancers-sign-contracts-free",
+      "description": "Freelancers sign contracts without expensive software using free browser-based tools. No registration, no uploads, completely private. Try SignMyPDF free today.",
+      "descriptionLength": 160
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/pdf-wont-let-me-type-fix",
+      "finalUrl": "https://www.signmypdf.io/blog/pdf-wont-let-me-type-fix",
+      "status": 200,
+      "title": "PDF Won&#x27;t Let Me Type — How to Fix It Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/pdf-wont-let-me-type-fix",
+      "ogUrl": "https://www.signmypdf.io/blog/pdf-wont-let-me-type-fix",
+      "description": "PDF won&#x27;t let me type? Fix it instantly with this free browser-based tool. Add text anywhere on your PDF — no downloads, no registration. Try it now!",
+      "descriptionLength": 154
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/real-estate-agents-sign-documents",
+      "finalUrl": "https://www.signmypdf.io/blog/real-estate-agents-sign-documents",
+      "status": 200,
+      "title": "How Real Estate Agents Sign Documents Without Adobe 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/real-estate-agents-sign-documents",
+      "ogUrl": "https://www.signmypdf.io/blog/real-estate-agents-sign-documents",
+      "description": "Real estate agents sign documents without Adobe using free browser-based tools. No registration, complete privacy. Start signing contracts instantly.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/electronic-signature-legal-rental",
+      "finalUrl": "https://www.signmypdf.io/blog/electronic-signature-legal-rental",
+      "status": 200,
+      "title": "Is an Electronic Signature Legal on a Rental Agreement? 2026 | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/electronic-signature-legal-rental",
+      "ogUrl": "https://www.signmypdf.io/blog/electronic-signature-legal-rental",
+      "description": "Electronic signatures are legal on rental agreements. Learn the laws and sign your lease online free with SignMyPDF — no registration required.",
+      "descriptionLength": 143
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+      "finalUrl": "https://www.signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+      "status": 200,
+      "title": "SignMyPDF vs DocuSign: Which is Better for Freelancers? (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+      "ogUrl": "https://www.signmypdf.io/blog/signmypdf-vs-docusign-freelancers",
+      "description": "SignMyPDF vs DocuSign for freelancers in 2026: price, speed, mobile, and privacy compared. Find out which e-signature tool saves money and time for independent contractors.",
+      "descriptionLength": 172
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/how-to-sign-nda-online",
+      "finalUrl": "https://www.signmypdf.io/blog/how-to-sign-nda-online",
+      "status": 200,
+      "title": "How to Sign NDA Online Free: No Account Required (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/how-to-sign-nda-online",
+      "ogUrl": "https://www.signmypdf.io/blog/how-to-sign-nda-online",
+      "description": "Sign your NDA online free in 2026. No registration, no account, fully legal under ESIGN Act. Your confidential document never leaves your device.",
+      "descriptionLength": 145
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/docusign-alternative-free",
+      "finalUrl": "https://www.signmypdf.io/blog/docusign-alternative-free",
+      "status": 200,
+      "title": "Best Free DocuSign Alternative (2026): No Subscription Needed | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/docusign-alternative-free",
+      "ogUrl": "https://www.signmypdf.io/blog/docusign-alternative-free",
+      "description": "Best free DocuSign alternative in 2026. Sign PDFs online with no account, no monthly fee. Legally valid e-signatures. Works on any device instantly.",
+      "descriptionLength": 148
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-fast-secure",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-fast-secure",
+      "status": 200,
+      "title": "Sign PDF Fast & Secure | Quick Signing with Full Privacy (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-fast-secure",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-fast-secure",
+      "description": "Sign PDFs in under 2 minutes with complete privacy. File never leaves your device. Fast, secure, legally valid. Free for up to 2 documents per day.",
+      "descriptionLength": 147
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/how-to-sign-lease-agreement-online",
+      "finalUrl": "https://www.signmypdf.io/blog/how-to-sign-lease-agreement-online",
+      "status": 200,
+      "title": "How to Sign a Lease Agreement Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/how-to-sign-lease-agreement-online",
+      "ogUrl": "https://www.signmypdf.io/blog/how-to-sign-lease-agreement-online",
+      "description": "Sign your lease agreement online for free in 2026. No printer, no registration, legally valid under ESIGN Act. Works on iPhone, Android, and desktop.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-no-watermark",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-no-watermark",
+      "status": 200,
+      "title": "Sign PDF Without Watermark | Clean Professional Results (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-no-watermark",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-no-watermark",
+      "description": "Sign PDFs without ugly watermarks. Clean, professional signed documents free. No branding stamps on your content. Up to 2 docs/day at no cost.",
+      "descriptionLength": 142
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-without-adobe",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-without-adobe",
+      "status": 200,
+      "title": "Sign PDF Without Adobe Acrobat | Free Alternative (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-without-adobe",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-without-adobe",
+      "description": "Sign PDFs without Adobe Acrobat subscription. Free browser-based alternative with full signing features. No installation, no registration, legally valid.",
+      "descriptionLength": 153
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-on-mac",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-on-mac",
+      "status": 200,
+      "title": "Sign PDF on Mac Free | Better Than Preview (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-on-mac",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-on-mac",
+      "description": "Sign PDFs on Mac without Preview. Browser-based tool with typed signatures, precise placement, and instant download. Free, no installation needed.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-android-free",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-android-free",
+      "status": 200,
+      "title": "Sign PDF on Android Free | No App Install (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-android-free",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-android-free",
+      "description": "Sign PDFs on Android without installing apps. Works in Chrome and Samsung Internet. Free, no registration, no ads. Your file stays on your device.",
+      "descriptionLength": 146
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/how-to-add-signature-to-pdf",
+      "finalUrl": "https://www.signmypdf.io/blog/how-to-add-signature-to-pdf",
+      "status": 200,
+      "title": "How to Add Signature to PDF | 3 Free Methods Explained (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/how-to-add-signature-to-pdf",
+      "ogUrl": "https://www.signmypdf.io/blog/how-to-add-signature-to-pdf",
+      "description": "Learn 3 ways to add signature to PDF: draw, type, or upload image. Free online tool, no registration. Works on any device — desktop, iPhone, Android.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+      "status": 200,
+      "title": "How to Fill Out a W-9 Form Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-w9-form-online-free",
+      "description": "Fill out a W-9 form online free in minutes with our secure browser-based tool. No uploads, no registration. Try SignMyPDF now!",
+      "descriptionLength": 126
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/sign-pdf-free-without-registration",
+      "finalUrl": "https://www.signmypdf.io/blog/sign-pdf-free-without-registration",
+      "status": 200,
+      "title": "Sign PDF Free Without Registration | No Email Required (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/sign-pdf-free-without-registration",
+      "ogUrl": "https://www.signmypdf.io/blog/sign-pdf-free-without-registration",
+      "description": "Sign PDFs instantly without creating an account. No email, no registration, no personal data collected. Upload and sign in seconds — completely free.",
+      "descriptionLength": 149
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/how-to-sign-pdf-online",
+      "finalUrl": "https://www.signmypdf.io/blog/how-to-sign-pdf-online",
+      "status": 200,
+      "title": "How to Sign PDF Online Free: Complete Guide (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/how-to-sign-pdf-online",
+      "ogUrl": "https://www.signmypdf.io/blog/how-to-sign-pdf-online",
+      "description": "Sign PDF online for free in 2026. No registration, no downloads. Step-by-step guide to electronic signatures that are legally binding in the US and worldwide.",
+      "descriptionLength": 158
+    },
+    {
+      "url": "https://www.signmypdf.io/blog/fill-pdf-form-online-free",
+      "finalUrl": "https://www.signmypdf.io/blog/fill-pdf-form-online-free",
+      "status": 200,
+      "title": "How to Fill PDF Form Online Free (2026) | SignMyPDF",
+      "canonical": "https://www.signmypdf.io/blog/fill-pdf-form-online-free",
+      "ogUrl": "https://www.signmypdf.io/blog/fill-pdf-form-online-free",
+      "description": "Fill any PDF form online for free in 2026. Click anywhere to type — no registration, no software, no printing. Works on desktop, iPhone, and Android. 100% private.",
+      "descriptionLength": 163
+    }
+  ]
+}
