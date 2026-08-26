@@ -1,0 +1,154 @@
+{
+  "date": "2026-08-26",
+  "timestamp": "2026-08-26T03:43:14.797Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-08-24T08:33:21.284Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 9336,
+    "clicks28d": 53,
+    "avgPosition28d": 20.502677806341044,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 2444,
+        "clicks": 20,
+        "position": 7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 94,
+        "clicks": 5,
+        "position": 8.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 383,
+        "clicks": 3,
+        "position": 11
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+        "impressions": 178,
+        "clicks": 3,
+        "position": 10.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 15,
+        "clicks": 3,
+        "position": 15.9
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 29,
+        "clicks": 2,
+        "position": 3.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 771,
+        "clicks": 2,
+        "position": 57.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 980,
+        "clicks": 2,
+        "position": 15.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 267,
+        "clicks": 1,
+        "position": 16.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/biggest-mistake-protecting-pdfs",
+        "impressions": 8,
+        "clicks": 1,
+        "position": 10
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 62,
+        "clicks": 1,
+        "position": 6.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+        "impressions": 19,
+        "clicks": 1,
+        "position": 6.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+        "impressions": 102,
+        "clicks": 1,
+        "position": 21
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+        "impressions": 32,
+        "clicks": 1,
+        "position": 13.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+        "impressions": 11,
+        "clicks": 1,
+        "position": 7.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signing-no-email-required",
+        "impressions": 20,
+        "clicks": 1,
+        "position": 16.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protect-pdf-from-copying-text",
+        "impressions": 10,
+        "clicks": 1,
+        "position": 32.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+        "impressions": 354,
+        "clicks": 1,
+        "position": 13.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-car-purchase-agreement-online",
+        "impressions": 108,
+        "clicks": 1,
+        "position": 9.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-lease-renewal-online",
+        "impressions": 40,
+        "clicks": 1,
+        "position": 28.4
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
