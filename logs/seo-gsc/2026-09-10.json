@@ -1,0 +1,154 @@
+{
+  "date": "2026-09-10",
+  "timestamp": "2026-09-10T07:34:47.648Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-09-08T10:40:39.433Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 11464,
+    "clicks28d": 93,
+    "avgPosition28d": 16.67027215631542,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 2361,
+        "clicks": 23,
+        "position": 6.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 106,
+        "clicks": 17,
+        "position": 7.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+        "impressions": 556,
+        "clicks": 7,
+        "position": 7.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+        "impressions": 614,
+        "clicks": 6,
+        "position": 9.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 995,
+        "clicks": 5,
+        "position": 8.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 114,
+        "clicks": 4,
+        "position": 14.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+        "impressions": 439,
+        "clicks": 4,
+        "position": 12.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fix-typo-on-signed-pdf",
+        "impressions": 57,
+        "clicks": 3,
+        "position": 7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-on-iphone-free",
+        "impressions": 1522,
+        "clicks": 3,
+        "position": 12.9
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 49,
+        "clicks": 2,
+        "position": 5.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-visa-application-form-pdf",
+        "impressions": 75,
+        "clicks": 2,
+        "position": 7.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-field-not-clickable-fix",
+        "impressions": 94,
+        "clicks": 2,
+        "position": 7.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 34,
+        "clicks": 1,
+        "position": 25.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 702,
+        "clicks": 1,
+        "position": 62.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-customs-declaration-form-pdf",
+        "impressions": 62,
+        "clicks": 1,
+        "position": 21.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+        "impressions": 109,
+        "clicks": 1,
+        "position": 11.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-form-not-saving-fix",
+        "impressions": 90,
+        "clicks": 1,
+        "position": 8.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-on-android-free",
+        "impressions": 40,
+        "clicks": 1,
+        "position": 16.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+        "impressions": 47,
+        "clicks": 1,
+        "position": 13
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-read-only-add-text-fix",
+        "impressions": 15,
+        "clicks": 1,
+        "position": 12.4
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
