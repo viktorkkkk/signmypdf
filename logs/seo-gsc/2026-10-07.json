@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-07",
+  "timestamp": "2026-10-07T09:28:38.442Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-10-06T15:48:52.048Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 11214,
+    "clicks28d": 134,
+    "avgPosition28d": 12.872570001783485,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 1984,
+        "clicks": 24,
+        "position": 6.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 152,
+        "clicks": 17,
+        "position": 5.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 1299,
+        "clicks": 14,
+        "position": 6.9
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 57,
+        "clicks": 10,
+        "position": 2.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+        "impressions": 625,
+        "clicks": 7,
+        "position": 7.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 148,
+        "clicks": 4,
+        "position": 9.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-rental-application-pdf-free",
+        "impressions": 74,
+        "clicks": 4,
+        "position": 5.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+        "impressions": 624,
+        "clicks": 4,
+        "position": 8.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 228,
+        "clicks": 4,
+        "position": 8.3
+      },
+      {
+        "url": "https://www.signmypdf.io/fill",
+        "impressions": 107,
+        "clicks": 4,
+        "position": 36.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 42,
+        "clicks": 3,
+        "position": 10.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-job-application-pdf-online",
+        "impressions": 80,
+        "clicks": 3,
+        "position": 6.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+        "impressions": 15,
+        "clicks": 3,
+        "position": 7.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/owner-password-vs-user-password",
+        "impressions": 175,
+        "clicks": 2,
+        "position": 7.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+        "impressions": 205,
+        "clicks": 2,
+        "position": 8.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/signed-pdf-looks-different-fix",
+        "impressions": 74,
+        "clicks": 2,
+        "position": 7.2
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 169,
+        "clicks": 1,
+        "position": 11.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+        "impressions": 23,
+        "clicks": 1,
+        "position": 7.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/dochub-free-alternative",
+        "impressions": 12,
+        "clicks": 1,
+        "position": 7.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 395,
+        "clicks": 1,
+        "position": 58.9
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
