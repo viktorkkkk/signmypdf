@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-24",
+  "timestamp": "2026-10-24T07:41:25.838Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 1,
+  "ok": false,
+  "issues": [
+    "GSC: sitemap last downloaded 9.1 days ago (threshold: 7d). Google has stopped re-fetching — investigate."
+  ],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-10-15T04:21:46.060Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 12266,
+    "clicks28d": 107,
+    "avgPosition28d": 12.698679276047612,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 2537,
+        "clicks": 21,
+        "position": 6.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 87,
+        "clicks": 9,
+        "position": 7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+        "impressions": 642,
+        "clicks": 8,
+        "position": 7.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 199,
+        "clicks": 7,
+        "position": 9.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 1383,
+        "clicks": 7,
+        "position": 7.6
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 81,
+        "clicks": 5,
+        "position": 3.4
+      },
+      {
+        "url": "https://www.signmypdf.io/fill",
+        "impressions": 333,
+        "clicks": 5,
+        "position": 42.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-grayed-out-fix",
+        "impressions": 673,
+        "clicks": 4,
+        "position": 8.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 284,
+        "clicks": 4,
+        "position": 9.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-pdf-vs-encrypted-email",
+        "impressions": 54,
+        "clicks": 3,
+        "position": 6.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+        "impressions": 8,
+        "clicks": 2,
+        "position": 4.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 310,
+        "clicks": 2,
+        "position": 52.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+        "impressions": 54,
+        "clicks": 2,
+        "position": 6.7
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-w4-form-pdf-online",
+        "impressions": 12,
+        "clicks": 2,
+        "position": 8.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+        "impressions": 34,
+        "clicks": 2,
+        "position": 6.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-keeps-asking-password",
+        "impressions": 267,
+        "clicks": 2,
+        "position": 8.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+        "impressions": 354,
+        "clicks": 2,
+        "position": 8.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+        "impressions": 22,
+        "clicks": 2,
+        "position": 8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/add-multiple-signatures-one-pdf",
+        "impressions": 18,
+        "clicks": 1,
+        "position": 9.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/can-protected-pdf-be-hacked",
+        "impressions": 27,
+        "clicks": 1,
+        "position": 8.7
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
