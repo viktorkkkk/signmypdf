@@ -1,0 +1,154 @@
+{
+  "date": "2026-11-09",
+  "timestamp": "2026-11-09T10:32:32.563Z",
+  "property": "sc-domain:signmypdf.io",
+  "sitemap": "https://www.signmypdf.io/sitemap.xml",
+  "issueCount": 0,
+  "ok": true,
+  "issues": [],
+  "facts": {
+    "propertyPermission": "siteOwner",
+    "allProperties": [
+      {
+        "siteUrl": "sc-domain:signmypdf.io",
+        "permissionLevel": "siteOwner"
+      },
+      {
+        "siteUrl": "https://signmypdf.io/",
+        "permissionLevel": "siteOwner"
+      }
+    ],
+    "sitemapSubmitted": "2026-08-03T09:02:46.644Z",
+    "sitemapDownloaded": "2026-11-03T12:47:26.394Z",
+    "sitemapErrors": "0",
+    "sitemapWarnings": "0",
+    "sitemapWebUrlCount": "197",
+    "sitemapWebIndexed": "0",
+    "impressions28d": 14883,
+    "clicks28d": 118,
+    "avgPosition28d": 13.922461869246792,
+    "topPages": [
+      {
+        "url": "https://www.signmypdf.io/blog/signature-disappears-pdf-fix",
+        "impressions": 2734,
+        "clicks": 24,
+        "position": 6.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-form-fields-not-working-fix",
+        "impressions": 1728,
+        "clicks": 10,
+        "position": 7.8
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-multiple-pdf-pages",
+        "impressions": 317,
+        "clicks": 10,
+        "position": 6.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-pdf-checkbox-not-working",
+        "impressions": 701,
+        "clicks": 9,
+        "position": 6.6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-bank-form-pdf-online",
+        "impressions": 177,
+        "clicks": 6,
+        "position": 21.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-no-editing-allowed",
+        "impressions": 344,
+        "clicks": 6,
+        "position": 8.6
+      },
+      {
+        "url": "https://www.signmypdf.io/",
+        "impressions": 122,
+        "clicks": 4,
+        "position": 3.9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/docusign-alternative-free",
+        "impressions": 751,
+        "clicks": 4,
+        "position": 20.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/protected-pdf-wont-open-some-devices",
+        "impressions": 576,
+        "clicks": 4,
+        "position": 10.9
+      },
+      {
+        "url": "https://www.signmypdf.io/fill",
+        "impressions": 618,
+        "clicks": 4,
+        "position": 39.8
+      },
+      {
+        "url": "https://www.signmypdf.io/sign-pdf-chrome-extension",
+        "impressions": 275,
+        "clicks": 4,
+        "position": 11.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-medical-release-form-online",
+        "impressions": 54,
+        "clicks": 3,
+        "position": 6
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/password-protect-pdf-on-android",
+        "impressions": 83,
+        "clicks": 3,
+        "position": 7.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/aes-128-vs-aes-256-pdf",
+        "impressions": 6,
+        "clicks": 2,
+        "position": 3.5
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/electronic-signature-laws-by-state",
+        "impressions": 271,
+        "clicks": 2,
+        "position": 59.3
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/fill-nda-pdf-online-free",
+        "impressions": 8,
+        "clicks": 2,
+        "position": 4.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/pdf-signature-invalid-error-fix",
+        "impressions": 218,
+        "clicks": 2,
+        "position": 9
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-affidavit-online-free",
+        "impressions": 63,
+        "clicks": 2,
+        "position": 7.4
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/sign-pdf-and-email-back",
+        "impressions": 45,
+        "clicks": 2,
+        "position": 8.1
+      },
+      {
+        "url": "https://www.signmypdf.io/blog/adobe-vs-free-pdf-protection",
+        "impressions": 151,
+        "clicks": 1,
+        "position": 8.9
+      }
+    ],
+    "pagesWithImpressions28d": 20
+  }
+}
